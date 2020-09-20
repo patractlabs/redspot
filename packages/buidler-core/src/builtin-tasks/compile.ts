@@ -13,10 +13,10 @@ import {
 import { internalTask, task, types } from "../internal/core/config/config-env";
 import { BuidlerError } from "../internal/core/errors";
 import { ERRORS } from "../internal/core/errors-list";
-import { Compiler } from "../internal/solidity/compiler";
-import { getInputFromDependencyGraph } from "../internal/solidity/compiler/compiler-input";
-import { DependencyGraph } from "../internal/solidity/dependencyGraph";
-import { Resolver } from "../internal/solidity/resolver";
+import { Compiler } from "@redspot/solidity/compiler";
+import { getInputFromDependencyGraph } from "@redspot/solidity/compiler/compiler-input";
+import { DependencyGraph } from "@redspot/solidity/dependencyGraph";
+import { Resolver } from "@redspot/solidity/resolver";
 import { glob } from "../internal/util/glob";
 import { getCompilersDir } from "../internal/util/global-dir";
 import { pluralize } from "../internal/util/strings";

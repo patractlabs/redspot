@@ -4,7 +4,7 @@ import { DeepPartial, DeepReadonly, Omit } from "ts-essentials";
 import {
   EvmMessageTrace,
   MessageTrace,
-} from "./internal/buidler-evm/stack-traces/message-trace";
+} from "@redspot/buidler-evm/stack-traces/message-trace";
 import * as types from "./internal/core/params/argumentTypes";
 
 // Begin config types

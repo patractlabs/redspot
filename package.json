@@ -1,38 +1,62 @@
 {
   "name": "root",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "author": "Nomic Labs LLC",
   "license": "SEE LICENSE IN EACH PACKAGE'S LICENSE FILE",
+  "repository": "github:redspot/buidler",
   "private": true,
+  "engines": {
+    "node": ">=8.2.0",
+    "yarn": "^1.10.1"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
   "devDependencies": {
+    "@babel/core": "^7.11.6",
+    "@babel/register": "^7.11.5",
+    "@babel/runtime": "^7.11.2",
+    "@redspot/dev-cli": "0.3.0",
+    "@types/chai": "^4.2.0",
+    "@types/ci-info": "^2.0.0",
+    "@types/debug": "^4.1.4",
+    "@types/download": "^6.2.4",
+    "@types/find-up": "^2.1.1",
+    "@types/fs-extra": "^5.1.0",
+    "@types/glob": "^7.1.1",
+    "@types/lodash": "^4.14.123",
     "@types/mocha": "^5.2.6",
     "@types/node": "^8.10.44",
+    "@types/node-fetch": "^2.3.7",
+    "@types/qs": "^6.5.3",
+    "@types/semver": "^6.0.2",
     "@types/shelljs": "^0.8.6",
-    "chai": "^4.2.0",
+    "@types/sinon": "^7.5.1",
+    "@types/uuid": "^3.4.5",
+    "@types/ws": "^7.2.1",
     "ganache-cli": "^6.4.3",
-    "lerna": "^3.13.4",
-    "mocha": "^7.1.2",
+    "husky": "^4.3.0",
+    "lerna": "^3.22.1",
     "nyc": "^14.1.0",
     "prettier": "2.0.5",
+    "pretty-quick": "^3.0.2",
     "rimraf": "^3.0.2",
     "shelljs": "^0.8.3",
-    "source-map-support": "^0.5.13",
-    "ts-node": "^8.1.0",
+    "sinon": "^9.0.0",
+    "time-require": "^0.1.2",
     "tslint": "^5.16.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-consistent-codestyle": "^1.15.1",
     "tslint-plugin-prettier": "^2.0.1",
-    "typescript": "~3.8.3"
+    "typescript": "^4.0.2"
   },
   "scripts": {
-    "postinstall": "node scripts/install.js",
-    "build": "lerna exec -- npm run build",
-    "build-test": "lerna exec -- npm run build-test",
-    "watch": "tsc --build --watch packages/*/src",
-    "clean": "lerna exec -- npm run clean",
-    "test": "node scripts/run-tests.js",
-    "lint": "lerna exec --no-bail -- npm run lint",
-    "lint:fix": "lerna exec -- npm run lint:fix"
+    "build": "polkadot-dev-build-ts",
+    "lint": "polkadot-dev-run-lint"
   },
-  "dependencies": {}
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
+  }
 }
