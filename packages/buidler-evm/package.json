@@ -1,5 +1,5 @@
 {
-  "name"@redspot/buidler-evm",
+  "name": "@redspot/buidler-evm",
   "version": "0.3.0-alpha.1",
   "author": "Nomic Labs LLC",
   "license": "SEE LICENSE IN LICENSE",
