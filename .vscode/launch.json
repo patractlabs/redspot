@@ -5,15 +5,27 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch via npm",
+      "name": "TEST",
       "type": "node",
       "request": "launch",
       "cwd": "${workspaceFolder}/test",
       "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "test", "builtin-tasks/run.ts"]
+    },
+    {
+      "name": "CLI_FLIPPER",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/examples/flipper",
+      "env": { "TS_NODE_PROJECT": "${workspaceFolder}/tsconfig.json" },
       "runtimeArgs": [
-        "run",
-        "test",
-        "builtin-tasks/run.ts"
+        "-r",
+        "ts-node/register",
+        "-r",
+        "tsconfig-paths/register"
+      ],
+      "args": [
+        "${workspaceFolder}/packages/buidler-core/src/internal/cli/cli.ts"
       ]
     }
   ]

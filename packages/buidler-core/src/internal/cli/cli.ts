@@ -3,9 +3,8 @@ import chalk from "chalk";
 import debug from "debug";
 import semver from "semver";
 import "source-map-support/register";
-
 import { TASK_HELP } from "../../builtin-tasks/task-names";
-import { ResolvedBuidlerConfig, TaskArguments } from "../../types";
+import { TaskArguments } from "../../types";
 import { BUIDLER_NAME } from "../constants";
 import { BuidlerContext } from "../context";
 import { loadConfigAndTasks } from "../core/config/config-loading";
@@ -18,11 +17,9 @@ import { Environment } from "../core/runtime-environment";
 import { loadTsNodeIfPresent } from "../core/typescript-support";
 import { Reporter } from "../sentry/reporter";
 import { getPackageJson, PackageJson } from "../util/packageInfo";
-
 import { Analytics } from "./analytics";
 import { ArgumentsParser } from "./ArgumentsParser";
 import { enableEmoji } from "./emoji";
-import { createProject } from "./project-creation";
 
 const log = debug("buidler:core:cli");
 
@@ -84,7 +81,7 @@ async function main() {
       !isCwdInsideProject() &&
       process.stdout.isTTY === true
     ) {
-      await createProject();
+      console.log("TODO: create project");
       return;
     }
 
