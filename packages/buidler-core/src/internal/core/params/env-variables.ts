@@ -1,5 +1,3 @@
-import ProcessEnv = NodeJS.ProcessEnv;
-
 import { BuidlerArguments, BuidlerParamDefinitions } from "../../../types";
 import { ArgumentsParser } from "../../cli/ArgumentsParser";
 import { unsafeObjectKeys } from "../../util/unsafe";
@@ -7,6 +5,10 @@ import { BuidlerError } from "../errors";
 import { ERRORS } from "../errors-list";
 
 const BUIDLER_ENV_ARGUMENT_PREFIX = "BUIDLER_";
+
+interface ProcessEnv {
+  [key: string]: string | undefined;
+}
 
 export function paramNameToEnvVariable(paramName: string): string {
   // We create it starting from the result of ArgumentsParser.paramNameToCLA

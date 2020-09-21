@@ -185,7 +185,7 @@ export function validateConfig(config: any) {
 }
 
 export function getValidationErrors(config: any): string[] {
-  const errors = [];
+  const errors: string[] = [];
 
   // These can't be validated with io-ts
   if (config !== undefined && typeof config.networks === "object") {

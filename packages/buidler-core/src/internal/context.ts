@@ -15,7 +15,7 @@ export type GlobalWithBuidlerContext = NodeJS.Global & {
 
 export class BuidlerContext {
   public static isCreated(): boolean {
-    const globalWithBuidlerContext = global as GlobalWithBuidlerContext;
+    const globalWithBuidlerContext = (global as any) as GlobalWithBuidlerContext;
     return globalWithBuidlerContext.__buidlerContext !== undefined;
   }
 
@@ -23,14 +23,14 @@ export class BuidlerContext {
     if (this.isCreated()) {
       throw new BuidlerError(ERRORS.GENERAL.CONTEXT_ALREADY_CREATED);
     }
-    const globalWithBuidlerContext = global as GlobalWithBuidlerContext;
+    const globalWithBuidlerContext = (global as any) as GlobalWithBuidlerContext;
     const ctx = new BuidlerContext();
     globalWithBuidlerContext.__buidlerContext = ctx;
     return ctx;
   }
 
   public static getBuidlerContext(): BuidlerContext {
-    const globalWithBuidlerContext = global as GlobalWithBuidlerContext;
+    const globalWithBuidlerContext = (global as any) as GlobalWithBuidlerContext;
     const ctx = globalWithBuidlerContext.__buidlerContext;
     if (ctx === undefined) {
       throw new BuidlerError(ERRORS.GENERAL.CONTEXT_NOT_CREATED);

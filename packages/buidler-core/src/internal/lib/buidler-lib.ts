@@ -53,4 +53,4 @@ if (BuidlerContext.isCreated()) {
   ctx.setBuidlerRuntimeEnvironment(env);
 }
 
-export = env;
+module.exports = env;

@@ -5,12 +5,12 @@ import { BN, bufferToHex, privateToAddress, toBuffer } from "ethereumjs-util";
 import {
   JsonRpcServer,
   JsonRpcServerConfig,
-} from "../internal/buidler-evm/jsonrpc/server";
+} from "@redspot/buidler-evm/jsonrpc/server";
 import { BUIDLEREVM_NETWORK_NAME } from "../internal/constants";
 import { task, types } from "../internal/core/config/config-env";
 import { BuidlerError } from "../internal/core/errors";
 import { ERRORS } from "../internal/core/errors-list";
-import { createProvider } from "../internal/core/providers/construction";
+import { createProvider } from "@redspot/eth-providers/construction";
 import { Reporter } from "../internal/sentry/reporter";
 import { lazyObject } from "../internal/util/lazy";
 import {

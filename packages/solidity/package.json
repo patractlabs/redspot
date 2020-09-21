@@ -1,0 +1,23 @@
+{
+  "name": "@redspot/solidity",
+  "version": "0.3.0-alpha.1",
+  "author": "Patract Labs LLC",
+  "contributors": [
+    "Nomic Labs LLC"
+  ],
+  "license": "SEE LICENSE IN LICENSE",
+  "scripts": {
+    "test": "node ../../node_modules/mocha/bin/mocha --recursive"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.11.2",
+    "@redspot/buidler": "0.3.0-alpha.1",
+    "@solidity-parser/parser": "^0.5.2",
+    "debug": "^4.1.1",
+    "download": "^7.1.0",
+    "ethereumjs-util": "^6.1.0",
+    "fs-extra": "^7.0.1",
+    "slash": "^3.0.0",
+    "solc": "0.6.8"
+  }
+}

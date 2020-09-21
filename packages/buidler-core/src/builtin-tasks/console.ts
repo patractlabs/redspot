@@ -28,7 +28,7 @@ export default function () {
           "console-history.txt"
         );
 
-        const nodeArgs = [];
+        const nodeArgs: string[] = [];
         if (semver.gte(process.version, "10.0.0")) {
           nodeArgs.push("--experimental-repl-await");
         }

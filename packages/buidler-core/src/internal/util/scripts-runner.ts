@@ -121,7 +121,7 @@ function getTsNodeArgsIfNeeded(scriptPath: string) {
     return [];
   }
 
-  const extraNodeArgs = [];
+  const extraNodeArgs: string[] = [];
 
   if (!process.execArgv.includes("ts-node/register")) {
     extraNodeArgs.push("--require");

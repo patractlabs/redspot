@@ -1,0 +1,22 @@
+{
+  "name": "@redspot/eth-providers",
+  "version": "0.3.0-alpha.1",
+  "author": "Patract Labs LLC",
+  "contributors": [
+    "Nomic Labs LLC"
+  ],
+  "license": "SEE LICENSE IN LICENSE",
+  "scripts": {
+    "test": "node ../../node_modules/mocha/bin/mocha --recursive"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.11.2",
+    "@redspot/buidler": "0.3.0-alpha.1",
+    "eth-sig-util": "^2.5.2",
+    "ethereumjs-common": "^1.3.2",
+    "ethereumjs-tx": "^2.1.1",
+    "ethereumjs-util": "^6.1.0",
+    "lodash": "^4.17.11",
+    "node-fetch": "^2.6.0"
+  }
+}
