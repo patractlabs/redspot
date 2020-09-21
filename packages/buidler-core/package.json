@@ -5,8 +5,7 @@
   "license": "SEE LICENSE IN LICENSE",
   "main": "internal/lib/buidler-lib.js",
   "bin": {
-    "buidler": "internal/cli/cli.js",
-    "builder": "internal/cli/cli-with-a-typo.js"
+    "redspot": "internal/cli/cli.js"
   },
   "dependencies": {
     "@babel/runtime": "^7.11.2",

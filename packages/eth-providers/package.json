@@ -1,7 +1,10 @@
 {
   "name": "@redspot/eth-providers",
   "version": "0.3.0-alpha.1",
-  "author": "Nomic Labs LLC",
+  "author": "Patract Labs LLC",
+  "contributors": [
+    "Nomic Labs LLC"
+  ],
   "license": "SEE LICENSE IN LICENSE",
   "scripts": {
     "test": "node ../../node_modules/mocha/bin/mocha --recursive"
