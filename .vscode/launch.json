@@ -25,7 +25,8 @@
         "tsconfig-paths/register"
       ],
       "args": [
-        "${workspaceFolder}/packages/buidler-core/src/internal/cli/cli.ts"
+        "${workspaceFolder}/packages/buidler-core/src/internal/cli/cli.ts",
+        "compile"
       ]
     }
   ]

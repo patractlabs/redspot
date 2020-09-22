@@ -3,15 +3,15 @@ export const TASK_CHECK = "check";
 export const TASK_CLEAN = "clean";
 
 export const TASK_COMPILE = "compile";
-export const TASK_COMPILE_GET_SOURCE_PATHS = "compile:get-source-paths";
-export const TASK_COMPILE_GET_RESOLVED_SOURCES = "compile:get-resolved-sources";
-export const TASK_COMPILE_GET_DEPENDENCY_GRAPH = "compile:get-dependency-graph";
-export const TASK_COMPILE_GET_COMPILER_INPUT = "compile:get-compiler-input";
-export const TASK_COMPILE_RUN_COMPILER = "compile:run-compiler";
 export const TASK_COMPILE_COMPILE = "compile:compile";
-export const TASK_COMPILE_CHECK_CACHE = "compile:cache";
-
+export const TASK_COMPILE_GET_RESOLVED_WORKSPACE =
+  "compile:get-resolved-workspace";
 export const TASK_BUILD_ARTIFACTS = "compile:build-artifacts";
+export const TASK_COMPILE_GET_COMPILER_INPUT = "compile:get-compile-input";
+export const TASK_COMPILE_RUN_COMPILER = "compile:run-compiler";
+export const TASK_COMPILE_RUN_GENERATE_METADATA =
+  "compile:run-generate-metadata";
+export const TASK_COMPILE_COPY_TARGET_FILES = "compile:copy-target-files";
 
 export const TASK_CONSOLE = "console";
 
