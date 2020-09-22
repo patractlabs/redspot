@@ -16,10 +16,6 @@ export default function () {
   );
 
   loadPluginFile(
-    path.join(__dirname, "..", "..", "..", "builtin-tasks", "flatten")
-  );
-
-  loadPluginFile(
     path.join(__dirname, "..", "..", "..", "builtin-tasks", "help")
   );
 

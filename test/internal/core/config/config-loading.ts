@@ -87,7 +87,6 @@ describe("config loading", function () {
     it("Should define the default tasks", function () {
       assert.containsAllKeys(this.env.tasks, [
         TASK_CLEAN,
-        "flatten",
         "compile",
         "help",
         "run",

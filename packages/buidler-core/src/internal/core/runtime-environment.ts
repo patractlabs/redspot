@@ -1,5 +1,6 @@
+import { MessageTrace } from "@redspot/buidler-evm/stack-traces/message-trace";
+import { createProvider } from "@redspot/eth-providers/construction";
 import debug from "debug";
-
 import {
   BuidlerArguments,
   BuidlerRuntimeEnvironment,
@@ -15,12 +16,9 @@ import {
   TaskDefinition,
   TasksMap,
 } from "../../types";
-import { MessageTrace } from "@redspot/buidler-evm/stack-traces/message-trace";
 import { lazyObject } from "../util/lazy";
-
 import { BuidlerError } from "./errors";
 import { ERRORS } from "./errors-list";
-import { createProvider } from "@redspot/eth-providers/construction";
 import { OverriddenTaskDefinition } from "./tasks/task-definitions";
 
 const log = debug("buidler:core:bre");

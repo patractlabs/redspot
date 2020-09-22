@@ -1,16 +1,15 @@
-import chalk from "chalk";
-import debug from "debug";
-import { BN, bufferToHex, privateToAddress, toBuffer } from "ethereumjs-util";
-
 import {
   JsonRpcServer,
   JsonRpcServerConfig,
 } from "@redspot/buidler-evm/jsonrpc/server";
+import { createProvider } from "@redspot/eth-providers/construction";
+import chalk from "chalk";
+import debug from "debug";
+import { BN, bufferToHex, privateToAddress, toBuffer } from "ethereumjs-util";
 import { BUIDLEREVM_NETWORK_NAME } from "../internal/constants";
 import { task, types } from "../internal/core/config/config-env";
 import { BuidlerError } from "../internal/core/errors";
 import { ERRORS } from "../internal/core/errors-list";
-import { createProvider } from "@redspot/eth-providers/construction";
 import { Reporter } from "../internal/sentry/reporter";
 import { lazyObject } from "../internal/util/lazy";
 import {
@@ -18,7 +17,6 @@ import {
   EthereumProvider,
   ResolvedBuidlerConfig,
 } from "../types";
-
 import { TASK_NODE } from "./task-names";
 import { watchCompilerOutput } from "./utils/watch";
 

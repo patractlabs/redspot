@@ -44,6 +44,8 @@
     "shelljs": "^0.8.3",
     "sinon": "^9.0.0",
     "time-require": "^0.1.2",
+    "ts-node": "^9.0.0",
+    "tsconfig-paths": "^3.9.0",
     "tslint": "^5.16.0",
     "tslint-config-prettier": "^1.18.0",
     "tslint-consistent-codestyle": "^1.15.1",

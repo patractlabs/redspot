@@ -1,12 +1,11 @@
 import findUp from "find-up";
 import fsExtra from "fs-extra";
 import path from "path";
-
 import { getPackageRoot } from "../util/packageInfo";
-
 import { BuidlerError } from "./errors";
 import { ERRORS } from "./errors-list";
 import { isTypescriptSupported } from "./typescript-support";
+
 const JS_CONFIG_FILENAME = "buidler.config.js";
 const TS_CONFIG_FILENAME = "buidler.config.ts";
 

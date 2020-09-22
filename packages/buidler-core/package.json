@@ -10,6 +10,9 @@
   "bin": {
     "redspot": "internal/cli/cli.js"
   },
+  "engines": {
+    "node": ">=8.2.0"
+  },
   "dependencies": {
     "@babel/runtime": "^7.11.2",
     "@redspot/buidler-evm": "0.3.0-alpha.1",

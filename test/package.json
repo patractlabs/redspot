@@ -12,6 +12,7 @@
     "@redspot/buidler-evm": "0.3.0-alpha.1",
     "@redspot/eth-providers": "0.3.0-alpha.1",
     "@redspot/solidity": "0.3.0-alpha.1",
+    "@types/mocha": "^8.0.3",
     "chai": "^4.2.0",
     "download": "^7.1.0",
     "ethereumjs-abi": "^0.6.8",
@@ -22,9 +23,8 @@
     "io-ts": "1.10.4",
     "semver": "^6.3.0",
     "solc": "0.6.8",
+    "source-map-support": "^0.5.13",
     "ts-node": "^9.0.0",
-    "tsconfig-paths": "^3.9.0",
-    "source-map-support": "^0.5.13"
-
+    "tsconfig-paths": "^3.9.0"
   }
 }
