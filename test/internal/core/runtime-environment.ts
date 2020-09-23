@@ -57,7 +57,6 @@ describe("Environment", () => {
     showStackTraces: false,
     version: false,
     help: false,
-    emoji: false,
     verbose: false,
   };
 

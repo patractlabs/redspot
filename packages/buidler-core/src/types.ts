@@ -238,7 +238,6 @@ export interface ParamDefinitionsMap {
  * * showStackTraces: flag to show stack traces.
  * * version: flag to show buidler's version.
  * * help: flag to show buidler's help message.
- * * emoji:
  * * config: used to specify buidler's config file.
  */
 export interface BuidlerArguments {
@@ -246,7 +245,6 @@ export interface BuidlerArguments {
   showStackTraces: boolean;
   version: boolean;
   help: boolean;
-  emoji: boolean;
   config?: string;
   verbose: boolean;
   maxMemory?: number;

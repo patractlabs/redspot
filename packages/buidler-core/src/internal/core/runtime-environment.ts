@@ -54,8 +54,7 @@ export class Environment implements BuidlerRuntimeEnvironment {
     public readonly config: ResolvedBuidlerConfig,
     public readonly buidlerArguments: BuidlerArguments,
     public readonly tasks: TasksMap,
-    extenders: EnvironmentExtender[] = [],
-    experimentalBuidlerEVMMessageTraceHooks: ExperimentalBuidlerEVMMessageTraceHook[] = []
+    extenders: EnvironmentExtender[] = []
   ) {
     log("Creating BuidlerRuntimeEnvironment");
 
@@ -78,11 +77,7 @@ export class Environment implements BuidlerRuntimeEnvironment {
         networkName,
         networkConfig,
         config.solc.version,
-        config.paths,
-        experimentalBuidlerEVMMessageTraceHooks.map(
-          (hook) => (trace: MessageTrace, isCallMessageTrace: boolean) =>
-            hook(this, trace, isCallMessageTrace)
-        )
+        config.paths
       );
     });
 

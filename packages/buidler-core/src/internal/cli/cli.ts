@@ -1,8 +1,9 @@
 #!/usr/bin/env node
+import "source-map-support/register";
+
 import chalk from "chalk";
 import debug from "debug";
 import semver from "semver";
-import "source-map-support/register";
 import { TASK_HELP } from "../../builtin-tasks/task-names";
 import { TaskArguments } from "../../types";
 import { BUIDLER_NAME } from "../constants";
@@ -19,7 +20,6 @@ import { Reporter } from "../sentry/reporter";
 import { getPackageJson, PackageJson } from "../util/packageInfo";
 import { Analytics } from "./analytics";
 import { ArgumentsParser } from "./ArgumentsParser";
-import { enableEmoji } from "./emoji";
 
 const log = debug("buidler:core:cli");
 
@@ -68,10 +68,6 @@ async function main() {
     if (buidlerArguments.verbose) {
       Reporter.setVerbose(true);
       debug.enable("buidler*");
-    }
-
-    if (buidlerArguments.emoji) {
-      enableEmoji();
     }
 
     showStackTraces = buidlerArguments.showStackTraces;
@@ -143,8 +139,7 @@ async function main() {
       config,
       buidlerArguments,
       taskDefinitions,
-      envExtenders,
-      ctx.experimentalBuidlerEVMMessageTraceHooks
+      envExtenders
     );
 
     ctx.setBuidlerRuntimeEnvironment(env);
