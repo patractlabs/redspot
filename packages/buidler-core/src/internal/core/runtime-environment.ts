@@ -1,4 +1,3 @@
-import { MessageTrace } from "@redspot/buidler-evm/stack-traces/message-trace";
 import { createProvider } from "@redspot/eth-providers/construction";
 import debug from "debug";
 import {
@@ -6,7 +5,6 @@ import {
   BuidlerRuntimeEnvironment,
   EnvironmentExtender,
   EthereumProvider,
-  ExperimentalBuidlerEVMMessageTraceHook,
   Network,
   ParamDefinition,
   ResolvedBuidlerConfig,

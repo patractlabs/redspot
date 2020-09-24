@@ -1,5 +1,4 @@
 import {
-  BoundExperimentalBuidlerEVMMessageTraceHook,
   BuidlerNetworkConfig,
   EthereumProvider,
   HDAccountsConfig,

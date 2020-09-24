@@ -1,10 +1,6 @@
+import { MessageTrace } from "@redspot/buidler-evm/stack-traces/message-trace";
 import { EventEmitter } from "events";
 import { DeepPartial, DeepReadonly, Omit } from "ts-essentials";
-
-import {
-  EvmMessageTrace,
-  MessageTrace,
-} from "@redspot/buidler-evm/stack-traces/message-trace";
 import * as types from "./internal/core/params/argumentTypes";
 
 // Begin config types

@@ -1304,8 +1304,6 @@ export class EthModule {
 
     await this._logTransactionTrace(tx, trace, block, blockResult);
 
-    await this._runBuidlerEVMMessageTraceHooks(trace, false);
-
     this._logConsoleLogMessages(consoleLogMessages);
 
     if (error !== undefined) {
