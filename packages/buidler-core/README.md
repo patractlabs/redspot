@@ -13,6 +13,8 @@ This project is used for contracts developer, if developers want to deploy and t
 
 Please refer to this for more information: https://github.com/patractlabs/jupiter
 
+Riot group for disscusion: https://app.element.io/#/room/!RZjiuwwssNFJZxaTjg:matrix.org
+
 ## Installation
 
 TODO
