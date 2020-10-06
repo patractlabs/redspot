@@ -1,4 +1,4 @@
-# RedSpot
+# Redspot
 
 TODO
 
@@ -13,7 +13,7 @@ This project is used for contracts developer, if developers want to deploy and t
 
 Please refer to this for more information: https://github.com/patractlabs/jupiter
 
-Riot group for disscusion: https://app.element.io/#/room/!RZjiuwwssNFJZxaTjg:matrix.org
+Riot group for disscusion: https://app.element.io/#/room/#PatractLabsDev:matrix.org
 
 *WARNING!*
 **This repo is under developing. But after first version released, we would change current repo name from `redspot-0.2` to `redspot` to replace old repo [https://github.com/patractlabs/redspot](https://github.com/patractlabs/redspot)**
