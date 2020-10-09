@@ -1,11 +1,10 @@
-import { createProvider } from "@redspot/eth-providers/construction";
 import debug from "debug";
 import {
   BuidlerArguments,
   BuidlerRuntimeEnvironment,
   EnvironmentExtender,
-  EthereumProvider,
   Network,
+  NetworkProvider,
   ParamDefinition,
   ResolvedBuidlerConfig,
   RunSuperFunction,
@@ -14,6 +13,7 @@ import {
   TaskDefinition,
   TasksMap,
 } from "../../types";
+import { createProvider } from "../provider/";
 import { lazyObject } from "../util/lazy";
 import { BuidlerError } from "./errors";
 import { ERRORS } from "./errors-list";
@@ -27,10 +27,7 @@ export class Environment implements BuidlerRuntimeEnvironment {
     "_runTaskDefinition",
   ];
 
-  /**
-   * An EIP1193 Ethereum provider.
-   */
-  public ethereum: EthereumProvider;
+  public rpc: NetworkProvider;
 
   public network: Network;
 
@@ -71,12 +68,7 @@ export class Environment implements BuidlerRuntimeEnvironment {
 
     const provider = lazyObject(() => {
       log(`Creating provider for network ${networkName}`);
-      return createProvider(
-        networkName,
-        networkConfig,
-        config.solc.version,
-        config.paths
-      );
+      return createProvider(networkName, networkConfig);
     });
 
     this.network = {
@@ -85,7 +77,7 @@ export class Environment implements BuidlerRuntimeEnvironment {
       provider,
     };
 
-    this.ethereum = provider;
+    this.rpc = provider;
     this._extenders = extenders;
 
     extenders.forEach((extender) => extender(this));

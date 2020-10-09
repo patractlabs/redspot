@@ -1,7 +1,6 @@
 import * as t from "io-ts";
 import { Context, getFunctionName, ValidationError } from "io-ts/lib";
 import { Reporter } from "io-ts/lib/Reporter";
-
 import {
   BUIDLEREVM_NETWORK_NAME,
   BUIDLEREVM_SUPPORTED_HARDFORKS,
@@ -74,60 +73,21 @@ function optional<TypeT, OutputT>(
 }
 
 // IMPORTANT: This t.types MUST be kept in sync with the actual types.
-
-const BuidlerNetworkAccount = t.type({
-  privateKey: t.string,
-  balance: t.string,
-});
-
-const BuidlerNetworkConfig = t.type({
-  hardfork: optional(t.string),
-  chainId: optional(t.number),
-  from: optional(t.string),
-  gas: optional(t.union([t.literal("auto"), t.number])),
-  gasPrice: optional(t.union([t.literal("auto"), t.number])),
-  gasMultiplier: optional(t.number),
-  accounts: optional(t.array(BuidlerNetworkAccount)),
-  blockGasLimit: optional(t.number),
-  throwOnTransactionFailures: optional(t.boolean),
-  throwOnCallFailures: optional(t.boolean),
-  loggingEnabled: optional(t.boolean),
-  allowUnlimitedContractSize: optional(t.boolean),
-  initialDate: optional(t.string),
-});
-
-const HDAccountsConfig = t.type({
-  mnemonic: t.string,
-  initialIndex: optional(t.number),
-  count: optional(t.number),
-  path: optional(t.string),
-});
-
-const OtherAccountsConfig = t.type({
-  type: t.string,
-});
-
-const NetworkConfigAccounts = t.union([
-  t.literal("remote"),
-  t.array(t.string),
-  HDAccountsConfig,
-  OtherAccountsConfig,
-]);
+const NetworkConfigAccounts = t.array(t.string);
 
 const HttpHeaders = t.record(t.string, t.string, "httpHeaders");
 
-const HttpNetworkConfig = t.type({
-  chainId: optional(t.number),
-  from: optional(t.string),
-  gas: optional(t.union([t.literal("auto"), t.number])),
-  gasPrice: optional(t.union([t.literal("auto"), t.number])),
-  gasMultiplier: optional(t.number),
-  url: optional(t.string),
+const WsNetworkConfig = t.type({
   accounts: optional(NetworkConfigAccounts),
+  gasLimit: optional(t.union([t.string, t.number])),
+  endowment: optional(t.union([t.string, t.number])),
+  from: optional(t.string),
+  endpoint: optional(t.union([t.string, t.array(t.string)])),
+  autoConnectMs: optional(t.union([t.number, t.literal(false)])),
   httpHeaders: optional(HttpHeaders),
 });
 
-const NetworkConfig = t.union([BuidlerNetworkConfig, HttpNetworkConfig]);
+const NetworkConfig = WsNetworkConfig;
 
 const Networks = t.record(t.string, NetworkConfig);
 
@@ -139,19 +99,6 @@ const ProjectPaths = t.type({
   tests: optional(t.string),
 });
 
-const EVMVersion = t.string;
-
-const SolcOptimizerConfig = t.type({
-  enabled: optional(t.boolean),
-  runs: optional(t.number),
-});
-
-const SolcConfig = t.type({
-  version: optional(t.string),
-  optimizer: optional(SolcOptimizerConfig),
-  evmVersion: optional(EVMVersion),
-});
-
 const AnalyticsConfig = t.type({
   enabled: optional(t.boolean),
 });
@@ -161,7 +108,6 @@ const BuidlerConfig = t.type(
     defaultNetwork: optional(t.string),
     networks: optional(Networks),
     paths: optional(ProjectPaths),
-    solc: optional(SolcConfig),
     analytics: optional(AnalyticsConfig),
   },
   "BuidlerConfig"
@@ -341,10 +287,6 @@ export function getValidationErrors(config: any): string[] {
         continue;
       }
 
-      if (networkName === "localhost" && netConfig.url === undefined) {
-        continue;
-      }
-
       if (typeof netConfig.url !== "string") {
         errors.push(
           getErrorMessage(
@@ -355,13 +297,13 @@ export function getValidationErrors(config: any): string[] {
         );
       }
 
-      const netConfigResult = HttpNetworkConfig.decode(netConfig);
+      const netConfigResult = WsNetworkConfig.decode(netConfig);
       if (netConfigResult.isLeft()) {
         errors.push(
           getErrorMessage(
             `BuidlerConfig.networks.${networkName}`,
             netConfig,
-            "HttpNetworkConfig"
+            "WsNetworkConfig"
           )
         );
       }

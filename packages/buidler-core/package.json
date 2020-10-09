@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.11.2",
+    "@polkadot/rpc-provider": "^2.1.1",
     "@redspot/buidler-evm": "0.3.0-alpha.1",
     "@redspot/eth-providers": "0.3.0-alpha.1",
     "@redspot/solidity": "0.3.0-alpha.1",

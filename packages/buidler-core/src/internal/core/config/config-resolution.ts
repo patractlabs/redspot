@@ -1,7 +1,6 @@
 import deepmerge from "deepmerge";
 import * as fs from "fs";
 import path from "path";
-
 import {
   BuidlerConfig,
   ConfigExtender,
@@ -48,7 +47,6 @@ export function resolveConfig(
     ...config,
     paths,
     networks: config.networks!,
-    solc: config.solc!,
     defaultNetwork: config.defaultNetwork!,
     analytics: config.analytics!,
   };

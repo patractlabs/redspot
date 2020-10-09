@@ -1,0 +1,6 @@
+network.provider.networkName
+network.provider
+network
+.help
+clear
+ls
