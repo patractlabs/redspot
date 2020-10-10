@@ -1,10 +1,8 @@
 import path from "path";
-
 import { BuidlerArguments, ResolvedBuidlerConfig } from "../../../types";
 import { BuidlerContext } from "../../context";
 import { loadPluginFile } from "../plugins";
 import { getUserConfigPath } from "../project-structure";
-
 import { resolveConfig } from "./config-resolution";
 import { validateConfig } from "./config-validation";
 

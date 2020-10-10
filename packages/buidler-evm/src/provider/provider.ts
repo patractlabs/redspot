@@ -71,8 +71,7 @@ export class BuidlerEVMProvider extends EventEmitter
     private readonly _paths?: ProjectPaths,
     private readonly _loggingEnabled = false,
     private readonly _allowUnlimitedContractSize = false,
-    private readonly _initialDate?: Date,
-    private readonly _experimentalBuidlerEVMMessageTraceHooks: BoundExperimentalBuidlerEVMMessageTraceHook[] = []
+    private readonly _initialDate?: Date
   ) {
     super();
   }
@@ -294,8 +293,7 @@ export class BuidlerEVMProvider extends EventEmitter
       node,
       this._throwOnTransactionFailures,
       this._throwOnCallFailures,
-      this._loggingEnabled ? this._logger : undefined,
-      this._experimentalBuidlerEVMMessageTraceHooks
+      this._loggingEnabled ? this._logger : undefined
     );
 
     this._netModule = new NetModule(common);

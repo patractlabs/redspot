@@ -1,13 +1,10 @@
-import { MessageTrace } from "@redspot/buidler-evm/stack-traces/message-trace";
-import { createProvider } from "@redspot/eth-providers/construction";
 import debug from "debug";
 import {
   BuidlerArguments,
   BuidlerRuntimeEnvironment,
   EnvironmentExtender,
-  EthereumProvider,
-  ExperimentalBuidlerEVMMessageTraceHook,
   Network,
+  NetworkProvider,
   ParamDefinition,
   ResolvedBuidlerConfig,
   RunSuperFunction,
@@ -16,6 +13,7 @@ import {
   TaskDefinition,
   TasksMap,
 } from "../../types";
+import { createProvider } from "../provider/";
 import { lazyObject } from "../util/lazy";
 import { BuidlerError } from "./errors";
 import { ERRORS } from "./errors-list";
@@ -29,10 +27,7 @@ export class Environment implements BuidlerRuntimeEnvironment {
     "_runTaskDefinition",
   ];
 
-  /**
-   * An EIP1193 Ethereum provider.
-   */
-  public ethereum: EthereumProvider;
+  public rpc: NetworkProvider;
 
   public network: Network;
 
@@ -54,8 +49,7 @@ export class Environment implements BuidlerRuntimeEnvironment {
     public readonly config: ResolvedBuidlerConfig,
     public readonly buidlerArguments: BuidlerArguments,
     public readonly tasks: TasksMap,
-    extenders: EnvironmentExtender[] = [],
-    experimentalBuidlerEVMMessageTraceHooks: ExperimentalBuidlerEVMMessageTraceHook[] = []
+    extenders: EnvironmentExtender[] = []
   ) {
     log("Creating BuidlerRuntimeEnvironment");
 
@@ -74,16 +68,7 @@ export class Environment implements BuidlerRuntimeEnvironment {
 
     const provider = lazyObject(() => {
       log(`Creating provider for network ${networkName}`);
-      return createProvider(
-        networkName,
-        networkConfig,
-        config.solc.version,
-        config.paths,
-        experimentalBuidlerEVMMessageTraceHooks.map(
-          (hook) => (trace: MessageTrace, isCallMessageTrace: boolean) =>
-            hook(this, trace, isCallMessageTrace)
-        )
-      );
+      return createProvider(networkName, networkConfig);
     });
 
     this.network = {
@@ -92,7 +77,7 @@ export class Environment implements BuidlerRuntimeEnvironment {
       provider,
     };
 
-    this.ethereum = provider;
+    this.rpc = provider;
     this._extenders = extenders;
 
     extenders.forEach((extender) => extender(this));

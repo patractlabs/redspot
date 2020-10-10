@@ -35,7 +35,6 @@ describe("Env vars arguments parsing", () => {
     });
     assert.equal(args.help, BUIDLER_PARAM_DEFINITIONS.help.defaultValue);
     assert.equal(args.network, BUIDLER_PARAM_DEFINITIONS.network.defaultValue);
-    assert.equal(args.emoji, BUIDLER_PARAM_DEFINITIONS.emoji.defaultValue);
     assert.equal(
       args.showStackTraces,
       BUIDLER_PARAM_DEFINITIONS.showStackTraces.defaultValue
@@ -48,7 +47,6 @@ describe("Env vars arguments parsing", () => {
       IRRELEVANT_ENV_VAR: "123",
       BUIDLER_NETWORK: "asd",
       BUIDLER_SHOW_STACK_TRACES: "true",
-      BUIDLER_EMOJI: "true",
       BUIDLER_VERSION: "true",
       BUIDLER_HELP: "true",
     });
@@ -57,7 +55,6 @@ describe("Env vars arguments parsing", () => {
 
     // These are not really useful, but we test them anyway
     assert.equal(args.showStackTraces, true);
-    assert.equal(args.emoji, true);
     assert.equal(args.version, true);
     assert.equal(args.help, true);
   });
@@ -78,7 +75,6 @@ describe("getEnvVariablesMap", () => {
     assert.deepEqual(
       getEnvVariablesMap({
         network: "asd",
-        emoji: false,
         help: true,
         showStackTraces: true,
         version: false,
@@ -87,7 +83,6 @@ describe("getEnvVariablesMap", () => {
       }),
       {
         BUIDLER_NETWORK: "asd",
-        BUIDLER_EMOJI: "false",
         BUIDLER_HELP: "true",
         BUIDLER_SHOW_STACK_TRACES: "true",
         BUIDLER_VERSION: "false",

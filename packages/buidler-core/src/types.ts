@@ -1,10 +1,7 @@
+import { MessageTrace } from "@redspot/buidler-evm/stack-traces/message-trace";
 import { EventEmitter } from "events";
 import { DeepPartial, DeepReadonly, Omit } from "ts-essentials";
-
-import {
-  EvmMessageTrace,
-  MessageTrace,
-} from "@redspot/buidler-evm/stack-traces/message-trace";
+import { WsProvider } from "@polkadot/rpc-provider";
 import * as types from "./internal/core/params/argumentTypes";
 
 // Begin config types
@@ -12,11 +9,10 @@ import * as types from "./internal/core/params/argumentTypes";
 // IMPORTANT: This t.types MUST be kept in sync with the actual types.
 
 export interface CommonNetworkConfig {
-  chainId?: number;
+  accounts?: NetworkConfigAccounts;
+  gasLimit?: string | number;
+  endowment?: string | number;
   from?: string;
-  gas?: "auto" | number;
-  gasPrice?: "auto" | number;
-  gasMultiplier?: number;
 }
 
 export interface BuidlerNetworkAccount {
@@ -24,42 +20,15 @@ export interface BuidlerNetworkAccount {
   balance: string;
 }
 
-export interface BuidlerNetworkConfig extends CommonNetworkConfig {
-  accounts?: BuidlerNetworkAccount[];
-  blockGasLimit?: number;
-  hardfork?: string;
-  throwOnTransactionFailures?: boolean;
-  throwOnCallFailures?: boolean;
-  loggingEnabled?: boolean;
-  allowUnlimitedContractSize?: boolean;
-  initialDate?: string;
+export type NetworkConfigAccounts = string[];
+
+export interface WsNetworkConfig extends CommonNetworkConfig {
+  endpoint?: string | string[];
+  autoConnectMs?: number | false;
+  httpHeaders?: Record<string, string>;
 }
 
-export interface HDAccountsConfig {
-  mnemonic: string;
-  initialIndex?: number;
-  count?: number;
-  path?: string;
-}
-
-export interface OtherAccountsConfig {
-  type: string;
-}
-
-export type NetworkConfigAccounts =
-  | "remote"
-  | string[]
-  | HDAccountsConfig
-  | OtherAccountsConfig;
-
-export interface HttpNetworkConfig extends CommonNetworkConfig {
-  url?: string;
-  timeout?: number;
-  httpHeaders?: { [name: string]: string };
-  accounts?: NetworkConfigAccounts;
-}
-
-export type NetworkConfig = BuidlerNetworkConfig | HttpNetworkConfig;
+export type NetworkConfig = WsNetworkConfig;
 
 export interface Networks {
   [networkName: string]: NetworkConfig;
@@ -103,8 +72,7 @@ export interface AnalyticsConfig {
 export interface BuidlerConfig {
   defaultNetwork?: string;
   networks?: Networks;
-  paths?: Omit<Partial<ProjectPaths>, "configFile">;
-  solc?: DeepPartial<SolcConfig>;
+  paths?: Partial<ProjectPaths>;
   mocha?: Mocha.MochaOptions;
   analytics?: Partial<AnalyticsConfig>;
 }
@@ -113,7 +81,6 @@ export interface ResolvedBuidlerConfig extends BuidlerConfig {
   defaultNetwork: string;
   paths: ProjectPaths;
   networks: Networks;
-  solc: SolcConfig;
   analytics: AnalyticsConfig;
 }
 
@@ -238,7 +205,6 @@ export interface ParamDefinitionsMap {
  * * showStackTraces: flag to show stack traces.
  * * version: flag to show buidler's version.
  * * help: flag to show buidler's help message.
- * * emoji:
  * * config: used to specify buidler's config file.
  */
 export interface BuidlerArguments {
@@ -246,7 +212,6 @@ export interface BuidlerArguments {
   showStackTraces: boolean;
   version: boolean;
   help: boolean;
-  emoji: boolean;
   config?: string;
   verbose: boolean;
   maxMemory?: number;
@@ -303,6 +268,7 @@ export type ActionType<ArgsT extends TaskArguments> = (
   runSuper: RunSuperFunction<ArgsT>
 ) => Promise<any>;
 
+// @TODO delete
 export interface EthereumProvider extends EventEmitter {
   send(method: string, params?: any[]): Promise<any>;
 }
@@ -310,10 +276,19 @@ export interface EthereumProvider extends EventEmitter {
 // This alias is here for backwards compatibility
 export type IEthereumProvider = EthereumProvider;
 
+export interface NetworkProvider extends WsProvider {
+  accounts: NetworkConfigAccounts;
+  endowment: string | number;
+  gasLimit: string | number;
+  networkName: string;
+}
+
+export type INetworkProvider = NetworkProvider;
+
 export interface Network {
   name: string;
   config: NetworkConfig;
-  provider: EthereumProvider;
+  provider: NetworkProvider;
 }
 
 export interface BuidlerRuntimeEnvironment {
@@ -322,7 +297,7 @@ export interface BuidlerRuntimeEnvironment {
   readonly tasks: TasksMap;
   readonly run: RunTaskFunction;
   readonly network: Network;
-  readonly ethereum: EthereumProvider; // DEPRECATED: Use network.provider
+  readonly rpc: NetworkProvider; // DEPRECATED: Use network.provider
 }
 
 export interface Artifact {

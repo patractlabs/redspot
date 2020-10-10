@@ -11,7 +11,6 @@ import {
 import * as t from "io-ts";
 import util from "util";
 
-import { BoundExperimentalBuidlerEVMMessageTraceHook } from "@redspot/buidler/types";
 import { weiToHumanReadableString } from "@redspot/buidler/internal/util/wei-values";
 import {
   isCreateTrace,
@@ -82,8 +81,7 @@ export class EthModule {
     private readonly _node: BuidlerNode,
     private readonly _throwOnTransactionFailures: boolean,
     private readonly _throwOnCallFailures: boolean,
-    private readonly _logger?: ModulesLogger,
-    private readonly _experimentalBuidlerEVMMessageTraceHooks: BoundExperimentalBuidlerEVMMessageTraceHook[] = []
+    private readonly _logger?: ModulesLogger
   ) {}
 
   public async processRequest(
@@ -321,8 +319,6 @@ export class EthModule {
     await this._logCallTrace(callParams, trace);
 
     this._logConsoleLogMessages(consoleLogMessages);
-
-    await this._runBuidlerEVMMessageTraceHooks(trace, true);
 
     if (error !== undefined) {
       if (this._throwOnCallFailures) {
@@ -1308,8 +1304,6 @@ export class EthModule {
 
     await this._logTransactionTrace(tx, trace, block, blockResult);
 
-    await this._runBuidlerEVMMessageTraceHooks(trace, false);
-
     this._logConsoleLogMessages(consoleLogMessages);
 
     if (error !== undefined) {
@@ -1336,14 +1330,5 @@ export class EthModule {
     }
 
     this._logger.logWithTitle("To", bufferToHex(to));
-  }
-
-  private async _runBuidlerEVMMessageTraceHooks(
-    trace: MessageTrace,
-    isCall: boolean
-  ) {
-    for (const hook of this._experimentalBuidlerEVMMessageTraceHooks) {
-      await hook(trace, isCall);
-    }
   }
 }
