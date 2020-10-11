@@ -4,7 +4,6 @@ import {
   BuidlerRuntimeEnvironment,
   EnvironmentExtender,
   Network,
-  NetworkProvider,
   ParamDefinition,
   ResolvedBuidlerConfig,
   RunSuperFunction,
@@ -26,8 +25,6 @@ export class Environment implements BuidlerRuntimeEnvironment {
     "injectToGlobal",
     "_runTaskDefinition",
   ];
-
-  public rpc: NetworkProvider;
 
   public network: Network;
 
@@ -77,7 +74,6 @@ export class Environment implements BuidlerRuntimeEnvironment {
       provider,
     };
 
-    this.rpc = provider;
     this._extenders = extenders;
 
     extenders.forEach((extender) => extender(this));

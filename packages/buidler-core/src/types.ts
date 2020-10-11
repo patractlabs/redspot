@@ -1,17 +1,18 @@
 import { MessageTrace } from "@redspot/buidler-evm/stack-traces/message-trace";
 import { EventEmitter } from "events";
-import { DeepPartial, DeepReadonly, Omit } from "ts-essentials";
+import { DeepReadonly } from "ts-essentials";
 import { WsProvider } from "@polkadot/rpc-provider";
+import { InkProject } from "@polkadot/types/interfaces";
 import * as types from "./internal/core/params/argumentTypes";
 
 // Begin config types
 
 // IMPORTANT: This t.types MUST be kept in sync with the actual types.
-
 export interface CommonNetworkConfig {
   accounts?: NetworkConfigAccounts;
   gasLimit?: string | number;
   endowment?: string | number;
+  types?: Record<string, any>;
   from?: string;
 }
 
@@ -281,6 +282,7 @@ export interface NetworkProvider extends WsProvider {
   endowment: string | number;
   gasLimit: string | number;
   networkName: string;
+  types: Record<string, any>;
 }
 
 export type INetworkProvider = NetworkProvider;
@@ -297,17 +299,9 @@ export interface BuidlerRuntimeEnvironment {
   readonly tasks: TasksMap;
   readonly run: RunTaskFunction;
   readonly network: Network;
-  readonly rpc: NetworkProvider; // DEPRECATED: Use network.provider
 }
 
-export interface Artifact {
-  contractName: string;
-  abi: any;
-  bytecode: string; // "0x"-prefixed hex string
-  deployedBytecode: string; // "0x"-prefixed hex string
-  linkReferences: LinkReferences;
-  deployedLinkReferences: LinkReferences;
-}
+export interface Artifact extends InkProject {}
 
 export interface LinkReferences {
   [libraryFileName: string]: {

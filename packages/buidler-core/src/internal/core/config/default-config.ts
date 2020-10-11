@@ -6,7 +6,8 @@ const DEFAULT_BUIDLER_NETWORK_CONFIG: NetworkConfig = {
   endowment: "5000000000000",
   accounts: ["//Alice", "//Bob", "//Charlie", "//Dave", "//Eve", "//Ferdie"],
   endpoint: ["ws://127.0.0.1:9944"],
-  autoConnectMs: 0,
+  types: {},
+  autoConnectMs: false,
   httpHeaders: {},
 };
 

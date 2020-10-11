@@ -61,7 +61,7 @@ export function filterContractPackage(metadata: CargoMetadata): CargoMetadata {
   const contracts = metadata.packages.filter(({ id, dependencies }) => {
     return (
       (metadata.workspace_members || []).includes(id) &&
-      !!dependencies.find(({ name }: any) => name === "ink_core")
+      !!dependencies.find(({ name }: any) => name === "ink_lang")
     );
   });
 

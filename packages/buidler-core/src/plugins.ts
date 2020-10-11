@@ -4,8 +4,10 @@ export {
 } from "./internal/core/errors";
 export {
   saveArtifact,
-  readArtifact,
-  readArtifactSync,
+  readAbi,
+  readAbiSync,
+  readWasm,
+  readWasmSync,
 } from "./internal/artifacts";
 export { lazyObject, lazyFunction } from "./internal/util/lazy";
 export { ensurePluginLoadedWithUsePlugin } from "./internal/core/plugins";
