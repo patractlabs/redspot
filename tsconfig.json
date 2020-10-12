@@ -17,8 +17,8 @@
     "paths": {
       "redspot": ["packages/redspot-core/src"],
       "redspot/*": ["packages/redspot-core/src/*"],
-      "@redspot/api": ["packages/redspot-polkadot/src"],
-      "@redspot/api/*": ["packages/redspot-polkadot/src/*"]
+      "@redspot/polkadot": ["packages/redspot-polkadot/src"],
+      "@redspot/polkadot/*": ["packages/redspot-polkadot/src/*"]
     },
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@polkadot/ts", "./node_modules/@types"]

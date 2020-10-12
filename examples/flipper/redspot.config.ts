@@ -1,7 +1,7 @@
 import { usePlugin } from "redspot/config";
 import { RedspotConfig } from "redspot/types";
 
-usePlugin("@redspot/api");
+usePlugin("@redspot/polkadot");
 
 export default {
   defaultNetwork: "development",
