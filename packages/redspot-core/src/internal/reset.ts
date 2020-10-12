@@ -37,7 +37,7 @@ export function resetBuidlerContext() {
   // Unload all the buidler's entry-points.
   unloadModule("../register");
   unloadModule("./cli/cli");
-  unloadModule("./lib/buidler-lib");
+  unloadModule("./lib/redspot-lib");
 }
 
 function unloadModule(path: string) {

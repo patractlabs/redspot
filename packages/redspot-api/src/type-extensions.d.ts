@@ -1,4 +1,4 @@
-import "@nomiclabs/buidler/types";
+import "redspot/types";
 import Api from "./api";
 import { RegistryTypes } from "@polkadot/types/types";
 

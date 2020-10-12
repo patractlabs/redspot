@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "author": "Nomic Labs LLC",
   "license": "SEE LICENSE IN EACH PACKAGE'S LICENSE FILE",
-  "repository": "github:redspot/buidler",
   "private": true,
   "engines": {
     "node": ">=8.2.0",

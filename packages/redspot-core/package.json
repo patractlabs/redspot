@@ -6,7 +6,7 @@
     "Nomic Labs LLC"
   ],
   "license": "SEE LICENSE IN LICENSE",
-  "main": "internal/lib/buidler-lib.js",
+  "main": "internal/lib/redspot-lib.js",
   "bin": {
     "redspot": "internal/cli/cli.js"
   },
