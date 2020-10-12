@@ -172,7 +172,6 @@ export interface RedspotArguments {
   help: boolean;
   config?: string;
   verbose: boolean;
-  maxMemory?: number;
 }
 
 export type RedspotParamDefinitions = {

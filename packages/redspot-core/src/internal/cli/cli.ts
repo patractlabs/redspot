@@ -189,7 +189,7 @@ async function main() {
     } else {
       if (!isRedspotError) {
         console.error(
-          `If you think this is a bug in Redspot, please report it here: https://redspot.dev/reportbug`
+          `If you think this is a bug in Redspot, please report it here: https://github.com/patractlabs/redspot-0.2/issues/new`
         );
       }
 

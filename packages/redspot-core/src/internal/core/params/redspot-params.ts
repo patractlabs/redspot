@@ -56,13 +56,4 @@ export const REDSPOT_PARAM_DEFINITIONS: RedspotParamDefinitions = {
     isOptional: true,
     isVariadic: false,
   },
-  maxMemory: {
-    name: "maxMemory",
-    defaultValue: undefined,
-    description: "The maximum amount of memory that Redspot can use.",
-    type: types.int,
-    isOptional: true,
-    isFlag: false,
-    isVariadic: false,
-  },
 };
