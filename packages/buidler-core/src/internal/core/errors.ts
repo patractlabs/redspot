@@ -1,6 +1,5 @@
 import { getClosestCallerPackage } from "../util/caller-package";
 import { replaceAll } from "../util/strings";
-
 import { ErrorDescriptor, ERRORS, getErrorCode } from "./errors-list";
 
 const inspect = Symbol.for("nodejs.util.inspect.custom");

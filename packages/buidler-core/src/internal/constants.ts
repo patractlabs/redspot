@@ -1,14 +1,4 @@
-export const BUIDLER_NAME = "Buidler";
+export const BUIDLER_NAME = "Redspot";
 
 export const BUIDLER_EXECUTABLE_NAME = "buidler";
 export const BUIDLEREVM_NETWORK_NAME = "localhost";
-
-export const SOLC_INPUT_FILENAME = "solc-input.json";
-export const SOLC_OUTPUT_FILENAME = "solc-output.json";
-
-export const BUIDLEREVM_SUPPORTED_HARDFORKS = [
-  "byzantium",
-  "constantinople",
-  "petersburg",
-  "istanbul",
-];

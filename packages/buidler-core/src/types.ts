@@ -1,8 +1,6 @@
-import { MessageTrace } from "@redspot/buidler-evm/stack-traces/message-trace";
-import { EventEmitter } from "events";
-import { DeepReadonly } from "ts-essentials";
 import { WsProvider } from "@polkadot/rpc-provider";
 import { InkProject } from "@polkadot/types/interfaces";
+import { DeepReadonly } from "ts-essentials";
 import * as types from "./internal/core/params/argumentTypes";
 
 // Begin config types
@@ -53,19 +51,6 @@ export interface ProjectPaths {
   tests: string;
 }
 
-type EVMVersion = string;
-
-export interface SolcConfig {
-  version: string;
-  optimizer: SolcOptimizerConfig;
-  evmVersion?: EVMVersion;
-}
-
-export interface SolcOptimizerConfig {
-  enabled: boolean;
-  runs: number;
-}
-
 export interface AnalyticsConfig {
   enabled: boolean;
 }
@@ -85,19 +70,6 @@ export interface ResolvedBuidlerConfig extends BuidlerConfig {
   analytics: AnalyticsConfig;
 }
 
-// End config types
-
-export interface SolcInput {
-  settings: {
-    metadata: { useLiteralContent: boolean };
-    optimizer: SolcOptimizerConfig;
-    outputSelection: { "*": { "": string[]; "*": string[] } };
-    evmVersion?: string;
-  };
-  sources: { [p: string]: { content: string } };
-  language: string;
-}
-
 /**
  * A function that receives a BuidlerRuntimeEnvironment and
  * modify its properties or add new ones.
@@ -108,21 +80,6 @@ export type ConfigExtender = (
   config: ResolvedBuidlerConfig,
   userConfig: DeepReadonly<BuidlerConfig>
 ) => void;
-
-// NOTE: This is experimental and will be removed. Please contact our team
-// if you are planning to use it.
-export type ExperimentalBuidlerEVMMessageTraceHook = (
-  bre: BuidlerRuntimeEnvironment,
-  trace: MessageTrace,
-  isMessageTraceFromACall: boolean
-) => Promise<void>;
-
-// NOTE: This is experimental and will be removed. Please contact our team
-// if you are planning to use it.
-export type BoundExperimentalBuidlerEVMMessageTraceHook = (
-  trace: MessageTrace,
-  isMessageTraceFromACall: boolean
-) => Promise<void>;
 
 export interface TasksMap {
   [name: string]: TaskDefinition;
@@ -268,14 +225,6 @@ export type ActionType<ArgsT extends TaskArguments> = (
   env: BuidlerRuntimeEnvironment,
   runSuper: RunSuperFunction<ArgsT>
 ) => Promise<any>;
-
-// @TODO delete
-export interface EthereumProvider extends EventEmitter {
-  send(method: string, params?: any[]): Promise<any>;
-}
-
-// This alias is here for backwards compatibility
-export type IEthereumProvider = EthereumProvider;
 
 export interface NetworkProvider extends WsProvider {
   accounts: NetworkConfigAccounts;

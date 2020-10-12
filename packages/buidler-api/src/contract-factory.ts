@@ -13,7 +13,7 @@ export default class ContractFactory {
     contractName: string,
     signer: KeyringPair
   ): Promise<string> {
-    const outDir = this.#api.env.config.paths.artifacts;
+    const outDir = this.#api.paths.artifacts;
 
     const wasmCode = await readWasm(outDir, contractName);
 
@@ -34,8 +34,8 @@ export default class ContractFactory {
     _endowment?: number,
     _gasRequired?: number
   ): Promise<string> {
-    const endowment = this.#api.env.network.provider.endowment;
-    const gasRequired = this.#api.env.network.provider.gasLimit;
+    const endowment = this.#api.network.provider.endowment;
+    const gasRequired = this.#api.network.provider.gasLimit;
 
     const extrinsic = this.#api.tx.contracts.instantiate(
       endowment,

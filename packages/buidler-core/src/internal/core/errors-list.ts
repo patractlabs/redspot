@@ -55,7 +55,7 @@ You can learn hoy to use Buidler by reading the [Getting Started guide](./README
       message:
         "Buidler doesn't support your Node.js version. It should be %requirement%.",
       title: "Unsupported Node.js",
-      description: `Buidler doesn't support your Node.js version. 
+      description: `Buidler doesn't support your Node.js version.
 
 Please upgrade your version of Node.js and try again.`,
       shouldBeReported: false,
@@ -64,9 +64,9 @@ Please upgrade your version of Node.js and try again.`,
       number: 3,
       message: "%operation% is not supported in Buidler.",
       title: "Unsupported operation",
-      description: `You are tying to perform an unsupported operation. 
+      description: `You are tying to perform an unsupported operation.
 
-Unless you are creating a task or plugin, this is probably a bug. 
+Unless you are creating a task or plugin, this is probably a bug.
 
 Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us improve Buidler.`,
       shouldBeReported: true,
@@ -114,11 +114,11 @@ Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us i
       message: `There's one or more errors in your config file:
 
 %errors%
-  
+
 To learn more about Buidler's configuration, please go to https://buidler.dev/config/`,
       title: "Invalid Buidler config",
-      description: `You have one or more errors in your config file. 
-      
+      description: `You have one or more errors in your config file.
+
 Check the error message for details, or go to [documentation](https://buidler.dev/config/) to learn more.`,
       shouldBeReported: false,
     },
@@ -127,7 +127,7 @@ Check the error message for details, or go to [documentation](https://buidler.de
       message: `Error while loading Buidler's configuration.
 You probably imported @nomiclabs/buidler instead of @nomiclabs/buidler/config`,
       title: "Failed to load config file",
-      description: `There was an error while loading your config file. 
+      description: `There was an error while loading your config file.
 
 The most common source of errors is trying to import \`@nomiclabs/buidler\` instead of \`@nomiclabs/buidler/config\`.
 
@@ -162,7 +162,7 @@ Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us i
       number: 100,
       message: "Network %network% doesn't exist",
       title: "Selected network doesn't exist",
-      description: `You are trying to run Buidler with a non-existent network. 
+      description: `You are trying to run Buidler with a non-existent network.
 
 Read the [documentation](https://buidler.dev/config/#networks-configuration) to learn how to define custom networks.`,
       shouldBeReported: false,
@@ -172,7 +172,7 @@ Read the [documentation](https://buidler.dev/config/#networks-configuration) to 
       message:
         "Buidler was set to use chain id %configChainId%, but connected to a chain with id %connectionChainId%.",
       title: "Connected to the wrong network",
-      description: `Your config specifies a chain id for the network you are trying to used, but Buidler detected anotherone. 
+      description: `Your config specifies a chain id for the network you are trying to used, but Buidler detected anotherone.
 
 Please make sure you are setting your config correctly.`,
       shouldBeReported: false,
@@ -183,7 +183,7 @@ Please make sure you are setting your config correctly.`,
       message:
         "Trying to send a tx with chain id %txChainId%, but Buidler is connected to a chain with id %chainId%.",
       title: "Incorrectly send chainId in a transaction",
-      description: `Buidler sent the \`chainId\` field in a transaction. 
+      description: `Buidler sent the \`chainId\` field in a transaction.
 
 Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us improve Buidler.`,
       shouldBeReported: false,
@@ -202,8 +202,8 @@ Please check that you are sending a \`data\` parameter.`,
       message:
         "Account %account% is not managed by the node you are connected to.",
       title: "Unrecognized account",
-      description: `You are trying to send a transaction or sign some data with an 
-account not managed by your Ethereum node nor Buidler.  
+      description: `You are trying to send a transaction or sign some data with an
+account not managed by your Ethereum node nor Buidler.
 
 Please double check your accounts and the \`from\` parameter in your RPC calls.`,
       shouldBeReported: false,
@@ -212,8 +212,8 @@ Please double check your accounts and the \`from\` parameter in your RPC calls.`
       number: 105,
       message: "Missing param %param% from a tx being signed locally.",
       title: "Missing transaction parameter",
-      description: `You are trying to send a transaction with a locally managed 
-account, and some parameters are missing. 
+      description: `You are trying to send a transaction with a locally managed
+account, and some parameters are missing.
 
 Please double check your transactions' parameters.`,
       shouldBeReported: false,
@@ -223,7 +223,7 @@ Please double check your transactions' parameters.`,
       message:
         "No local account was set and there are accounts in the remote node.",
       title: "No remote accounts available",
-      description: `No local account was set and there are accounts in the remote node. 
+      description: `No local account was set and there are accounts in the remote node.
 
 Please make sure that your Ethereum node has unlocked accounts.`,
       shouldBeReported: false,
@@ -233,8 +233,8 @@ Please make sure that your Ethereum node has unlocked accounts.`,
       message:
         "HD path %path% is invalid. Read about BIP32 to know about the valid forms.",
       title: "Invalid HD path",
-      description: `An invalid HD/BIP32 derivation path was provided in your config.  
-      
+      description: `An invalid HD/BIP32 derivation path was provided in your config.
+
 Read the [documentation](https://buidler.dev/config/#hd-wallet-config) to learn how to define HD accounts correctly.`,
       shouldBeReported: false,
     },
@@ -243,7 +243,7 @@ Read the [documentation](https://buidler.dev/config/#hd-wallet-config) to learn 
       message:
         "Received invalid value `%value%` from/to the node's JSON-RPC, but a Quantity was expected.",
       title: "Invalid JSON-RPC value",
-      description: `One of your transactions sent or received an invalid JSON-RPC QUANTITY value. 
+      description: `One of your transactions sent or received an invalid JSON-RPC QUANTITY value.
 
 Please double check your calls' parameters and keep your Ethereum node up to date.`,
       shouldBeReported: false,
@@ -272,7 +272,7 @@ Please make sure your node is running, and check your internet connection and ne
       number: 111,
       message: "Invalid JSON-RPC response received: %response%",
       title: "Invalid JSON-RPC response",
-      description: `One of your JSON-RPC requests received an invalid response. 
+      description: `One of your JSON-RPC requests received an invalid response.
 
 Please make sure your node is running, and check your internet connection and networks config.`,
       shouldBeReported: false,
@@ -282,7 +282,7 @@ Please make sure your node is running, and check your internet connection and ne
       message:
         "Cannot derive key %path% from mnemonic '%mnemonic%.\nTry using another mnemonic or deriving less keys.",
       title: "Could not derive an HD key",
-      description: `One of your HD keys could not be derived. 
+      description: `One of your HD keys could not be derived.
 
 Try using another mnemonic or deriving less keys.`,
       shouldBeReported: false,
@@ -294,8 +294,8 @@ Try using another mnemonic or deriving less keys.`,
       message:
         "Could not set positional param %paramName% for task %taskName% because there is already a variadic positional param and it has to be the last positional one.",
       title: "Could not add positional param",
-      description: `Could add a positional param to your task because 
-there is already a variadic positional param and it has to be the last 
+      description: `Could add a positional param to your task because
+there is already a variadic positional param and it has to be the last
 positional one.
 
 Please double check your task definitions.`,
@@ -307,7 +307,7 @@ Please double check your task definitions.`,
         "Could not set param %paramName% for task %taskName% because its name is already used.",
       title: "Repeated param name",
       description: `Could not add a param to your task because its name is already used.
-      
+
 Please double check your task definitions.`,
       shouldBeReported: false,
     },
@@ -317,7 +317,7 @@ Please double check your task definitions.`,
         "Could not set param %paramName% for task %taskName% because its name is used as a param for Buidler.",
       title: "Buidler and task param names clash",
       description: `Could not add a param to your task because its name is used as a param for Buidler.
-      
+
 Please double check your task definitions.`,
       shouldBeReported: false,
     },
@@ -327,7 +327,7 @@ Please double check your task definitions.`,
         "Could not set param %paramName% for task %taskName% because it is mandatory and it was added after an optional positional param.",
       title: "Optional param followed by a required one",
       description: `Could not add param to your task because it is required and it was added after an optional positional param.
-      
+
 Please double check your task definitions.`,
       shouldBeReported: false,
     },
@@ -382,7 +382,7 @@ Please, double check your task definitions.`,
       number: 205,
       message: "No action set for task %taskName%.",
       title: "Tried to run task without an action",
-      description: `A task was run, but it has no action set.  
+      description: `A task was run, but it has no action set.
 
 Please double check your task definitions.`,
       shouldBeReported: false,
@@ -392,7 +392,7 @@ Please double check your task definitions.`,
       message:
         "Tried to call runSuper from a non-overridden definition of task %taskName%",
       title: "`runSuper` not available",
-      description: `You tried to call \`runSuper\` from a non-overridden task. 
+      description: `You tried to call \`runSuper\` from a non-overridden task.
 
 Please use \`runSuper.isDefined\` to make sure that you can call it.`,
       shouldBeReported: false,
@@ -402,7 +402,7 @@ Please use \`runSuper.isDefined\` to make sure that you can call it.`,
       message:
         "Default value for param %paramName% of task %taskName% doesn't match the default one, try specifying it.",
       title: "Default value has incorrect type",
-      description: `One of your tasks has a parameter whose default value doesn't match the expected type. 
+      description: `One of your tasks has a parameter whose default value doesn't match the expected type.
 
 Please double check your task definitions.`,
       shouldBeReported: false,
@@ -412,7 +412,7 @@ Please double check your task definitions.`,
       message:
         "Default value for param %paramName% of task %taskName% shouldn't be set.",
       title: "Required parameter has a default value",
-      description: `One of your tasks has a required parameter with a default value. 
+      description: `One of your tasks has a required parameter with a default value.
 
 Please double check your task definitions.`,
       shouldBeReported: false,
@@ -422,7 +422,7 @@ Please double check your task definitions.`,
       message:
         "Invalid param name %paramName% in task %taskName%. Param names must be camelCase.",
       title: "Invalid casing in parameter name",
-      description: `Your parameter names must use camelCase.  
+      description: `Your parameter names must use camelCase.
 
 Please double check your task definitions.`,
       shouldBeReported: false,
@@ -433,7 +433,7 @@ Please double check your task definitions.`,
       number: 300,
       message: "Invalid environment variable %varName%'s value: %value%",
       title: "Invalid environment variable value",
-      description: `You are setting one of Buidler arguments using an environment variable, but it has an incorrect value. 
+      description: `You are setting one of Buidler arguments using an environment variable, but it has an incorrect value.
 
 Please double check your environment variables.`,
       shouldBeReported: false,
@@ -442,7 +442,7 @@ Please double check your environment variables.`,
       number: 301,
       message: "Invalid value %value% for argument %name% of type %type%",
       title: "Invalid argument type",
-      description: `One of your Buidler or task's arguments has an invalid type. 
+      description: `One of your Buidler or task's arguments has an invalid type.
 
 Please double check your arguments.`,
       shouldBeReported: false,
@@ -452,8 +452,8 @@ Please double check your arguments.`,
       message:
         "Invalid argument %name%: File %value% doesn't exist or is not a readable file.",
       title: "Invalid file argument",
-      description: `One of your tasks expected a file as an argument, but you provided a 
-non-existent or non-readable file. 
+      description: `One of your tasks expected a file as an argument, but you provided a
+non-existent or non-readable file.
 
 Please double check your arguments.`,
       shouldBeReported: false,
@@ -462,7 +462,7 @@ Please double check your arguments.`,
       number: 303,
       message: "Unrecognized task %task%",
       title: "Unrecognized task",
-      description: `Tried to run a non-existent task. 
+      description: `Tried to run a non-existent task.
 
 Please double check the name of the task you are trying to run.`,
       shouldBeReported: false,
@@ -473,7 +473,7 @@ Please double check the name of the task you are trying to run.`,
         "Unrecognised command line argument %argument%.\nNote that task arguments must come after the task name.",
       title: "Unrecognized command line argument",
       description: `Buidler couldn't recognize one of your command line arguments.
-       
+
 This may be because you are writing it before the task name. It should come after it.
 
 Please double check how you invoked Buidler.`,
@@ -484,7 +484,7 @@ Please double check how you invoked Buidler.`,
       message: "Unrecognized param %param%",
       title: "Unrecognized param",
       description: `Buidler couldn't recognize one of your tasks' parameters.
-       
+
 Please double check how you invoked Buidler or run your task.`,
       shouldBeReported: false,
     },
@@ -492,7 +492,7 @@ Please double check how you invoked Buidler or run your task.`,
       number: 306,
       message: "Missing task argument %param%",
       title: "Missing task argument",
-      description: `You tried to run a task, but one of its required arguments was missing. 
+      description: `You tried to run a task, but one of its required arguments was missing.
 
 Please double check how you invoked Buidler or run your task.`,
       shouldBeReported: false,
@@ -501,7 +501,7 @@ Please double check how you invoked Buidler or run your task.`,
       number: 307,
       message: "Missing positional argument %param%",
       title: "Missing task positional argument",
-      description: `You tried to run a task, but one of its required arguments was missing. 
+      description: `You tried to run a task, but one of its required arguments was missing.
 
 Please double check how you invoked Buidler or run your task.`,
       shouldBeReported: false,
@@ -510,7 +510,7 @@ Please double check how you invoked Buidler or run your task.`,
       number: 308,
       message: "Unrecognized positional argument %argument%",
       title: "Unrecognized task positional argument",
-      description: `You tried to run a task with more positional arguments than needed. 
+      description: `You tried to run a task with more positional arguments than needed.
 
 Please double check how you invoked Buidler or run your task.`,
       shouldBeReported: false,
@@ -519,7 +519,7 @@ Please double check how you invoked Buidler or run your task.`,
       number: 309,
       message: "Repeated parameter %param%",
       title: "Repeated task parameter",
-      description: `You tried to run a task with a repeated parameter. 
+      description: `You tried to run a task with a repeated parameter.
 
 Please double check how you invoked Buidler or run your task.`,
       shouldBeReported: false,
@@ -528,7 +528,7 @@ Please double check how you invoked Buidler or run your task.`,
       number: 310,
       message: "Invalid param %param%. Command line params must be lowercase.",
       title: "Invalid casing in command line parameter",
-      description: `You tried to run buidler with a parameter with invalid casing. They must be lowercase. 
+      description: `You tried to run buidler with a parameter with invalid casing. They must be lowercase.
 
 Please double check how you invoked Buidler.`,
       shouldBeReported: false,
@@ -537,7 +537,7 @@ Please double check how you invoked Buidler.`,
       number: 311,
       message: "Error parsing JSON value for argument %param%: %error%",
       title: "Invalid JSON parameter",
-      description: `You tried to run a task with an invalid JSON parameter. 
+      description: `You tried to run a task with an invalid JSON parameter.
 
 Please double check how you invoked Buidler or run your task.`,
       shouldBeReported: false,
@@ -555,7 +555,7 @@ Please double check how you invoked Buidler or run your task.`,
       number: 401,
       message: "File %file% is outside the project.",
       title: "Tried to import file outside your project",
-      description: `One of your projects tried to import a file that it's outside your Buidler project. 
+      description: `One of your projects tried to import a file that it's outside your Buidler project.
 
 This is disabled for security reasons.`,
       shouldBeReported: false,
@@ -565,7 +565,7 @@ This is disabled for security reasons.`,
       message:
         "File %file% belongs to a library but was treated as a local one.",
       title: "Resolved library file as a local one",
-      description: `One of your libraries' files was treated as a local file. This is a bug. 
+      description: `One of your libraries' files was treated as a local file. This is a bug.
 
 Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us improve Buidler.`,
       shouldBeReported: true,
@@ -583,7 +583,7 @@ Please double check your imports or install the missing dependency.`,
       number: 404,
       message: "File %file% doesn't exist.",
       title: "Missing library file",
-      description: `One of your libraries' files was imported but doesn't exist. 
+      description: `One of your libraries' files was imported but doesn't exist.
 
 Please double check your imports or update your libraries.`,
       shouldBeReported: false,
@@ -592,7 +592,7 @@ Please double check your imports or update your libraries.`,
       number: 405,
       message: "Illegal import %imported% from %from%",
       title: "Illegal Solidity import",
-      description: `One of your libraries tried to use a relative import to import a file outside of its scope. 
+      description: `One of your libraries tried to use a relative import to import a file outside of its scope.
 
 This is disabled for security reasons.`,
       shouldBeReported: false,
@@ -602,7 +602,7 @@ This is disabled for security reasons.`,
       message:
         "File %file% from %library% is resolved to a path outside of its library.",
       title: "Illegal Solidity import",
-      description: `One of your libraries tried to use a relative import to import a file outside of its scope. 
+      description: `One of your libraries tried to use a relative import to import a file outside of its scope.
 
 This is disabled for security reasons.`,
       shouldBeReported: false,
@@ -611,7 +611,7 @@ This is disabled for security reasons.`,
       number: 407,
       message: "File %imported%, imported from %from%, not found.",
       title: "Imported file not found",
-      description: `One of your source files imported a non-existing one. 
+      description: `One of your source files imported a non-existing one.
 
 Please double check your imports.`,
       shouldBeReported: false,
@@ -623,7 +623,7 @@ Please double check your imports.`,
       message:
         "Solidity version %version% is invalid or hasn't been released yet.",
       title: "Invalid `solc` version",
-      description: `The Solidity version in your config is invalid or hasn't been released yet. 
+      description: `The Solidity version in your config is invalid or hasn't been released yet.
 
 Please double check your \`solc\` config.`,
       shouldBeReported: false,
@@ -633,8 +633,8 @@ Please double check your \`solc\` config.`,
       message:
         "Couldn't download compiler version %remoteVersion%. Please check your connection or use local version %localVersion%",
       title: "`solc` download failed",
-      description: `Couldn't download \`solc\`. 
-      
+      description: `Couldn't download \`solc\`.
+
 Please check your Internet connection.`,
       shouldBeReported: false,
     },
@@ -643,8 +643,8 @@ Please check your Internet connection.`,
       message:
         "Couldn't download compiler versions list. Please check your connection or use local version %localVersion%",
       title: "Couldn't obtain `solc` version list",
-      description: `Couldn't download \`solc\`'s version list. 
-      
+      description: `Couldn't download \`solc\`'s version list.
+
 Please check your Internet connection.`,
       shouldBeReported: false,
     },
@@ -653,8 +653,8 @@ Please check your Internet connection.`,
       message:
         "Couldn't download compiler version %remoteVersion%. Checksum verification failed. Please check your connection or use local version %localVersion%",
       title: "Downloaded `solc` checksum verification failed",
-      description: `Downloaded \`solc\` verification failed.. 
-      
+      description: `Downloaded \`solc\` verification failed..
+
 Please check your Internet connection.`,
       shouldBeReported: false,
     },
@@ -665,7 +665,7 @@ Please check your Internet connection.`,
       message: "Compilation failed",
       title: "Compilation failed",
       description: `Your smart contracts failed to compile.
-      
+
 Please check Buidler's output for more details.`,
       shouldBeReported: false,
     },
@@ -674,7 +674,7 @@ Please check Buidler's output for more details.`,
       message: "Script %script% doesn't exist.",
       title: "Script doesn't exist",
       description: `Tried to use \`buidler run\` to execut a non-existing script.
-      
+
 Please double check your script's path`,
       shouldBeReported: false,
     },
@@ -682,7 +682,7 @@ Please double check your script's path`,
       number: 602,
       message: "Error running script {%script%}: %error%",
       title: "Error running script",
-      description: `Running a script resulted in an error. 
+      description: `Running a script resulted in an error.
 
 Please check Buidler's output for more details.`,
       shouldBeReported: false,
@@ -691,7 +691,7 @@ Please check Buidler's output for more details.`,
       number: 603,
       message: "Buidler flatten doesn't support cyclic dependencies.",
       title: "Flatten detected cyclic dependencies",
-      description: `Buidler flatten doesn't support cyclic dependencies. 
+      description: `Buidler flatten doesn't support cyclic dependencies.
 
 We recommend not using this kind of dependencies.`,
       shouldBeReported: false,
@@ -716,7 +716,7 @@ We recommend not using this kind of dependencies.`,
         "Unsupported network for JSON-RPC server. Only buidlerevm is currently supported.",
       title: "Unsupported network for JSON-RPC server.",
       description: `JSON-RPC server can only be started when running the BuidlerEVM network.
-      
+
 To start the JSON-RPC server, retry the command without the --network parameter.`,
       shouldBeReported: false,
     },
@@ -726,7 +726,7 @@ To start the JSON-RPC server, retry the command without the --network parameter.
       number: 700,
       message: 'Artifact for contract "%contractName%" not found.',
       title: "Artifact not found",
-      description: `Tried to import a non-existing artifact. 
+      description: `Tried to import a non-existing artifact.
 
 Please double check that your contracts have been compiled and your artifact's name.`,
       shouldBeReported: false,
@@ -738,7 +738,7 @@ Please double check that your contracts have been compiled and your artifact's n
       message: `Plugin %plugin% is not installed.
 %extraMessage%Please run: npm install --save-dev%extraFlags% %plugin%`,
       title: "Plugin not installed",
-      description: `You are trying to use a plugin that hasn't been installed. 
+      description: `You are trying to use a plugin that hasn't been installed.
 
 Please follow Buidler's instructions to resolve this.`,
       shouldBeReported: false,
@@ -748,7 +748,7 @@ Please follow Buidler's instructions to resolve this.`,
       message: `Plugin %plugin% requires %dependency% to be installed.
 %extraMessage%Please run: npm install --save-dev%extraFlags% "%dependency%@%versionSpec%"`,
       title: "Plugin dependencies not installed",
-      description: `You are trying to use a plugin with unmet dependencies. 
+      description: `You are trying to use a plugin with unmet dependencies.
 
 Please follow Buidler's instructions to resolve this.`,
       shouldBeReported: false,
@@ -759,7 +759,7 @@ Please follow Buidler's instructions to resolve this.`,
 %extraMessage%If you haven't installed %dependency% manually, please run: npm install --save-dev%extraFlags% "%dependency%@%versionSpec%"
 If you have installed %dependency% yourself, please reinstall it with a valid version.`,
       title: "Plugin dependencies's version mismatch",
-      description: `You are trying to use a plugin that requires a different version of one of its dependencies. 
+      description: `You are trying to use a plugin that requires a different version of one of its dependencies.
 
 Please follow Buidler's instructions to resolve this.`,
       shouldBeReported: false,
@@ -769,7 +769,7 @@ Please follow Buidler's instructions to resolve this.`,
       message: `You are trying to load %pluginNameText% with a require or import statement.
 Please replace it with a call to usePlugin("%pluginNameCode%").`,
       title: "Importing a plugin with `require`",
-      description: `You are trying to load a plugin with a call to \`require\`. 
+      description: `You are trying to load a plugin with a call to \`require\`.
 
 Please use \`usePlugin(npm-plugin-package)\` instead.`,
       shouldBeReported: false,

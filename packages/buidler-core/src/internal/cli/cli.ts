@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 import "source-map-support/register";
-
 import chalk from "chalk";
 import debug from "debug";
 import semver from "semver";

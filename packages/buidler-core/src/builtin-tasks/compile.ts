@@ -1,11 +1,6 @@
 import chalk from "chalk";
-import fs from "fs-extra";
 import path from "path";
 import { saveArtifact } from "../internal/artifacts";
-import {
-  SOLC_INPUT_FILENAME,
-  SOLC_OUTPUT_FILENAME,
-} from "../internal/constants";
 import { internalTask, task, types } from "../internal/core/config/config-env";
 import { Compiler } from "../internal/ink/compiler";
 import {
@@ -13,7 +8,6 @@ import {
   filterContractPackage,
   getResolvedWorkspace,
 } from "../internal/ink/resolve";
-import { ResolvedBuidlerConfig } from "../types";
 import {
   TASK_BUILD_ARTIFACTS,
   TASK_COMPILE,

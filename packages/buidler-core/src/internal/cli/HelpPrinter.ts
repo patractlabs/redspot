@@ -6,7 +6,6 @@ import {
 } from "../../types";
 import { BuidlerError } from "../core/errors";
 import { ERRORS } from "../core/errors-list";
-
 import { ArgumentsParser } from "./ArgumentsParser";
 
 export class HelpPrinter {

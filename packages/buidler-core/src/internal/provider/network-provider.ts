@@ -1,5 +1,5 @@
 import { WsProvider } from "@polkadot/rpc-provider";
-import { NetworkConfigAccounts, INetworkProvider } from "../../types";
+import { INetworkProvider, NetworkConfigAccounts } from "../../types";
 
 export class NetworkProvider extends WsProvider implements INetworkProvider {
   public accounts: NetworkConfigAccounts;
