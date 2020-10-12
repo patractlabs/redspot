@@ -33,12 +33,6 @@ if (!RedspotContext.isCreated()) {
 
   const config = loadConfigAndTasks(redspotArguments);
 
-  // TODO: This is here for backwards compatibility.
-  // There are very few projects using this.
-  if (redspotArguments.network === undefined) {
-    redspotArguments.network = config.defaultNetwork;
-  }
-
   const env = new Environment(
     config,
     redspotArguments,

@@ -76,6 +76,7 @@ async function main() {
       !isCwdInsideProject() &&
       process.stdout.isTTY === true
     ) {
+      console.log(redspotArguments);
       console.log("TODO: create project");
       return;
     }
@@ -126,12 +127,6 @@ async function main() {
         taskDefinition,
         unparsedCLAs
       );
-    }
-
-    // TODO: This is here for backwards compatibility
-    // There are very few projects using this.
-    if (redspotArguments.network === undefined) {
-      redspotArguments.network = config.defaultNetwork;
     }
 
     const env = new Environment(
