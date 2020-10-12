@@ -2,7 +2,7 @@ import "@nomiclabs/buidler/types";
 import Api from "./api";
 import { RegistryTypes } from "@polkadot/types/types";
 
-declare module "@redspot/buidler/types" {
+declare module "redspot/types" {
   function getContractFactory(
     name: string,
     signer?: ethers.Signer

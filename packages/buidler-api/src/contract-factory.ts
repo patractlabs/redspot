@@ -1,5 +1,5 @@
 import { KeyringPair } from "@polkadot/keyring/types";
-import { readWasm } from "@redspot/buidler/plugins";
+import { readWasm } from "redspot/plugins";
 import Api from "./api";
 
 export default class ContractFactory {

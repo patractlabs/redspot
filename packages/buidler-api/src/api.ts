@@ -6,8 +6,8 @@ import Keyring from "@polkadot/keyring";
 import { KeyringPair } from "@polkadot/keyring/types";
 import { AccountId, EventRecord } from "@polkadot/types/interfaces";
 import { KeypairType } from "@polkadot/util-crypto/types";
-import { readAbiSync } from "@redspot/buidler/plugins";
-import { Artifact, Network, ProjectPaths } from "@redspot/buidler/types";
+import { readAbiSync } from "redspot/plugins";
+import { Artifact, Network, ProjectPaths } from "redspot/types";
 import ContractFactory from "./contract-factory";
 
 interface TxStatus {

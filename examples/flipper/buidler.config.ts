@@ -1,7 +1,7 @@
-import { usePlugin } from "@redspot/buidler/config";
-import { BuidlerConfig } from "@redspot/buidler/types";
+import { usePlugin } from "redspot/config";
+import { BuidlerConfig } from "redspot/types";
 
-usePlugin("@redspot/buidler-api");
+usePlugin("redspot-api");
 
 export default {
   defaultNetwork: "development",

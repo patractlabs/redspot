@@ -1,6 +1,6 @@
-import { extendEnvironment } from "@redspot/buidler/config";
-import { lazyObject } from "@redspot/buidler/plugins";
-import { BuidlerRuntimeEnvironment } from "@redspot/buidler/types";
+import { extendEnvironment } from "redspot/config";
+import { lazyObject } from "redspot/plugins";
+import { BuidlerRuntimeEnvironment } from "redspot/types";
 import { ApiPromise } from "@polkadot/api";
 import Api from "./api";
 
