@@ -1,7 +1,7 @@
 import {
   RedspotError,
   RedspotPluginError,
-  NomicLabsRedspotPluginError,
+  RedspotCorePluginError,
 } from "../core/errors";
 import { isLocalDev } from "../core/execution-mode";
 import { isRunningOnCiServer } from "../util/ci-detection";
@@ -95,7 +95,7 @@ export class Reporter {
     }
 
     if (RedspotPluginError.isRedspotPluginError(error)) {
-      if (NomicLabsRedspotPluginError.isNomicLabsRedspotPluginError(error)) {
+      if (RedspotCorePluginError.isRedspotCorePluginError(error)) {
         return error.shouldBeReported;
       }
 

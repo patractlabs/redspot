@@ -124,11 +124,11 @@ Check the error message for details, or go to [documentation](https://github.com
     LIB_IMPORTED_FROM_THE_CONFIG: {
       number: 9,
       message: `Error while loading Redspot's configuration.
-You probably imported @nomiclabs/redspot instead of @nomiclabs/redspot/config`,
+You probably imported redspot instead of redspot/config`,
       title: "Failed to load config file",
       description: `There was an error while loading your config file.
 
-The most common source of errors is trying to import \`@nomiclabs/redspot\` instead of \`@nomiclabs/redspot/config\`.
+The most common source of errors is trying to import \`redspot\` instead of \`redspot/config\`.
 
 Please make sure your config file is correct.`,
       shouldBeReported: false,
