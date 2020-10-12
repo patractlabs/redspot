@@ -1,5 +1,5 @@
 import findUp from "find-up";
-import { BuidlerError } from "./errors";
+import { RedspotError } from "./errors";
 import { ERRORS } from "./errors-list";
 import { isTypescriptSupported } from "./typescript-support";
 
@@ -23,7 +23,7 @@ export function getUserConfigPath() {
 
   const pathToConfigFile = findUp.sync(JS_CONFIG_FILENAME);
   if (pathToConfigFile === null) {
-    throw new BuidlerError(ERRORS.GENERAL.NOT_INSIDE_PROJECT);
+    throw new RedspotError(ERRORS.GENERAL.NOT_INSIDE_PROJECT);
   }
 
   return pathToConfigFile;

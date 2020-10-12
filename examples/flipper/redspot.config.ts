@@ -1,5 +1,5 @@
 import { usePlugin } from "redspot/config";
-import { BuidlerConfig } from "redspot/types";
+import { RedspotConfig } from "redspot/types";
 
 usePlugin("@redspot/api");
 
@@ -14,4 +14,4 @@ export default {
       },
     },
   },
-} as BuidlerConfig;
+} as RedspotConfig;

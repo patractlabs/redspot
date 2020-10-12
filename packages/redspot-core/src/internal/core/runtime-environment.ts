@@ -1,11 +1,11 @@
 import debug from "debug";
 import {
-  BuidlerArguments,
-  BuidlerRuntimeEnvironment,
+  RedspotArguments,
+  RedspotRuntimeEnvironment,
   EnvironmentExtender,
   Network,
   ParamDefinition,
-  ResolvedBuidlerConfig,
+  ResolvedRedspotConfig,
   RunSuperFunction,
   RunTaskFunction,
   TaskArguments,
@@ -14,13 +14,13 @@ import {
 } from "../../types";
 import { createProvider } from "../provider/";
 import { lazyObject } from "../util/lazy";
-import { BuidlerError } from "./errors";
+import { RedspotError } from "./errors";
 import { ERRORS } from "./errors-list";
 import { OverriddenTaskDefinition } from "./tasks/task-definitions";
 
-const log = debug("buidler:core:bre");
+const log = debug("redspot:core:bre");
 
-export class Environment implements BuidlerRuntimeEnvironment {
+export class Environment implements RedspotRuntimeEnvironment {
   private static readonly _BLACKLISTED_PROPERTIES: string[] = [
     "injectToGlobal",
     "_runTaskDefinition",
@@ -31,34 +31,34 @@ export class Environment implements BuidlerRuntimeEnvironment {
   private readonly _extenders: EnvironmentExtender[];
 
   /**
-   * Initializes the Buidler Runtime Environment and the given
+   * Initializes the Redspot Runtime Environment and the given
    * extender functions.
    *
    * @remarks The extenders' execution order is given by the order
-   * of the requires in the buidler's config file and its plugins.
+   * of the requires in the redspot's config file and its plugins.
    *
-   * @param config The buidler's config object.
-   * @param buidlerArguments The parsed buidler's arguments.
+   * @param config The redspot's config object.
+   * @param redspotArguments The parsed redspot's arguments.
    * @param tasks A map of tasks.
    * @param extenders A list of extenders.
    */
   constructor(
-    public readonly config: ResolvedBuidlerConfig,
-    public readonly buidlerArguments: BuidlerArguments,
+    public readonly config: ResolvedRedspotConfig,
+    public readonly redspotArguments: RedspotArguments,
     public readonly tasks: TasksMap,
     extenders: EnvironmentExtender[] = []
   ) {
-    log("Creating BuidlerRuntimeEnvironment");
+    log("Creating RedspotRuntimeEnvironment");
 
     const networkName =
-      buidlerArguments.network !== undefined
-        ? buidlerArguments.network
+      redspotArguments.network !== undefined
+        ? redspotArguments.network
         : config.defaultNetwork;
 
     const networkConfig = config.networks[networkName];
 
     if (networkConfig === undefined) {
-      throw new BuidlerError(ERRORS.NETWORK.CONFIG_NOT_FOUND, {
+      throw new RedspotError(ERRORS.NETWORK.CONFIG_NOT_FOUND, {
         network: networkName,
       });
     }
@@ -94,7 +94,7 @@ export class Environment implements BuidlerRuntimeEnvironment {
     log("Running task %s", name);
 
     if (taskDefinition === undefined) {
-      throw new BuidlerError(ERRORS.ARGUMENTS.UNRECOGNIZED_TASK, {
+      throw new RedspotError(ERRORS.ARGUMENTS.UNRECOGNIZED_TASK, {
         task: name,
       });
     }
@@ -108,7 +108,7 @@ export class Environment implements BuidlerRuntimeEnvironment {
   };
 
   /**
-   * Injects the properties of `this` (the Buidler Runtime Environment) into the global scope.
+   * Injects the properties of `this` (the Redspot Runtime Environment) into the global scope.
    *
    * @param blacklist a list of property names that won't be injected.
    *
@@ -162,7 +162,7 @@ export class Environment implements BuidlerRuntimeEnvironment {
       runSuperFunction.isDefined = true;
     } else {
       runSuperFunction = async () => {
-        throw new BuidlerError(ERRORS.TASK_DEFINITIONS.RUNSUPER_NOT_AVAILABLE, {
+        throw new RedspotError(ERRORS.TASK_DEFINITIONS.RUNSUPER_NOT_AVAILABLE, {
           taskName: taskDefinition.name,
         });
       };
@@ -191,7 +191,7 @@ export class Environment implements BuidlerRuntimeEnvironment {
    * Also, populate missing, non-mandatory arguments with default param values (if any).
    *
    * @private
-   * @throws BuidlerError if any of the following are true:
+   * @throws RedspotError if any of the following are true:
    *  > a required argument is missing
    *  > an argument's value's type doesn't match the defined param type
    *
@@ -214,7 +214,7 @@ export class Environment implements BuidlerRuntimeEnvironment {
     ];
 
     const initResolvedArguments: {
-      errors: BuidlerError[];
+      errors: RedspotError[];
       values: TaskArguments;
     } = { errors: [], values: {} };
 
@@ -271,7 +271,7 @@ export class Environment implements BuidlerRuntimeEnvironment {
       }
 
       // undefined & mandatory argument -> error
-      throw new BuidlerError(ERRORS.ARGUMENTS.MISSING_TASK_ARGUMENT, {
+      throw new RedspotError(ERRORS.ARGUMENTS.MISSING_TASK_ARGUMENT, {
         param: name,
       });
     }

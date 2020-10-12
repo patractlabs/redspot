@@ -8,7 +8,7 @@ class CustomError extends Error {
   constructor(message: string, public readonly parent?: Error) {
     // WARNING: Using super when extending a builtin class doesn't work well
     // with TS if you are compiling to a version of JavaScript that doesn't have
-    // native classes. We don't do that in Buidler.
+    // native classes. We don't do that in Redspot.
     //
     // For more info about this, take a look at: https://github.com/Microsoft/TypeScript/wiki/Breaking-Changes#extending-built-ins-like-error-array-and-map-may-no-longer-work
     super(message);
@@ -43,17 +43,17 @@ class CustomError extends Error {
   }
 }
 
-export class BuidlerError extends CustomError {
-  public static isBuidlerError(other: any): other is BuidlerError {
+export class RedspotError extends CustomError {
+  public static isRedspotError(other: any): other is RedspotError {
     return (
-      other !== undefined && other !== null && other._isBuidlerError === true
+      other !== undefined && other !== null && other._isRedspotError === true
     );
   }
 
   public readonly errorDescriptor: ErrorDescriptor;
   public readonly number: number;
 
-  private readonly _isBuidlerError: boolean;
+  private readonly _isRedspotError: boolean;
 
   constructor(
     errorDescriptor: ErrorDescriptor,
@@ -72,29 +72,29 @@ export class BuidlerError extends CustomError {
     this.errorDescriptor = errorDescriptor;
     this.number = errorDescriptor.number;
 
-    this._isBuidlerError = true;
-    Object.setPrototypeOf(this, BuidlerError.prototype);
+    this._isRedspotError = true;
+    Object.setPrototypeOf(this, RedspotError.prototype);
   }
 }
 
 /**
- * This class is used to throw errors from buidler plugins made by third parties.
+ * This class is used to throw errors from redspot plugins made by third parties.
  */
-export class BuidlerPluginError extends CustomError {
-  public static isBuidlerPluginError(other: any): other is BuidlerPluginError {
+export class RedspotPluginError extends CustomError {
+  public static isRedspotPluginError(other: any): other is RedspotPluginError {
     return (
       other !== undefined &&
       other !== null &&
-      other._isBuidlerPluginError === true
+      other._isRedspotPluginError === true
     );
   }
 
   public readonly pluginName: string;
 
-  private readonly _isBuidlerPluginError: boolean;
+  private readonly _isRedspotPluginError: boolean;
 
   /**
-   * Creates a BuidlerPluginError.
+   * Creates a RedspotPluginError.
    *
    * @param pluginName The name of the plugin.
    * @param message An error message that will be shown to the user.
@@ -126,27 +126,27 @@ export class BuidlerPluginError extends CustomError {
       this.pluginName = getClosestCallerPackage()!;
     }
 
-    this._isBuidlerPluginError = true;
-    Object.setPrototypeOf(this, BuidlerPluginError.prototype);
+    this._isRedspotPluginError = true;
+    Object.setPrototypeOf(this, RedspotPluginError.prototype);
   }
 }
 
-export class NomicLabsBuidlerPluginError extends BuidlerPluginError {
-  public static isNomicLabsBuidlerPluginError(
+export class NomicLabsRedspotPluginError extends RedspotPluginError {
+  public static isNomicLabsRedspotPluginError(
     other: any
-  ): other is NomicLabsBuidlerPluginError {
+  ): other is NomicLabsRedspotPluginError {
     return (
       other !== undefined &&
       other !== null &&
-      other._isNomicLabsBuidlerPluginError === true
+      other._isNomicLabsRedspotPluginError === true
     );
   }
 
-  private readonly _isNomicLabsBuidlerPluginError: boolean;
+  private readonly _isNomicLabsRedspotPluginError: boolean;
 
   /**
-   * This class is used to throw errors from *core* buidler plugins. If you are
-   * developing a third-party plugin, use BuidlerPluginError instead.
+   * This class is used to throw errors from *core* redspot plugins. If you are
+   * developing a third-party plugin, use RedspotPluginError instead.
    */
   public constructor(
     pluginName: string,
@@ -156,8 +156,8 @@ export class NomicLabsBuidlerPluginError extends BuidlerPluginError {
   ) {
     super(pluginName, message, parent);
 
-    this._isNomicLabsBuidlerPluginError = true;
-    Object.setPrototypeOf(this, NomicLabsBuidlerPluginError.prototype);
+    this._isNomicLabsRedspotPluginError = true;
+    Object.setPrototypeOf(this, NomicLabsRedspotPluginError.prototype);
   }
 }
 
@@ -191,7 +191,7 @@ function _applyErrorMessageTemplate(
   if (!isRecursiveCall) {
     for (const variableName of Object.keys(values)) {
       if (variableName.match(/^[a-zA-Z][a-zA-Z0-9]*$/) === null) {
-        throw new BuidlerError(ERRORS.INTERNAL.TEMPLATE_INVALID_VARIABLE_NAME, {
+        throw new RedspotError(ERRORS.INTERNAL.TEMPLATE_INVALID_VARIABLE_NAME, {
           variable: variableName,
         });
       }
@@ -199,7 +199,7 @@ function _applyErrorMessageTemplate(
       const variableTag = `%${variableName}%`;
 
       if (!template.includes(variableTag)) {
-        throw new BuidlerError(ERRORS.INTERNAL.TEMPLATE_VARIABLE_TAG_MISSING, {
+        throw new RedspotError(ERRORS.INTERNAL.TEMPLATE_VARIABLE_TAG_MISSING, {
           variable: variableName,
         });
       }
@@ -231,7 +231,7 @@ function _applyErrorMessageTemplate(
     const variableTag = `%${variableName}%`;
 
     if (value.match(/%([a-zA-Z][a-zA-Z0-9]*)?%/) !== null) {
-      throw new BuidlerError(
+      throw new RedspotError(
         ERRORS.INTERNAL.TEMPLATE_VALUE_CONTAINS_VARIABLE_TAG,
         { variable: variableName }
       );

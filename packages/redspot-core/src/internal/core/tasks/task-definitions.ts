@@ -5,10 +5,10 @@ import {
   TaskArguments,
   TaskDefinition,
 } from "../../../types";
-import { BuidlerError } from "../errors";
+import { RedspotError } from "../errors";
 import { ErrorDescriptor, ERRORS } from "../errors-list";
 import * as types from "../params/argumentTypes";
-import { BUIDLER_PARAM_DEFINITIONS } from "../params/redspot-params";
+import { REDSPOT_PARAM_DEFINITIONS } from "../params/redspot-params";
 
 /**
  * This class creates a task definition, which consists of:
@@ -47,7 +47,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
     this._hasVariadicParam = false;
     this._hasOptionalPositionalParam = false;
     this.action = () => {
-      throw new BuidlerError(ERRORS.TASK_DEFINITIONS.ACTION_NOT_SET, {
+      throw new RedspotError(ERRORS.TASK_DEFINITIONS.ACTION_NOT_SET, {
         taskName: name,
       });
     };
@@ -76,7 +76,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
    * Adds a paramater to the task's definition.
    *
    * @remarks This will throw if the `name` is already used by this task or
-   * by Buidler's global parameters.
+   * by Redspot's global parameters.
    *
    * @param name The parameter's name.
    * @param description The parameter's description.
@@ -103,7 +103,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
       }
 
       if (typeof defaultValue !== "string") {
-        throw new BuidlerError(
+        throw new RedspotError(
           ERRORS.TASK_DEFINITIONS.DEFAULT_VALUE_WRONG_TYPE,
           {
             paramName: name,
@@ -192,7 +192,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
    * Adds a positional paramater to the task's definition.
    *
    * @remarks This will throw if the `name` is already used by this task or
-   * by Buidler's global parameters.
+   * by Redspot's global parameters.
    * @remarks This will throw if `isOptional` is `false` and an optional positional
    * param was already set.
    * @remarks This will throw if a variadic positional param is already set.
@@ -222,7 +222,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
       }
 
       if (typeof defaultValue !== "string") {
-        throw new BuidlerError(
+        throw new RedspotError(
           ERRORS.TASK_DEFINITIONS.DEFAULT_VALUE_WRONG_TYPE,
           {
             paramName: name,
@@ -317,7 +317,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
       }
 
       if (!this._isStringArray(defaultValue)) {
-        throw new BuidlerError(
+        throw new RedspotError(
           ERRORS.TASK_DEFINITIONS.DEFAULT_VALUE_WRONG_TYPE,
           {
             paramName: name,
@@ -411,7 +411,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
    */
   private _validateNotAfterVariadicParam(name: string) {
     if (this._hasVariadicParam) {
-      throw new BuidlerError(ERRORS.TASK_DEFINITIONS.PARAM_AFTER_VARIADIC, {
+      throw new RedspotError(ERRORS.TASK_DEFINITIONS.PARAM_AFTER_VARIADIC, {
         paramName: name,
         taskName: this.name,
       });
@@ -423,19 +423,19 @@ export class SimpleTaskDefinition implements TaskDefinition {
    * @param name the param's name.
    *
    * @throws BDLR201 if `name` is already used as a param.
-   * @throws BDLR202 if `name` is already used as a param by Buidler
+   * @throws BDLR202 if `name` is already used as a param by Redspot
    */
   private _validateNameNotUsed(name: string) {
     if (this._hasParamDefined(name)) {
-      throw new BuidlerError(ERRORS.TASK_DEFINITIONS.PARAM_ALREADY_DEFINED, {
+      throw new RedspotError(ERRORS.TASK_DEFINITIONS.PARAM_ALREADY_DEFINED, {
         paramName: name,
         taskName: this.name,
       });
     }
 
-    if (Object.keys(BUIDLER_PARAM_DEFINITIONS).includes(name)) {
-      throw new BuidlerError(
-        ERRORS.TASK_DEFINITIONS.PARAM_CLASHES_WITH_BUIDLER_PARAM,
+    if (Object.keys(REDSPOT_PARAM_DEFINITIONS).includes(name)) {
+      throw new RedspotError(
+        ERRORS.TASK_DEFINITIONS.PARAM_CLASHES_WITH_REDSPOT_PARAM,
         {
           paramName: name,
           taskName: this.name,
@@ -468,7 +468,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
     isOptional: boolean
   ) {
     if (!isOptional && this._hasOptionalPositionalParam) {
-      throw new BuidlerError(
+      throw new RedspotError(
         ERRORS.TASK_DEFINITIONS.MANDATORY_PARAM_AFTER_OPTIONAL,
         {
           paramName: name,
@@ -482,7 +482,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
     const pattern = /^[a-z]+([a-zA-Z0-9])*$/;
     const match = name.match(pattern);
     if (match === null) {
-      throw new BuidlerError(
+      throw new RedspotError(
         ERRORS.TASK_DEFINITIONS.INVALID_PARAM_NAME_CASING,
         {
           paramName: name,
@@ -498,7 +498,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
     name: string
   ) {
     if (defaultValue !== undefined && !isOptional) {
-      throw new BuidlerError(
+      throw new RedspotError(
         ERRORS.TASK_DEFINITIONS.DEFAULT_IN_MANDATORY_PARAM,
         {
           paramName: name,
@@ -699,7 +699,7 @@ export class OverriddenTaskDefinition implements TaskDefinition {
   }
 
   private _throwNoParamsOverrideError(errorDescriptor: ErrorDescriptor): never {
-    throw new BuidlerError(errorDescriptor, {
+    throw new RedspotError(errorDescriptor, {
       taskName: this.name,
     });
   }

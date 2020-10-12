@@ -1,7 +1,7 @@
 import fsExtra from "fs-extra";
 import * as path from "path";
 import { Artifact } from "../types";
-import { BuidlerError } from "./core/errors";
+import { RedspotError } from "./core/errors";
 import { ERRORS } from "./core/errors-list";
 
 function getArtifactPath(
@@ -30,7 +30,7 @@ export async function readAbi(
   const artifactPath = getArtifactPath(artifactsPath, contractName, "abi");
 
   if (!fsExtra.pathExistsSync(artifactPath)) {
-    throw new BuidlerError(ERRORS.ARTIFACTS.NOT_FOUND, { contractName });
+    throw new RedspotError(ERRORS.ARTIFACTS.NOT_FOUND, { contractName });
   }
 
   return fsExtra.readJson(artifactPath);
@@ -43,7 +43,7 @@ export function readAbiSync(
   const artifactPath = getArtifactPath(artifactsPath, contractName, "abi");
 
   if (!fsExtra.pathExistsSync(artifactPath)) {
-    throw new BuidlerError(ERRORS.ARTIFACTS.NOT_FOUND, { contractName });
+    throw new RedspotError(ERRORS.ARTIFACTS.NOT_FOUND, { contractName });
   }
 
   return fsExtra.readJsonSync(artifactPath);
@@ -56,7 +56,7 @@ export async function readWasm(
   const artifactPath = getArtifactPath(artifactsPath, contractName, "wasm");
 
   if (!fsExtra.pathExistsSync(artifactPath)) {
-    throw new BuidlerError(ERRORS.ARTIFACTS.NOT_FOUND, { contractName });
+    throw new RedspotError(ERRORS.ARTIFACTS.NOT_FOUND, { contractName });
   }
 
   const buffer = await fsExtra.readFile(artifactPath);
@@ -71,7 +71,7 @@ export function readWasmSync(
   const artifactPath = getArtifactPath(artifactsPath, contractName, "wasm");
 
   if (!fsExtra.pathExistsSync(artifactPath)) {
-    throw new BuidlerError(ERRORS.ARTIFACTS.NOT_FOUND, { contractName });
+    throw new RedspotError(ERRORS.ARTIFACTS.NOT_FOUND, { contractName });
   }
 
   return fsExtra.readFileSync(artifactPath).toString("hex");

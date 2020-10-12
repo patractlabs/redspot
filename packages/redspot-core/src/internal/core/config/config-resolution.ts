@@ -2,30 +2,30 @@ import deepmerge from "deepmerge";
 import * as fs from "fs";
 import path from "path";
 import {
-  BuidlerConfig,
+  RedspotConfig,
   ConfigExtender,
   ProjectPaths,
-  ResolvedBuidlerConfig,
+  ResolvedRedspotConfig,
 } from "../../../types";
 import { fromEntries } from "../../util/lang";
-import { BuidlerError } from "../errors";
+import { RedspotError } from "../errors";
 import { ERRORS } from "../errors-list";
 
 function mergeUserAndDefaultConfigs(
-  defaultConfig: BuidlerConfig,
-  userConfig: BuidlerConfig
-): Partial<ResolvedBuidlerConfig> {
+  defaultConfig: RedspotConfig,
+  userConfig: RedspotConfig
+): Partial<ResolvedRedspotConfig> {
   return deepmerge(defaultConfig, userConfig, {
     arrayMerge: (destination: any[], source: any[]) => source,
   }) as any;
 }
 
 /**
- * This functions resolves the buidler config by merging the user provided config
- * and the buidler default config.
+ * This functions resolves the redspot config by merging the user provided config
+ * and the redspot default config.
  *
  * @param userConfigPath the user config filepath
- * @param defaultConfig  the buidler's default config object
+ * @param defaultConfig  the redspot's default config object
  * @param userConfig     the user config object
  * @param configExtenders An array of ConfigExtenders
  *
@@ -33,10 +33,10 @@ function mergeUserAndDefaultConfigs(
  */
 export function resolveConfig(
   userConfigPath: string,
-  defaultConfig: BuidlerConfig,
-  userConfig: BuidlerConfig,
+  defaultConfig: RedspotConfig,
+  userConfig: RedspotConfig,
   configExtenders: ConfigExtender[]
-): ResolvedBuidlerConfig {
+): ResolvedRedspotConfig {
   userConfig = deepFreezeUserConfig(userConfig);
 
   const config = mergeUserAndDefaultConfigs(defaultConfig, userConfig);
@@ -129,7 +129,7 @@ function deepFreezeUserConfig(
       value: any,
       receiver: any
     ): boolean {
-      throw new BuidlerError(ERRORS.GENERAL.USER_CONFIG_MODIFIED, {
+      throw new RedspotError(ERRORS.GENERAL.USER_CONFIG_MODIFIED, {
         path: [...propertyPath, property]
           .map((pathPart) => pathPart.toString())
           .join("."),

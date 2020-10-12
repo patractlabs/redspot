@@ -2,10 +2,10 @@ import debug from "debug";
 import findUp from "find-up";
 import path from "path";
 
-const log = debug("buidler:core:execution-mode");
+const log = debug("redspot:core:execution-mode");
 
 /**
- * This module defines different Buidler execution modes and autodetects them.
+ * This module defines different Redspot execution modes and autodetects them.
  *
  * IMPORTANT: This will have to be revisited once Yarn PnP and npm's tink get
  * widely adopted.
@@ -51,7 +51,7 @@ export function getExecutionMode(): ExecutionMode {
 }
 
 /**
- * Checks whether we're using Buidler in development mode (that is, we're working _on_ Buidler).
+ * Checks whether we're using Redspot in development mode (that is, we're working _on_ Redspot).
  */
 export function isLocalDev(): boolean {
   const executionMode = getExecutionMode();
@@ -66,7 +66,7 @@ export function isLocalDev(): boolean {
  * This is a somewhat more limited detection, but we use it if
  * is-installed-globally fails.
  *
- * If a user installs buidler locally, and executes it from outside the
+ * If a user installs redspot locally, and executes it from outside the
  * directory that contains the `node_module` with the installation, this will
  * fail and return `false`.
  */

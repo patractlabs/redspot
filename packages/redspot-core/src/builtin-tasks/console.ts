@@ -3,18 +3,18 @@ import fsExtra from "fs-extra";
 import * as path from "path";
 import * as semver from "semver";
 import { task } from "../internal/core/config/config-env";
-import { runScriptWithBuidler } from "../internal/util/scripts-runner";
+import { runScriptWithRedspot } from "../internal/util/scripts-runner";
 import { TASK_CONSOLE } from "./task-names";
 
 export default function () {
-  const log = debug("buidler:core:tasks:console");
+  const log = debug("redspot:core:tasks:console");
 
-  task(TASK_CONSOLE, "Opens a buidler console")
+  task(TASK_CONSOLE, "Opens a redspot console")
     .addFlag("noCompile", "Don't compile before running this task")
     .setAction(
       async (
         { noCompile }: { noCompile: boolean },
-        { config, run, buidlerArguments }
+        { config, run, redspotArguments }
       ) => {
         if (!noCompile) {
           await run("compile");
@@ -32,11 +32,11 @@ export default function () {
         }
 
         log(
-          `Creating a Node REPL subprocess with Buidler's register so we can set some Node's flags`
+          `Creating a Node REPL subprocess with Redspot's register so we can set some Node's flags`
         );
 
         // Running the script "" is like running `node`, so this starts the repl
-        await runScriptWithBuidler(buidlerArguments, "", [], nodeArgs, {
+        await runScriptWithRedspot(redspotArguments, "", [], nodeArgs, {
           NODE_REPL_HISTORY: historyFile,
         });
       }

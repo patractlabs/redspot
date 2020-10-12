@@ -1,7 +1,7 @@
-import { BuidlerConfig, NetworkConfig } from "../../../types";
-import { BUIDLEREVM_NETWORK_NAME } from "../../constants";
+import { RedspotConfig, NetworkConfig } from "../../../types";
+import { REDSPOT_DEFAULT_NETWORK_NAME } from "../../constants";
 
-const DEFAULT_BUIDLER_NETWORK_CONFIG: NetworkConfig = {
+const DEFAULT_REDSPOT_NETWORK_CONFIG: NetworkConfig = {
   gasLimit: "50000000000",
   endowment: "5000000000000",
   accounts: ["//Alice", "//Bob", "//Charlie", "//Dave", "//Eve", "//Ferdie"],
@@ -11,10 +11,10 @@ const DEFAULT_BUIDLER_NETWORK_CONFIG: NetworkConfig = {
   httpHeaders: {},
 };
 
-const defaultConfig: BuidlerConfig = {
-  defaultNetwork: BUIDLEREVM_NETWORK_NAME,
+const defaultConfig: RedspotConfig = {
+  defaultNetwork: REDSPOT_DEFAULT_NETWORK_NAME,
   networks: {
-    [BUIDLEREVM_NETWORK_NAME]: DEFAULT_BUIDLER_NETWORK_CONFIG,
+    [REDSPOT_DEFAULT_NETWORK_NAME]: DEFAULT_REDSPOT_NETWORK_CONFIG,
   },
   analytics: {
     enabled: true,

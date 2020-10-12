@@ -5,7 +5,7 @@ import {
   EnvironmentExtender,
   TaskArguments,
 } from "../../../types";
-import { BuidlerContext } from "../../context";
+import { RedspotContext } from "../../context";
 import * as argumentTypes from "../params/argumentTypes";
 import { usePlugin as usePluginImplementation } from "../plugins";
 
@@ -25,7 +25,7 @@ export function task<ArgsT extends TaskArguments>(
   descriptionOrAction?: string | ActionType<ArgsT>,
   action?: ActionType<ArgsT>
 ): ConfigurableTaskDefinition {
-  const ctx = BuidlerContext.getBuidlerContext();
+  const ctx = RedspotContext.getRedspotContext();
   const dsl = ctx.tasksDSL;
 
   if (descriptionOrAction === undefined) {
@@ -55,7 +55,7 @@ export function internalTask<ArgsT extends TaskArguments>(
   descriptionOrAction?: string | ActionType<ArgsT>,
   action?: ActionType<ArgsT>
 ): ConfigurableTaskDefinition {
-  const ctx = BuidlerContext.getBuidlerContext();
+  const ctx = RedspotContext.getRedspotContext();
   const dsl = ctx.tasksDSL;
 
   if (descriptionOrAction === undefined) {
@@ -73,27 +73,27 @@ export const types = argumentTypes;
 
 /**
  * Register an environment extender what will be run after the
- * Buidler Runtime Environment is initialized.
+ * Redspot Runtime Environment is initialized.
  *
- * @param extender A function that receives the Buidler Runtime
+ * @param extender A function that receives the Redspot Runtime
  * Environment.
  */
 export function extendEnvironment(extender: EnvironmentExtender) {
-  const ctx = BuidlerContext.getBuidlerContext();
+  const ctx = RedspotContext.getRedspotContext();
   const extenderManager = ctx.extendersManager;
   extenderManager.add(extender);
 }
 
 export function extendConfig(extender: ConfigExtender) {
-  const ctx = BuidlerContext.getBuidlerContext();
+  const ctx = RedspotContext.getRedspotContext();
   ctx.configExtenders.push(extender);
 }
 
 /**
- * Loads a Buidler plugin
+ * Loads a Redspot plugin
  * @param pluginName The plugin name.
  */
 export function usePlugin(pluginName: string) {
-  const ctx = BuidlerContext.getBuidlerContext();
+  const ctx = RedspotContext.getRedspotContext();
   usePluginImplementation(ctx, pluginName);
 }

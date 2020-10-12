@@ -1,8 +1,8 @@
 import * as t from "io-ts";
 import { Context, getFunctionName, ValidationError } from "io-ts/lib";
 import { Reporter } from "io-ts/lib/Reporter";
-import { BUIDLEREVM_NETWORK_NAME } from "../../constants";
-import { BuidlerError } from "../errors";
+import { REDSPOT_DEFAULT_NETWORK_NAME } from "../../constants";
+import { RedspotError } from "../errors";
 import { ERRORS } from "../errors-list";
 
 function stringify(v: any): string {
@@ -101,18 +101,18 @@ const AnalyticsConfig = t.type({
   enabled: optional(t.boolean),
 });
 
-const BuidlerConfig = t.type(
+const RedspotConfig = t.type(
   {
     defaultNetwork: optional(t.string),
     networks: optional(Networks),
     paths: optional(ProjectPaths),
     analytics: optional(AnalyticsConfig),
   },
-  "BuidlerConfig"
+  "RedspotConfig"
 );
 
 /**
- * Validates the config, throwing a BuidlerError if invalid.
+ * Validates the config, throwing a RedspotError if invalid.
  * @param config
  */
 export function validateConfig(config: any) {
@@ -125,7 +125,7 @@ export function validateConfig(config: any) {
   let errorList = errors.join("\n  * ");
   errorList = `  * ${errorList}`;
 
-  throw new BuidlerError(ERRORS.GENERAL.INVALID_CONFIG, { errors: errorList });
+  throw new RedspotError(ERRORS.GENERAL.INVALID_CONFIG, { errors: errorList });
 }
 
 export function getValidationErrors(config: any): string[] {
@@ -133,19 +133,19 @@ export function getValidationErrors(config: any): string[] {
 
   // These can't be validated with io-ts
   if (config !== undefined && typeof config.networks === "object") {
-    const buidlerNetwork = config.networks[BUIDLEREVM_NETWORK_NAME];
+    const redspotNetwork = config.networks[REDSPOT_DEFAULT_NETWORK_NAME];
 
     for (const [networkName, netConfig] of Object.entries<any>(
       config.networks
     )) {
-      if (networkName === BUIDLEREVM_NETWORK_NAME) {
+      if (networkName === REDSPOT_DEFAULT_NETWORK_NAME) {
         continue;
       }
 
       if (typeof netConfig.endpoint !== "string") {
         errors.push(
           getErrorMessage(
-            `BuidlerConfig.networks.${networkName}.url`,
+            `RedspotConfig.networks.${networkName}.url`,
             netConfig.url,
             "string"
           )
@@ -156,7 +156,7 @@ export function getValidationErrors(config: any): string[] {
       if (netConfigResult.isLeft()) {
         errors.push(
           getErrorMessage(
-            `BuidlerConfig.networks.${networkName}`,
+            `RedspotConfig.networks.${networkName}`,
             netConfig,
             "WsNetworkConfig"
           )
@@ -166,13 +166,13 @@ export function getValidationErrors(config: any): string[] {
   }
 
   // io-ts can get confused if there are errors that it can't understand.
-  // Especially around BuidlerEVM's config. It will treat it as an HTTPConfig,
+  // Especially around RedspotEVM's config. It will treat it as an HTTPConfig,
   // and may give a loot of errors.
   if (errors.length > 0) {
     return errors;
   }
 
-  const result = BuidlerConfig.decode(config);
+  const result = RedspotConfig.decode(config);
 
   if (result.isRight()) {
     return errors;

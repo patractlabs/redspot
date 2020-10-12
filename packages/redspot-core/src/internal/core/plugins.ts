@@ -1,12 +1,12 @@
 import debug from "debug";
 import * as path from "path";
 import * as semver from "semver";
-import { BuidlerContext } from "../context";
-import { BuidlerError } from "./errors";
+import { RedspotContext } from "../context";
+import { RedspotError } from "./errors";
 import { ERRORS } from "./errors-list";
 import { ExecutionMode, getExecutionMode } from "./execution-mode";
 
-const log = debug("buidler:core:plugins");
+const log = debug("redspot:core:plugins");
 
 interface PackageJson {
   name: string;
@@ -19,12 +19,12 @@ interface PackageJson {
 /**
  * Validates a plugin dependencies and loads it.
  * @param pluginName - The plugin name
- * @param buidlerContext - The BuidlerContext
+ * @param redspotContext - The RedspotContext
  * @param from - Where to resolve plugins and dependencies from. Only for
  * testing purposes.
  */
 export function usePlugin(
-  buidlerContext: BuidlerContext,
+  redspotContext: RedspotContext,
   pluginName: string,
   from?: string
 ) {
@@ -35,14 +35,14 @@ export function usePlugin(
   if (from === undefined) {
     // We have two different ways to search for plugins.
     //
-    // If Buidler is installed globally, we want to force the plugins to also be
+    // If Redspot is installed globally, we want to force the plugins to also be
     // installed globally, otherwise we can end up in a very chaotic situation.
-    // The way we enforce this is by setting `from` to something inside Buidler
+    // The way we enforce this is by setting `from` to something inside Redspot
     // itself, as it will be placed in the global node_modules.
     //
-    // If Buidler is not installed globally, we want the plugins to be
-    // accessible from the project's root, not from the Buidler installation.
-    // The reason for this is that yarn workspaces can easily hoist Buidler and
+    // If Redspot is not installed globally, we want the plugins to be
+    // accessible from the project's root, not from the Redspot installation.
+    // The reason for this is that yarn workspaces can easily hoist Redspot and
     // not the plugins, leaving you with something like this:
     //
     //    root/
@@ -57,7 +57,7 @@ export function usePlugin(
     //          plugin@v2/
     //        redspot.config.js
     //
-    // If we were to load the plugins from the Buidler installation in this
+    // If we were to load the plugins from the Redspot installation in this
     // situation, they wouldn't be found. Instead, we should load them from the
     // project's root.
     //
@@ -68,7 +68,7 @@ export function usePlugin(
     if (executionMode === ExecutionMode.EXECUTION_MODE_GLOBAL_INSTALLATION) {
       from = __dirname;
     } else {
-      from = buidlerContext.getConfigPath();
+      from = redspotContext.getConfigPath();
     }
   }
 
@@ -77,7 +77,7 @@ export function usePlugin(
   if (executionMode === ExecutionMode.EXECUTION_MODE_GLOBAL_INSTALLATION) {
     globalFlag = " --global";
     globalWarning =
-      "You are using a global installation of Buidler. Plugins and their dependencies must also be global.\n";
+      "You are using a global installation of Redspot. Plugins and their dependencies must also be global.\n";
   }
 
   const pluginPackageJson = readPackageJson(pluginName, from);
@@ -85,7 +85,7 @@ export function usePlugin(
   if (pluginPackageJson === undefined) {
     const installExtraFlags = globalFlag;
 
-    throw new BuidlerError(ERRORS.PLUGINS.NOT_INSTALLED, {
+    throw new RedspotError(ERRORS.PLUGINS.NOT_INSTALLED, {
       plugin: pluginName,
       extraMessage: globalWarning,
       extraFlags: installExtraFlags,
@@ -95,7 +95,7 @@ export function usePlugin(
   // We use the package.json's version of the name, as it is normalized.
   pluginName = pluginPackageJson.name;
 
-  if (buidlerContext.loadedPlugins.includes(pluginName)) {
+  if (redspotContext.loadedPlugins.includes(pluginName)) {
     return;
   }
 
@@ -112,7 +112,7 @@ export function usePlugin(
       }
 
       if (dependencyPackageJson === undefined) {
-        throw new BuidlerError(ERRORS.PLUGINS.MISSING_DEPENDENCY, {
+        throw new RedspotError(ERRORS.PLUGINS.MISSING_DEPENDENCY, {
           plugin: pluginName,
           dependency: dependencyName,
           extraMessage: globalWarning,
@@ -128,7 +128,7 @@ export function usePlugin(
           includePrerelease: true,
         })
       ) {
-        throw new BuidlerError(ERRORS.PLUGINS.DEPENDENCY_VERSION_MISMATCH, {
+        throw new RedspotError(ERRORS.PLUGINS.DEPENDENCY_VERSION_MISMATCH, {
           plugin: pluginName,
           dependency: dependencyName,
           extraMessage: globalWarning,
@@ -144,7 +144,7 @@ export function usePlugin(
   const pluginPath = require.resolve(pluginName, options);
   loadPluginFile(pluginPath);
 
-  buidlerContext.setPluginAsLoaded(pluginName);
+  redspotContext.setPluginAsLoaded(pluginName);
 }
 
 export function loadPluginFile(absolutePluginFilePath: string) {

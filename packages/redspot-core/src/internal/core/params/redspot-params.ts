@@ -1,7 +1,7 @@
-import { BuidlerParamDefinitions } from "../../../types";
+import { RedspotParamDefinitions } from "../../../types";
 import * as types from "./argumentTypes";
 
-export const BUIDLER_PARAM_DEFINITIONS: BuidlerParamDefinitions = {
+export const REDSPOT_PARAM_DEFINITIONS: RedspotParamDefinitions = {
   network: {
     name: "network",
     defaultValue: undefined,
@@ -23,7 +23,7 @@ export const BUIDLER_PARAM_DEFINITIONS: BuidlerParamDefinitions = {
   version: {
     name: "version",
     defaultValue: false,
-    description: "Shows buidler's version.",
+    description: "Shows redspot's version.",
     type: types.boolean,
     isFlag: true,
     isOptional: true,
@@ -41,7 +41,7 @@ export const BUIDLER_PARAM_DEFINITIONS: BuidlerParamDefinitions = {
   config: {
     name: "config",
     defaultValue: undefined,
-    description: "A Buidler config file.",
+    description: "A Redspot config file.",
     type: types.inputFile,
     isFlag: false,
     isOptional: true,
@@ -50,7 +50,7 @@ export const BUIDLER_PARAM_DEFINITIONS: BuidlerParamDefinitions = {
   verbose: {
     name: "verbose",
     defaultValue: false,
-    description: "Enables Buidler verbose logging",
+    description: "Enables Redspot verbose logging",
     type: types.boolean,
     isFlag: true,
     isOptional: true,
@@ -59,7 +59,7 @@ export const BUIDLER_PARAM_DEFINITIONS: BuidlerParamDefinitions = {
   maxMemory: {
     name: "maxMemory",
     defaultValue: undefined,
-    description: "The maximum amount of memory that Buidler can use.",
+    description: "The maximum amount of memory that Redspot can use.",
     type: types.int,
     isOptional: true,
     isFlag: false,

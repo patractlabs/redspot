@@ -1,61 +1,61 @@
-import { BuidlerRuntimeEnvironment, ConfigExtender } from "../types";
+import { RedspotRuntimeEnvironment, ConfigExtender } from "../types";
 import { ExtenderManager } from "./core/config/extenders";
-import { BuidlerError } from "./core/errors";
+import { RedspotError } from "./core/errors";
 import { ERRORS } from "./core/errors-list";
 import { TasksDSL } from "./core/tasks/dsl";
 
-export type GlobalWithBuidlerContext = NodeJS.Global & {
-  __buidlerContext: BuidlerContext;
+export type GlobalWithRedspotContext = NodeJS.Global & {
+  __redspotContext: RedspotContext;
 };
 
-export class BuidlerContext {
+export class RedspotContext {
   public static isCreated(): boolean {
-    const globalWithBuidlerContext = (global as any) as GlobalWithBuidlerContext;
-    return globalWithBuidlerContext.__buidlerContext !== undefined;
+    const globalWithRedspotContext = (global as any) as GlobalWithRedspotContext;
+    return globalWithRedspotContext.__redspotContext !== undefined;
   }
 
-  public static createBuidlerContext(): BuidlerContext {
+  public static createRedspotContext(): RedspotContext {
     if (this.isCreated()) {
-      throw new BuidlerError(ERRORS.GENERAL.CONTEXT_ALREADY_CREATED);
+      throw new RedspotError(ERRORS.GENERAL.CONTEXT_ALREADY_CREATED);
     }
-    const globalWithBuidlerContext = (global as any) as GlobalWithBuidlerContext;
-    const ctx = new BuidlerContext();
-    globalWithBuidlerContext.__buidlerContext = ctx;
+    const globalWithRedspotContext = (global as any) as GlobalWithRedspotContext;
+    const ctx = new RedspotContext();
+    globalWithRedspotContext.__redspotContext = ctx;
     return ctx;
   }
 
-  public static getBuidlerContext(): BuidlerContext {
-    const globalWithBuidlerContext = (global as any) as GlobalWithBuidlerContext;
-    const ctx = globalWithBuidlerContext.__buidlerContext;
+  public static getRedspotContext(): RedspotContext {
+    const globalWithRedspotContext = (global as any) as GlobalWithRedspotContext;
+    const ctx = globalWithRedspotContext.__redspotContext;
     if (ctx === undefined) {
-      throw new BuidlerError(ERRORS.GENERAL.CONTEXT_NOT_CREATED);
+      throw new RedspotError(ERRORS.GENERAL.CONTEXT_NOT_CREATED);
     }
     return ctx;
   }
 
-  public static deleteBuidlerContext() {
+  public static deleteRedspotContext() {
     const globalAsAny = global as any;
-    globalAsAny.__buidlerContext = undefined;
+    globalAsAny.__redspotContext = undefined;
   }
 
   public readonly tasksDSL = new TasksDSL();
   public readonly extendersManager = new ExtenderManager();
-  public environment?: BuidlerRuntimeEnvironment;
+  public environment?: RedspotRuntimeEnvironment;
   public readonly loadedPlugins: string[] = [];
   public readonly configExtenders: ConfigExtender[] = [];
 
   private _configPath?: string;
 
-  public setBuidlerRuntimeEnvironment(env: BuidlerRuntimeEnvironment) {
+  public setRedspotRuntimeEnvironment(env: RedspotRuntimeEnvironment) {
     if (this.environment !== undefined) {
-      throw new BuidlerError(ERRORS.GENERAL.CONTEXT_BRE_ALREADY_DEFINED);
+      throw new RedspotError(ERRORS.GENERAL.CONTEXT_BRE_ALREADY_DEFINED);
     }
     this.environment = env;
   }
 
-  public getBuidlerRuntimeEnvironment(): BuidlerRuntimeEnvironment {
+  public getRedspotRuntimeEnvironment(): RedspotRuntimeEnvironment {
     if (this.environment === undefined) {
-      throw new BuidlerError(ERRORS.GENERAL.CONTEXT_BRE_NOT_DEFINED);
+      throw new RedspotError(ERRORS.GENERAL.CONTEXT_BRE_NOT_DEFINED);
     }
     return this.environment;
   }
@@ -70,7 +70,7 @@ export class BuidlerContext {
 
   public getConfigPath(): string {
     if (this._configPath === undefined) {
-      throw new BuidlerError(ERRORS.GENERAL.CONTEXT_CONFIG_PATH_NOT_SET);
+      throw new RedspotError(ERRORS.GENERAL.CONTEXT_CONFIG_PATH_NOT_SET);
     }
 
     return this._configPath;

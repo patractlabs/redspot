@@ -1,10 +1,10 @@
 import debug from "debug";
 import path from "path";
-import { BuidlerArguments } from "../../types";
+import { RedspotArguments } from "../../types";
 import { ExecutionMode, getExecutionMode } from "../core/execution-mode";
 import { getEnvVariablesMap } from "../core/params/env-variables";
 
-const log = debug("buidler:core:scripts-runner");
+const log = debug("redspot:core:scripts-runner");
 
 export async function runScript(
   scriptPath: string,
@@ -38,23 +38,23 @@ export async function runScript(
   });
 }
 
-export async function runScriptWithBuidler(
-  buidlerArguments: BuidlerArguments,
+export async function runScriptWithRedspot(
+  redspotArguments: RedspotArguments,
   scriptPath: string,
   scriptArgs: string[] = [],
   extraNodeArgs: string[] = [],
   extraEnvVars: { [name: string]: string } = {}
 ): Promise<number> {
-  log(`Creating Buidler subprocess to run ${scriptPath}`);
+  log(`Creating Redspot subprocess to run ${scriptPath}`);
 
-  const buidlerRegisterPath = resolveBuidlerRegisterPath();
+  const redspotRegisterPath = resolveRedspotRegisterPath();
 
   return runScript(
     scriptPath,
     scriptArgs,
-    [...extraNodeArgs, "--require", buidlerRegisterPath],
+    [...extraNodeArgs, "--require", redspotRegisterPath],
     {
-      ...getEnvVariablesMap(buidlerArguments),
+      ...getEnvVariablesMap(redspotArguments),
       ...extraEnvVars,
     }
   );
@@ -86,10 +86,10 @@ function withFixedInspectArg(argv: string[]) {
 }
 
 /**
- * Ensure buidler/register source file path is resolved to compiled JS file
+ * Ensure redspot/register source file path is resolved to compiled JS file
  * instead of TS source file, so we don't need to run ts-node unnecessarily.
  */
-export function resolveBuidlerRegisterPath() {
+export function resolveRedspotRegisterPath() {
   const executionMode = getExecutionMode();
   const isCompiledInstallation = [
     ExecutionMode.EXECUTION_MODE_LOCAL_INSTALLATION,
@@ -97,18 +97,18 @@ export function resolveBuidlerRegisterPath() {
     ExecutionMode.EXECUTION_MODE_LINKED,
   ].includes(executionMode);
 
-  const buidlerCoreBaseDir = path.join(__dirname, "..", "..");
+  const redspotCoreBaseDir = path.join(__dirname, "..", "..");
 
-  const buidlerCoreCompiledDir = isCompiledInstallation
-    ? buidlerCoreBaseDir
-    : path.join(buidlerCoreBaseDir, "..");
+  const redspotCoreCompiledDir = isCompiledInstallation
+    ? redspotCoreBaseDir
+    : path.join(redspotCoreBaseDir, "..");
 
-  const buidlerCoreRegisterCompiledPath = path.join(
-    buidlerCoreCompiledDir,
+  const redspotCoreRegisterCompiledPath = path.join(
+    redspotCoreCompiledDir,
     "register"
   );
 
-  return buidlerCoreRegisterCompiledPath;
+  return redspotCoreRegisterCompiledPath;
 }
 
 function getTsNodeArgsIfNeeded(scriptPath: string) {

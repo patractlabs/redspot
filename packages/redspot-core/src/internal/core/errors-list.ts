@@ -32,7 +32,7 @@ export const ERROR_RANGES = {
   BUILTIN_TASKS: { min: 600, max: 699, title: "Built-in tasks errors" },
   ARTIFACTS: { min: 700, max: 799, title: "Artifacts related errors" },
   PLUGINS: { min: 800, max: 899, title: "Plugin system errors" },
-  INTERNAL: { min: 900, max: 999, title: "Internal Buidler errors" },
+  INTERNAL: { min: 900, max: 999, title: "Internal Redspot errors" },
 };
 
 export const ERRORS: {
@@ -43,70 +43,70 @@ export const ERRORS: {
   GENERAL: {
     NOT_INSIDE_PROJECT: {
       number: 1,
-      message: "You are not inside a Buidler project.",
-      title: "You are not inside a Buidler project",
-      description: `You are trying to run Buidler outside of a Buidler project.
+      message: "You are not inside a Redspot project.",
+      title: "You are not inside a Redspot project",
+      description: `You are trying to run Redspot outside of a Redspot project.
 
-You can learn hoy to use Buidler by reading the [Getting Started guide](./README.md).`,
+You can learn hoy to use Redspot by reading the [Getting Started guide](./README.md).`,
       shouldBeReported: false,
     },
     INVALID_NODE_VERSION: {
       number: 2,
       message:
-        "Buidler doesn't support your Node.js version. It should be %requirement%.",
+        "Redspot doesn't support your Node.js version. It should be %requirement%.",
       title: "Unsupported Node.js",
-      description: `Buidler doesn't support your Node.js version.
+      description: `Redspot doesn't support your Node.js version.
 
 Please upgrade your version of Node.js and try again.`,
       shouldBeReported: false,
     },
     UNSUPPORTED_OPERATION: {
       number: 3,
-      message: "%operation% is not supported in Buidler.",
+      message: "%operation% is not supported in Redspot.",
       title: "Unsupported operation",
       description: `You are tying to perform an unsupported operation.
 
 Unless you are creating a task or plugin, this is probably a bug.
 
-Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us improve Buidler.`,
+Please [report it](https://github.com/patractlabs/redspot-0.2/issues/new) to help us improve Redspot.`,
       shouldBeReported: true,
     },
     CONTEXT_ALREADY_CREATED: {
       number: 4,
-      message: "BuidlerContext is already created.",
-      title: "Buidler was already initialized",
-      description: `Buidler initialization was executed twice. This is a bug.
+      message: "RedspotContext is already created.",
+      title: "Redspot was already initialized",
+      description: `Redspot initialization was executed twice. This is a bug.
 
-Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us improve Buidler.`,
+Please [report it](https://github.com/patractlabs/redspot-0.2/issues/new) to help us improve Redspot.`,
       shouldBeReported: true,
     },
     CONTEXT_NOT_CREATED: {
       number: 5,
-      message: "BuidlerContext is not created.",
-      title: "Buidler wasn't initialized",
-      description: `Buidler initialization failed. This is a bug.
+      message: "RedspotContext is not created.",
+      title: "Redspot wasn't initialized",
+      description: `Redspot initialization failed. This is a bug.
 
-Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us improve Buidler.`,
+Please [report it](https://github.com/patractlabs/redspot-0.2/issues/new) to help us improve Redspot.`,
       shouldBeReported: true,
     },
     CONTEXT_BRE_NOT_DEFINED: {
       number: 6,
       message:
-        "Buidler Runtime Environment is not defined in the BuidlerContext.",
-      title: "Buidler Runtime Environment not created",
-      description: `Buidler initialization failed. This is a bug.
+        "Redspot Runtime Environment is not defined in the RedspotContext.",
+      title: "Redspot Runtime Environment not created",
+      description: `Redspot initialization failed. This is a bug.
 
-Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us improve Buidler.`,
+Please [report it](https://github.com/patractlabs/redspot-0.2/issues/new) to help us improve Redspot.`,
       shouldBeReported: true,
     },
     CONTEXT_BRE_ALREADY_DEFINED: {
       number: 7,
       message:
-        "Buidler Runtime Environment is already defined in the BuidlerContext",
-      title: "Tried to create the Buidler Runtime Environment twice",
-      description: `The Buidler initialization process was executed twice. This is a bug.
+        "Redspot Runtime Environment is already defined in the RedspotContext",
+      title: "Tried to create the Redspot Runtime Environment twice",
+      description: `The Redspot initialization process was executed twice. This is a bug.
 
-Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us improve Buidler.`,
+Please [report it](https://github.com/patractlabs/redspot-0.2/issues/new) to help us improve Redspot.`,
       shouldBeReported: true,
     },
     INVALID_CONFIG: {
@@ -115,45 +115,45 @@ Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us i
 
 %errors%
 
-To learn more about Buidler's configuration, please go to https://buidler.dev/config/`,
-      title: "Invalid Buidler config",
+To learn more about Redspot's configuration, please go to https://github.com/patractlabs/redspot-0.2`,
+      title: "Invalid Redspot config",
       description: `You have one or more errors in your config file.
 
-Check the error message for details, or go to [documentation](https://buidler.dev/config/) to learn more.`,
+Check the error message for details, or go to [documentation](https://github.com/patractlabs/redspot-0.2) to learn more.`,
       shouldBeReported: false,
     },
     LIB_IMPORTED_FROM_THE_CONFIG: {
       number: 9,
-      message: `Error while loading Buidler's configuration.
-You probably imported @nomiclabs/buidler instead of @nomiclabs/buidler/config`,
+      message: `Error while loading Redspot's configuration.
+You probably imported @nomiclabs/redspot instead of @nomiclabs/redspot/config`,
       title: "Failed to load config file",
       description: `There was an error while loading your config file.
 
-The most common source of errors is trying to import \`@nomiclabs/buidler\` instead of \`@nomiclabs/buidler/config\`.
+The most common source of errors is trying to import \`@nomiclabs/redspot\` instead of \`@nomiclabs/redspot/config\`.
 
 Please make sure your config file is correct.`,
       shouldBeReported: false,
     },
     USER_CONFIG_MODIFIED: {
       number: 10,
-      message: `Error while loading Buidler's configuration.
+      message: `Error while loading Redspot's configuration.
 You or one of your plugins is trying to modify the userConfig.%path% value from a config extender`,
       title: "Attempted to modify the user's config",
       description: `An attempt to modify the user's config was made.
 
 This is probably a bug in one of your plugins.
 
-Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us improve Buidler.`,
+Please [report it](https://github.com/patractlabs/redspot-0.2/issues/new) to help us improve Redspot.`,
       shouldBeReported: true,
     },
     CONTEXT_CONFIG_PATH_NOT_SET: {
       number: 11,
       message:
-        "Trying to access the BuidlerContext's config path field but it wasn't set",
-      title: "BuidlerContext's config path not defined",
-      description: `The Buidler initialization process was incomplete. This is a bug.
+        "Trying to access the RedspotContext's config path field but it wasn't set",
+      title: "RedspotContext's config path not defined",
+      description: `The Redspot initialization process was incomplete. This is a bug.
 
-Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us improve Buidler.`,
+Please [report it](https://github.com/patractlabs/redspot-0.2/issues/new) to help us improve Redspot.`,
       shouldBeReported: true,
     },
   },
@@ -162,30 +162,30 @@ Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us i
       number: 100,
       message: "Network %network% doesn't exist",
       title: "Selected network doesn't exist",
-      description: `You are trying to run Buidler with a non-existent network.
+      description: `You are trying to run Redspot with a non-existent network.
 
-Read the [documentation](https://buidler.dev/config/#networks-configuration) to learn how to define custom networks.`,
+Read the [documentation](https://github.com/patractlabs/redspot-0.2#networks-configuration) to learn how to define custom networks.`,
       shouldBeReported: false,
     },
     INVALID_GLOBAL_CHAIN_ID: {
       number: 101,
       message:
-        "Buidler was set to use chain id %configChainId%, but connected to a chain with id %connectionChainId%.",
+        "Redspot was set to use chain id %configChainId%, but connected to a chain with id %connectionChainId%.",
       title: "Connected to the wrong network",
-      description: `Your config specifies a chain id for the network you are trying to used, but Buidler detected anotherone.
+      description: `Your config specifies a chain id for the network you are trying to used, but Redspot detected anotherone.
 
 Please make sure you are setting your config correctly.`,
       shouldBeReported: false,
     },
-    /* DEPRECATED: This error only happened because of a misconception in Buidler */
+    /* DEPRECATED: This error only happened because of a misconception in Redspot */
     DEPRECATED_INVALID_TX_CHAIN_ID: {
       number: 102,
       message:
-        "Trying to send a tx with chain id %txChainId%, but Buidler is connected to a chain with id %chainId%.",
+        "Trying to send a tx with chain id %txChainId%, but Redspot is connected to a chain with id %chainId%.",
       title: "Incorrectly send chainId in a transaction",
-      description: `Buidler sent the \`chainId\` field in a transaction.
+      description: `Redspot sent the \`chainId\` field in a transaction.
 
-Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us improve Buidler.`,
+Please [report it](https://github.com/patractlabs/redspot-0.2/issues/new) to help us improve Redspot.`,
       shouldBeReported: false,
     },
     ETHSIGN_MISSING_DATA_PARAM: {
@@ -203,7 +203,7 @@ Please check that you are sending a \`data\` parameter.`,
         "Account %account% is not managed by the node you are connected to.",
       title: "Unrecognized account",
       description: `You are trying to send a transaction or sign some data with an
-account not managed by your Ethereum node nor Buidler.
+account not managed by your Ethereum node nor Redspot.
 
 Please double check your accounts and the \`from\` parameter in your RPC calls.`,
       shouldBeReported: false,
@@ -235,7 +235,7 @@ Please make sure that your Ethereum node has unlocked accounts.`,
       title: "Invalid HD path",
       description: `An invalid HD/BIP32 derivation path was provided in your config.
 
-Read the [documentation](https://buidler.dev/config/#hd-wallet-config) to learn how to define HD accounts correctly.`,
+Read the [documentation](https://github.com/patractlabs/redspot-0.2#hd-wallet-config) to learn how to define HD accounts correctly.`,
       shouldBeReported: false,
     },
     INVALID_RPC_QUANTITY_VALUE: {
@@ -311,12 +311,12 @@ Please double check your task definitions.`,
 Please double check your task definitions.`,
       shouldBeReported: false,
     },
-    PARAM_CLASHES_WITH_BUIDLER_PARAM: {
+    PARAM_CLASHES_WITH_REDSPOT_PARAM: {
       number: 202,
       message:
-        "Could not set param %paramName% for task %taskName% because its name is used as a param for Buidler.",
-      title: "Buidler and task param names clash",
-      description: `Could not add a param to your task because its name is used as a param for Buidler.
+        "Could not set param %paramName% for task %taskName% because its name is used as a param for Redspot.",
+      title: "Redspot and task param names clash",
+      description: `Could not add a param to your task because its name is used as a param for Redspot.
 
 Please double check your task definitions.`,
       shouldBeReported: false,
@@ -433,7 +433,7 @@ Please double check your task definitions.`,
       number: 300,
       message: "Invalid environment variable %varName%'s value: %value%",
       title: "Invalid environment variable value",
-      description: `You are setting one of Buidler arguments using an environment variable, but it has an incorrect value.
+      description: `You are setting one of Redspot arguments using an environment variable, but it has an incorrect value.
 
 Please double check your environment variables.`,
       shouldBeReported: false,
@@ -442,7 +442,7 @@ Please double check your environment variables.`,
       number: 301,
       message: "Invalid value %value% for argument %name% of type %type%",
       title: "Invalid argument type",
-      description: `One of your Buidler or task's arguments has an invalid type.
+      description: `One of your Redspot or task's arguments has an invalid type.
 
 Please double check your arguments.`,
       shouldBeReported: false,
@@ -472,20 +472,20 @@ Please double check the name of the task you are trying to run.`,
       message:
         "Unrecognised command line argument %argument%.\nNote that task arguments must come after the task name.",
       title: "Unrecognized command line argument",
-      description: `Buidler couldn't recognize one of your command line arguments.
+      description: `Redspot couldn't recognize one of your command line arguments.
 
 This may be because you are writing it before the task name. It should come after it.
 
-Please double check how you invoked Buidler.`,
+Please double check how you invoked Redspot.`,
       shouldBeReported: false,
     },
     UNRECOGNIZED_PARAM_NAME: {
       number: 305,
       message: "Unrecognized param %param%",
       title: "Unrecognized param",
-      description: `Buidler couldn't recognize one of your tasks' parameters.
+      description: `Redspot couldn't recognize one of your tasks' parameters.
 
-Please double check how you invoked Buidler or run your task.`,
+Please double check how you invoked Redspot or run your task.`,
       shouldBeReported: false,
     },
     MISSING_TASK_ARGUMENT: {
@@ -494,7 +494,7 @@ Please double check how you invoked Buidler or run your task.`,
       title: "Missing task argument",
       description: `You tried to run a task, but one of its required arguments was missing.
 
-Please double check how you invoked Buidler or run your task.`,
+Please double check how you invoked Redspot or run your task.`,
       shouldBeReported: false,
     },
     MISSING_POSITIONAL_ARG: {
@@ -503,7 +503,7 @@ Please double check how you invoked Buidler or run your task.`,
       title: "Missing task positional argument",
       description: `You tried to run a task, but one of its required arguments was missing.
 
-Please double check how you invoked Buidler or run your task.`,
+Please double check how you invoked Redspot or run your task.`,
       shouldBeReported: false,
     },
     UNRECOGNIZED_POSITIONAL_ARG: {
@@ -512,7 +512,7 @@ Please double check how you invoked Buidler or run your task.`,
       title: "Unrecognized task positional argument",
       description: `You tried to run a task with more positional arguments than needed.
 
-Please double check how you invoked Buidler or run your task.`,
+Please double check how you invoked Redspot or run your task.`,
       shouldBeReported: false,
     },
     REPEATED_PARAM: {
@@ -521,16 +521,16 @@ Please double check how you invoked Buidler or run your task.`,
       title: "Repeated task parameter",
       description: `You tried to run a task with a repeated parameter.
 
-Please double check how you invoked Buidler or run your task.`,
+Please double check how you invoked Redspot or run your task.`,
       shouldBeReported: false,
     },
     PARAM_NAME_INVALID_CASING: {
       number: 310,
       message: "Invalid param %param%. Command line params must be lowercase.",
       title: "Invalid casing in command line parameter",
-      description: `You tried to run buidler with a parameter with invalid casing. They must be lowercase.
+      description: `You tried to run redspot with a parameter with invalid casing. They must be lowercase.
 
-Please double check how you invoked Buidler.`,
+Please double check how you invoked Redspot.`,
       shouldBeReported: false,
     },
     INVALID_JSON_ARGUMENT: {
@@ -539,7 +539,7 @@ Please double check how you invoked Buidler.`,
       title: "Invalid JSON parameter",
       description: `You tried to run a task with an invalid JSON parameter.
 
-Please double check how you invoked Buidler or run your task.`,
+Please double check how you invoked Redspot or run your task.`,
       shouldBeReported: false,
     },
   },
@@ -555,7 +555,7 @@ Please double check how you invoked Buidler or run your task.`,
       number: 401,
       message: "File %file% is outside the project.",
       title: "Tried to import file outside your project",
-      description: `One of your projects tried to import a file that it's outside your Buidler project.
+      description: `One of your projects tried to import a file that it's outside your Redspot project.
 
 This is disabled for security reasons.`,
       shouldBeReported: false,
@@ -567,7 +567,7 @@ This is disabled for security reasons.`,
       title: "Resolved library file as a local one",
       description: `One of your libraries' files was treated as a local file. This is a bug.
 
-Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us improve Buidler.`,
+Please [report it](https://github.com/patractlabs/redspot-0.2/issues/new) to help us improve Redspot.`,
       shouldBeReported: true,
     },
     LIBRARY_NOT_INSTALLED: {
@@ -666,14 +666,14 @@ Please check your Internet connection.`,
       title: "Compilation failed",
       description: `Your smart contracts failed to compile.
 
-Please check Buidler's output for more details.`,
+Please check Redspot's output for more details.`,
       shouldBeReported: false,
     },
     RUN_FILE_NOT_FOUND: {
       number: 601,
       message: "Script %script% doesn't exist.",
       title: "Script doesn't exist",
-      description: `Tried to use \`buidler run\` to execut a non-existing script.
+      description: `Tried to use \`redspot run\` to execut a non-existing script.
 
 Please double check your script's path`,
       shouldBeReported: false,
@@ -684,14 +684,14 @@ Please double check your script's path`,
       title: "Error running script",
       description: `Running a script resulted in an error.
 
-Please check Buidler's output for more details.`,
+Please check Redspot's output for more details.`,
       shouldBeReported: false,
     },
     FLATTEN_CYCLE: {
       number: 603,
-      message: "Buidler flatten doesn't support cyclic dependencies.",
+      message: "Redspot flatten doesn't support cyclic dependencies.",
       title: "Flatten detected cyclic dependencies",
-      description: `Buidler flatten doesn't support cyclic dependencies.
+      description: `Redspot flatten doesn't support cyclic dependencies.
 
 We recommend not using this kind of dependencies.`,
       shouldBeReported: false,
@@ -713,9 +713,9 @@ We recommend not using this kind of dependencies.`,
     JSONRPC_UNSUPPORTED_NETWORK: {
       number: 606,
       message:
-        "Unsupported network for JSON-RPC server. Only buidlerevm is currently supported.",
+        "Unsupported network for JSON-RPC server. Only redspotevm is currently supported.",
       title: "Unsupported network for JSON-RPC server.",
-      description: `JSON-RPC server can only be started when running the BuidlerEVM network.
+      description: `JSON-RPC server can only be started when running the RedspotEVM network.
 
 To start the JSON-RPC server, retry the command without the --network parameter.`,
       shouldBeReported: false,
@@ -740,7 +740,7 @@ Please double check that your contracts have been compiled and your artifact's n
       title: "Plugin not installed",
       description: `You are trying to use a plugin that hasn't been installed.
 
-Please follow Buidler's instructions to resolve this.`,
+Please follow Redspot's instructions to resolve this.`,
       shouldBeReported: false,
     },
     MISSING_DEPENDENCY: {
@@ -750,7 +750,7 @@ Please follow Buidler's instructions to resolve this.`,
       title: "Plugin dependencies not installed",
       description: `You are trying to use a plugin with unmet dependencies.
 
-Please follow Buidler's instructions to resolve this.`,
+Please follow Redspot's instructions to resolve this.`,
       shouldBeReported: false,
     },
     DEPENDENCY_VERSION_MISMATCH: {
@@ -761,7 +761,7 @@ If you have installed %dependency% yourself, please reinstall it with a valid ve
       title: "Plugin dependencies's version mismatch",
       description: `You are trying to use a plugin that requires a different version of one of its dependencies.
 
-Please follow Buidler's instructions to resolve this.`,
+Please follow Redspot's instructions to resolve this.`,
       shouldBeReported: false,
     },
     OLD_STYLE_IMPORT_DETECTED: {
@@ -783,7 +783,7 @@ Please use \`usePlugin(npm-plugin-package)\` instead.`,
       title: "Invalid error message template",
       description: `An error message template contains an invalid variable name. This is a bug.
 
-Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us improve Buidler.`,
+Please [report it](https://github.com/patractlabs/redspot-0.2/issues/new) to help us improve Redspot.`,
       shouldBeReported: true,
     },
     TEMPLATE_VALUE_CONTAINS_VARIABLE_TAG: {
@@ -793,7 +793,7 @@ Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us i
       title: "Invalid error message replacement",
       description: `Tried to replace an error message variable with a value that contains another variable name. This is a bug.
 
-Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us improve Buidler.`,
+Please [report it](https://github.com/patractlabs/redspot-0.2/issues/new) to help us improve Redspot.`,
       shouldBeReported: true,
     },
     TEMPLATE_VARIABLE_TAG_MISSING: {
@@ -802,7 +802,7 @@ Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us i
       title: "Missing replacement value from error message template",
       description: `An error message template is missing a replacement value. This is a bug.
 
-Please [report it](https://github.com/nomiclabs/buidler/issues/new) to help us improve Buidler.`,
+Please [report it](https://github.com/patractlabs/redspot-0.2/issues/new) to help us improve Redspot.`,
       shouldBeReported: true,
     },
   },

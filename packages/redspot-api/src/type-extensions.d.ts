@@ -13,7 +13,7 @@ declare module "redspot/types" {
     signer?: ethers.Signer
   ): Promise<ethers.ContractFactory>;
 
-  interface BuidlerRuntimeEnvironment {
+  interface RedspotRuntimeEnvironment {
     api?: Api;
   }
 }

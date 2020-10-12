@@ -1,4 +1,4 @@
-export const BUIDLER_NAME = "Redspot";
+export const REDSPOT_NAME = "Redspot";
 
-export const BUIDLER_EXECUTABLE_NAME = "buidler";
-export const BUIDLEREVM_NETWORK_NAME = "localhost";
+export const REDSPOT_EXECUTABLE_NAME = "redspot";
+export const REDSPOT_DEFAULT_NETWORK_NAME = "localhost";

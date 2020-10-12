@@ -1,8 +1,8 @@
 import debug from "debug";
-import { BuidlerContext } from "./internal/context";
+import { RedspotContext } from "./internal/context";
 import { loadConfigAndTasks } from "./internal/core/config/config-loading";
-import { getEnvBuidlerArguments } from "./internal/core/params/env-variables";
-import { BUIDLER_PARAM_DEFINITIONS } from "./internal/core/params/redspot-params";
+import { getEnvRedspotArguments } from "./internal/core/params/env-variables";
+import { REDSPOT_PARAM_DEFINITIONS } from "./internal/core/params/redspot-params";
 import { Environment } from "./internal/core/runtime-environment";
 import { loadTsNodeIfPresent } from "./internal/core/typescript-support";
 import {
@@ -10,11 +10,11 @@ import {
   isNodeCalledWithoutAScript,
 } from "./internal/util/console";
 
-if (!BuidlerContext.isCreated()) {
+if (!RedspotContext.isCreated()) {
   // tslint:disable-next-line no-var-requires
   require("source-map-support/register");
 
-  const ctx = BuidlerContext.createBuidlerContext();
+  const ctx = RedspotContext.createRedspotContext();
 
   if (isNodeCalledWithoutAScript()) {
     disableReplWriterShowProxy();
@@ -22,31 +22,31 @@ if (!BuidlerContext.isCreated()) {
 
   loadTsNodeIfPresent();
 
-  const buidlerArguments = getEnvBuidlerArguments(
-    BUIDLER_PARAM_DEFINITIONS,
+  const redspotArguments = getEnvRedspotArguments(
+    REDSPOT_PARAM_DEFINITIONS,
     process.env
   );
 
-  if (buidlerArguments.verbose) {
-    debug.enable("buidler*");
+  if (redspotArguments.verbose) {
+    debug.enable("redspot*");
   }
 
-  const config = loadConfigAndTasks(buidlerArguments);
+  const config = loadConfigAndTasks(redspotArguments);
 
   // TODO: This is here for backwards compatibility.
   // There are very few projects using this.
-  if (buidlerArguments.network === undefined) {
-    buidlerArguments.network = config.defaultNetwork;
+  if (redspotArguments.network === undefined) {
+    redspotArguments.network = config.defaultNetwork;
   }
 
   const env = new Environment(
     config,
-    buidlerArguments,
+    redspotArguments,
     ctx.tasksDSL.getTaskDefinitions(),
     ctx.extendersManager.getExtenders()
   );
 
-  ctx.setBuidlerRuntimeEnvironment(env);
+  ctx.setRedspotRuntimeEnvironment(env);
 
   env.injectToGlobal();
 }

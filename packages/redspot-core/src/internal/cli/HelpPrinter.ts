@@ -1,10 +1,10 @@
 import {
-  BuidlerParamDefinitions,
+  RedspotParamDefinitions,
   ParamDefinition,
   ParamDefinitionsMap,
   TasksMap,
 } from "../../types";
-import { BuidlerError } from "../core/errors";
+import { RedspotError } from "../core/errors";
 import { ERRORS } from "../core/errors-list";
 import { ArgumentsParser } from "./ArgumentsParser";
 
@@ -13,7 +13,7 @@ export class HelpPrinter {
     private readonly _programName: string,
     private readonly _executableName: string,
     private readonly _version: string,
-    private readonly _buidlerParamDefinitions: BuidlerParamDefinitions,
+    private readonly _redspotParamDefinitions: RedspotParamDefinitions,
     private readonly _tasks: TasksMap
   ) {}
 
@@ -26,7 +26,7 @@ export class HelpPrinter {
 
     console.log("GLOBAL OPTIONS:\n");
 
-    this._printParamDetails(this._buidlerParamDefinitions);
+    this._printParamDetails(this._redspotParamDefinitions);
 
     console.log("\n\nAVAILABLE TASKS:\n");
 
@@ -58,7 +58,7 @@ export class HelpPrinter {
     const taskDefinition = this._tasks[taskName];
 
     if (taskDefinition === undefined) {
-      throw new BuidlerError(ERRORS.ARGUMENTS.UNRECOGNIZED_TASK, {
+      throw new RedspotError(ERRORS.ARGUMENTS.UNRECOGNIZED_TASK, {
         task: taskName,
       });
     }

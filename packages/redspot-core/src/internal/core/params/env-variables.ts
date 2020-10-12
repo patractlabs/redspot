@@ -1,10 +1,10 @@
-import { BuidlerArguments, BuidlerParamDefinitions } from "../../../types";
+import { RedspotArguments, RedspotParamDefinitions } from "../../../types";
 import { ArgumentsParser } from "../../cli/ArgumentsParser";
 import { unsafeObjectKeys } from "../../util/unsafe";
-import { BuidlerError } from "../errors";
+import { RedspotError } from "../errors";
 import { ERRORS } from "../errors-list";
 
-const BUIDLER_ENV_ARGUMENT_PREFIX = "BUIDLER_";
+const REDSPOT_ENV_ARGUMENT_PREFIX = "REDSPOT_";
 
 interface ProcessEnv {
   [key: string]: string | undefined;
@@ -14,17 +14,17 @@ export function paramNameToEnvVariable(paramName: string): string {
   // We create it starting from the result of ArgumentsParser.paramNameToCLA
   // so it's easier to explain and understand their equivalences.
   return ArgumentsParser.paramNameToCLA(paramName)
-    .replace(ArgumentsParser.PARAM_PREFIX, BUIDLER_ENV_ARGUMENT_PREFIX)
+    .replace(ArgumentsParser.PARAM_PREFIX, REDSPOT_ENV_ARGUMENT_PREFIX)
     .replace(/-/g, "_")
     .toUpperCase();
 }
 
 export function getEnvVariablesMap(
-  buidlerArguments: BuidlerArguments
+  redspotArguments: RedspotArguments
 ): { [envVar: string]: string } {
   const values: { [envVar: string]: string } = {};
 
-  for (const [name, value] of Object.entries(buidlerArguments)) {
+  for (const [name, value] of Object.entries(redspotArguments)) {
     if (value === undefined) {
       continue;
     }
@@ -35,10 +35,10 @@ export function getEnvVariablesMap(
   return values;
 }
 
-export function getEnvBuidlerArguments(
-  paramDefinitions: BuidlerParamDefinitions,
+export function getEnvRedspotArguments(
+  paramDefinitions: RedspotParamDefinitions,
   envVariables: ProcessEnv
-): BuidlerArguments {
+): RedspotArguments {
   const envArgs: any = {};
 
   for (const paramName of unsafeObjectKeys(paramDefinitions)) {
@@ -50,7 +50,7 @@ export function getEnvBuidlerArguments(
       try {
         envArgs[paramName] = definition.type.parse(paramName, rawValue);
       } catch (error) {
-        throw new BuidlerError(
+        throw new RedspotError(
           ERRORS.ARGUMENTS.INVALID_ENV_VAR_VALUE,
           {
             varName: envVarName,
@@ -65,5 +65,5 @@ export function getEnvBuidlerArguments(
   }
 
   // TODO: This is a little type-unsafe, but we know we have all the needed arguments
-  return envArgs as BuidlerArguments;
+  return envArgs as RedspotArguments;
 }

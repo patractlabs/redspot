@@ -108,11 +108,11 @@ export class Anonymizer {
       .replace(hexRegex, (match) => match.replace(/./g, "x"));
   }
 
-  public raisedByBuidler(event: Event): boolean {
+  public raisedByRedspot(event: Event): boolean {
     const exceptions = event?.exception?.values;
 
     if (exceptions === undefined) {
-      // if we can't prove that the exception doesn't come from buidler,
+      // if we can't prove that the exception doesn't come from redspot,
       // we err on the side of reporting the error
       return true;
     }
@@ -130,9 +130,9 @@ export class Anonymizer {
         continue;
       }
 
-      // we stop after finding either a buidler file or a file from the user's
+      // we stop after finding either a redspot file or a file from the user's
       // project
-      if (this._isBuidlerFile(frame.filename)) {
+      if (this._isRedspotFile(frame.filename)) {
         return true;
       }
 
@@ -148,7 +148,7 @@ export class Anonymizer {
       }
     }
 
-    // if we didn't find any buidler frame, we don't report the error
+    // if we didn't find any redspot frame, we don't report the error
     return false;
   }
 
@@ -158,14 +158,14 @@ export class Anonymizer {
     });
   }
 
-  private _isBuidlerFile(filename: string): boolean {
+  private _isRedspotFile(filename: string): boolean {
     const nomiclabsPath = path.join("node_modules", "@nomiclabs");
     const truffleContractPath = path.join(nomiclabsPath, "truffle-contract");
-    const isBuidlerFile =
+    const isRedspotFile =
       filename.startsWith(nomiclabsPath) &&
       !filename.startsWith(truffleContractPath);
 
-    return isBuidlerFile;
+    return isRedspotFile;
   }
 
   private _anonymizeExceptions(exceptions: Exception[]): Exception[] {

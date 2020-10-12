@@ -1,29 +1,29 @@
 import { fork } from "child_process";
-import { getEnvBuidlerArguments } from "../core/params/env-variables";
-import { BUIDLER_PARAM_DEFINITIONS } from "../core/params/redspot-params";
+import { getEnvRedspotArguments } from "../core/params/env-variables";
+import { REDSPOT_PARAM_DEFINITIONS } from "../core/params/redspot-params";
 import { ArgumentsParser } from "./ArgumentsParser";
 
 const nodeArgs = [...process.execArgv];
 
-if (process.env.DISABLE_BUIDLEREVM_OPTIMIZATIONS === undefined) {
+if (process.env.DISABLE_REDSPOTEVM_OPTIMIZATIONS === undefined) {
   nodeArgs.push("--max-semi-space-size=100");
 }
 
-const envVariableArguments = getEnvBuidlerArguments(
-  BUIDLER_PARAM_DEFINITIONS,
+const envVariableArguments = getEnvRedspotArguments(
+  REDSPOT_PARAM_DEFINITIONS,
   process.env
 );
 
 const argumentsParser = new ArgumentsParser();
 
-const { buidlerArguments } = argumentsParser.parseBuidlerArguments(
-  BUIDLER_PARAM_DEFINITIONS,
+const { redspotArguments } = argumentsParser.parseRedspotArguments(
+  REDSPOT_PARAM_DEFINITIONS,
   envVariableArguments,
   process.argv.slice(2)
 );
 
-if (buidlerArguments.maxMemory !== undefined) {
-  nodeArgs.push(`--max-old-space-size=${buidlerArguments.maxMemory}`);
+if (redspotArguments.maxMemory !== undefined) {
+  nodeArgs.push(`--max-old-space-size=${redspotArguments.maxMemory}`);
 }
 
 const childProcess = fork(`${__dirname}/cli`, process.argv.slice(2), {

@@ -1,11 +1,11 @@
 import { extendEnvironment } from "redspot/config";
 import { lazyObject } from "redspot/plugins";
-import { BuidlerRuntimeEnvironment } from "redspot/types";
+import { RedspotRuntimeEnvironment } from "redspot/types";
 import { ApiPromise } from "@polkadot/api";
 import Api from "./api";
 
 export default function () {
-  extendEnvironment((env: BuidlerRuntimeEnvironment) => {
+  extendEnvironment((env: RedspotRuntimeEnvironment) => {
     env.api = lazyObject(() => {
       const paths = env.config.paths;
       const network = env.network;

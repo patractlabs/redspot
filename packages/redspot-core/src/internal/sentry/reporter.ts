@@ -1,11 +1,11 @@
 import {
-  BuidlerError,
-  BuidlerPluginError,
-  NomicLabsBuidlerPluginError,
+  RedspotError,
+  RedspotPluginError,
+  NomicLabsRedspotPluginError,
 } from "../core/errors";
 import { isLocalDev } from "../core/execution-mode";
 import { isRunningOnCiServer } from "../util/ci-detection";
-import { getBuidlerVersion } from "../util/packageInfo";
+import { getRedspotVersion } from "../util/packageInfo";
 import { getSubprocessTransport } from "./transport";
 
 export const SENTRY_DSN =
@@ -33,8 +33,8 @@ export class Reporter {
     Sentry.setExtra("configPath", instance.configPath);
     Sentry.setExtra("nodeVersion", process.version);
 
-    const buidlerVersion = getBuidlerVersion();
-    Sentry.setExtra("buidlerVersion", buidlerVersion);
+    const redspotVersion = getRedspotVersion();
+    Sentry.setExtra("redspotVersion", redspotVersion);
 
     Sentry.captureException(error);
 
@@ -60,8 +60,8 @@ export class Reporter {
   }
 
   /**
-   * The path to the buidler config file. We use this when files are anonymized,
-   * since the buidler config is the only file in the user's project that is not
+   * The path to the redspot config file. We use this when files are anonymized,
+   * since the redspot config is the only file in the user's project that is not
    * anonymized.
    */
   public static setConfigPath(configPath: string) {
@@ -88,14 +88,14 @@ export class Reporter {
 
   public static shouldReport(error: Error): boolean {
     if (
-      BuidlerError.isBuidlerError(error) &&
+      RedspotError.isRedspotError(error) &&
       !error.errorDescriptor.shouldBeReported
     ) {
       return false;
     }
 
-    if (BuidlerPluginError.isBuidlerPluginError(error)) {
-      if (NomicLabsBuidlerPluginError.isNomicLabsBuidlerPluginError(error)) {
+    if (RedspotPluginError.isRedspotPluginError(error)) {
+      if (NomicLabsRedspotPluginError.isNomicLabsRedspotPluginError(error)) {
         return error.shouldBeReported;
       }
 
@@ -127,8 +127,8 @@ export class Reporter {
       this.enabled = false;
     }
 
-    // set BUIDLER_ENABLE_SENTRY=true to enable sentry during development (for local testing)
-    if (isLocalDev() && process.env.BUIDLER_ENABLE_SENTRY === undefined) {
+    // set REDSPOT_ENABLE_SENTRY=true to enable sentry during development (for local testing)
+    if (isLocalDev() && process.env.REDSPOT_ENABLE_SENTRY === undefined) {
       this.enabled = false;
     }
   }

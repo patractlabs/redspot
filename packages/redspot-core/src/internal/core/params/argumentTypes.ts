@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import fsExtra from "fs-extra";
-import { BuidlerError } from "../errors";
+import { RedspotError } from "../errors";
 import { ERRORS } from "../errors-list";
 
 /**
@@ -55,7 +55,7 @@ export const string: ArgumentType<string> = {
     const isString = typeof value === "string";
 
     if (!isString) {
-      throw new BuidlerError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
+      throw new RedspotError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
         value,
         name: argName,
         type: string.name,
@@ -80,7 +80,7 @@ export const boolean: ArgumentType<boolean> = {
       return false;
     }
 
-    throw new BuidlerError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
+    throw new RedspotError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
       value: strValue,
       name: argName,
       type: "boolean",
@@ -98,7 +98,7 @@ export const boolean: ArgumentType<boolean> = {
     const isBoolean = typeof value === "boolean";
 
     if (!isBoolean) {
-      throw new BuidlerError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
+      throw new RedspotError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
         value,
         name: argName,
         type: boolean.name,
@@ -122,7 +122,7 @@ export const int: ArgumentType<number> = {
       strValue.match(decimalPattern) === null &&
       strValue.match(hexPattern) === null
     ) {
-      throw new BuidlerError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
+      throw new RedspotError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
         value: strValue,
         name: argName,
         type: int.name,
@@ -142,7 +142,7 @@ export const int: ArgumentType<number> = {
   validate: (argName: string, value: any): void => {
     const isInt = Number.isInteger(value);
     if (!isInt) {
-      throw new BuidlerError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
+      throw new RedspotError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
         value,
         name: argName,
         type: int.name,
@@ -166,7 +166,7 @@ export const float: ArgumentType<number> = {
       strValue.match(decimalPattern) === null &&
       strValue.match(hexPattern) === null
     ) {
-      throw new BuidlerError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
+      throw new RedspotError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
         value: strValue,
         name: argName,
         type: float.name,
@@ -188,7 +188,7 @@ export const float: ArgumentType<number> = {
     const isFloatOrInteger = typeof value === "number" && !isNaN(value);
 
     if (!isFloatOrInteger) {
-      throw new BuidlerError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
+      throw new RedspotError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
         value,
         name: argName,
         type: float.name,
@@ -210,12 +210,12 @@ export const inputFile: ArgumentType<string> = {
       const stats = fs.lstatSync(strValue);
 
       if (stats.isDirectory()) {
-        // This is caught and encapsulated in a buidler error.
-        // tslint:disable-next-line only-buidler-error
+        // This is caught and encapsulated in a redspot error.
+        // tslint:disable-next-line only-redspot-error
         throw new Error(`${strValue} is a directory, not a file`);
       }
     } catch (error) {
-      throw new BuidlerError(
+      throw new RedspotError(
         ERRORS.ARGUMENTS.INVALID_INPUT_FILE,
         {
           name: argName,
@@ -241,7 +241,7 @@ export const inputFile: ArgumentType<string> = {
       inputFile.parse(argName, value);
     } catch (error) {
       // the input value is considered invalid, throw error.
-      throw new BuidlerError(
+      throw new RedspotError(
         ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE,
         {
           value,
@@ -260,7 +260,7 @@ export const json: ArgumentType<any> = {
     try {
       return JSON.parse(strValue);
     } catch (error) {
-      throw new BuidlerError(
+      throw new RedspotError(
         ERRORS.ARGUMENTS.INVALID_JSON_ARGUMENT,
         {
           param: argName,
@@ -281,7 +281,7 @@ export const json: ArgumentType<any> = {
    */
   validate: (argName: string, value: any): void => {
     if (value === undefined) {
-      throw new BuidlerError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
+      throw new RedspotError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
         value,
         name: argName,
         type: json.name,

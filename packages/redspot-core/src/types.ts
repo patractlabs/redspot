@@ -14,7 +14,7 @@ export interface CommonNetworkConfig {
   from?: string;
 }
 
-export interface BuidlerNetworkAccount {
+export interface RedspotNetworkAccount {
   privateKey: string;
   balance: string;
 }
@@ -36,7 +36,7 @@ export interface Networks {
 /**
  * The project paths:
  * * root: the project's root.
- * * configFile: the buidler's config filepath.
+ * * configFile: the redspot's config filepath.
  * * cache: project's cache directory.
  * * artifacts: artifact's directory.
  * * sources: project's sources directory.
@@ -55,7 +55,7 @@ export interface AnalyticsConfig {
   enabled: boolean;
 }
 
-export interface BuidlerConfig {
+export interface RedspotConfig {
   defaultNetwork?: string;
   networks?: Networks;
   paths?: Partial<ProjectPaths>;
@@ -63,7 +63,7 @@ export interface BuidlerConfig {
   analytics?: Partial<AnalyticsConfig>;
 }
 
-export interface ResolvedBuidlerConfig extends BuidlerConfig {
+export interface ResolvedRedspotConfig extends RedspotConfig {
   defaultNetwork: string;
   paths: ProjectPaths;
   networks: Networks;
@@ -71,14 +71,14 @@ export interface ResolvedBuidlerConfig extends BuidlerConfig {
 }
 
 /**
- * A function that receives a BuidlerRuntimeEnvironment and
+ * A function that receives a RedspotRuntimeEnvironment and
  * modify its properties or add new ones.
  */
-export type EnvironmentExtender = (env: BuidlerRuntimeEnvironment) => void;
+export type EnvironmentExtender = (env: RedspotRuntimeEnvironment) => void;
 
 export type ConfigExtender = (
-  config: ResolvedBuidlerConfig,
-  userConfig: DeepReadonly<BuidlerConfig>
+  config: ResolvedRedspotConfig,
+  userConfig: DeepReadonly<RedspotConfig>
 ) => void;
 
 export interface TasksMap {
@@ -158,14 +158,14 @@ export interface ParamDefinitionsMap {
 }
 
 /**
- * Buidler arguments:
+ * Redspot arguments:
  * * network: the network to be used.
  * * showStackTraces: flag to show stack traces.
- * * version: flag to show buidler's version.
- * * help: flag to show buidler's help message.
- * * config: used to specify buidler's config file.
+ * * version: flag to show redspot's version.
+ * * help: flag to show redspot's help message.
+ * * config: used to specify redspot's config file.
  */
-export interface BuidlerArguments {
+export interface RedspotArguments {
   network?: string;
   showStackTraces: boolean;
   version: boolean;
@@ -175,9 +175,9 @@ export interface BuidlerArguments {
   maxMemory?: number;
 }
 
-export type BuidlerParamDefinitions = {
-  [param in keyof Required<BuidlerArguments>]: OptionalParamDefinition<
-    BuidlerArguments[param]
+export type RedspotParamDefinitions = {
+  [param in keyof Required<RedspotArguments>]: OptionalParamDefinition<
+    RedspotArguments[param]
   >;
 };
 
@@ -222,7 +222,7 @@ export interface RunSuperFunction<ArgT extends TaskArguments> {
 
 export type ActionType<ArgsT extends TaskArguments> = (
   taskArgs: ArgsT,
-  env: BuidlerRuntimeEnvironment,
+  env: RedspotRuntimeEnvironment,
   runSuper: RunSuperFunction<ArgsT>
 ) => Promise<any>;
 
@@ -242,9 +242,9 @@ export interface Network {
   provider: NetworkProvider;
 }
 
-export interface BuidlerRuntimeEnvironment {
-  readonly config: ResolvedBuidlerConfig;
-  readonly buidlerArguments: BuidlerArguments;
+export interface RedspotRuntimeEnvironment {
+  readonly config: ResolvedRedspotConfig;
+  readonly redspotArguments: RedspotArguments;
   readonly tasks: TasksMap;
   readonly run: RunTaskFunction;
   readonly network: Network;

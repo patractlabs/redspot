@@ -29,10 +29,10 @@ TODO
 
 ## License
 
-This project is forked from [buidler](https://github.com/nomiclabs/buidler), and just base on the `redspot-core` part then modify it under MIT licence. (not include Buidler EVM, "sample-project/" and others which is under NOMIC LABS DEVELOPER LICENSE AGREEMENT and Unlicense, more details refer to [buidler LICENSE](https://github.com/nomiclabs/buidler/blob/development/LICENSE))
+This project is forked from [buidler](https://github.com/nomiclabs/buidler), and just base on the `redspot-core` part then modify it under MIT licence. (not include Redspot EVM, "sample-project/" and others which is under NOMIC LABS DEVELOPER LICENSE AGREEMENT and Unlicense, more details refer to [buidler LICENSE](https://github.com/nomiclabs/buidler/blob/development/LICENSE))
 
 And RedSpot would also be distributed under MIT license.
 
 ## Thanks
 
-[buidler](https://github.com/nomiclabs/buidler) - Buidler is an Ethereum development environment. Compile your contracts and run them on a development network. Get Solidity stack traces & console.log.
+[buidler](https://github.com/nomiclabs/buidler) - Redspot is an Ethereum development environment. Compile your contracts and run them on a development network. Get Solidity stack traces & console.log.

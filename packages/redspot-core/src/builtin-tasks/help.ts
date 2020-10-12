@@ -1,7 +1,7 @@
 import { HelpPrinter } from "../internal/cli/HelpPrinter";
-import { BUIDLER_EXECUTABLE_NAME, BUIDLER_NAME } from "../internal/constants";
+import { REDSPOT_EXECUTABLE_NAME, REDSPOT_NAME } from "../internal/constants";
 import { task } from "../internal/core/config/config-env";
-import { BUIDLER_PARAM_DEFINITIONS } from "../internal/core/params/redspot-params";
+import { REDSPOT_PARAM_DEFINITIONS } from "../internal/core/params/redspot-params";
 import { getPackageJson } from "../internal/util/packageInfo";
 import { TASK_HELP } from "./task-names";
 
@@ -15,10 +15,10 @@ export default function () {
       const packageJson = await getPackageJson();
 
       const helpPrinter = new HelpPrinter(
-        BUIDLER_NAME,
-        BUIDLER_EXECUTABLE_NAME,
+        REDSPOT_NAME,
+        REDSPOT_EXECUTABLE_NAME,
         packageJson.version,
-        BUIDLER_PARAM_DEFINITIONS,
+        REDSPOT_PARAM_DEFINITIONS,
         tasks
       );
 

@@ -3,13 +3,13 @@ import debug from "debug";
 import { Anonymizer } from "./anonymizer";
 import { SENTRY_DSN } from "./reporter";
 
-const log = debug("buidler:sentry:subprocess");
+const log = debug("redspot:sentry:subprocess");
 
 async function main() {
-  const verbose = process.env.BUIDLER_SENTRY_VERBOSE === "true";
+  const verbose = process.env.REDSPOT_SENTRY_VERBOSE === "true";
 
   if (verbose) {
-    debug.enable("buidler*");
+    debug.enable("redspot*");
   }
 
   log("starting subprocess");
@@ -23,11 +23,11 @@ async function main() {
     process.exit(1);
   }
 
-  const serializedEvent = process.env.BUIDLER_SENTRY_EVENT;
+  const serializedEvent = process.env.REDSPOT_SENTRY_EVENT;
   if (serializedEvent === undefined) {
-    log("BUIDLER_SENTRY_EVENT env variable is not set, exiting");
+    log("REDSPOT_SENTRY_EVENT env variable is not set, exiting");
     Sentry.captureMessage(
-      `There was an error parsing an event: BUIDLER_SENTRY_EVENT env variable is not set`
+      `There was an error parsing an event: REDSPOT_SENTRY_EVENT env variable is not set`
     );
     return;
   }
@@ -37,23 +37,23 @@ async function main() {
     event = JSON.parse(serializedEvent);
   } catch (error) {
     log(
-      "BUIDLER_SENTRY_EVENT env variable doesn't have a valid JSON, exiting: %o",
+      "REDSPOT_SENTRY_EVENT env variable doesn't have a valid JSON, exiting: %o",
       serializedEvent
     );
     Sentry.captureMessage(
-      `There was an error parsing an event: BUIDLER_SENTRY_EVENT env variable doesn't have a valid JSON`
+      `There was an error parsing an event: REDSPOT_SENTRY_EVENT env variable doesn't have a valid JSON`
     );
     return;
   }
 
   try {
-    const configPath = process.env.BUIDLER_SENTRY_CONFIG_PATH;
+    const configPath = process.env.REDSPOT_SENTRY_CONFIG_PATH;
 
     const anonymizer = new Anonymizer(configPath);
     const anonymizedEvent = anonymizer.anonymize(event);
 
     if (anonymizedEvent.isRight()) {
-      if (anonymizer.raisedByBuidler(anonymizedEvent.value)) {
+      if (anonymizer.raisedByRedspot(anonymizedEvent.value)) {
         Sentry.captureEvent(anonymizedEvent.value);
       }
     } else {

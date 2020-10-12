@@ -5,13 +5,13 @@ import semver from "semver";
 import "source-map-support/register";
 import { TASK_HELP } from "../../builtin-tasks/task-names";
 import { TaskArguments } from "../../types";
-import { BUIDLER_NAME } from "../constants";
-import { BuidlerContext } from "../context";
+import { REDSPOT_NAME } from "../constants";
+import { RedspotContext } from "../context";
 import { loadConfigAndTasks } from "../core/config/config-loading";
-import { BuidlerError, BuidlerPluginError } from "../core/errors";
+import { RedspotError, RedspotPluginError } from "../core/errors";
 import { ERRORS, getErrorCode } from "../core/errors-list";
-import { getEnvBuidlerArguments } from "../core/params/env-variables";
-import { BUIDLER_PARAM_DEFINITIONS } from "../core/params/redspot-params";
+import { getEnvRedspotArguments } from "../core/params/env-variables";
+import { REDSPOT_PARAM_DEFINITIONS } from "../core/params/redspot-params";
 import { isCwdInsideProject } from "../core/project-structure";
 import { Environment } from "../core/runtime-environment";
 import { loadTsNodeIfPresent } from "../core/typescript-support";
@@ -20,7 +20,7 @@ import { getPackageJson, PackageJson } from "../util/packageInfo";
 import { Analytics } from "./analytics";
 import { ArgumentsParser } from "./ArgumentsParser";
 
-const log = debug("buidler:core:cli");
+const log = debug("redspot:core:cli");
 
 const ANALYTICS_SLOW_TASK_THRESHOLD = 300;
 
@@ -31,7 +31,7 @@ async function printVersionMessage(packageJson: PackageJson) {
 function ensureValidNodeVersion(packageJson: PackageJson) {
   const requirement = packageJson.engines.node;
   if (!semver.satisfies(process.version, requirement)) {
-    throw new BuidlerError(ERRORS.GENERAL.INVALID_NODE_VERSION, {
+    throw new RedspotError(ERRORS.GENERAL.INVALID_NODE_VERSION, {
       requirement,
     });
   }
@@ -47,32 +47,32 @@ async function main() {
 
     ensureValidNodeVersion(packageJson);
 
-    const envVariableArguments = getEnvBuidlerArguments(
-      BUIDLER_PARAM_DEFINITIONS,
+    const envVariableArguments = getEnvRedspotArguments(
+      REDSPOT_PARAM_DEFINITIONS,
       process.env
     );
 
     const argumentsParser = new ArgumentsParser();
 
     const {
-      buidlerArguments,
+      redspotArguments,
       taskName: parsedTaskName,
       unparsedCLAs,
-    } = argumentsParser.parseBuidlerArguments(
-      BUIDLER_PARAM_DEFINITIONS,
+    } = argumentsParser.parseRedspotArguments(
+      REDSPOT_PARAM_DEFINITIONS,
       envVariableArguments,
       process.argv.slice(2)
     );
 
-    if (buidlerArguments.verbose) {
+    if (redspotArguments.verbose) {
       Reporter.setVerbose(true);
-      debug.enable("buidler*");
+      debug.enable("redspot*");
     }
 
-    showStackTraces = buidlerArguments.showStackTraces;
+    showStackTraces = redspotArguments.showStackTraces;
 
     if (
-      buidlerArguments.config === undefined &&
+      redspotArguments.config === undefined &&
       !isCwdInsideProject() &&
       process.stdout.isTTY === true
     ) {
@@ -81,15 +81,15 @@ async function main() {
     }
 
     // --version is a special case
-    if (buidlerArguments.version) {
+    if (redspotArguments.version) {
       await printVersionMessage(packageJson);
       return;
     }
 
     loadTsNodeIfPresent();
 
-    const ctx = BuidlerContext.createBuidlerContext();
-    const config = loadConfigAndTasks(buidlerArguments);
+    const ctx = RedspotContext.createRedspotContext();
+    const config = loadConfigAndTasks(redspotArguments);
 
     const analytics = await Analytics.getInstance(
       config.paths.root,
@@ -110,14 +110,14 @@ async function main() {
     let taskArguments: TaskArguments;
 
     // --help is a also special case
-    if (buidlerArguments.help && taskName !== TASK_HELP) {
+    if (redspotArguments.help && taskName !== TASK_HELP) {
       taskArguments = { task: taskName };
       taskName = TASK_HELP;
     } else {
       const taskDefinition = taskDefinitions[taskName];
 
       if (taskDefinition === undefined) {
-        throw new BuidlerError(ERRORS.ARGUMENTS.UNRECOGNIZED_TASK, {
+        throw new RedspotError(ERRORS.ARGUMENTS.UNRECOGNIZED_TASK, {
           task: taskName,
         });
       }
@@ -130,18 +130,18 @@ async function main() {
 
     // TODO: This is here for backwards compatibility
     // There are very few projects using this.
-    if (buidlerArguments.network === undefined) {
-      buidlerArguments.network = config.defaultNetwork;
+    if (redspotArguments.network === undefined) {
+      redspotArguments.network = config.defaultNetwork;
     }
 
     const env = new Environment(
       config,
-      buidlerArguments,
+      redspotArguments,
       taskDefinitions,
       envExtenders
     );
 
-    ctx.setBuidlerRuntimeEnvironment(env);
+    ctx.setRedspotRuntimeEnvironment(env);
 
     const timestampBeforeRun = new Date().getTime();
 
@@ -156,15 +156,15 @@ async function main() {
     } else {
       abortAnalytics();
     }
-    log(`Killing Buidler after successfully running task ${taskName}`);
+    log(`Killing Redspot after successfully running task ${taskName}`);
   } catch (error) {
-    let isBuidlerError = false;
+    let isRedspotError = false;
 
-    if (BuidlerError.isBuidlerError(error)) {
-      isBuidlerError = true;
+    if (RedspotError.isRedspotError(error)) {
+      isRedspotError = true;
       console.error(chalk.red(`Error ${error.message}`));
-    } else if (BuidlerPluginError.isBuidlerPluginError(error)) {
-      isBuidlerError = true;
+    } else if (RedspotPluginError.isRedspotPluginError(error)) {
+      isRedspotError = true;
       console.error(
         chalk.red(`Error in plugin ${error.pluginName}: ${error.message}`)
       );
@@ -187,23 +187,23 @@ async function main() {
     if (showStackTraces) {
       console.error(error);
     } else {
-      if (!isBuidlerError) {
+      if (!isRedspotError) {
         console.error(
-          `If you think this is a bug in Buidler, please report it here: https://buidler.dev/reportbug`
+          `If you think this is a bug in Redspot, please report it here: https://redspot.dev/reportbug`
         );
       }
 
-      if (BuidlerError.isBuidlerError(error)) {
-        const link = `https://buidler.dev/${getErrorCode(
+      if (RedspotError.isRedspotError(error)) {
+        const link = `https://redspot.dev/${getErrorCode(
           error.errorDescriptor
         )}`;
 
         console.error(
-          `For more info go to ${link} or run ${BUIDLER_NAME} with --show-stack-traces`
+          `For more info go to ${link} or run ${REDSPOT_NAME} with --show-stack-traces`
         );
       } else {
         console.error(
-          `For more info run ${BUIDLER_NAME} with --show-stack-traces`
+          `For more info run ${REDSPOT_NAME} with --show-stack-traces`
         );
       }
     }

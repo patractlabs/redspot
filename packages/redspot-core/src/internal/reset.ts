@@ -1,15 +1,15 @@
 /**
- * This function resets the buidler context.
+ * This function resets the redspot context.
  *
- * This doesn't unload any loaded Buidler plugin, so those have to be unloaded
+ * This doesn't unload any loaded Redspot plugin, so those have to be unloaded
  * manually with `unloadModule`.
  */
-import { BuidlerContext } from "./context";
+import { RedspotContext } from "./context";
 import { getUserConfigPath } from "./core/project-structure";
 
-export function resetBuidlerContext() {
-  if (BuidlerContext.isCreated()) {
-    const ctx = BuidlerContext.getBuidlerContext();
+export function resetRedspotContext() {
+  if (RedspotContext.isCreated()) {
+    const ctx = RedspotContext.getRedspotContext();
     const globalAsAny = global as any;
     if (ctx.environment !== undefined) {
       for (const key of Object.keys(ctx.environment)) {
@@ -24,17 +24,17 @@ export function resetBuidlerContext() {
       try {
         configPath = getUserConfigPath();
       } catch (error) {
-        // We weren't in a buidler project
+        // We weren't in a redspot project
       }
 
       if (configPath !== undefined) {
         unloadModule(configPath);
       }
     }
-    BuidlerContext.deleteBuidlerContext();
+    RedspotContext.deleteRedspotContext();
   }
 
-  // Unload all the buidler's entry-points.
+  // Unload all the redspot's entry-points.
   unloadModule("../register");
   unloadModule("./cli/cli");
   unloadModule("./lib/redspot-lib");

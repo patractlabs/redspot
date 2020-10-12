@@ -20,12 +20,12 @@ export function getSubprocessTransport(): any {
       const serializedEvent = JSON.stringify(event);
 
       const env: Record<string, string> = {
-        BUIDLER_SENTRY_EVENT: serializedEvent,
-        BUIDLER_SENTRY_VERBOSE: verbose.toString(),
+        REDSPOT_SENTRY_EVENT: serializedEvent,
+        REDSPOT_SENTRY_VERBOSE: verbose.toString(),
       };
 
       if (configPath !== undefined) {
-        env.BUIDLER_SENTRY_CONFIG_PATH = configPath;
+        env.REDSPOT_SENTRY_CONFIG_PATH = configPath;
       }
 
       const subprocessPath = path.join(__dirname, "subprocess");

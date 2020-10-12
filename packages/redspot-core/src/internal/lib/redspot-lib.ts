@@ -1,54 +1,54 @@
 import debug from "debug";
-import { BuidlerRuntimeEnvironment } from "../../types";
-import { BuidlerContext } from "../context";
+import { RedspotRuntimeEnvironment } from "../../types";
+import { RedspotContext } from "../context";
 import { loadConfigAndTasks } from "../core/config/config-loading";
-import { BuidlerError } from "../core/errors";
+import { RedspotError } from "../core/errors";
 import { ERRORS } from "../core/errors-list";
-import { getEnvBuidlerArguments } from "../core/params/env-variables";
-import { BUIDLER_PARAM_DEFINITIONS } from "../core/params/redspot-params";
+import { getEnvRedspotArguments } from "../core/params/env-variables";
+import { REDSPOT_PARAM_DEFINITIONS } from "../core/params/redspot-params";
 import { Environment } from "../core/runtime-environment";
 
-let ctx: BuidlerContext;
-let env: BuidlerRuntimeEnvironment;
+let ctx: RedspotContext;
+let env: RedspotRuntimeEnvironment;
 
-if (BuidlerContext.isCreated()) {
-  ctx = BuidlerContext.getBuidlerContext();
+if (RedspotContext.isCreated()) {
+  ctx = RedspotContext.getRedspotContext();
 
   // The most probable reason for this to happen is that this file was imported
   // from the config file
   if (ctx.environment === undefined) {
-    throw new BuidlerError(ERRORS.GENERAL.LIB_IMPORTED_FROM_THE_CONFIG);
+    throw new RedspotError(ERRORS.GENERAL.LIB_IMPORTED_FROM_THE_CONFIG);
   }
 
   env = ctx.environment;
 } else {
-  ctx = BuidlerContext.createBuidlerContext();
+  ctx = RedspotContext.createRedspotContext();
 
-  const buidlerArguments = getEnvBuidlerArguments(
-    BUIDLER_PARAM_DEFINITIONS,
+  const redspotArguments = getEnvRedspotArguments(
+    REDSPOT_PARAM_DEFINITIONS,
     process.env
   );
 
-  if (buidlerArguments.verbose) {
-    debug.enable("buidler*");
+  if (redspotArguments.verbose) {
+    debug.enable("redspot*");
   }
 
-  const config = loadConfigAndTasks(buidlerArguments);
+  const config = loadConfigAndTasks(redspotArguments);
 
   // TODO: This is here for backwards compatibility.
   // There are very few projects using this.
-  if (buidlerArguments.network === undefined) {
-    buidlerArguments.network = config.defaultNetwork;
+  if (redspotArguments.network === undefined) {
+    redspotArguments.network = config.defaultNetwork;
   }
 
   env = new Environment(
     config,
-    buidlerArguments,
+    redspotArguments,
     ctx.tasksDSL.getTaskDefinitions(),
     ctx.extendersManager.getExtenders()
   );
 
-  ctx.setBuidlerRuntimeEnvironment(env);
+  ctx.setRedspotRuntimeEnvironment(env);
 }
 
 module.exports = env;

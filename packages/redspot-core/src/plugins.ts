@@ -5,10 +5,10 @@ export {
   readWasmSync,
   saveArtifact,
 } from "./internal/artifacts";
-export { BUIDLEREVM_NETWORK_NAME } from "./internal/constants";
+export { REDSPOT_DEFAULT_NETWORK_NAME } from "./internal/constants";
 export {
-  BuidlerPluginError,
-  NomicLabsBuidlerPluginError,
+  RedspotPluginError,
+  NomicLabsRedspotPluginError,
 } from "./internal/core/errors";
 export { ensurePluginLoadedWithUsePlugin } from "./internal/core/plugins";
 export { lazyFunction, lazyObject } from "./internal/util/lazy";
