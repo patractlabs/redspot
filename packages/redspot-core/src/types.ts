@@ -23,7 +23,6 @@ export type NetworkConfigAccounts = string[];
 
 export interface WsNetworkConfig extends CommonNetworkConfig {
   endpoint?: string | string[];
-  autoConnectMs?: number | false;
   httpHeaders?: Record<string, string>;
 }
 

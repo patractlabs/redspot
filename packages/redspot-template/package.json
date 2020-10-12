@@ -1,0 +1,6 @@
+{
+  "name": "@redspot/redspot-template",
+  "version": "0.3.0-alpha.3",
+  "main": "index.js",
+  "license": "MIT"
+}
