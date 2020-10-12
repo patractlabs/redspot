@@ -1,7 +1,4 @@
 import findUp from "find-up";
-import fsExtra from "fs-extra";
-import path from "path";
-import { getPackageRoot } from "../util/packageInfo";
 import { BuidlerError } from "./errors";
 import { ERRORS } from "./errors-list";
 import { isTypescriptSupported } from "./typescript-support";
@@ -30,11 +27,4 @@ export function getUserConfigPath() {
   }
 
   return pathToConfigFile;
-}
-
-export async function getRecommendedGitIgnore() {
-  const packageRoot = await getPackageRoot();
-  const gitIgnorePath = path.join(packageRoot, "recommended-gitignore.txt");
-
-  return fsExtra.readFile(gitIgnorePath, "utf-8");
 }

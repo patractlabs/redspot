@@ -15,8 +15,8 @@
     "noEmitOnError": true,
     "baseUrl": ".",
     "paths": {
-      "redspot": ["packages/buidler-core/src"],
-      "redspot/*": ["packages/buidler-core/src/*"],
+      "redspot": ["packages/redspot-core/src"],
+      "redspot/*": ["packages/redspot-core/src/*"],
       "redspot-api": ["packages/buidler-api/src"],
       "redspot-api/*": ["packages/buidler-api/src/*"]
     },
