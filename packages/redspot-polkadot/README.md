@@ -1,1 +1,1 @@
-# redspot-api
+# redspot-polkadot
