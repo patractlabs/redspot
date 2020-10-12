@@ -17,8 +17,8 @@
     "paths": {
       "redspot": ["packages/redspot-core/src"],
       "redspot/*": ["packages/redspot-core/src/*"],
-      "redspot-api": ["packages/buidler-api/src"],
-      "redspot-api/*": ["packages/buidler-api/src/*"]
+      "@redspot/api": ["packages/redspot-api/src"],
+      "@redspot/api/*": ["packages/redspot-api/src/*"]
     },
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@polkadot/ts", "./node_modules/@types"]

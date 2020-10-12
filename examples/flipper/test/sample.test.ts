@@ -1,5 +1,5 @@
 import { expect } from "chai";
-import { api } from "@redspot/buidler/internal/lib/buidler-lib";
+import { api } from "redspot/internal/lib/buidler-lib";
 
 describe("Flipper", function () {
   it("flipper", async function () {
