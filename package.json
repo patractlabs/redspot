@@ -21,7 +21,7 @@
     "@types/ci-info": "^2.0.0",
     "@types/debug": "^4.1.4",
     "@types/download": "^6.2.4",
-    "@types/find-up": "^2.1.1",
+    "@types/find-up": "^2.1.0",
     "@types/fs-extra": "^5.1.0",
     "@types/glob": "^7.1.1",
     "@types/lodash": "^4.14.123",
