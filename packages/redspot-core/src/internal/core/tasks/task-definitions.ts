@@ -8,7 +8,7 @@ import {
 import { BuidlerError } from "../errors";
 import { ErrorDescriptor, ERRORS } from "../errors-list";
 import * as types from "../params/argumentTypes";
-import { BUIDLER_PARAM_DEFINITIONS } from "../params/buidler-params";
+import { BUIDLER_PARAM_DEFINITIONS } from "../params/redspot-params";
 
 /**
  * This class creates a task definition, which consists of:

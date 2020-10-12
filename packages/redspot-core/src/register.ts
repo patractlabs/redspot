@@ -1,8 +1,8 @@
 import debug from "debug";
 import { BuidlerContext } from "./internal/context";
 import { loadConfigAndTasks } from "./internal/core/config/config-loading";
-import { BUIDLER_PARAM_DEFINITIONS } from "./internal/core/params/buidler-params";
 import { getEnvBuidlerArguments } from "./internal/core/params/env-variables";
+import { BUIDLER_PARAM_DEFINITIONS } from "./internal/core/params/redspot-params";
 import { Environment } from "./internal/core/runtime-environment";
 import { loadTsNodeIfPresent } from "./internal/core/typescript-support";
 import {

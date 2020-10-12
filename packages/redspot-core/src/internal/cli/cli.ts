@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-import "source-map-support/register";
 import chalk from "chalk";
 import debug from "debug";
 import semver from "semver";
+import "source-map-support/register";
 import { TASK_HELP } from "../../builtin-tasks/task-names";
 import { TaskArguments } from "../../types";
 import { BUIDLER_NAME } from "../constants";
@@ -10,8 +10,8 @@ import { BuidlerContext } from "../context";
 import { loadConfigAndTasks } from "../core/config/config-loading";
 import { BuidlerError, BuidlerPluginError } from "../core/errors";
 import { ERRORS, getErrorCode } from "../core/errors-list";
-import { BUIDLER_PARAM_DEFINITIONS } from "../core/params/buidler-params";
 import { getEnvBuidlerArguments } from "../core/params/env-variables";
+import { BUIDLER_PARAM_DEFINITIONS } from "../core/params/redspot-params";
 import { isCwdInsideProject } from "../core/project-structure";
 import { Environment } from "../core/runtime-environment";
 import { loadTsNodeIfPresent } from "../core/typescript-support";
