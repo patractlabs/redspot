@@ -2,10 +2,6 @@
   "name": "redspot",
   "version": "0.3.0-alpha.3",
   "author": "Patract Labs",
-  "contributors": [
-    "Nomic Labs LLC"
-  ],
-  "license": "SEE LICENSE IN LICENSE",
   "main": "internal/lib/redspot-lib.js",
   "bin": {
     "redspot": "internal/cli/cli.js"

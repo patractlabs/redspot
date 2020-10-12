@@ -1,8 +1,7 @@
 {
   "name": "@redspot/polkadot",
   "version": "0.3.0-alpha.3",
-  "author": "Nomic Labs LLC",
-  "license": "SEE LICENSE IN LICENSE",
+  "author": "Patract Labs",
   "scripts": {
     "test": "node ../../node_modules/mocha/bin/mocha --recursive"
   },
