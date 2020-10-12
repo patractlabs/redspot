@@ -89,7 +89,7 @@ Please [report it](https://github.com/patractlabs/redspot-0.2/issues/new) to hel
 Please [report it](https://github.com/patractlabs/redspot-0.2/issues/new) to help us improve Redspot.`,
       shouldBeReported: true,
     },
-    CONTEXT_BRE_NOT_DEFINED: {
+    CONTEXT_RSE_NOT_DEFINED: {
       number: 6,
       message:
         "Redspot Runtime Environment is not defined in the RedspotContext.",
@@ -99,7 +99,7 @@ Please [report it](https://github.com/patractlabs/redspot-0.2/issues/new) to hel
 Please [report it](https://github.com/patractlabs/redspot-0.2/issues/new) to help us improve Redspot.`,
       shouldBeReported: true,
     },
-    CONTEXT_BRE_ALREADY_DEFINED: {
+    CONTEXT_RSE_ALREADY_DEFINED: {
       number: 7,
       message:
         "Redspot Runtime Environment is already defined in the RedspotContext",

@@ -48,14 +48,14 @@ export class RedspotContext {
 
   public setRedspotRuntimeEnvironment(env: RedspotRuntimeEnvironment) {
     if (this.environment !== undefined) {
-      throw new RedspotError(ERRORS.GENERAL.CONTEXT_BRE_ALREADY_DEFINED);
+      throw new RedspotError(ERRORS.GENERAL.CONTEXT_RSE_ALREADY_DEFINED);
     }
     this.environment = env;
   }
 
   public getRedspotRuntimeEnvironment(): RedspotRuntimeEnvironment {
     if (this.environment === undefined) {
-      throw new RedspotError(ERRORS.GENERAL.CONTEXT_BRE_NOT_DEFINED);
+      throw new RedspotError(ERRORS.GENERAL.CONTEXT_RSE_NOT_DEFINED);
     }
     return this.environment;
   }

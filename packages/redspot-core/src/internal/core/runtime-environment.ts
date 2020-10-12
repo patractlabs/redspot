@@ -18,7 +18,7 @@ import { RedspotError } from "./errors";
 import { ERRORS } from "./errors-list";
 import { OverriddenTaskDefinition } from "./tasks/task-definitions";
 
-const log = debug("redspot:core:bre");
+const log = debug("redspot:core:rse");
 
 export class Environment implements RedspotRuntimeEnvironment {
   private static readonly _BLACKLISTED_PROPERTIES: string[] = [
