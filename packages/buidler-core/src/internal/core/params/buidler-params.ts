@@ -1,5 +1,4 @@
 import { BuidlerParamDefinitions } from "../../../types";
-
 import * as types from "./argumentTypes";
 
 export const BUIDLER_PARAM_DEFINITIONS: BuidlerParamDefinitions = {

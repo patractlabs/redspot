@@ -1,9 +1,7 @@
 import debug from "debug";
 import * as path from "path";
 import * as semver from "semver";
-
 import { BuidlerContext } from "../context";
-
 import { BuidlerError } from "./errors";
 import { ERRORS } from "./errors-list";
 import { ExecutionMode, getExecutionMode } from "./execution-mode";

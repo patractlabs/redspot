@@ -1,3 +1,5 @@
+api
+network
 await api.contract.deploy('flipper', '0xb6b5fa9791b27da76f1046de45d57bb835a8dfc44f21b223d8d6bb88e5eb5141')
 await api.contract.deploy('flipper', Alice)
 await api.contract.putCode('flipper', Alice)

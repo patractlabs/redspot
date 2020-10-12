@@ -1,10 +1,10 @@
-import { CargoPackage, CargoMetadata } from "./resolve";
-import spawn from "cross-spawn";
 import chalk from "chalk";
+import { execSync } from "child_process";
+import spawn from "cross-spawn";
+import fs from "fs-extra";
 import path from "path";
 import semver from "semver";
-import fs from "fs-extra";
-import { execSync } from "child_process";
+import { CargoMetadata, CargoPackage } from "./resolve";
 
 export interface CompilerOptions {
   toolchain: string;

@@ -1,8 +1,6 @@
 import { fork } from "child_process";
-
 import { BUIDLER_PARAM_DEFINITIONS } from "../core/params/buidler-params";
 import { getEnvBuidlerArguments } from "../core/params/env-variables";
-
 import { ArgumentsParser } from "./ArgumentsParser";
 
 const nodeArgs = [...process.execArgv];

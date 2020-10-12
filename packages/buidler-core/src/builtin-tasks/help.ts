@@ -3,7 +3,6 @@ import { BUIDLER_EXECUTABLE_NAME, BUIDLER_NAME } from "../internal/constants";
 import { task } from "../internal/core/config/config-env";
 import { BUIDLER_PARAM_DEFINITIONS } from "../internal/core/params/buidler-params";
 import { getPackageJson } from "../internal/util/packageInfo";
-
 import { TASK_HELP } from "./task-names";
 
 export default function () {

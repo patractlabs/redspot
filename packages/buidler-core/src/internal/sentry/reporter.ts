@@ -6,7 +6,6 @@ import {
 import { isLocalDev } from "../core/execution-mode";
 import { isRunningOnCiServer } from "../util/ci-detection";
 import { getBuidlerVersion } from "../util/packageInfo";
-
 import { getSubprocessTransport } from "./transport";
 
 export const SENTRY_DSN =

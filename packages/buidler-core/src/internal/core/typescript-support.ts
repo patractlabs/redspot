@@ -1,5 +1,4 @@
 import chalk from "chalk";
-
 import { ExecutionMode, getExecutionMode } from "./execution-mode";
 
 let cachedIsTypescriptSupported: boolean | undefined;

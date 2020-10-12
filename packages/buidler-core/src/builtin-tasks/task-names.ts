@@ -11,15 +11,12 @@ export const TASK_COMPILE_GET_COMPILER_INPUT = "compile:get-compile-input";
 export const TASK_COMPILE_RUN_COMPILER = "compile:run-compiler";
 export const TASK_COMPILE_RUN_GENERATE_METADATA =
   "compile:run-generate-metadata";
-export const TASK_COMPILE_COPY_TARGET_FILES = "compile:copy-target-files";
 
 export const TASK_CONSOLE = "console";
 
 export const TASK_HELP = "help";
 
 export const TASK_RUN = "run";
-
-export const TASK_NODE = "node";
 
 export const TASK_TEST = "test";
 

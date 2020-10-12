@@ -7,7 +7,7 @@ import { KeyringPair } from "@polkadot/keyring/types";
 import { AccountId, EventRecord } from "@polkadot/types/interfaces";
 import { KeypairType } from "@polkadot/util-crypto/types";
 import { readAbiSync } from "@redspot/buidler/plugins";
-import { Artifact, BuidlerRuntimeEnvironment } from "@redspot/buidler/types";
+import { Artifact, Network, ProjectPaths } from "@redspot/buidler/types";
 import ContractFactory from "./contract-factory";
 
 interface TxStatus {
@@ -29,13 +29,15 @@ interface TxStatus {
 }
 
 export default class Api extends ApiPromise {
-  public readonly env: BuidlerRuntimeEnvironment;
+  public readonly paths: ProjectPaths;
+  public readonly network: Network;
   public readonly keyring: Keyring;
   public readonly contract: ContractFactory;
 
-  constructor(apiOptions: ApiOptions, env: BuidlerRuntimeEnvironment) {
+  constructor(apiOptions: ApiOptions, network: Network, paths: ProjectPaths) {
     super(apiOptions);
-    this.env = env;
+    this.network = network;
+    this.paths = paths;
     this.keyring = new Keyring({
       ss58Format: this.registry.chainSS58,
     });
@@ -51,7 +53,7 @@ export default class Api extends ApiPromise {
       ss58Format: this.registry.chainSS58,
     };
 
-    const accounts = this.env.network.provider.accounts;
+    const accounts = this.network.provider.accounts;
 
     for (const uri of accounts) {
       const meta = {
@@ -69,7 +71,7 @@ export default class Api extends ApiPromise {
   getContract(nameOrAbi: string | Artifact | Abi, address: string | AccountId) {
     const abi =
       typeof nameOrAbi === "string"
-        ? readAbiSync(this.env.config.paths.artifacts, nameOrAbi)
+        ? readAbiSync(this.paths.artifacts, nameOrAbi)
         : nameOrAbi;
 
     return new PromiseContract(this, abi as any, address);
@@ -78,7 +80,7 @@ export default class Api extends ApiPromise {
   getAbi(nameOrAbi: string | Artifact) {
     const abi =
       typeof nameOrAbi === "string"
-        ? readAbiSync(this.env.config.paths.artifacts, nameOrAbi)
+        ? readAbiSync(this.paths.artifacts, nameOrAbi)
         : nameOrAbi;
 
     return new Abi(this.registry, abi as any);

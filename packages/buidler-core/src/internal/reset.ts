@@ -6,7 +6,6 @@
  */
 import { BuidlerContext } from "./context";
 import { getUserConfigPath } from "./core/project-structure";
-import { globSync } from "./util/glob";
 
 export function resetBuidlerContext() {
   if (BuidlerContext.isCreated()) {

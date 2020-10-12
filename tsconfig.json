@@ -18,13 +18,7 @@
       "@redspot/buidler": ["packages/buidler-core/src"],
       "@redspot/buidler/*": ["packages/buidler-core/src/*"],
       "@redspot/buidler-api": ["packages/buidler-api/src"],
-      "@redspot/buidler-api/*": ["packages/buidler-api/src/*"],
-      "@redspot/buidler-evm": ["packages/buidler-evm/src"],
-      "@redspot/buidler-evm/*": ["packages/buidler-evm/src/*"],
-      "@redspot/eth-providers": ["packages/eth-providers/src"],
-      "@redspot/eth-providers/*": ["packages/eth-providers/src/*"],
-      "@redspot/solidity": ["packages/solidity/src"],
-      "@redspot/solidity/*": ["packages/solidity/src/*"]
+      "@redspot/buidler-api/*": ["packages/buidler-api/src/*"]
     },
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@polkadot/ts", "./node_modules/@types"]

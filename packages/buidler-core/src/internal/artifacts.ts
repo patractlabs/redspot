@@ -1,8 +1,6 @@
 import fsExtra from "fs-extra";
 import * as path from "path";
-
 import { Artifact } from "../types";
-
 import { BuidlerError } from "./core/errors";
 import { ERRORS } from "./core/errors-list";
 
