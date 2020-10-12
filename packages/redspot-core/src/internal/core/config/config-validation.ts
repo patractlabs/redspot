@@ -81,7 +81,6 @@ const WsNetworkConfig = t.type({
   from: optional(t.string),
   types: optional(t.record(t.string, t.unknown)),
   endpoint: optional(t.union([t.string, t.array(t.string)])),
-  autoConnectMs: optional(t.union([t.number, t.literal(false)])),
   httpHeaders: optional(HttpHeaders),
 });
 

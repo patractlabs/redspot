@@ -9,7 +9,6 @@ export function createProvider(
     networkName,
     networkConfig.endpoint,
     networkConfig.types,
-    networkConfig.autoConnectMs,
     networkConfig.httpHeaders,
     networkConfig.accounts,
     networkConfig.endowment,

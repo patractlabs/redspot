@@ -7,7 +7,6 @@ const DEFAULT_REDSPOT_NETWORK_CONFIG: NetworkConfig = {
   accounts: ["//Alice", "//Bob", "//Charlie", "//Dave", "//Eve", "//Ferdie"],
   endpoint: ["ws://127.0.0.1:9944"],
   types: {},
-  autoConnectMs: false,
   httpHeaders: {},
 };
 

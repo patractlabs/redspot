@@ -12,7 +12,6 @@ export class NetworkProvider extends WsProvider implements INetworkProvider {
     networkName: string,
     endpoint: string | string[] = "ws://127.0.0.1:9944",
     types: Record<string, any> = {},
-    autoConnectMs: number | false,
     httpHeaders: Record<string, string>,
     accounts: NetworkConfigAccounts = [
       "//Alice",
@@ -25,7 +24,7 @@ export class NetworkProvider extends WsProvider implements INetworkProvider {
     endowment: string | number = "5000000000000",
     gasLimit: string | number = "50000000000"
   ) {
-    super(endpoint, autoConnectMs, httpHeaders);
+    super(endpoint, 0, httpHeaders);
     this.networkName = networkName;
     this.types = types;
     this.accounts = accounts;
