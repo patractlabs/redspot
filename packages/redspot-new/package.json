@@ -1,0 +1,26 @@
+{
+  "name": "redspot-new",
+  "version": "0.3.0-alpha.3",
+  "author": "Patract Labs",
+  "main": "./index.ts",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "cross-spawn": "^7.0.3",
+    "fs-extra": "^9.0.1",
+    "semver": "^7.3.2",
+    "yargs": "^15.4.1"
+  },
+  "files": [
+    "index.js",
+    "createApp.js"
+  ],
+  "bin": {
+    "redspot-new": "./index.js"
+  },
+  "devDependencies": {
+    "@types/cross-spawn": "^6.0.2",
+    "@types/fs-extra": "^9.0.1",
+    "@types/semver": "^7.3.1",
+    "@types/yargs": "^15.0.5"
+  }
+}
