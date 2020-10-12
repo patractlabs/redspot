@@ -131,18 +131,18 @@ export class RedspotPluginError extends CustomError {
   }
 }
 
-export class NomicLabsRedspotPluginError extends RedspotPluginError {
-  public static isNomicLabsRedspotPluginError(
+export class RedspotCorePluginError extends RedspotPluginError {
+  public static isRedspotCorePluginError(
     other: any
-  ): other is NomicLabsRedspotPluginError {
+  ): other is RedspotCorePluginError {
     return (
       other !== undefined &&
       other !== null &&
-      other._isNomicLabsRedspotPluginError === true
+      other._isRedspotCorePluginError === true
     );
   }
 
-  private readonly _isNomicLabsRedspotPluginError: boolean;
+  private readonly _isRedspotCorePluginError: boolean;
 
   /**
    * This class is used to throw errors from *core* redspot plugins. If you are
@@ -156,8 +156,8 @@ export class NomicLabsRedspotPluginError extends RedspotPluginError {
   ) {
     super(pluginName, message, parent);
 
-    this._isNomicLabsRedspotPluginError = true;
-    Object.setPrototypeOf(this, NomicLabsRedspotPluginError.prototype);
+    this._isRedspotCorePluginError = true;
+    Object.setPrototypeOf(this, RedspotCorePluginError.prototype);
   }
 }
 

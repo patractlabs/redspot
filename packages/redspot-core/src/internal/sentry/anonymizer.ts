@@ -132,6 +132,7 @@ export class Anonymizer {
 
       // we stop after finding either a redspot file or a file from the user's
       // project
+      // @TODO check
       if (this._isRedspotFile(frame.filename)) {
         return true;
       }
@@ -159,11 +160,10 @@ export class Anonymizer {
   }
 
   private _isRedspotFile(filename: string): boolean {
-    const nomiclabsPath = path.join("node_modules", "@nomiclabs");
-    const truffleContractPath = path.join(nomiclabsPath, "truffle-contract");
+    const redspotPath = path.join("node_modules", "redspot");
+    const redspotsPath = path.join("node_modules", "@redspot");
     const isRedspotFile =
-      filename.startsWith(nomiclabsPath) &&
-      !filename.startsWith(truffleContractPath);
+      filename.startsWith(redspotPath) || filename.startsWith(redspotsPath);
 
     return isRedspotFile;
   }
