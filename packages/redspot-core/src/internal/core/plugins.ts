@@ -47,15 +47,15 @@ export function usePlugin(
     //
     //    root/
     //      node_modules/
-    //        buidler
+    //        redspot
     //      subpackage1/
     //        node_modules/
     //          plugin@v1/
-    //        buidler.config.js
+    //        redspot.config.js
     //      subpackage2/
     //        node_modules/
     //          plugin@v2/
-    //        buidler.config.js
+    //        redspot.config.js
     //
     // If we were to load the plugins from the Buidler installation in this
     // situation, they wouldn't be found. Instead, we should load them from the

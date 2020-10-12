@@ -3,8 +3,8 @@ import { BuidlerError } from "./errors";
 import { ERRORS } from "./errors-list";
 import { isTypescriptSupported } from "./typescript-support";
 
-const JS_CONFIG_FILENAME = "buidler.config.js";
-const TS_CONFIG_FILENAME = "buidler.config.ts";
+const JS_CONFIG_FILENAME = "redspot.config.js";
+const TS_CONFIG_FILENAME = "redspot.config.ts";
 
 export function isCwdInsideProject() {
   return (
