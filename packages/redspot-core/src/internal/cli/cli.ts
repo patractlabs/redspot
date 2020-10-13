@@ -76,8 +76,14 @@ async function main() {
       !isCwdInsideProject() &&
       process.stdout.isTTY === true
     ) {
-      console.log(redspotArguments);
-      console.log("TODO: create project");
+      console.log(chalk.red(`You are not inside a Redspot project.`));
+      console.log("");
+      console.log(
+        `Run the following command to create a new Redspot project: `
+      );
+      console.log(chalk.cyan(`  $ npx redspot-new <project-name>`));
+      console.log("");
+
       return;
     }
 
@@ -188,19 +194,9 @@ async function main() {
         );
       }
 
-      if (RedspotError.isRedspotError(error)) {
-        const link = `https://redspot.dev/${getErrorCode(
-          error.errorDescriptor
-        )}`;
-
-        console.error(
-          `For more info go to ${link} or run ${REDSPOT_NAME} with --show-stack-traces`
-        );
-      } else {
-        console.error(
-          `For more info run ${REDSPOT_NAME} with --show-stack-traces`
-        );
-      }
+      console.error(
+        `For more info run ${REDSPOT_NAME} with --show-stack-traces`
+      );
     }
 
     await Reporter.close(1000);

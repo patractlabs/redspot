@@ -114,7 +114,7 @@ function run(
           templateName,
         ],
         `
-    var { init } = require('${packageToInstall}/scripts/init.js');
+    var { init } = require('${packageToInstall}/internal/cli/init.js');
     init.apply(null, JSON.parse(process.argv[1]));
   `
       );
