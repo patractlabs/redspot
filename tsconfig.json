@@ -1,5 +1,10 @@
 {
-  "exclude": ["build/**/*", "**/build/**/*", "redspot-template/common"],
+  "exclude": [
+    "build/**/*",
+    "**/build/**/*",
+    "redspot-template/common",
+    "examples"
+  ],
   "compilerOptions": {
     "target": "ES2017",
     "module": "commonjs",
