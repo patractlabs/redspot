@@ -7,8 +7,9 @@ import path from "path";
 import semver from "semver";
 import yargs, { argv } from "yargs";
 
-const packageToInstall = "redspot@0.3.0-alpha.4";
-const templateToInstall = "@redspot/redspot-template@0.3.0-alpha.4";
+const packageToInstall = "redspot";
+const templateToInstall = "@redspot/redspot-template";
+const tag = "alpha";
 
 function init() {
   const currentNodeVersion = process.versions.node;
@@ -96,7 +97,7 @@ function run(
 
   console.log("Installing packages. This might take a while.");
 
-  install(root, allDependencies, useYarn, verbose)
+  install(root, allDependencies, useYarn, tag, verbose)
     .then(async () => {
       checkNodeVersion(packageToInstall);
 
@@ -164,17 +165,22 @@ function install(
   root: string,
   dependencies: string[],
   useYarn: boolean,
+  tag: string,
   verbose: boolean
 ) {
   return new Promise((resolve, reject) => {
     let command: string;
     let args: string[];
 
+    const dependenciesWithTag = !tag
+      ? dependencies
+      : dependencies.map((d) => `${d}@${tag}`);
+
     if (useYarn) {
       command = "yarnpkg";
       args = ["add", "--exact"];
 
-      [].push.apply(args, dependencies as any);
+      [].push.apply(args, dependenciesWithTag as any);
 
       args.push("--cwd");
       args.push(root);
@@ -186,7 +192,7 @@ function install(
         "--save-exact",
         "--loglevel",
         "error",
-      ].concat(dependencies);
+      ].concat(dependenciesWithTag);
     }
 
     if (verbose) {
