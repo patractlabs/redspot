@@ -16,11 +16,5 @@
   ],
   "bin": {
     "redspot-new": "./index.js"
-  },
-  "devDependencies": {
-    "@types/cross-spawn": "^6.0.2",
-    "@types/fs-extra": "^9.0.1",
-    "@types/semver": "^7.3.1",
-    "@types/yargs": "^15.0.5"
   }
 }
