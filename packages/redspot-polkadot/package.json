@@ -2,12 +2,9 @@
   "name": "@redspot/polkadot",
   "version": "0.3.0-alpha.4",
   "author": "Patract Labs",
-  "scripts": {
-    "test": "node ../../node_modules/mocha/bin/mocha --recursive"
-  },
   "dependencies": {
-    "@babel/runtime": "^7.11.2",
     "@polkadot/api": "^2.1.2-13",
-    "@polkadot/api-contract": "^2.1.2-13"
+    "@polkadot/api-contract": "^2.1.2-13",
+    "redspot": "0.3.0-alpha.4"
   }
 }

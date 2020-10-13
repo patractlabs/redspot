@@ -4,7 +4,6 @@
   "author": "Patract Labs",
   "main": "./index.js",
   "dependencies": {
-    "@babel/runtime": "^7.11.2",
     "chalk": "^4.1.0",
     "cross-spawn": "^7.0.3",
     "fs-extra": "^9.0.1",

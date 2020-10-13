@@ -11,10 +11,7 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@babel/core": "^7.11.6",
-    "@babel/register": "^7.11.5",
-    "@babel/runtime": "^7.11.2",
-    "@redspot/dev-cli": "0.3.0",
+    "@redspot/dev-cli": "0.3.3",
     "@types/chai": "^4.2.0",
     "@types/ci-info": "^2.0.0",
     "@types/debug": "^4.1.4",
@@ -43,8 +40,8 @@
     "typescript": "^4.0.2"
   },
   "scripts": {
-    "build": "polkadot-dev-build-ts",
-    "lint": "polkadot-dev-run-lint"
+    "build": "redspot-dev-build-ts",
+    "lint": "redspot-dev-run-lint"
   },
   "husky": {
     "hooks": {

@@ -1,6 +1,5 @@
 import { ApiPromise, SubmittableResult } from "@polkadot/api";
-import { PromiseContract } from "@polkadot/api-contract";
-import { Abi } from "@polkadot/api-contract";
+import { Abi, PromiseContract } from "@polkadot/api-contract";
 import { ApiOptions, SubmittableExtrinsic } from "@polkadot/api/types";
 import Keyring from "@polkadot/keyring";
 import { KeyringPair } from "@polkadot/keyring/types";

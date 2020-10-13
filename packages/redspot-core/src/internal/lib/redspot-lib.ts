@@ -45,4 +45,4 @@ if (RedspotContext.isCreated()) {
   ctx.setRedspotRuntimeEnvironment(env);
 }
 
-module.exports = env;
+export = env;
