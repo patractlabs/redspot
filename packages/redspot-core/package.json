@@ -1,6 +1,6 @@
 {
   "name": "redspot",
-  "version": "0.3.0-alpha.4",
+  "version": "0.3.0-alpha.11",
   "author": "Patract Labs",
   "main": "internal/lib/redspot-lib.js",
   "bin": {
