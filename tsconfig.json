@@ -2,7 +2,7 @@
   "exclude": [
     "build/**/*",
     "**/build/**/*",
-    "redspot-template/common",
+    "**/redspot-template/**/*",
     "examples"
   ],
   "compilerOptions": {

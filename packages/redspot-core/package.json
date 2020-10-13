@@ -10,7 +10,6 @@
     "node": ">=8.2.0"
   },
   "dependencies": {
-    "@babel/runtime": "^7.11.2",
     "@polkadot/rpc-provider": "^2.1.2-13",
     "@polkadot/types": "^2.1.2-13",
     "@sentry/node": "5.18.1",
@@ -37,5 +36,8 @@
     "ts-node": "^9.0.0",
     "typescript": "^4.0.3",
     "uuid": "3.3.2"
+  },
+  "devDependencies": {
+    "@types/mocha": "^5.2.6"
   }
 }
