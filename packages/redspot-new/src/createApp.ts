@@ -7,8 +7,8 @@ import path from "path";
 import semver from "semver";
 import yargs, { argv } from "yargs";
 
-const packageToInstall = "redspot";
-const templateToInstall = "@redspot/redspot-template@0.3.0-alpha.3";
+const packageToInstall = "redspot@0.3.0-alpha.4";
+const templateToInstall = "@redspot/redspot-template@0.3.0-alpha.4";
 
 function init() {
   const currentNodeVersion = process.versions.node;
