@@ -1,6 +1,6 @@
 {
   "name": "@redspot/polkadot",
-  "version": "0.3.0-alpha.3",
+  "version": "0.3.0-alpha.4",
   "author": "Patract Labs",
   "scripts": {
     "test": "node ../../node_modules/mocha/bin/mocha --recursive"
