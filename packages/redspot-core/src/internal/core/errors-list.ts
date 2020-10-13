@@ -44,9 +44,7 @@ export const ERRORS: {
       number: 1,
       message: "You are not inside a Redspot project.",
       title: "You are not inside a Redspot project",
-      description: `You are trying to run Redspot outside of a Redspot project.
-
-You can learn hoy to use Redspot by reading the [Getting Started guide](./README.md).`,
+      description: `You are trying to run Redspot outside of a Redspot project.`,
       shouldBeReported: false,
     },
     INVALID_NODE_VERSION: {
@@ -161,9 +159,7 @@ Please [report it](https://github.com/patractlabs/redspot-0.2/issues/new) to hel
       number: 100,
       message: "Network %network% doesn't exist",
       title: "Selected network doesn't exist",
-      description: `You are trying to run Redspot with a non-existent network.
-
-Read the [documentation](https://github.com/patractlabs/redspot-0.2#networks-configuration) to learn how to define custom networks.`,
+      description: `You are trying to run Redspot with a non-existent network.`,
       shouldBeReported: false,
     },
     INVALID_JSON_RESPONSE: {
