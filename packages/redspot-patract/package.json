@@ -1,10 +1,10 @@
 {
   "name": "@redspot/patract",
-  "version": "0.3.0-alpha.12",
+  "version": "0.3.0-alpha.13",
   "author": "Patract Labs",
   "dependencies": {
     "@polkadot/api": "^2.1.2-13",
     "@polkadot/api-contract": "^2.1.2-13",
-    "redspot": "0.3.0-alpha.12"
+    "redspot": "0.3.0-alpha.13"
   }
 }
