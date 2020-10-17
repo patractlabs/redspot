@@ -3,6 +3,6 @@ import Api from "./api";
 
 declare module "redspot/types" {
   interface RedspotRuntimeEnvironment {
-    polkadotjs?: Api;
+    polkadot: Api;
   }
 }

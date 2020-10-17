@@ -5,7 +5,8 @@ import Api from "./api";
 
 export default function () {
   extendEnvironment((env: RedspotRuntimeEnvironment) => {
-    env.polkadotjs = lazyObject(() => {
+    // @ts-ignore
+    env.polkadot = lazyObject(() => {
       const paths = env.config.paths;
       const network = env.network;
       const provider = network.provider;
