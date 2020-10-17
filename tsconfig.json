@@ -23,7 +23,9 @@
       "redspot": ["packages/redspot-core/src"],
       "redspot/*": ["packages/redspot-core/src/*"],
       "@redspot/polkadot": ["packages/redspot-polkadot/src"],
-      "@redspot/polkadot/*": ["packages/redspot-polkadot/src/*"]
+      "@redspot/polkadot/*": ["packages/redspot-polkadot/src/*"],
+      "@redspot/rpc-provider": ["packages/rpc-provider/src"],
+      "@redspot/rpc-provider/*": ["packages/rpc-provider/src/*"]
     },
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@polkadot/ts", "./node_modules/@types"]

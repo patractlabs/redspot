@@ -1,11 +1,11 @@
 import { NetworkConfig } from "../../types";
-import { NetworkProvider } from "./network-provider";
+import { RpcProvider } from "./rpc-provider";
 
 export function createProvider(
   networkName: string,
   networkConfig: NetworkConfig
 ) {
-  return new NetworkProvider(
+  return new RpcProvider(
     networkName,
     networkConfig.endpoint,
     networkConfig.types,
