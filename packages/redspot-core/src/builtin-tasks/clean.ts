@@ -7,11 +7,11 @@ export default function () {
     TASK_CLEAN,
     "Clears the cache and deletes all artifacts",
     async (_, { config }) => {
-      console.log(`delete ${config.paths.cache}`);
+      console.log(`Delete ${config.paths.cache}`);
       await fsExtra.emptyDir(config.paths.cache);
-      console.log(`delete ${config.paths.artifacts}`);
+      console.log(`Delete ${config.paths.artifacts}`);
       await fsExtra.remove(config.paths.artifacts);
-      console.log("done!");
+      console.log("Done!");
     }
   );
 }

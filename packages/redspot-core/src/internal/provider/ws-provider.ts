@@ -9,7 +9,7 @@ import assert from "assert";
 import chalk from "chalk";
 import EventEmitter from "eventemitter3";
 import {
-  IRpcProvider,
+  WsProvider as IWsProvider,
   JsonRpcResponse,
   ProviderInterfaceCallback,
   ProviderInterfaceEmitCb,
@@ -45,26 +45,13 @@ const ALIASSES: { [index: string]: string } = {
 const RETRY_DELAY = 1000;
 
 /**
- * # @polkadot/rpc-provider/ws
- *
  * @name WsProvider
  *
  * @description The WebSocket Provider allows sending requests using WebSocket to a WebSocket RPC server TCP port. Unlike the [[HttpProvider]], it does support subscriptions and allows listening to events such as new blocks or balance changes.
  *
- * @example
- * <BR>
- *
- * ```javascript
- * import Api from '@polkadot/api/promise';
- * import WsProvider from '@polkadot/rpc-provider/ws';
- *
- * const provider = new WsProvider('ws://127.0.0.1:9944');
- * const api = new Api(provider);
- * ```
- *
  * @see [[HttpProvider]]
  */
-export default class WsProvider implements IRpcProvider {
+export default class WsProvider implements IWsProvider {
   readonly #coder: Coder;
 
   readonly #endpoints: string[];
@@ -315,20 +302,6 @@ export default class WsProvider implements IRpcProvider {
    * @param  {any[]}                 params   Parameters
    * @param  {ProviderInterfaceCallback} callback Callback
    * @return {Promise<number>}                     Promise resolving to the dd of the subscription you can use with [[unsubscribe]].
-   *
-   * @example
-   * <BR>
-   *
-   * ```javascript
-   * const provider = new WsProvider('ws://127.0.0.1:9944');
-   * const rpc = new Rpc(provider);
-   *
-   * rpc.state.subscribeStorage([[storage.system.account, <Address>]], (_, values) => {
-   *   console.log(values)
-   * }).then((subscriptionId) => {
-   *   console.log('balance changes subscription id: ', subscriptionId)
-   * })
-   * ```
    */
   public async subscribe(
     type: string,
