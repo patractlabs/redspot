@@ -1,7 +1,7 @@
-import { WsProvider } from "@polkadot/rpc-provider";
-import { INetworkProvider, NetworkConfigAccounts } from "../../types";
+import WsProvider from "./ws-provider";
+import { IRpcProvider, NetworkConfigAccounts } from "../../types";
 
-export class NetworkProvider extends WsProvider implements INetworkProvider {
+export class RpcProvider extends WsProvider implements IRpcProvider {
   public accounts: NetworkConfigAccounts;
   public endowment: string | number;
   public gasLimit: string | number;
@@ -24,7 +24,7 @@ export class NetworkProvider extends WsProvider implements INetworkProvider {
     endowment: string | number = "5000000000000",
     gasLimit: string | number = "50000000000"
   ) {
-    super(endpoint, 0, httpHeaders);
+    super(endpoint, httpHeaders);
     this.networkName = networkName;
     this.types = types;
     this.accounts = accounts;
