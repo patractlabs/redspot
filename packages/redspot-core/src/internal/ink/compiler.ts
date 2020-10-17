@@ -84,6 +84,8 @@ export class Compiler {
 
     await this.runCompile(contract);
 
+    console.log("");
+
     return path.resolve(
       this._metadata.target_directory,
       `${contract.name}.wasm`
@@ -151,6 +153,8 @@ export class Compiler {
     console.log("");
 
     await this.runGenerateMetadata(contract);
+
+    console.log("");
 
     const metadataPath = path.resolve(
       this._metadata.target_directory,
