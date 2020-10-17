@@ -1,4 +1,3 @@
-import WsProvider from "./internal/provider/ws-provider";
 import { InkProject } from "@polkadot/types/interfaces";
 import { DeepReadonly } from "ts-essentials";
 import * as types from "./internal/core/params/argumentTypes";
@@ -267,11 +266,11 @@ export type ProviderInterfaceCallback = (
 export type ProviderInterfaceEmitted = "connected" | "disconnected" | "error";
 
 export type ProviderInterfaceEmitCb = (value?: any) => any;
-export interface RpcProvider {
+export interface WsProvider {
   readonly hasSubscriptions: boolean;
   readonly isConnected: boolean;
 
-  clone(): RpcProvider;
+  clone(): WsProvider;
   connect(): Promise<void>;
   disconnect(): Promise<void>;
   on(type: ProviderInterfaceEmitted, sub: ProviderInterfaceEmitCb): () => void;
@@ -287,6 +286,14 @@ export interface RpcProvider {
     method: string,
     id: number | string
   ): Promise<boolean>;
+}
+
+export interface RpcProvider extends WsProvider {
+  accounts: NetworkConfigAccounts;
+  endowment: string | number;
+  gasLimit: string | number;
+  networkName: string;
+  types: Record<string, any>;
 }
 
 export type IRpcProvider = RpcProvider;
