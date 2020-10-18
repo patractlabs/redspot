@@ -1,12 +1,14 @@
-import WsProvider from "./ws-provider";
+import { TypeRegistry } from "@polkadot/types";
+import BN from "bn.js";
 import { IRpcProvider, NetworkConfigAccounts } from "../../types";
+import WsProvider from "./ws-provider";
 
 export class RpcProvider extends WsProvider implements IRpcProvider {
   public accounts: NetworkConfigAccounts;
-  public endowment: string | number;
-  public gasLimit: string | number;
+  public endowment: BN;
+  public gasLimit: BN;
   public networkName: string;
-  public types: Record<string, any>;
+  public registry: TypeRegistry;
 
   constructor(
     networkName: string,
@@ -21,14 +23,17 @@ export class RpcProvider extends WsProvider implements IRpcProvider {
       "//Eve",
       "//Ferdie",
     ],
-    endowment: string | number = "5000000000000",
-    gasLimit: string | number = "50000000000"
+    endowment: BN | number | string = "5000000000000",
+    gasLimit: BN | number | string = "50000000000"
   ) {
     super(endpoint, httpHeaders);
     this.networkName = networkName;
-    this.types = types;
     this.accounts = accounts;
-    this.endowment = endowment;
-    this.gasLimit = gasLimit;
+    this.endowment = new BN(endowment);
+    this.gasLimit = new BN(gasLimit);
+    this.registry = new TypeRegistry();
+    this.registry.setKnownTypes({
+      types,
+    });
   }
 }

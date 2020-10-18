@@ -10,12 +10,12 @@ export default function () {
       const paths = env.config.paths;
       const network = env.network;
       const provider = network.provider;
-      const types = network.provider.types;
+      const registry = network.provider.registry;
 
       return new Api(
         {
           provider,
-          types,
+          registry,
         },
         network,
         paths

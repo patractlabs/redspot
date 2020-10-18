@@ -1,14 +1,16 @@
 import { InkProject } from "@polkadot/types/interfaces";
+import BN from "bn.js";
 import { DeepReadonly } from "ts-essentials";
 import * as types from "./internal/core/params/argumentTypes";
+import { TypeRegistry } from "@polkadot/types";
 
 // Begin config types
 
 // IMPORTANT: This t.types MUST be kept in sync with the actual types.
 export interface CommonNetworkConfig {
   accounts?: NetworkConfigAccounts;
-  gasLimit?: string | number;
-  endowment?: string | number;
+  gasLimit?: string | number | BN;
+  endowment?: string | number | BN;
   types?: Record<string, any>;
   from?: string;
 }
@@ -290,10 +292,10 @@ export interface WsProvider {
 
 export interface RpcProvider extends WsProvider {
   accounts: NetworkConfigAccounts;
-  endowment: string | number;
-  gasLimit: string | number;
+  endowment: BN;
+  gasLimit: BN;
+  registry: TypeRegistry;
   networkName: string;
-  types: Record<string, any>;
 }
 
 export type IRpcProvider = RpcProvider;
