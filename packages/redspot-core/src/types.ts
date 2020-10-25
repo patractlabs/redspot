@@ -1,8 +1,10 @@
-import { InkProject } from "@polkadot/types/interfaces";
-import BN from "bn.js";
+import type { Keyring } from "@polkadot/keyring";
+import type { KeyringPair } from "@polkadot/keyring/types";
+import type { TypeRegistry } from "@polkadot/types";
+import type { ContractProject } from "@polkadot/types/interfaces";
+import type BN from "bn.js";
 import { DeepReadonly } from "ts-essentials";
 import * as types from "./internal/core/params/argumentTypes";
-import { TypeRegistry } from "@polkadot/types";
 
 // Begin config types
 
@@ -20,7 +22,7 @@ export interface RedspotNetworkAccount {
   balance: string;
 }
 
-export type NetworkConfigAccounts = string[];
+export type NetworkConfigAccounts = (string | KeyringPair)[];
 
 export interface WsNetworkConfig extends CommonNetworkConfig {
   endpoint?: string | string[];
@@ -291,7 +293,8 @@ export interface WsProvider {
 }
 
 export interface RpcProvider extends WsProvider {
-  accounts: NetworkConfigAccounts;
+  accounts: KeyringPair[];
+  keyring: Keyring;
   endowment: BN;
   gasLimit: BN;
   registry: TypeRegistry;
@@ -314,7 +317,7 @@ export interface RedspotRuntimeEnvironment {
   readonly network: Network;
 }
 
-export interface Artifact extends InkProject {}
+export interface Artifact extends ContractProject {}
 
 export interface LinkReferences {
   [libraryFileName: string]: {

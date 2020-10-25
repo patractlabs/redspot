@@ -153,6 +153,24 @@ Please [report it](https://github.com/patractlabs/redspot-0.2/issues/new) to hel
 Please [report it](https://github.com/patractlabs/redspot-0.2/issues/new) to help us improve Redspot.`,
       shouldBeReported: true,
     },
+    BAD_SURI: {
+      number: 12,
+      message: `Can't parse suri "%uri%"`,
+      title: "BAD SURI",
+      description: `The account cannot be imported from this suri.
+
+Please check that the configured accounts are correct.`,
+      shouldBeReported: false,
+    },
+    BAD_KEYPAIR: {
+      number: 13,
+      message: `Cannot import keypair`,
+      title: "BAD KEYPAIR",
+      description: `The keypair cannot be imported.
+
+Please check that the configured keypair are correct.`,
+      shouldBeReported: false,
+    },
   },
   NETWORK: {
     CONFIG_NOT_FOUND: {

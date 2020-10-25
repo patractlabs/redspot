@@ -1,15 +1,20 @@
+import { Keyring } from "@polkadot/keyring";
+import type { KeyringPair } from "@polkadot/keyring/types";
 import { TypeRegistry } from "@polkadot/types";
 import BN from "bn.js";
 import { IRpcProvider, NetworkConfigAccounts } from "../../types";
 import registry from "./registry";
 import WsProvider from "./ws-provider";
+import { RedspotError } from "../core/errors";
+import { ERRORS } from "../core/errors-list";
 
 export class RpcProvider extends WsProvider implements IRpcProvider {
-  public accounts: NetworkConfigAccounts;
-  public endowment: BN;
-  public gasLimit: BN;
-  public networkName: string;
-  public registry: TypeRegistry;
+  readonly accounts: KeyringPair[];
+  readonly keyring: Keyring;
+  readonly endowment: BN;
+  readonly gasLimit: BN;
+  readonly networkName: string;
+  readonly registry: TypeRegistry;
 
   constructor(
     networkName: string,
@@ -29,13 +34,34 @@ export class RpcProvider extends WsProvider implements IRpcProvider {
   ) {
     super(endpoint, httpHeaders);
     this.networkName = networkName;
-    this.accounts = accounts;
     this.endowment = new BN(endowment);
     this.gasLimit = new BN(gasLimit);
     this.registry = registry;
 
     this.registry.setKnownTypes({
       types,
+    });
+
+    this.keyring = new Keyring({
+      type: "sr25519",
+    });
+
+    this.accounts = accounts.map((account) => {
+      if (typeof account === "object") {
+        try {
+          return this.keyring.addPair(account);
+        } catch (error) {
+          console.log(error.message);
+          throw new RedspotError(ERRORS.GENERAL.BAD_KEYPAIR);
+        }
+      } else {
+        try {
+          return this.keyring.addFromUri(account);
+        } catch (error) {
+          console.log(error.message);
+          throw new RedspotError(ERRORS.GENERAL.BAD_SURI, { uri: account });
+        }
+      }
     });
   }
 }
