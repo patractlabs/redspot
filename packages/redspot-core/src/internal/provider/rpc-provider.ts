@@ -1,6 +1,7 @@
 import { TypeRegistry } from "@polkadot/types";
 import BN from "bn.js";
 import { IRpcProvider, NetworkConfigAccounts } from "../../types";
+import registry from "./registry";
 import WsProvider from "./ws-provider";
 
 export class RpcProvider extends WsProvider implements IRpcProvider {
@@ -31,7 +32,8 @@ export class RpcProvider extends WsProvider implements IRpcProvider {
     this.accounts = accounts;
     this.endowment = new BN(endowment);
     this.gasLimit = new BN(gasLimit);
-    this.registry = new TypeRegistry();
+    this.registry = registry;
+
     this.registry.setKnownTypes({
       types,
     });
