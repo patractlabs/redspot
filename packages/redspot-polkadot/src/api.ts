@@ -54,17 +54,7 @@ export default class Api extends ApiPromise {
 
     const accounts = this.network.provider.accounts;
 
-    for (const uri of accounts) {
-      const meta = {
-        name: uri.replace("//", "_").toLowerCase(),
-      };
-
-      const pair = this.keyring.addFromUri(uri, meta, type);
-
-      pair.lock = (): void => {};
-    }
-
-    return this.keyring.getPairs();
+    return accounts;
   }
 
   getContract(nameOrAbi: string | Artifact | Abi, address: string | AccountId) {
@@ -82,7 +72,7 @@ export default class Api extends ApiPromise {
         ? readAbiSync(this.paths.artifacts, nameOrAbi)
         : nameOrAbi;
 
-    return new Abi(this.registry, abi as any);
+    return new Abi(this.registry as any, abi as any);
   }
 
   formatEvents(records: EventRecord[]) {

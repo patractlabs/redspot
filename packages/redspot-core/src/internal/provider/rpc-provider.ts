@@ -57,7 +57,15 @@ export class RpcProvider extends WsProvider implements IRpcProvider {
         }
       } else {
         try {
-          return this.keyring.addFromUri(account);
+          const meta = {
+            name: account.replace("//", "_").toLowerCase(),
+          };
+
+          const pair = this.keyring.addFromUri(account, meta);
+
+          pair.lock = (): void => {};
+
+          return pair;
         } catch (error) {
           console.log(error.message);
           throw new RedspotError(ERRORS.GENERAL.BAD_SURI, { uri: account });
