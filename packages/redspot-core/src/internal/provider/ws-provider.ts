@@ -52,29 +52,29 @@ const RETRY_DELAY = 1000;
  * @see [[HttpProvider]]
  */
 export default class WsProvider implements IWsProvider {
-  readonly #coder: Coder;
+  readonly _coder: Coder;
 
-  readonly #endpoints: string[];
+  readonly _endpoints: string[];
 
-  readonly #headers: Record<string, string>;
+  readonly _headers: Record<string, string>;
 
-  readonly #eventemitter: EventEmitter;
+  readonly _eventemitter: EventEmitter;
 
-  readonly #handlers: Record<string, WsStateAwaiting> = {};
+  readonly _handlers: Record<string, WsStateAwaiting> = {};
 
-  readonly #queued: Record<string, string> = {};
+  readonly _queued: Record<string, string> = {};
 
-  readonly #waitingForId: Record<string, JsonRpcResponse> = {};
+  readonly _waitingForId: Record<string, JsonRpcResponse> = {};
 
-  #autoConnectMs: number;
+  _autoConnectMs: number;
 
-  #endpointIndex: number;
+  _endpointIndex: number;
 
-  #isConnected = false;
+  _isConnected = false;
 
-  #subscriptions: Record<string, WsStateSubscription> = {};
+  _subscriptions: Record<string, WsStateSubscription> = {};
 
-  #websocket: WebSocket | null;
+  _websocket: WebSocket | null;
 
   /**
    * @param {string | string[]}  endpoint    The endpoint url. Usually `ws://ip:9944` or `wss://ip:9944`, may provide an array of endpoint strings.
@@ -95,12 +95,12 @@ export default class WsProvider implements IWsProvider {
       );
     });
 
-    this.#eventemitter = new EventEmitter();
-    this.#coder = new Coder();
-    this.#endpointIndex = -1;
-    this.#endpoints = endpoints;
-    this.#headers = headers;
-    this.#websocket = null;
+    this._eventemitter = new EventEmitter();
+    this._coder = new Coder();
+    this._endpointIndex = -1;
+    this._endpoints = endpoints;
+    this._headers = headers;
+    this._websocket = null;
   }
 
   /**
@@ -115,14 +115,14 @@ export default class WsProvider implements IWsProvider {
    * @return {boolean} true if connected
    */
   public get isConnected(): boolean {
-    return this.#isConnected;
+    return this._isConnected;
   }
 
   /**
    * @description Returns a clone of the object
    */
   public clone(): WsProvider {
-    return new WsProvider(this.#endpoints);
+    return new WsProvider(this._endpoints);
   }
 
   /**
@@ -133,27 +133,27 @@ export default class WsProvider implements IWsProvider {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async connect(): Promise<void> {
     try {
-      this.#endpointIndex = (this.#endpointIndex + 1) % this.#endpoints.length;
-      this.#websocket =
+      this._endpointIndex = (this._endpointIndex + 1) % this._endpoints.length;
+      this._websocket =
         typeof WebSocket !== "undefined" && isChildClass(WebSocket, WS)
-          ? new WS(this.#endpoints[this.#endpointIndex])
+          ? new WS(this._endpoints[this._endpointIndex])
           : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // WS may be an instance of w3cwebsocket, which supports headers
             new (WS as any)(
-              this.#endpoints[this.#endpointIndex],
+              this._endpoints[this._endpointIndex],
               undefined,
               undefined,
-              this.#headers
+              this._headers
             );
 
-      this.#websocket.onclose = this.#onSocketClose;
-      this.#websocket.onerror = this.#onSocketError;
-      this.#websocket.onmessage = this.#onSocketMessage;
-      this.#websocket.onopen = this.#onSocketOpen;
+      this._websocket.onclose = this._onSocketClose;
+      this._websocket.onerror = this._onSocketError;
+      this._websocket.onmessage = this._onSocketMessage;
+      this._websocket.onopen = this._onSocketOpen;
 
       return new Promise((resolve, reject) => {
         let isConnected = false;
-        const eventemitter = this.#eventemitter;
+        const eventemitter = this._eventemitter;
 
         function removeAll(event?) {
           eventemitter.removeListener("connected", onConnect);
@@ -176,14 +176,14 @@ export default class WsProvider implements IWsProvider {
           removeAll(event);
         }
 
-        this.#eventemitter.once("connected", onConnect);
-        this.#eventemitter.once("disconnected", onClose);
-        this.#eventemitter.once("error", onClose);
+        this._eventemitter.once("connected", onConnect);
+        this._eventemitter.once("disconnected", onClose);
+        this._eventemitter.once("error", onClose);
       });
     } catch (error) {
       log.error(chalk.red(error));
 
-      this.#emit("error", error);
+      this._emit("error", error);
 
       throw error;
     }
@@ -200,7 +200,7 @@ export default class WsProvider implements IWsProvider {
         this.connectWithRetry().catch((): void => {
           // does not throw
         });
-      }, this.#autoConnectMs || RETRY_DELAY);
+      }, this._autoConnectMs || RETRY_DELAY);
     }
   }
 
@@ -211,20 +211,20 @@ export default class WsProvider implements IWsProvider {
   public async disconnect(): Promise<void> {
     try {
       assert(
-        !isNull(this.#websocket),
+        !isNull(this._websocket),
         "Cannot disconnect on a non-connected websocket"
       );
 
       // switch off autoConnect, we are in manual mode now
-      this.#autoConnectMs = 0;
+      this._autoConnectMs = 0;
 
       // 1000 - Normal closure; the connection successfully completed
-      this.#websocket.close(1000);
-      this.#websocket = null;
+      this._websocket.close(1000);
+      this._websocket = null;
     } catch (error) {
       log.error(chalk.red(error));
 
-      this.#emit("error", error);
+      this._emit("error", error);
 
       throw error;
     }
@@ -240,10 +240,10 @@ export default class WsProvider implements IWsProvider {
     type: ProviderInterfaceEmitted,
     sub: ProviderInterfaceEmitCb
   ): () => void {
-    this.#eventemitter.on(type, sub);
+    this._eventemitter.on(type, sub);
 
     return (): void => {
-      this.#eventemitter.removeListener(type, sub);
+      this._eventemitter.removeListener(type, sub);
     };
   }
 
@@ -260,9 +260,9 @@ export default class WsProvider implements IWsProvider {
   ): Promise<any> {
     return new Promise((resolve, reject): void => {
       try {
-        const json = this.#coder.encodeJson(method, params);
+        const json = this._coder.encodeJson(method, params);
         const request = JSON.stringify(json);
-        const id = this.#coder.getId();
+        const id = this._coder.getId();
 
         const callback = (error?: Error | null, result?: any): void => {
           error ? reject(error) : resolve(result);
@@ -276,17 +276,17 @@ export default class WsProvider implements IWsProvider {
           json.params
         );
 
-        this.#handlers[id] = {
+        this._handlers[id] = {
           callback,
           method,
           params,
           subscription,
         };
 
-        if (this.isConnected && !isNull(this.#websocket)) {
-          this.#websocket.send(request);
+        if (this.isConnected && !isNull(this._websocket)) {
+          this._websocket.send(request);
         } else {
-          this.#queued[id] = request;
+          this._queued[id] = request;
         }
       } catch (error) {
         reject(error);
@@ -330,42 +330,42 @@ export default class WsProvider implements IWsProvider {
     // the assigned id now does not match what the API user originally received. It has
     // a slight complication in solving - since we cannot rely on the send id, but rather
     // need to find the actual subscription id to map it
-    if (isUndefined(this.#subscriptions[subscription])) {
+    if (isUndefined(this._subscriptions[subscription])) {
       log.warn(`Unable to find active subscription=${subscription}`);
 
       return false;
     }
 
-    delete this.#subscriptions[subscription];
+    delete this._subscriptions[subscription];
 
     const result = (await this.send(method, [id])) as Promise<boolean>;
 
     return result;
   }
 
-  #emit = (type: ProviderInterfaceEmitted, ...args: any[]): void => {
-    this.#eventemitter.emit(type, ...args);
+  _emit = (type: ProviderInterfaceEmitted, ...args: any[]): void => {
+    this._eventemitter.emit(type, ...args);
   };
 
-  #onSocketClose = (event: CloseEvent): void => {
+  _onSocketClose = (event: CloseEvent): void => {
     log.error(
       chalk.red(
-        `Disconnected from ${this.#endpoints[this.#endpointIndex]}: ${
+        `Disconnected from ${this._endpoints[this._endpointIndex]}: ${
           event.code
         }:: ${event.reason || getWSErrorString(event.code)}`
       )
     );
 
-    this.#isConnected = false;
-    this.#emit("disconnected");
+    this._isConnected = false;
+    this._emit("disconnected");
   };
 
-  #onSocketError = (error: Event): void => {
+  _onSocketError = (error: Event): void => {
     log.warn(`Socket event: ${error.type}`);
-    this.#emit("error", error);
+    this._emit("error", error);
   };
 
-  #onSocketMessage = (message: MessageEvent): void => {
+  _onSocketMessage = (message: MessageEvent): void => {
     const response = JSON.parse(message.data as string) as JsonRpcResponse;
     const isMsg = isUndefined(response.method);
 
@@ -389,19 +389,19 @@ export default class WsProvider implements IWsProvider {
         response.id
       );
 
-      return this.#onSocketMessageResult(response);
+      return this._onSocketMessageResult(response);
     } else {
       log.debug(
         `${chalk.red("⬇")} SubId: ${chalk.bold(
           response.params.subscription.toString()
         )}, result: ${subresult(response.params.result)}`
       );
-      this.#onSocketMessageSubscribe(response);
+      this._onSocketMessageSubscribe(response);
     }
   };
 
-  #onSocketMessageResult = (response: JsonRpcResponse): void => {
-    const handler = this.#handlers[response.id];
+  _onSocketMessageResult = (response: JsonRpcResponse): void => {
+    const handler = this._handlers[response.id];
 
     if (!handler) {
       // log.warn(`Unable to find handler for id=${response.id}`);
@@ -411,7 +411,7 @@ export default class WsProvider implements IWsProvider {
 
     try {
       const { method, params, subscription } = handler;
-      const result = this.#coder.decodeResponse(response) as string;
+      const result = this._coder.decodeResponse(response) as string;
 
       // first send the result - in case of subs, we may have an update
       // immediately if we have some queued results already
@@ -420,33 +420,33 @@ export default class WsProvider implements IWsProvider {
       if (subscription) {
         const subId = `${subscription.type}::${result}`;
 
-        this.#subscriptions[subId] = {
+        this._subscriptions[subId] = {
           ...subscription,
           method,
           params,
         };
 
         // if we have a result waiting for this subscription already
-        if (this.#waitingForId[subId]) {
-          this.#onSocketMessageSubscribe(this.#waitingForId[subId]);
+        if (this._waitingForId[subId]) {
+          this._onSocketMessageSubscribe(this._waitingForId[subId]);
         }
       }
     } catch (error) {
       handler.callback(error, undefined);
     }
 
-    delete this.#handlers[response.id];
+    delete this._handlers[response.id];
   };
 
-  #onSocketMessageSubscribe = (response: JsonRpcResponse): void => {
+  _onSocketMessageSubscribe = (response: JsonRpcResponse): void => {
     const method =
       ALIASSES[response.method as string] || response.method || "invalid";
     const subId = `${method}::${response.params.subscription}`;
-    const handler = this.#subscriptions[subId];
+    const handler = this._subscriptions[subId];
 
     if (!handler) {
       // store the JSON, we could have out-of-order subid coming in
-      this.#waitingForId[subId] = response;
+      this._waitingForId[subId] = response;
 
       // log.warn(`Unable to find handler for subscription=${subId}`);
 
@@ -454,10 +454,10 @@ export default class WsProvider implements IWsProvider {
     }
 
     // housekeeping
-    delete this.#waitingForId[subId];
+    delete this._waitingForId[subId];
 
     try {
-      const result = this.#coder.decodeResponse(response);
+      const result = this._coder.decodeResponse(response);
 
       handler.callback(null, result);
     } catch (error) {
@@ -465,24 +465,24 @@ export default class WsProvider implements IWsProvider {
     }
   };
 
-  #onSocketOpen = (): boolean => {
-    assert(!isNull(this.#websocket), "WebSocket cannot be null in onOpen");
+  _onSocketOpen = (): boolean => {
+    assert(!isNull(this._websocket), "WebSocket cannot be null in onOpen");
 
-    log.info("Connected to", this.#endpoints[this.#endpointIndex]);
+    log.info("Connected to", this._endpoints[this._endpointIndex]);
 
-    this.#isConnected = true;
+    this._isConnected = true;
 
-    this.#emit("connected");
-    this.#sendQueue();
-    this.#resubscribe();
+    this._emit("connected");
+    this._sendQueue();
+    this._resubscribe();
 
     return true;
   };
 
-  #resubscribe = (): void => {
-    const subscriptions = this.#subscriptions;
+  _resubscribe = (): void => {
+    const subscriptions = this._subscriptions;
 
-    this.#subscriptions = {};
+    this._subscriptions = {};
 
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     Object.keys(subscriptions).forEach(
@@ -505,13 +505,13 @@ export default class WsProvider implements IWsProvider {
     );
   };
 
-  #sendQueue = (): void => {
-    Object.keys(this.#queued).forEach((id): void => {
+  _sendQueue = (): void => {
+    Object.keys(this._queued).forEach((id): void => {
       try {
         // we have done the websocket check in onSocketOpen, if an issue, will catch it
-        (this.#websocket as WebSocket).send(this.#queued[id]);
+        (this._websocket as WebSocket).send(this._queued[id]);
 
-        delete this.#queued[id];
+        delete this._queued[id];
       } catch (error) {
         log.error(chalk.red(error));
       }

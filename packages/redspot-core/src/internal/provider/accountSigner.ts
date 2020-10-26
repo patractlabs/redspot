@@ -1,7 +1,8 @@
 import { SignerResult } from "@polkadot/api/types";
 import { KeyringPair } from "@polkadot/keyring/types";
 import { SignerPayloadJSON } from "@polkadot/types/types";
-import registry from "../provider/registry";
+import type { Registry } from "@polkadot/types/types";
+
 import { IAccountSigner } from "../../types";
 import BN from "bn.js";
 
@@ -11,14 +12,17 @@ export default class AccountSigner implements IAccountSigner {
   readonly pair: KeyringPair;
   readonly gasLimit: BN;
   readonly endowment: BN;
+  readonly registry: Registry;
 
   constructor(
+    registry: Registry,
     keyringPair: KeyringPair,
     defaults: {
       endowment: BN;
       gasLimit: BN;
     }
   ) {
+    this.registry = registry;
     this.pair = keyringPair;
     this.endowment = defaults.endowment;
     this.gasLimit = defaults.gasLimit;
@@ -26,7 +30,7 @@ export default class AccountSigner implements IAccountSigner {
 
   public async signPayload(payload: SignerPayloadJSON): Promise<SignerResult> {
     return new Promise((resolve): void => {
-      const signed = registry
+      const signed = this.registry
         .createType("ExtrinsicPayload", payload, { version: payload.version })
         .sign(this.pair);
 

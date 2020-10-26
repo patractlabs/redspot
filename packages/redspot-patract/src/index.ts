@@ -23,9 +23,9 @@ export default function () {
       const api = new ApiPromise({
         provider,
         registry,
+        // hack
+        ...registry.knownTypes,
       });
-
-      api.connect();
 
       return {
         api: api,

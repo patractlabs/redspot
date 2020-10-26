@@ -5,6 +5,6 @@
   "dependencies": {
     "@polkadot/api": "^2.4.1",
     "@polkadot/api-contract": "^2.4.1",
-    "redspot": "0.3.0-15.0"
+    "redspot": "0.3.0-16.0"
   }
 }

@@ -3,7 +3,6 @@ import type { KeyringPair } from "@polkadot/keyring/types";
 import { TypeRegistry } from "@polkadot/types";
 import BN from "bn.js";
 import { IRpcProvider, NetworkConfigAccounts } from "../../types";
-import registry from "./registry";
 import WsProvider from "./ws-provider";
 import { RedspotError } from "../core/errors";
 import { ERRORS } from "../core/errors-list";
@@ -37,10 +36,10 @@ export class RpcProvider extends WsProvider implements IRpcProvider {
     this.networkName = networkName;
     this.endowment = new BN(endowment);
     this.gasLimit = new BN(gasLimit);
-    this.registry = registry;
+    this.registry = new TypeRegistry();
 
     this.registry.setKnownTypes({
-      types,
+      types: { ...types },
     });
 
     this.keyring = new Keyring({
@@ -75,7 +74,7 @@ export class RpcProvider extends WsProvider implements IRpcProvider {
   }
 
   createSigner(keyringPair: KeyringPair): AccountSigner {
-    return new AccountSigner(keyringPair, {
+    return new AccountSigner(this.registry, keyringPair, {
       endowment: this.endowment,
       gasLimit: this.gasLimit,
     });
