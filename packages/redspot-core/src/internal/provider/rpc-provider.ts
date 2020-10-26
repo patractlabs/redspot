@@ -7,6 +7,7 @@ import registry from "./registry";
 import WsProvider from "./ws-provider";
 import { RedspotError } from "../core/errors";
 import { ERRORS } from "../core/errors-list";
+import AccountSigner from "./accountSigner";
 
 export class RpcProvider extends WsProvider implements IRpcProvider {
   readonly accounts: KeyringPair[];
@@ -63,5 +64,9 @@ export class RpcProvider extends WsProvider implements IRpcProvider {
         }
       }
     });
+  }
+
+  createSigner(keyringPair: KeyringPair) {
+    return new AccountSigner(keyringPair);
   }
 }

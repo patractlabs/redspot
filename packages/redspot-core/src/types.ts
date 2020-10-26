@@ -1,3 +1,4 @@
+import type { Signer } from "@polkadot/api/types";
 import type { Keyring } from "@polkadot/keyring";
 import type { KeyringPair } from "@polkadot/keyring/types";
 import type { TypeRegistry } from "@polkadot/types";
@@ -299,9 +300,16 @@ export interface RpcProvider extends WsProvider {
   gasLimit: BN;
   registry: TypeRegistry;
   networkName: string;
+  createSigner(keyringPair: KeyringPair): AccountSigner;
 }
 
 export type IRpcProvider = RpcProvider;
+
+export interface AccountSigner extends Signer {
+  getAddress(): Promise<string>;
+}
+
+export type IAccountSigner = AccountSigner;
 
 export interface Network {
   name: string;
