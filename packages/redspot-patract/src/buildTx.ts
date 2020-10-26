@@ -1,9 +1,11 @@
 import { SubmittableResult } from "@polkadot/api";
+import type { SignerOptions } from "@polkadot/api/types";
 import { SubmittableExtrinsic } from "@polkadot/api/types";
 import type { EventRecord } from "@polkadot/types/interfaces";
+import type { Registry } from "@polkadot/types/types";
 import type { AccountSigner } from "redspot/types";
 
-export interface TxStatus {
+export interface TransactionResponse {
   from: string;
   txHash?: string;
   blockHash?: string;
@@ -23,22 +25,25 @@ export interface TxStatus {
 }
 
 export async function buildTx(
+  registry: Registry,
   extrinsic: SubmittableExtrinsic<"promise">,
-  signer: AccountSigner
-): Promise<TxStatus> {
-  const signerAddress = await signer.getAddress();
+  options?: Partial<SignerOptions> & {
+    signer: AccountSigner;
+  }
+): Promise<TransactionResponse> {
+  const signerAddress = await options.signer.getAddress();
 
   return new Promise((resolve, reject) => {
     const actionStatus = {
       from: signerAddress.toString(),
       txHash: extrinsic.hash.toHex(),
-    } as Partial<TxStatus>;
+    } as Partial<TransactionResponse>;
 
     extrinsic
       .signAndSend(
         signerAddress,
         {
-          signer,
+          ...options,
         },
         (result: SubmittableResult) => {
           if (result.status.isInBlock) {
@@ -64,7 +69,7 @@ export async function buildTx(
                   if (dispatchError.isModule) {
                     try {
                       const mod = dispatchError.asModule;
-                      const error = this.registry.findMetaError(
+                      const error = registry.findMetaError(
                         new Uint8Array([
                           mod.index.toNumber(),
                           mod.error.toNumber(),
@@ -83,7 +88,7 @@ export async function buildTx(
                   reject(actionStatus);
                 } else if (method === "ExtrinsicSuccess") {
                   actionStatus.result = result;
-                  resolve(actionStatus as TxStatus);
+                  resolve(actionStatus as TransactionResponse);
                 }
               });
           } else if (result.isError) {

@@ -1,5 +1,5 @@
 import { ApiPromise, SubmittableResult } from "@polkadot/api";
-import { Abi, PromiseContract } from "@polkadot/api-contract";
+import { Abi, ContractPromise } from "@polkadot/api-contract";
 import { ApiOptions, SubmittableExtrinsic } from "@polkadot/api/types";
 import Keyring from "@polkadot/keyring";
 import { KeyringPair } from "@polkadot/keyring/types";
@@ -73,7 +73,7 @@ export default class Api extends ApiPromise {
         ? readAbiSync(this.paths.artifacts, nameOrAbi)
         : nameOrAbi;
 
-    return new PromiseContract(this, abi as any, address);
+    return new ContractPromise(this, abi as any, address);
   }
 
   getAbi(nameOrAbi: string | Artifact) {

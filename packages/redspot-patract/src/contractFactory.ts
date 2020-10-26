@@ -1,15 +1,16 @@
 import { ApiPromise } from "@polkadot/api";
 import { Abi } from "@polkadot/api-contract";
-import type { AbiConstructor, AbiMessage } from "@polkadot/api-contract/types";
-import { encodeMessage } from "@polkadot/api-contract/util";
+import type { AbiConstructor } from "@polkadot/api-contract/types";
 import type { SubmittableExtrinsic } from "@polkadot/api/types";
 import type { Bytes } from "@polkadot/types";
 import type { CodeHash } from "@polkadot/types/interfaces/contracts";
 import type { AccountId } from "@polkadot/types/interfaces/types";
 import type { AnyJson, ISubmittableResult } from "@polkadot/types/types";
 import { CodecArg } from "@polkadot/types/types";
-import { u8aToU8a } from "@polkadot/util";
+import { isU8a, u8aToHex, u8aToU8a } from "@polkadot/util";
 import BN from "bn.js";
+import chalk from "chalk";
+import log from "redspot/internal/log";
 import { RedspotPluginError } from "redspot/plugins";
 import type { AccountSigner } from "redspot/types";
 import { buildTx } from "./buildTx";
@@ -21,15 +22,12 @@ type ContractAbi = AnyJson | Abi;
 
 const pluginName = "redspot-patract";
 
-export class ContractFactory {
+export default class ContractFactory {
   readonly abi: Abi;
   readonly wasm: Uint8Array;
-  readonly apiProvider: ApiPromise;
+  readonly api: ApiPromise;
   readonly signer: AccountSigner;
-  readonly defaults?: {
-    endowment?: BN | string;
-    gasLimit?: BN | string;
-  };
+
   readonly populateTransaction: {
     putCode: (
       code: string | Bytes | Uint8Array
@@ -43,14 +41,10 @@ export class ContractFactory {
   };
 
   constructor(
-    contractAbi: ContractAbi,
     wasm: Uint8Array | string | Buffer,
+    contractAbi: ContractAbi,
     apiProvider: ApiPromise,
-    signer: AccountSigner,
-    defaults?: {
-      endowment?: BN | string;
-      gasLimit?: BN | string;
-    }
+    signer: AccountSigner
   ) {
     this.abi =
       contractAbi instanceof Abi
@@ -58,9 +52,8 @@ export class ContractFactory {
         : new Abi(contractAbi, apiProvider.registry.getChainProperties());
 
     this.wasm = u8aToU8a(wasm);
-    this.apiProvider = apiProvider;
+    this.api = apiProvider;
     this.signer = signer;
-    this.defaults = defaults;
 
     this.populateTransaction = {
       putCode: this._buildPutCode,
@@ -70,31 +63,38 @@ export class ContractFactory {
   }
 
   _buildPutCode() {
-    return this.apiProvider.tx.contracts.putCode(this.wasm);
+    return this.api.tx.contracts.putCode(this.wasm);
   }
 
   _buildInstantiate(
     codeHash: string | Uint8Array | CodeHash,
     data: string | Uint8Array | Bytes,
-    endowment?: BN | string,
-    gasLimit?: BN | string
+    endowment: BN | string,
+    gasLimit: BN | string
   ) {
-    return this.apiProvider.tx.contracts.instantiate(
-      endowment || this.defaults?.endowment,
-      gasLimit || this.defaults?.gasLimit,
+    return this.api.tx.contracts.instantiate(
+      endowment,
+      gasLimit,
       codeHash,
       data
     );
   }
 
-  encodeMessage(message: AbiMessage | AbiConstructor, ...params: CodecArg[]) {
-    return encodeMessage(this.abi.registry, message, params);
-  }
-
   async putCode(): Promise<CodeHash> {
     const tx = this._buildPutCode();
 
-    const status = await buildTx(tx, this.signer);
+    const contractName = this.abi.project.contract.name;
+
+    log.log("");
+    log.log(chalk.magenta(`===== PutCode ${contractName} =====`));
+    log.log(
+      "WasmCode: ",
+      u8aToHex(this.wasm).replace(/^(\w{32})(\w*)(\w{30})$/g, "$1......$3")
+    );
+
+    const status = await buildTx(this.api.registry, tx, {
+      signer: this.signer,
+    });
     const record = status.result.findRecord("contracts", "CodeStored");
 
     const codeHash = record?.event.data[0] as CodeHash;
@@ -106,6 +106,8 @@ export class ContractFactory {
       );
     }
 
+    log.log(`➤ ${contractName} codeHash: ${chalk.blue(codeHash.toHex())}`);
+
     return codeHash;
   }
 
@@ -114,12 +116,28 @@ export class ContractFactory {
     constructorOrId: AbiConstructor | string | number,
     ...params: CodecArg[]
   ): Promise<AccountId> {
+    const contractName = this.abi.project.contract.name;
+
     const constructor = this.abi.findConstructor(constructorOrId);
-    const encoded = this.encodeMessage(constructor, ...params);
+    const encoded = constructor.toU8a(params);
+    const endowment = this.signer.endowment;
+    const gasLimit = this.signer.gasLimit;
 
-    const tx = this._buildInstantiate(codeHash, encoded);
+    const tx = this._buildInstantiate(codeHash, encoded, endowment, gasLimit);
 
-    const status = await buildTx(tx, this.signer);
+    log.log("");
+    log.log(chalk.magenta(`===== Instantiate ${contractName} =====`));
+    log.log("Endowment: ", endowment.toString());
+    log.log("GasLimit: ", gasLimit.toString());
+    log.log(
+      "CodeHash: ",
+      isU8a(codeHash) ? u8aToHex(codeHash) : codeHash.toString()
+    );
+    log.log("InputData: ", u8aToHex(encoded));
+
+    const status = await buildTx(this.api.registry, tx, {
+      signer: this.signer,
+    });
     const record = status.result.findRecord("contracts", "Instantiated");
 
     const address = record.event.data[1] as AccountId;
@@ -138,38 +156,42 @@ export class ContractFactory {
     constructorOrId: AbiConstructor | string | number,
     ...params: CodecArg[]
   ): Promise<Contract> {
-    const abiHash = this.abi.project.source.hash;
-
     const codeHash = await this.putCode();
     const contractAddress = await this.instantiate(
       codeHash,
       constructorOrId,
       ...params
     );
-    return new Contract(contractAddress, this.abi, this.apiProvider);
+
+    const contract = new Contract(
+      contractAddress,
+      this.abi,
+      this.api,
+      this.signer
+    );
+
+    return contract;
   }
 
   attach(address: string): Contract {
-    return (<any>this.constructor).getContract(
-      address,
-      this.abi,
-      this.apiProvider
-    );
+    return (<any>this.constructor).getContract(address, this.abi, this.api);
   }
 
-  connect(apiProvider: ApiPromise) {
+  connect(signer: AccountSigner) {
     return new (<{ new (...args: any[]): ContractFactory }>this.constructor)(
-      this.abi,
       this.wasm,
-      apiProvider
+      this.abi,
+      this.api,
+      signer
     );
   }
 
   static getContract(
     address: string,
     contractAbi: ContractAbi,
-    apiProvider?: ApiPromise
+    apiProvider: ApiPromise,
+    signer: AccountSigner
   ): Contract {
-    return new Contract(address, contractAbi, apiProvider);
+    return new Contract(address, contractAbi, apiProvider, signer);
   }
 }
