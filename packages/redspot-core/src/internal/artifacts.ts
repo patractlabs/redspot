@@ -61,7 +61,7 @@ export async function readWasm(
 
   const buffer = await fsExtra.readFile(artifactPath);
 
-  return buffer.toString("hex");
+  return "0x" + buffer.toString("hex");
 }
 
 export function readWasmSync(

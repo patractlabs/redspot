@@ -306,6 +306,8 @@ export interface RpcProvider extends WsProvider {
 export type IRpcProvider = RpcProvider;
 
 export interface AccountSigner extends Signer {
+  readonly gasLimit: BN;
+  readonly endowment: BN;
   getAddress(): Promise<string>;
 }
 
