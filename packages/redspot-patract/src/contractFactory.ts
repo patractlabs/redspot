@@ -62,8 +62,8 @@ export default class ContractFactory {
     this.abi;
   }
 
-  _buildPutCode() {
-    return this.api.tx.contracts.putCode(this.wasm);
+  _buildPutCode(wasmCode: Uint8Array | string | Buffer) {
+    return this.api.tx.contracts.putCode(wasmCode);
   }
 
   _buildInstantiate(
@@ -81,16 +81,16 @@ export default class ContractFactory {
   }
 
   async putCode(): Promise<CodeHash> {
-    const tx = this._buildPutCode();
-
     const contractName = this.abi.project.contract.name;
-
+    const wasmCode = u8aToHex(this.wasm);
     log.log("");
     log.log(chalk.magenta(`===== PutCode ${contractName} =====`));
     log.log(
       "WasmCode: ",
-      u8aToHex(this.wasm).replace(/^(\w{32})(\w*)(\w{30})$/g, "$1......$3")
+      wasmCode.replace(/^(\w{32})(\w*)(\w{30})$/g, "$1......$3")
     );
+
+    const tx = this._buildPutCode(wasmCode);
 
     const status = await buildTx(this.api.registry, tx, {
       signer: this.signer,

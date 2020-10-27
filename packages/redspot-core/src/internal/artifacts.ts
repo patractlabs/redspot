@@ -74,5 +74,5 @@ export function readWasmSync(
     throw new RedspotError(ERRORS.ARTIFACTS.NOT_FOUND, { contractName });
   }
 
-  return fsExtra.readFileSync(artifactPath).toString("hex");
+  return "0x" + fsExtra.readFileSync(artifactPath).toString("hex");
 }
