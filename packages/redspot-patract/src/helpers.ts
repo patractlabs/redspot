@@ -21,7 +21,7 @@ export async function getContractFactory(
   contractName: string,
   signer?: AccountSigner
 ) {
-  const api: ApiPromise = env.patract.api;
+  const api: ApiPromise = await env.patract.connect();
   const wasmCode = getWasm(env, contractName);
   const abi = getAbi(env, contractName);
 
@@ -39,7 +39,7 @@ export async function getContractAt(
   address: AccountId | string,
   signer?: AccountSigner
 ) {
-  const api: ApiPromise = env.patract.api;
+  const api: ApiPromise = await env.patract.connect();
 
   const abi = getAbi(env, contractName);
 

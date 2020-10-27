@@ -27,11 +27,21 @@ export default function () {
         ...registry.knownTypes,
       });
 
-      api.connect();
-
       return {
         api: api,
         Contract: Contract,
+        connect: async () => {
+          const isConnected = api.isConnected;
+
+          if (!api.isConnected) {
+            await api.connect();
+          }
+
+          return await api.isReady;
+        },
+        disconnect: async () => {
+          await api.disconnect();
+        },
         ContractFactory: ContractFactory,
         getContractFactory: getContractFactory.bind(null, env),
         getContractAt: getContractAt.bind(null, env),

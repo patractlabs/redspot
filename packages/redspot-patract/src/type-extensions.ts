@@ -11,6 +11,8 @@ declare module "redspot/types" {
       api: ApiPromise;
       Contract: typeof Contract;
       ContractFactory: typeof ContractFactory;
+      connect: () => Promise<ApiPromise>;
+      disconnect: () => Promise<void>;
       getContractAt(
         contractName: string,
         address: AccountId | string,
