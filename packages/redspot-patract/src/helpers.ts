@@ -22,7 +22,6 @@ export async function getContractFactory(
   signer?: AccountSigner
 ) {
   const api: ApiPromise = env.patract.api;
-
   const wasmCode = getWasm(env, contractName);
   const abi = getAbi(env, contractName);
 

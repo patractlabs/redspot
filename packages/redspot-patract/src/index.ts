@@ -27,6 +27,8 @@ export default function () {
         ...registry.knownTypes,
       });
 
+      api.connect();
+
       return {
         api: api,
         Contract: Contract,

@@ -16,6 +16,8 @@ import { Codec, Registry, TypeDef } from "@polkadot/types/types";
 import BN from "bn.js";
 import type { AccountSigner } from "redspot/types";
 import { buildTx, TransactionResponse } from "./buildTx";
+import log from "redspot/internal/log";
+import chalk from "chalk";
 
 export function formatData(
   registry: Registry,
@@ -70,10 +72,8 @@ async function populateTransaction(
   // The ABI coded transaction
   const data = fragment.toU8a(args as CodecArg[]);
 
-  const singerAddress = await contract.signer.getAddress();
-
   const callParams: CallParams = {
-    dest: overrides.dest || singerAddress,
+    dest: overrides.dest || contract.address,
     value: overrides.value || new BN("0"),
     gasLimit:
       overrides.gasLimit ||
@@ -126,6 +126,19 @@ function buildCall(
     );
 
     const origin = await options.signer.getAddress();
+
+    const params = {
+      ...callParams,
+      origin,
+    };
+
+    log.log("");
+    log.log(chalk.magenta(`===== Call =====`));
+    Object.keys(params).map((key) => {
+      try {
+        log.log(`${key}: `, params[key].toString());
+      } catch {}
+    });
 
     const result: ContractExecResult = await contract.api.rpc.contracts.call({
       ...callParams,
@@ -230,7 +243,6 @@ export default class Contract {
     this.callStatic = {};
     this.estimateGas = {};
     this.functions = {};
-    this.callStatic = {};
 
     this.populateTransaction = {};
     this.address = this.api.registry.createType("AccountId", address);
@@ -251,11 +263,11 @@ export default class Contract {
       }
 
       if (this.populateTransaction[identifier] == null) {
-        this.callStatic[identifier] = buildPopulate(this, fragment);
+        this.populateTransaction[identifier] = buildPopulate(this, fragment);
       }
 
       if (this.estimateGas[identifier] == null) {
-        this.callStatic[identifier] = buildEstimate(this, fragment);
+        this.estimateGas[identifier] = buildEstimate(this, fragment);
       }
     }
   }
