@@ -1,7 +1,7 @@
 {
   "package": {
     "dependencies": {
-      "@redspot/polkadot": "^0.3.0-alpha.13"
+      "@redspot/patract": "^0.3.0"
     },
     "scripts": {
       "build": "npx redspot compile",
