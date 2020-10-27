@@ -10,8 +10,9 @@ import ContractFactory from "./contractFactory";
 export async function getSigners(
   env: RedspotRuntimeEnvironment
 ): Promise<AccountSigner[]> {
-  return env.network.provider.accounts.map((account) => {
-    return env.network.provider.createSigner(account);
+  const keyringpairs = await env.network.provider.getKeyringPairs();
+  return keyringpairs.map((pair) => {
+    return env.network.provider.createSigner(pair);
   });
 }
 
@@ -20,7 +21,6 @@ export async function getContractFactory(
   contractName: string,
   signer?: AccountSigner
 ) {
-  // @ts-ignore
   const api: ApiPromise = env.patract.api;
 
   const wasmCode = getWasm(env, contractName);
@@ -40,7 +40,6 @@ export async function getContractAt(
   address: AccountId | string,
   signer?: AccountSigner
 ) {
-  // @ts-ignore
   const api: ApiPromise = env.patract.api;
 
   const abi = getAbi(env, contractName);

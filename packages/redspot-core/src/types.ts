@@ -294,13 +294,14 @@ export interface WsProvider {
 }
 
 export interface RpcProvider extends WsProvider {
-  accounts: KeyringPair[];
+  accounts: NetworkConfigAccounts;
   keyring: Keyring;
   endowment: BN;
   gasLimit: BN;
   registry: TypeRegistry;
   networkName: string;
   createSigner(keyringPair: KeyringPair): AccountSigner;
+  getKeyringPairs(): Promise<KeyringPair[]>;
 }
 
 export type IRpcProvider = RpcProvider;

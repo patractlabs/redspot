@@ -15,7 +15,6 @@ import "./type-extensions";
 
 export default function () {
   extendEnvironment((env: RedspotRuntimeEnvironment) => {
-    // @ts-ignore
     env.patract = lazyObject(() => {
       const network = env.network;
       const provider = network.provider;

@@ -10,7 +10,7 @@ import { ERRORS } from "../core/errors-list";
 import AccountSigner from "./accountSigner";
 
 export class RpcProvider extends WsProvider implements IRpcProvider {
-  readonly accounts: KeyringPair[];
+  readonly accounts: NetworkConfigAccounts;
   readonly keyring: Keyring;
   readonly endowment: BN;
   readonly gasLimit: BN;
@@ -47,33 +47,40 @@ export class RpcProvider extends WsProvider implements IRpcProvider {
       type: "sr25519",
     });
 
-    cryptoWaitReady().then(() => {
-      // @ts-ignore
-      this.accounts = accounts.map((account) => {
-        if (typeof account === "object") {
-          try {
-            return this.keyring.addPair(account);
-          } catch (error) {
-            console.log(error.message);
-            throw new RedspotError(ERRORS.GENERAL.BAD_KEYPAIR);
-          }
-        } else {
-          try {
-            const meta = {
-              name: account.replace("//", "_").toLowerCase(),
-            };
+    this.accounts = accounts;
+  }
 
-            const pair = this.keyring.addFromUri(account, meta);
+  async getKeyringPairs(): Promise<KeyringPair[]> {
+    await cryptoWaitReady();
 
-            pair.lock = (): void => {};
+    return this.accounts.map((account) => {
+      if (typeof account === "object") {
+        try {
+          const pair = this.keyring.addPair(account);
 
-            return pair;
-          } catch (error) {
-            console.log(error.message);
-            throw new RedspotError(ERRORS.GENERAL.BAD_SURI, { uri: account });
-          }
+          pair.lock = (): void => {};
+
+          return pair;
+        } catch (error) {
+          console.log(error.message);
+          throw new RedspotError(ERRORS.GENERAL.BAD_KEYPAIR);
         }
-      });
+      } else {
+        try {
+          const meta = {
+            name: account.replace("//", "_").toLowerCase(),
+          };
+
+          const pair = this.keyring.addFromUri(account, meta);
+
+          pair.lock = (): void => {};
+
+          return pair;
+        } catch (error) {
+          console.log(error.message);
+          throw new RedspotError(ERRORS.GENERAL.BAD_SURI, { uri: account });
+        }
+      }
     });
   }
 

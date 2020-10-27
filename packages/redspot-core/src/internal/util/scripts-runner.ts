@@ -125,6 +125,7 @@ function getTsNodeArgsIfNeeded(scriptPath: string) {
   if (!process.execArgv.includes("ts-node/register")) {
     extraNodeArgs.push("--require");
     extraNodeArgs.push("ts-node/register");
+    extraNodeArgs.push("TS_NODE_TRANSPILE_ONLY=true");
   }
 
   return extraNodeArgs;
