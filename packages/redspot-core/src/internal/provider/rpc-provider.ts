@@ -1,6 +1,7 @@
 import { Keyring } from "@polkadot/keyring";
 import type { KeyringPair } from "@polkadot/keyring/types";
 import { TypeRegistry } from "@polkadot/types";
+import { cryptoWaitReady } from "@polkadot/util-crypto";
 import BN from "bn.js";
 import { IRpcProvider, NetworkConfigAccounts } from "../../types";
 import WsProvider from "./ws-provider";
@@ -46,30 +47,33 @@ export class RpcProvider extends WsProvider implements IRpcProvider {
       type: "sr25519",
     });
 
-    this.accounts = accounts.map((account) => {
-      if (typeof account === "object") {
-        try {
-          return this.keyring.addPair(account);
-        } catch (error) {
-          console.log(error.message);
-          throw new RedspotError(ERRORS.GENERAL.BAD_KEYPAIR);
+    cryptoWaitReady().then(() => {
+      // @ts-ignore
+      this.accounts = accounts.map((account) => {
+        if (typeof account === "object") {
+          try {
+            return this.keyring.addPair(account);
+          } catch (error) {
+            console.log(error.message);
+            throw new RedspotError(ERRORS.GENERAL.BAD_KEYPAIR);
+          }
+        } else {
+          try {
+            const meta = {
+              name: account.replace("//", "_").toLowerCase(),
+            };
+
+            const pair = this.keyring.addFromUri(account, meta);
+
+            pair.lock = (): void => {};
+
+            return pair;
+          } catch (error) {
+            console.log(error.message);
+            throw new RedspotError(ERRORS.GENERAL.BAD_SURI, { uri: account });
+          }
         }
-      } else {
-        try {
-          const meta = {
-            name: account.replace("//", "_").toLowerCase(),
-          };
-
-          const pair = this.keyring.addFromUri(account, meta);
-
-          pair.lock = (): void => {};
-
-          return pair;
-        } catch (error) {
-          console.log(error.message);
-          throw new RedspotError(ERRORS.GENERAL.BAD_SURI, { uri: account });
-        }
-      }
+      });
     });
   }
 
