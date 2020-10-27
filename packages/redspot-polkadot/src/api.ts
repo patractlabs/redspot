@@ -52,7 +52,7 @@ export default class Api extends ApiPromise {
       ss58Format: this.registry.chainSS58,
     };
 
-    const accounts = this.network.provider.accounts;
+    const accounts = await this.network.provider.getKeyringPairs();
 
     return accounts;
   }
