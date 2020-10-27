@@ -11,6 +11,7 @@ import {
   getSigners,
   getWasm,
 } from "./helpers";
+import "./type-extensions";
 
 export default function () {
   extendEnvironment((env: RedspotRuntimeEnvironment) => {
