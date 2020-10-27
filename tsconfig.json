@@ -3,8 +3,7 @@
     "build/**/*",
     "**/build/**/*",
     "**/redspot-template/**/*",
-    "examples",
-    "**/type-extensions.d.ts"
+    "examples"
   ],
   "compilerOptions": {
     "target": "ES2017",
