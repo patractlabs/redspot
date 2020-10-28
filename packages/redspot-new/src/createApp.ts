@@ -9,7 +9,7 @@ import yargs, { argv } from "yargs";
 
 const packageToInstall = "redspot";
 const templateToInstall = "@redspot/redspot-template";
-const tag = "alpha";
+const tag = "latest";
 
 function init() {
   const currentNodeVersion = process.versions.node;
