@@ -174,7 +174,7 @@ export interface RedspotArguments {
   version: boolean;
   help: boolean;
   config?: string;
-  verbose: boolean;
+  logLevel: string;
 }
 
 export type RedspotParamDefinitions = {

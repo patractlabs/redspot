@@ -47,11 +47,11 @@ export const REDSPOT_PARAM_DEFINITIONS: RedspotParamDefinitions = {
     isOptional: true,
     isVariadic: false,
   },
-  verbose: {
-    name: "verbose",
-    defaultValue: false,
-    description: "Enables Redspot verbose logging",
-    type: types.boolean,
+  logLevel: {
+    name: "logLevel",
+    defaultValue: "3",
+    description: "Set log levels 1-5",
+    type: types.string,
     isFlag: true,
     isOptional: true,
     isVariadic: false,
