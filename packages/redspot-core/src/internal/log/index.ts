@@ -1,11 +1,5 @@
-import { Signale } from "signale";
+import consola from "consola";
 
-const log = new Signale({
-  logLevel: "warn",
-  config: {
-    displayLabel: false,
-    displayBadge: false,
-  },
-});
+const logger = consola.create({});
 
-export default log;
+export default logger;

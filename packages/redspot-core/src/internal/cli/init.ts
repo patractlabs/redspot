@@ -11,7 +11,7 @@ process.on("unhandledRejection", (err) => {
 function init(
   appPath: string,
   appName: string,
-  verbose: boolean,
+  logLevel: string,
   originalDirectory: string,
   templateToInstall: string,
   templateName: string
@@ -111,7 +111,9 @@ function init(
   } else {
     command = "npm";
     remove = "uninstall";
-    args = ["install", "--save", verbose && "--verbose"].filter((e) => e);
+    args = ["install", "--save", Number(logLevel) >= 5 && "--verbose"].filter(
+      (e) => e
+    );
   }
 
   // Install additional template dependencies, if present.

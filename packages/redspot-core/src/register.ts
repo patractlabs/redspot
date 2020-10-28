@@ -27,10 +27,6 @@ if (!RedspotContext.isCreated()) {
     process.env
   );
 
-  if (redspotArguments.verbose) {
-    debug.enable("redspot*");
-  }
-
   const config = loadConfigAndTasks(redspotArguments);
 
   const env = new Environment(
