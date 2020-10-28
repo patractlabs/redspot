@@ -1,10 +1,5 @@
 {
-  "exclude": [
-    "build/**/*",
-    "**/build/**/*",
-    "**/redspot-template/**/*",
-    "examples"
-  ],
+  "exclude": ["build/**/*", "**/build/**/*", "**/redspot-template/**/*"],
   "compilerOptions": {
     "target": "ES2017",
     "module": "commonjs",
@@ -26,8 +21,8 @@
       "@redspot/polkadot/*": ["packages/redspot-polkadot/src/*"],
       "@redspot/rpc-provider": ["packages/rpc-provider/src"],
       "@redspot/rpc-provider/*": ["packages/rpc-provider/src/*"],
-      "@redspot/patract": ["packages/patract/src"],
-      "@redspot/patract/*": ["packages/patract/src/*"]
+      "@redspot/patract": ["packages/redspot-patract/src"],
+      "@redspot/patract/*": ["packages/redspot-patract/src/*"]
     },
     "skipLibCheck": true,
     "typeRoots": ["./node_modules/@polkadot/ts", "./node_modules/@types"]

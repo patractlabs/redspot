@@ -312,7 +312,7 @@ checksum = "e78d4f1cc4ae33bbfc157ed5d5a5ef3bc29227303d595861deb238fcec4e9457"
 
 [[package]]
 name = "flipper"
-version = "3.0.0-rc1"
+version = "3.0.0"
 dependencies = [
  "ink_env",
  "ink_lang",
@@ -320,7 +320,7 @@ dependencies = [
  "ink_primitives",
  "ink_storage",
  "parity-scale-codec",
- "scale-info",
+ "scale-info 0.3.0",
 ]
 
 [[package]]
@@ -402,7 +402,7 @@ dependencies = [
  "parity-scale-codec",
  "paste",
  "rand",
- "scale-info",
+ "scale-info 0.4.0",
  "sha2",
  "sha3",
  "static_assertions",
@@ -477,7 +477,7 @@ dependencies = [
  "impl-serde",
  "ink_prelude",
  "ink_primitives",
- "scale-info",
+ "scale-info 0.4.0",
  "serde",
 ]
 
@@ -496,7 +496,7 @@ source = "git+https://github.com/paritytech/ink?branch=master#1765a49f15b7f9a594
 dependencies = [
  "ink_prelude",
  "parity-scale-codec",
- "scale-info",
+ "scale-info 0.4.0",
  "tiny-keccak",
 ]
 
@@ -516,7 +516,7 @@ dependencies = [
  "ink_primitives",
  "ink_storage_derive",
  "parity-scale-codec",
- "scale-info",
+ "scale-info 0.4.0",
 ]
 
 [[package]]
@@ -842,6 +842,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "93fc1dc3aaa9bfed95e02e6eadabb4baf7e3078b0bd1b4d7b6b0b68378900502"
 dependencies = [
  "winapi-util",
+]
+
+[[package]]
+name = "scale-info"
+version = "0.3.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7919285337ce8aab83d156ab7516b5eeb4d76c412c60fbf0c2f55f63c4791e0c"
+dependencies = [
+ "derive_more",
+ "scale-info-derive",
+ "serde",
 ]
 
 [[package]]
