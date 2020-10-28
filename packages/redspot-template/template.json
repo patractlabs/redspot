@@ -1,8 +1,6 @@
 {
   "package": {
-    "dependencies": {
-      "@redspot/patract": "^0.3.1"
-    },
+    "dependencies": {},
     "scripts": {
       "build": "npx redspot compile",
       "test": "npx redspot test"

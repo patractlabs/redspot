@@ -9,6 +9,7 @@ import yargs, { argv } from "yargs";
 
 const packageToInstall = "redspot";
 const templateToInstall = "@redspot/redspot-template";
+const defaultToInstall = "@redspot/patract";
 const tag = "latest";
 
 function init() {
@@ -93,7 +94,11 @@ function run(
   verbose: boolean
 ) {
   const templateName = argv.template;
-  const allDependencies = [packageToInstall, templateToInstall];
+  const allDependencies = [
+    packageToInstall,
+    templateToInstall,
+    defaultToInstall,
+  ];
 
   console.log("Installing packages. This might take a while.");
 
