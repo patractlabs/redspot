@@ -149,6 +149,8 @@ export default class ContractFactory {
       );
     }
 
+    log.log(`➤ ${contractName} address: ${chalk.blue(address.toString())}`);
+
     return address;
   }
 
