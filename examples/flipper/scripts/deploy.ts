@@ -6,7 +6,7 @@ async function run() {
   // const flipperFactory = await getContractFactory("flipper");
   // await flipperFactory.deployed(0, true);
   const signers = await getSigners();
-  await getRandomSigner(signers[0], "10000030921831283091283091283012");
+  await getRandomSigner(signers[0], "100000000000");
 }
 
 run().catch((err) => {

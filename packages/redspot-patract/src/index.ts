@@ -10,6 +10,7 @@ import {
   getContractFactory,
   getSigners,
   getWasm,
+  getRandomSigner,
 } from "./helpers";
 import "./type-extensions";
 
@@ -33,7 +34,7 @@ export default function () {
         connect: async () => {
           const isConnected = api.isConnected;
 
-          if (!api.isConnected) {
+          if (!isConnected) {
             await api.connect();
           }
 
@@ -47,6 +48,7 @@ export default function () {
         getContractAt: getContractAt.bind(null, env),
         getAbi: getAbi.bind(null, env),
         getWasm: getWasm.bind(null, env),
+        getRandomSigner: getRandomSigner.bind(null, env),
         getSigners: async () => getSigners(env),
       };
     });

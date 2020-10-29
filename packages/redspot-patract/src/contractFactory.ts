@@ -7,6 +7,8 @@ import type { CodeHash } from "@polkadot/types/interfaces/contracts";
 import type { AccountId } from "@polkadot/types/interfaces/types";
 import type { AnyJson, ISubmittableResult } from "@polkadot/types/types";
 import { CodecArg } from "@polkadot/types/types";
+import { blake2AsU8a } from "@polkadot/util-crypto";
+import { compactStripLength, u8aConcat } from "@polkadot/util";
 import { isU8a, u8aToHex, u8aToU8a } from "@polkadot/util";
 import BN from "bn.js";
 import chalk from "chalk";
@@ -173,6 +175,57 @@ export default class ContractFactory {
     );
 
     return contract;
+  }
+
+  async deployed(
+    constructorOrId: AbiConstructor | string | number,
+    ...params: CodecArg[]
+  ) {
+    const deployedAddress = await this.getContractAddress(
+      constructorOrId,
+      params
+    );
+    const contractInfo = await this.api.query.contracts.contractInfoOf(
+      deployedAddress
+    );
+    if (contractInfo.isNone) {
+      return this.deploy(constructorOrId, ...params);
+    }
+
+    log.warn(
+      "The same WASM code and the instantiation parameter contract have been deployed."
+    );
+    log.info(
+      `Use contracts that have already been deployed: ${chalk.cyan(
+        deployedAddress.toString()
+      )}`
+    );
+
+    const contract = new Contract(
+      deployedAddress,
+      this.abi,
+      this.api,
+      this.signer
+    );
+
+    return contract;
+  }
+
+  async getContractAddress(
+    constructorOrId: AbiConstructor | string | number,
+    params: CodecArg[]
+  ) {
+    const codeHash = blake2AsU8a(this.wasm);
+
+    const constructor = this.abi.findConstructor(constructorOrId);
+    const encoded = constructor.toU8a(params);
+    const [_, encodedStripLength] = compactStripLength(encoded);
+
+    const dataHash = blake2AsU8a(encodedStripLength);
+    const buf = u8aConcat(codeHash, dataHash, this.signer.pair.publicKey);
+    const address = blake2AsU8a(buf);
+
+    return this.api.registry.createType("AccountId", address);
   }
 
   attach(address: string): Contract {
