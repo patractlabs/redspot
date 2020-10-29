@@ -309,6 +309,7 @@ export type IRpcProvider = RpcProvider;
 export interface AccountSigner extends Signer {
   readonly gasLimit: BN;
   readonly endowment: BN;
+  readonly pair: KeyringPair;
   getAddress(): Promise<string>;
 }
 

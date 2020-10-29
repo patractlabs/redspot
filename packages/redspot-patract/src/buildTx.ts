@@ -27,7 +27,7 @@ export interface TransactionResponse {
 export async function buildTx(
   registry: Registry,
   extrinsic: SubmittableExtrinsic<"promise">,
-  options?: Partial<SignerOptions> & {
+  options: Partial<SignerOptions> & {
     signer: AccountSigner;
   }
 ): Promise<TransactionResponse> {

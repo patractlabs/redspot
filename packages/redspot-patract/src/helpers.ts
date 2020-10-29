@@ -1,9 +1,14 @@
 import type { ApiPromise } from "@polkadot/api";
 import { Abi } from "@polkadot/api-contract";
 import type { AccountId } from "@polkadot/types/interfaces/types";
+import { cryptoWaitReady, mnemonicGenerate } from "@polkadot/util-crypto";
+import BN from "bn.js";
+import chalk from "chalk";
+import log from "redspot/internal/log";
 import { readAbiSync, readWasmSync } from "redspot/plugins";
 import type { RedspotRuntimeEnvironment } from "redspot/types";
 import { AccountSigner } from "redspot/types";
+import { buildTx } from "./buildTx";
 import Contract from "./contract";
 import ContractFactory from "./contractFactory";
 
@@ -14,6 +19,45 @@ export async function getSigners(
   return keyringpairs.map((pair) => {
     return env.network.provider.createSigner(pair);
   });
+}
+
+export async function getRandomSigner(
+  env: RedspotRuntimeEnvironment,
+  from?: AccountSigner,
+  amount?: BN | string | number
+): Promise<AccountSigner> {
+  const api: ApiPromise = await env.patract.connect();
+  await cryptoWaitReady();
+  const mnemonic = mnemonicGenerate();
+  const keyringPair = env.network.provider.keyring.addFromMnemonic(mnemonic);
+  const newAccount = env.network.provider.createSigner(keyringPair);
+  log.info(`Generate random signer: ${chalk.cyan(keyringPair.address)}`);
+  log.info(`Mnemonic: ${chalk.cyan(mnemonic)}`);
+  if (from && amount) {
+    try {
+      const result = await buildTx(
+        api.registry,
+        api.tx.balances.transfer(keyringPair.address, amount),
+        {
+          signer: from,
+        }
+      );
+    } catch (error) {
+      log.error(`Transfer failed`);
+      log.error(error.error);
+      throw error;
+    }
+
+    log.info(
+      `Transfer ${chalk.yellow(amount.toString())} from ${chalk.cyan(
+        from.pair.address.toString()
+      )} to ${chalk.cyan(keyringPair.address)}`
+    );
+
+    return newAccount;
+  }
+
+  return newAccount;
 }
 
 export async function getContractFactory(
