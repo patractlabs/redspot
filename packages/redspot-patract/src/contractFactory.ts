@@ -7,21 +7,30 @@ import type { CodeHash } from "@polkadot/types/interfaces/contracts";
 import type { AccountId } from "@polkadot/types/interfaces/types";
 import type { AnyJson, ISubmittableResult } from "@polkadot/types/types";
 import { CodecArg } from "@polkadot/types/types";
+import {
+  compactStripLength,
+  isU8a,
+  u8aConcat,
+  u8aToHex,
+  u8aToU8a,
+} from "@polkadot/util";
 import { blake2AsU8a } from "@polkadot/util-crypto";
-import { compactStripLength, u8aConcat } from "@polkadot/util";
-import { isU8a, u8aToHex, u8aToU8a } from "@polkadot/util";
 import BN from "bn.js";
 import chalk from "chalk";
 import log from "redspot/internal/log";
 import { RedspotPluginError } from "redspot/plugins";
 import type { AccountSigner } from "redspot/types";
 import { buildTx } from "./buildTx";
-import Contract from "./contract";
+import Contract, {
+  CallOverrides,
+  TransactionParams,
+  BigNumber,
+} from "./contract";
 
 export type ContractFunction<T = any> = (...args: Array<any>) => Promise<T>;
 
 type ContractAbi = AnyJson | Abi;
-
+type ConstructorOrId = AbiConstructor | string | number;
 const pluginName = "redspot-patract";
 
 export default class ContractFactory {
@@ -37,8 +46,8 @@ export default class ContractFactory {
     instantiate: (
       codeHash: string | Uint8Array | CodeHash,
       data: string | Uint8Array | Bytes,
-      endowment: BN | string,
-      gasLimit: BN | string
+      endowment: BigNumber,
+      gasLimit: BigNumber
     ) => SubmittableExtrinsic<"promise", ISubmittableResult>;
   };
 
@@ -71,8 +80,8 @@ export default class ContractFactory {
   _buildInstantiate(
     codeHash: string | Uint8Array | CodeHash,
     data: string | Uint8Array | Bytes,
-    endowment: BN | string,
-    gasLimit: BN | string
+    endowment: BigNumber,
+    gasLimit: BigNumber
   ) {
     return this.api.tx.contracts.instantiate(
       endowment,
@@ -82,7 +91,13 @@ export default class ContractFactory {
     );
   }
 
-  async putCode(): Promise<CodeHash> {
+  async putCode(overrides?: Partial<CallOverrides>): Promise<CodeHash> {
+    const options = { ...overrides };
+
+    delete options.value;
+    delete options.gasLimit;
+    delete options.dest;
+
     const contractName = this.abi.project.contract.name;
     const wasmCode = u8aToHex(this.wasm);
     log.log("");
@@ -96,7 +111,12 @@ export default class ContractFactory {
 
     const status = await buildTx(this.api.registry, tx, {
       signer: this.signer,
+      ...options,
+    }).catch((error) => {
+      log.error(error.error || error);
+      throw new RedspotPluginError(pluginName, "PutCode failed");
     });
+
     const record = status.result.findRecord("contracts", "CodeStored");
 
     const codeHash = record?.event.data[0] as CodeHash;
@@ -108,22 +128,30 @@ export default class ContractFactory {
       );
     }
 
-    log.log(`➤ ${contractName} codeHash: ${chalk.blue(codeHash.toHex())}`);
+    log.success(`${contractName} codeHash: ${chalk.blue(codeHash.toHex())}`);
 
     return codeHash;
   }
 
   async instantiate(
     codeHash: string | Uint8Array | CodeHash,
-    constructorOrId: AbiConstructor | string | number,
-    ...params: CodecArg[]
+    constructorOrId: ConstructorOrId,
+    ...args: TransactionParams
   ): Promise<AccountId> {
+    const { params, overrides } = this.parseArgs(constructorOrId, ...args);
+
     const contractName = this.abi.project.contract.name;
 
     const constructor = this.abi.findConstructor(constructorOrId);
     const encoded = constructor.toU8a(params);
-    const endowment = this.signer.endowment;
-    const gasLimit = this.signer.gasLimit;
+
+    const endowment =
+      overrides.value || this.api.consts.balances.existentialDeposit;
+    const gasLimit = overrides.gasLimit || this.signer.gasLimit;
+
+    delete overrides.value;
+    delete overrides.gasLimit;
+    delete overrides.dest;
 
     const tx = this._buildInstantiate(codeHash, encoded, endowment, gasLimit);
 
@@ -139,7 +167,12 @@ export default class ContractFactory {
 
     const status = await buildTx(this.api.registry, tx, {
       signer: this.signer,
+      ...overrides,
+    }).catch((error) => {
+      log.error(error.error || error);
+      throw new RedspotPluginError(pluginName, "Instantiation failed");
     });
+
     const record = status.result.findRecord("contracts", "Instantiated");
 
     const address = record.event.data[1] as AccountId;
@@ -151,20 +184,23 @@ export default class ContractFactory {
       );
     }
 
-    log.log(`➤ ${contractName} address: ${chalk.blue(address.toString())}`);
+    log.success(`${contractName} address: ${chalk.blue(address.toString())}`);
 
     return address;
   }
 
   async deploy(
-    constructorOrId: AbiConstructor | string | number,
-    ...params: CodecArg[]
+    constructorOrId: ConstructorOrId,
+    ...args: TransactionParams
   ): Promise<Contract> {
-    const codeHash = await this.putCode();
+    const { params, overrides } = this.parseArgs(constructorOrId, ...args);
+
+    const codeHash = await this.putCode(overrides);
     const contractAddress = await this.instantiate(
       codeHash,
       constructorOrId,
-      ...params
+      ...params,
+      overrides
     );
 
     const contract = new Contract(
@@ -177,19 +213,20 @@ export default class ContractFactory {
     return contract;
   }
 
-  async deployed(
-    constructorOrId: AbiConstructor | string | number,
-    ...params: CodecArg[]
-  ) {
+  async deployed(constructorOrId: ConstructorOrId, ...args: TransactionParams) {
+    const { params, overrides } = this.parseArgs(constructorOrId, ...args);
+
     const deployedAddress = await this.getContractAddress(
       constructorOrId,
       params
     );
+
     const contractInfo = await this.api.query.contracts.contractInfoOf(
       deployedAddress
     );
+
     if (contractInfo.isNone) {
-      return this.deploy(constructorOrId, ...params);
+      return this.deploy(constructorOrId, ...params, overrides);
     }
 
     log.warn(
@@ -212,7 +249,7 @@ export default class ContractFactory {
   }
 
   async getContractAddress(
-    constructorOrId: AbiConstructor | string | number,
+    constructorOrId: ConstructorOrId,
     params: CodecArg[]
   ) {
     const codeHash = blake2AsU8a(this.wasm);
@@ -239,6 +276,33 @@ export default class ContractFactory {
       this.api,
       signer
     );
+  }
+
+  parseArgs(constructorOrId: ConstructorOrId, ...args: TransactionParams) {
+    let overrides: Partial<CallOverrides> = {};
+    let params: CodecArg[] = [];
+
+    const constructor = this.abi.findConstructor(constructorOrId);
+
+    if (
+      args.length === constructor.args.length + 1 &&
+      typeof args[args.length - 1] === "object"
+    ) {
+      overrides = { ...(args[args.length - 1] as Partial<CallOverrides>) };
+      params = [...(args.slice(0, -1) as CodecArg[])];
+    } else if (args.length !== constructor.args.length) {
+      throw new RedspotPluginError(
+        pluginName,
+        `Expected ${constructor.args.length} arguments to contract message '${constructor.identifier}', found ${args.length}`
+      );
+    } else {
+      params = [...(args as CodecArg[])];
+    }
+
+    return {
+      overrides,
+      params,
+    };
   }
 
   static getContract(

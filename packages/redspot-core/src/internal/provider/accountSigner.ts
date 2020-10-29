@@ -11,20 +11,17 @@ let id = 0;
 export default class AccountSigner implements IAccountSigner {
   readonly pair: KeyringPair;
   readonly gasLimit: BN;
-  readonly endowment: BN;
   readonly registry: Registry;
 
   constructor(
     registry: Registry,
     keyringPair: KeyringPair,
     defaults: {
-      endowment: BN;
       gasLimit: BN;
     }
   ) {
     this.registry = registry;
     this.pair = keyringPair;
-    this.endowment = defaults.endowment;
     this.gasLimit = defaults.gasLimit;
   }
 
@@ -44,15 +41,7 @@ export default class AccountSigner implements IAccountSigner {
 
   public setKeyPair() {}
 
-  public setEndowment(endowment: BN | string): void {
-    Object.defineProperty(this, "endowment", {
-      enumerable: true,
-      value: endowment,
-      writable: false,
-    });
-  }
-
-  public setGasLimit(gasLimit: BN | string): void {
+  public setGasLimit(gasLimit: BN | string | bigint): void {
     Object.defineProperty(this, "gasLimit", {
       enumerable: true,
       value: gasLimit,

@@ -77,7 +77,6 @@ const HttpHeaders = t.record(t.string, t.string, "httpHeaders");
 const WsNetworkConfig = t.type({
   accounts: optional(NetworkConfigAccounts),
   gasLimit: optional(t.union([t.string, t.number])),
-  endowment: optional(t.union([t.string, t.number])),
   from: optional(t.string),
   types: optional(t.record(t.string, t.unknown)),
   endpoint: optional(t.union([t.string, t.array(t.string)])),

@@ -27,7 +27,8 @@ export function formatData(
   return createTypeUnsafe(registry, type, [data], true);
 }
 
-export type TransactionParams = (CodecArg | CallOverrides)[];
+export type BigNumber = BN | string | bigint;
+export type TransactionParams = (CodecArg | Partial<CallOverrides>)[];
 export type ContractFunction<T = any> = (
   ...args: TransactionParams
 ) => Promise<T>;
@@ -42,16 +43,15 @@ export interface PopulatedTransaction extends Partial<SignerOptions> {
 
 export interface CallOverrides extends SignerOptions {
   dest?: any;
-  value?: any;
-  gasLimit?: BN | string;
-  txParams?: any;
+  value?: BigNumber;
+  gasLimit?: BigNumber;
   signer: AccountSigner;
 }
 
 export interface CallParams {
   dest: any;
-  value: any;
-  gasLimit: string | BN;
+  value: BigNumber;
+  gasLimit: BigNumber;
   inputData: Uint8Array;
 }
 
@@ -66,7 +66,7 @@ async function populateTransaction(
     args.length === fragment.args.length + 1 &&
     typeof args[args.length - 1] === "object"
   ) {
-    overrides = { ...(args.pop() as CallOverrides) };
+    overrides = { ...(args.pop() as Partial<CallOverrides>) };
   }
 
   // The ABI coded transaction
@@ -84,7 +84,7 @@ async function populateTransaction(
 
   const signer = overrides.signer || contract.signer;
 
-  // Remvoe the overrides
+  // Remove the overrides
   delete overrides.dest;
   delete overrides.value;
   delete overrides.gasLimit;
