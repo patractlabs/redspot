@@ -12,7 +12,6 @@ import AccountSigner from "./accountSigner";
 export class RpcProvider extends WsProvider implements IRpcProvider {
   readonly accounts: NetworkConfigAccounts;
   readonly keyring: Keyring;
-  readonly endowment: BN;
   readonly gasLimit: BN;
   readonly networkName: string;
   readonly registry: TypeRegistry;
@@ -30,12 +29,10 @@ export class RpcProvider extends WsProvider implements IRpcProvider {
       "//Eve",
       "//Ferdie",
     ],
-    endowment: BN | number | string = "5000000000000",
     gasLimit: BN | number | string = "50000000000"
   ) {
     super(endpoint, httpHeaders);
     this.networkName = networkName;
-    this.endowment = new BN(endowment);
     this.gasLimit = new BN(gasLimit);
     this.registry = new TypeRegistry();
 
@@ -86,7 +83,6 @@ export class RpcProvider extends WsProvider implements IRpcProvider {
 
   createSigner(keyringPair: KeyringPair): AccountSigner {
     return new AccountSigner(this.registry, keyringPair, {
-      endowment: this.endowment,
       gasLimit: this.gasLimit,
     });
   }

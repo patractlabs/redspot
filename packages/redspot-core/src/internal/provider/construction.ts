@@ -11,7 +11,6 @@ export function createProvider(
     networkConfig.types,
     networkConfig.httpHeaders,
     networkConfig.accounts,
-    networkConfig.endowment,
     networkConfig.gasLimit
   );
 }

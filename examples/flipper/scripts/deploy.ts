@@ -3,10 +3,13 @@ import { patract } from "redspot/internal/lib/redspot-lib";
 const { getContractFactory, getSigners, getRandomSigner } = patract!;
 
 async function run() {
-  // const flipperFactory = await getContractFactory("flipper");
-  // await flipperFactory.deployed(0, true);
   const signers = await getSigners();
-  await getRandomSigner(signers[0], "100000000000");
+  const signer = await getRandomSigner(signers[0], "50000000000000");
+  const flipperFactory = await getContractFactory("flipper", signer);
+  await flipperFactory.deployed(0, true, {
+    value: 10010000000,
+    gasLimit: 50000000000,
+  });
 }
 
 run().catch((err) => {

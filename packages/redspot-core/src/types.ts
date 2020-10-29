@@ -13,7 +13,6 @@ import * as types from "./internal/core/params/argumentTypes";
 export interface CommonNetworkConfig {
   accounts?: NetworkConfigAccounts;
   gasLimit?: string | number | BN;
-  endowment?: string | number | BN;
   types?: Record<string, any>;
   from?: string;
 }
@@ -296,7 +295,6 @@ export interface WsProvider {
 export interface RpcProvider extends WsProvider {
   accounts: NetworkConfigAccounts;
   keyring: Keyring;
-  endowment: BN;
   gasLimit: BN;
   registry: TypeRegistry;
   networkName: string;
@@ -308,7 +306,6 @@ export type IRpcProvider = RpcProvider;
 
 export interface AccountSigner extends Signer {
   readonly gasLimit: BN;
-  readonly endowment: BN;
   readonly pair: KeyringPair;
   getAddress(): Promise<string>;
 }
