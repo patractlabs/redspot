@@ -34,7 +34,7 @@ export default class ContractFactory {
     _endowment?: number,
     _gasRequired?: number
   ): Promise<string> {
-    const endowment = this.#api.network.provider.endowment;
+    const endowment = "20000000000";
     const gasRequired = this.#api.network.provider.gasLimit;
 
     const extrinsic = this.#api.tx.contracts.instantiate(
