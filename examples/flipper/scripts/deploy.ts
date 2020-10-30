@@ -7,12 +7,13 @@ async function run() {
   const signer = await getRandomSigner(signers[0], "25001600000");
 
   const flipperFactory = await getContractFactory("flipper", signer);
-  const codeHash = await flipperFactory.putCode({
-    signer: signers[0],
-  });
-  await flipperFactory.instantiate(codeHash, 0, true, {
+  const contract = await flipperFactory.deploy(0, true, {
     gasLimit: 5000000000,
   });
+
+  await contract.get();
+  await contract.flip();
+  await contract.get();
 
   patract.disconnect();
 }

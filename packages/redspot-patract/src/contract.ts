@@ -6,6 +6,7 @@ import type {
 } from "@polkadot/api-contract/types";
 import type { SignerOptions, SubmittableExtrinsic } from "@polkadot/api/types";
 import { createTypeUnsafe, Raw } from "@polkadot/types";
+import { u8aToHex, isU8a } from "@polkadot/util";
 import type { AccountId, ContractExecResult } from "@polkadot/types/interfaces";
 import type {
   AnyJson,
@@ -133,10 +134,16 @@ function buildCall(
     };
 
     log.log("");
-    log.log(chalk.magenta(`===== Call =====`));
+    log.log(chalk.magenta(`===== Read ${fragment.identifier} =====`));
     Object.keys(params).map((key) => {
       try {
-        log.log(`${key}: `, params[key].toString());
+        let print: string;
+        if (isU8a(callParams[key])) {
+          print = u8aToHex(callParams[key]);
+        } else {
+          print = callParams[key].toString();
+        }
+        log.log(`${key}: `, print);
       } catch {}
     });
 
@@ -157,6 +164,12 @@ function buildCall(
           : null,
       result,
     };
+
+    if (result.isSuccess) {
+      log.success(`Output: ${outcome.output?.toString()}`);
+    } else {
+      log.error(outcome.result);
+    }
 
     return outcome;
   };
@@ -185,11 +198,42 @@ function buildSend(
       args
     );
 
-    const tx = await buildTx(contract.api.registry, extrinsic, {
+    log.log("");
+    log.log(chalk.magenta(`===== Exec ${fragment.identifier} =====`));
+    Object.keys(callParams).map((key) => {
+      try {
+        let print: string;
+        if (isU8a(callParams[key])) {
+          print = u8aToHex(callParams[key]);
+        } else {
+          print = callParams[key].toString();
+        }
+        log.log(`${key}: `, print);
+      } catch {}
+    });
+
+    const response = await buildTx(contract.api.registry, extrinsic, {
       ...options,
     });
 
-    return tx;
+    if (!response.error) {
+      log.success(`Execute successfully`);
+      log.success(
+        `➤ ${chalk.cyanBright(
+          `https://polkadot.js.org/apps/#/explorer/query/${response.blockHash}`
+        )}`
+      );
+    } else {
+      log.error(`Execute failed. ${chalk.red(response.error?.message || "")}`);
+      response.blockHash &&
+        log.info(
+          `➤ ${chalk.cyanBright(
+            `https://polkadot.js.org/apps/#/explorer/query/${response.blockHash}`
+          )}`
+        );
+    }
+
+    return response;
   };
 }
 
@@ -222,7 +266,7 @@ export default class Contract {
   };
 
   // The meta-class properties
-  readonly [key: string]: ContractFunction | any;
+  readonly [key: string]: any;
 
   constructor(
     address: string | AccountId,
