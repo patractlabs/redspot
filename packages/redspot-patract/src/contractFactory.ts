@@ -94,6 +94,18 @@ export default class ContractFactory {
   async putCode(overrides?: Partial<CallOverrides>): Promise<CodeHash> {
     const options = { ...overrides };
 
+    const wasmHash = blake2AsU8a(this.wasm);
+
+    const codeStorage = await this.api.query.contracts.codeStorage(
+      blake2AsU8a(this.wasm)
+    );
+
+    if (!codeStorage.isNone) {
+      const hash = this.api.registry.createType("CodeHash", wasmHash);
+      log.info(`Use the uploaded codehash: ${hash.toString()}`);
+      return hash;
+    }
+
     delete options.value;
     delete options.gasLimit;
     delete options.dest;
@@ -118,6 +130,7 @@ export default class ContractFactory {
     });
 
     const record = status.result.findRecord("contracts", "CodeStored");
+    const depositRecord = status.result.findRecord("balances", "Deposit");
 
     const codeHash = record?.event.data[0] as CodeHash;
 
@@ -125,6 +138,14 @@ export default class ContractFactory {
       throw new RedspotPluginError(
         pluginName,
         `Can't get codehash for contracts`
+      );
+    }
+
+    if (depositRecord && depositRecord?.event?.data?.[1]) {
+      log.info(
+        `The gas consumption of ${contractName} putCode: ${chalk.yellow(
+          depositRecord.event.data[1]?.toString()
+        )}`
       );
     }
 
@@ -144,9 +165,10 @@ export default class ContractFactory {
 
     const constructor = this.abi.findConstructor(constructorOrId);
     const encoded = constructor.toU8a(params);
-
-    const endowment =
-      overrides.value || this.api.consts.balances.existentialDeposit;
+    const mindeposit = this.api.consts.balances.existentialDeposit.add(
+      this.api.consts.contracts.tombstoneDeposit
+    );
+    const endowment = overrides.value || mindeposit;
     const gasLimit = overrides.gasLimit || this.signer.gasLimit;
 
     delete overrides.value;
@@ -174,6 +196,7 @@ export default class ContractFactory {
     });
 
     const record = status.result.findRecord("contracts", "Instantiated");
+    const depositRecord = status.result.findRecord("balances", "Deposit");
 
     const address = record.event.data[1] as AccountId;
 
@@ -181,6 +204,14 @@ export default class ContractFactory {
       throw new RedspotPluginError(
         pluginName,
         `The instantiation contract failed`
+      );
+    }
+
+    if (depositRecord && depositRecord?.event?.data?.[1]) {
+      log.info(
+        `The gas consumption of ${contractName} instantiate: ${chalk.yellow(
+          depositRecord.event.data[1]?.toString()
+        )}`
       );
     }
 

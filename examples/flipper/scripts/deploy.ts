@@ -4,12 +4,17 @@ const { getContractFactory, getSigners, getRandomSigner } = patract!;
 
 async function run() {
   const signers = await getSigners();
-  const signer = await getRandomSigner(signers[0], "50000000000000");
+  const signer = await getRandomSigner(signers[0], "25001600000");
+
   const flipperFactory = await getContractFactory("flipper", signer);
-  await flipperFactory.deployed(0, true, {
-    value: 10010000000,
-    gasLimit: 50000000000,
+  const codeHash = await flipperFactory.putCode({
+    signer: signers[0],
   });
+  await flipperFactory.instantiate(codeHash, 0, true, {
+    gasLimit: 5000000000,
+  });
+
+  patract.disconnect();
 }
 
 run().catch((err) => {
