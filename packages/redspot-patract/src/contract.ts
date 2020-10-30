@@ -219,7 +219,7 @@ function buildSend(
     if (!response.error) {
       log.success(`Execute successfully`);
       log.success(
-        `➤ ${chalk.cyanBright(
+        `${chalk.cyanBright(
           `https://polkadot.js.org/apps/#/explorer/query/${response.blockHash}`
         )}`
       );
@@ -227,7 +227,7 @@ function buildSend(
       log.error(`Execute failed. ${chalk.red(response.error?.message || "")}`);
       response.blockHash &&
         log.info(
-          `➤ ${chalk.cyanBright(
+          `${chalk.cyanBright(
             `https://polkadot.js.org/apps/#/explorer/query/${response.blockHash}`
           )}`
         );
