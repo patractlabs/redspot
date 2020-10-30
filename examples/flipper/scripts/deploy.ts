@@ -4,7 +4,7 @@ const { getContractFactory, getSigners, getRandomSigner } = patract!;
 
 async function run() {
   const signers = await getSigners();
-  const signer = await getRandomSigner(signers[0], "25001600000");
+  const signer = await getRandomSigner(signers[0], "250001600000");
 
   const flipperFactory = await getContractFactory("flipper", signer);
   const contract = await flipperFactory.deploy(0, true, {
@@ -12,6 +12,7 @@ async function run() {
   });
 
   await contract.get();
+  await contract.estimateGas.flip();
   await contract.flip();
   await contract.get();
 

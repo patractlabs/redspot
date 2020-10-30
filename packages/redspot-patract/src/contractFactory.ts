@@ -142,8 +142,8 @@ export default class ContractFactory {
     }
 
     if (depositRecord && depositRecord?.event?.data?.[1]) {
-      log.info(
-        `The gas consumption of ${contractName} putCode: ${chalk.yellow(
+      log.success(
+        `Transaction fees: ${chalk.yellow(
           depositRecord.event.data[1]?.toString()
         )}`
       );
@@ -197,6 +197,10 @@ export default class ContractFactory {
 
     const record = status.result.findRecord("contracts", "Instantiated");
     const depositRecord = status.result.findRecord("balances", "Deposit");
+    const successRecord = status.result.findRecord(
+      "system",
+      "ExtrinsicSuccess"
+    );
 
     const address = record.event.data[1] as AccountId;
 
@@ -208,9 +212,17 @@ export default class ContractFactory {
     }
 
     if (depositRecord && depositRecord?.event?.data?.[1]) {
-      log.info(
-        `The gas consumption of ${contractName} instantiate: ${chalk.yellow(
+      log.success(
+        `Transaction fees: ${chalk.yellow(
           depositRecord.event.data[1]?.toString()
+        )}`
+      );
+    }
+
+    if (successRecord && (successRecord?.event?.data?.[0] as any).weight) {
+      log.success(
+        `The gas consumption of ${contractName} instantiate: ${chalk.yellow(
+          (successRecord?.event?.data?.[0] as any).weight.toString()
         )}`
       );
     }

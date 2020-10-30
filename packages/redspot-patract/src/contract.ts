@@ -115,7 +115,8 @@ function buildPopulate(
 
 function buildCall(
   contract: Contract,
-  fragment: AbiMessage
+  fragment: AbiMessage,
+  isEstimateGas = false
 ): ContractFunction<ContractCallOutcome> {
   return async function (
     ...args: TransactionParams
@@ -132,9 +133,12 @@ function buildCall(
       ...callParams,
       origin,
     };
-
     log.log("");
-    log.log(chalk.magenta(`===== Read ${fragment.identifier} =====`));
+    if (!isEstimateGas) {
+      log.log(chalk.magenta(`===== Read ${fragment.identifier} =====`));
+    } else {
+      log.log(chalk.magenta(`===== Estimate gas ${fragment.identifier} =====`));
+    }
     Object.keys(params).map((key) => {
       try {
         let print: string;
@@ -166,7 +170,11 @@ function buildCall(
     };
 
     if (result.isSuccess) {
-      log.success(`Output: ${outcome.output?.toString()}`);
+      if (!isEstimateGas) {
+        log.success(`Output: ${outcome.output?.toString()}`);
+      } else {
+        log.success(`Output: ${result.asSuccess?.gasConsumed?.toString()}`);
+      }
     } else {
       log.error(outcome.result);
     }
@@ -242,7 +250,7 @@ function buildEstimate(
   fragment: AbiMessage
 ): ContractFunction<BN> {
   return async function (...args: TransactionParams): Promise<BN> {
-    const call = buildCall(contract, fragment);
+    const call = buildCall(contract, fragment, true);
     const callResult = await call(...args);
     if (!callResult.result.isSuccess) {
       return new BN("0");
