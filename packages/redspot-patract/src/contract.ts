@@ -6,7 +6,6 @@ import type {
 } from "@polkadot/api-contract/types";
 import type { SignerOptions, SubmittableExtrinsic } from "@polkadot/api/types";
 import { createTypeUnsafe, Raw } from "@polkadot/types";
-import { u8aToHex, isU8a, stringCamelCase } from "@polkadot/util";
 import type { AccountId, ContractExecResult } from "@polkadot/types/interfaces";
 import type {
   AnyJson,
@@ -14,11 +13,18 @@ import type {
   ISubmittableResult,
 } from "@polkadot/types/types";
 import { Codec, Registry, TypeDef } from "@polkadot/types/types";
+import {
+  assert,
+  isObject,
+  isU8a,
+  stringCamelCase,
+  u8aToHex,
+} from "@polkadot/util";
 import BN from "bn.js";
+import chalk from "chalk";
+import log from "redspot/internal/log";
 import type { AccountSigner } from "redspot/types";
 import { buildTx, TransactionResponse } from "./buildTx";
-import log from "redspot/internal/log";
-import chalk from "chalk";
 
 export function formatData(
   registry: Registry,
@@ -156,32 +162,34 @@ function buildCall(
       } catch {}
     });
 
-    const result: ContractExecResult = await contract.api.rpc.contracts.call({
+    const json = await contract.api.rpc.contracts.call.json({
       ...callParams,
       origin,
     });
 
-    const outcome: ContractCallOutcome = {
+    const { debugMessage, gasConsumed, result } = mapExecResult(
+      this.registry,
+      json.toJSON()
+    );
+
+    const outcome = {
+      debugMessage,
+      gasConsumed,
       output:
-        result.isSuccess && fragment.returnType
-          ? createTypeUnsafe(
-              contract.api.registry,
-              fragment.returnType.type,
-              [result.asSuccess.data],
-              true
-            )
+        result.isOk && fragment.returnType
+          ? formatData(this.registry, result.asOk.data, fragment.returnType)
           : null,
       result,
     };
 
-    if (result.isSuccess) {
+    if (result.isOk) {
       if (!isEstimateGas) {
         log.success(`Output: ${outcome.output?.toString()}`);
       } else {
-        log.success(`Output: ${result.asSuccess?.gasConsumed?.toString()}`);
+        log.success(`Output: ${outcome.gasConsumed.toString()}`);
       }
     } else {
-      log.error(outcome.result);
+      log.error(outcome.debugMessage);
     }
 
     return outcome;
@@ -264,6 +272,39 @@ function buildEstimate(
       return new BN(callResult.result.asSuccess.gasConsumed);
     }
   };
+}
+
+function mapExecResult(registry: Registry, json: AnyJson): ContractExecResult {
+  assert(
+    isObject(json) && !Array.isArray(json),
+    "Invalid JSON result retrieved"
+  );
+
+  if (!Object.keys(json).some((key) => ["error", "success"].includes(key))) {
+    return registry.createType("ContractExecResult", json);
+  }
+
+  const from = registry.createType("ContractExecResultTo260", json);
+
+  if (from.isSuccess) {
+    const s = from.asSuccess;
+
+    return registry.createType("ContractExecResult", {
+      gasConsumed: s.gasConsumed,
+      result: {
+        ok: {
+          data: s.data,
+          flags: s.flags,
+        },
+      },
+    });
+  }
+
+  // in the old format error has no additional information,
+  // map it as-is with an "unknown" error
+  return registry.createType("ContractExecResult", {
+    result: { err: { other: "unknown" } },
+  });
 }
 
 export default class Contract {

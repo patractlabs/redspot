@@ -14,7 +14,7 @@ export interface TransactionResponse {
     data?: any;
   };
   result: SubmittableResult;
-  events?: {
+  abiEvents?: {
     bytes: string;
     section: string;
     method: string;
