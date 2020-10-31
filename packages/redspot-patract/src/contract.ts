@@ -291,7 +291,7 @@ export default class Contract {
 
     this.api = apiProvider;
     this.signer = signer;
-    this.api.tx.contracts.call;
+
     this.callStatic = {};
     this.estimateGas = {};
     this.functions = {};
