@@ -3,8 +3,8 @@
   "version": "0.3.1-13",
   "author": "Patract Labs",
   "dependencies": {
-    "@polkadot/api": "^2.4.1",
-    "@polkadot/api-contract": "^2.4.1",
+    "@polkadot/api": "^2.4.2-18",
+    "@polkadot/api-contract": "^2.4.2-18",
     "redspot": "0.3.1-13"
   }
 }
