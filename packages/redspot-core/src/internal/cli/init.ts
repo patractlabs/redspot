@@ -144,7 +144,7 @@ function init(
   console.log(`Removing template package using ${command}...`);
   console.log();
 
-  const proc = spawn.sync(command, [remove, templateName], {
+  const proc = spawn.sync(command, [remove, templateToInstall], {
     stdio: "inherit",
   });
   if (proc.status !== 0) {
