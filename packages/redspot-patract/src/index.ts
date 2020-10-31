@@ -1,4 +1,5 @@
 import { ApiPromise } from "@polkadot/api";
+import { Abi } from "@polkadot/api-contract";
 import { extendEnvironment } from "redspot/config";
 import { lazyObject } from "redspot/plugins";
 import type { RedspotRuntimeEnvironment } from "redspot/types";
@@ -8,9 +9,9 @@ import {
   getAbi,
   getContractAt,
   getContractFactory,
+  getRandomSigner,
   getSigners,
   getWasm,
-  getRandomSigner,
 } from "./helpers";
 import "./type-extensions";
 
@@ -54,3 +55,5 @@ export default function () {
     });
   });
 }
+
+export { ApiPromise, Abi, Contract, ContractFactory };
