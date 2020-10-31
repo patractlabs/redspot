@@ -280,7 +280,10 @@ export default class Contract {
   };
 
   // The meta-class properties
-  readonly [key: string]: any;
+  readonly [key: string]:
+    | ContractFunction<ContractCallOutcome>
+    | ContractFunction<TransactionResponse>
+    | any;
 
   constructor(
     address: string | AccountId,
