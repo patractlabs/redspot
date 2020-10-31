@@ -1,6 +1,10 @@
 {
   "package": {
-    "dependencies": {},
+    "dependencies": {
+      "@types/jest": "^26.0.15",
+      "jest": "^26.6.1",
+      "ts-jest": "^26.4.3"
+    },
     "scripts": {
       "build": "npx redspot compile",
       "test": "npx redspot test"

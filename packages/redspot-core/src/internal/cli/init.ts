@@ -129,11 +129,22 @@ function init(
     );
   }
 
+  if (templateName && args.length > 1) {
+    console.log();
+    console.log(`Installing template dependencies using ${command}...`);
+
+    const proc = spawn.sync(command, args, { stdio: "inherit" });
+    if (proc.status !== 0) {
+      console.error(`\`${command} ${args.join(" ")}\` failed`);
+      return;
+    }
+  }
+
   // Remove template
   console.log(`Removing template package using ${command}...`);
   console.log();
 
-  const proc = spawn.sync(command, [remove, templateToInstall], {
+  const proc = spawn.sync(command, [remove, templateName], {
     stdio: "inherit",
   });
   if (proc.status !== 0) {
