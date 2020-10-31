@@ -6,7 +6,7 @@ import type {
 } from "@polkadot/api-contract/types";
 import type { SignerOptions, SubmittableExtrinsic } from "@polkadot/api/types";
 import { createTypeUnsafe, Raw } from "@polkadot/types";
-import { u8aToHex, isU8a } from "@polkadot/util";
+import { u8aToHex, isU8a, stringCamelCase } from "@polkadot/util";
 import type { AccountId, ContractExecResult } from "@polkadot/types/interfaces";
 import type {
   AnyJson,
@@ -104,6 +104,10 @@ async function populateTransaction(
   };
 }
 
+function formatIdentifier(str: string) {
+  return stringCamelCase(str);
+}
+
 function buildPopulate(
   contract: Contract,
   fragment: AbiMessage
@@ -126,6 +130,7 @@ function buildCall(
       fragment,
       args
     );
+    const messageName = formatIdentifier(fragment.identifier);
 
     const origin = await options.signer.getAddress();
 
@@ -135,9 +140,9 @@ function buildCall(
     };
     log.log("");
     if (!isEstimateGas) {
-      log.log(chalk.magenta(`===== Read ${fragment.identifier} =====`));
+      log.log(chalk.magenta(`===== Read ${messageName} =====`));
     } else {
-      log.log(chalk.magenta(`===== Estimate gas ${fragment.identifier} =====`));
+      log.log(chalk.magenta(`===== Estimate gas ${messageName} =====`));
     }
     Object.keys(params).map((key) => {
       try {
@@ -205,9 +210,10 @@ function buildSend(
       fragment,
       args
     );
+    const messageName = formatIdentifier(fragment.identifier);
 
     log.log("");
-    log.log(chalk.magenta(`===== Exec ${fragment.identifier} =====`));
+    log.log(chalk.magenta(`===== Exec ${messageName} =====`));
     Object.keys(callParams).map((key) => {
       try {
         let print: string;
@@ -300,26 +306,26 @@ export default class Contract {
     this.address = this.api.registry.createType("AccountId", address);
 
     for (const fragment of this.abi.messages) {
-      const identifier = fragment.identifier;
+      const messageName = formatIdentifier(fragment.identifier);
 
-      if (this[identifier] == null) {
-        Object.defineProperty(this, identifier, {
+      if (this[messageName] == null) {
+        Object.defineProperty(this, messageName, {
           enumerable: true,
           value: buildDefault(this, fragment),
           writable: false,
         });
       }
 
-      if (this.callStatic[identifier] == null) {
-        this.callStatic[identifier] = buildCall(this, fragment);
+      if (this.callStatic[messageName] == null) {
+        this.callStatic[messageName] = buildCall(this, fragment);
       }
 
-      if (this.populateTransaction[identifier] == null) {
-        this.populateTransaction[identifier] = buildPopulate(this, fragment);
+      if (this.populateTransaction[messageName] == null) {
+        this.populateTransaction[messageName] = buildPopulate(this, fragment);
       }
 
-      if (this.estimateGas[identifier] == null) {
-        this.estimateGas[identifier] = buildEstimate(this, fragment);
+      if (this.estimateGas[messageName] == null) {
+        this.estimateGas[messageName] = buildEstimate(this, fragment);
       }
     }
   }
