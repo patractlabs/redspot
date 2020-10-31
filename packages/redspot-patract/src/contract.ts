@@ -2,6 +2,7 @@ import { ApiPromise } from "@polkadot/api";
 import { Abi } from "@polkadot/api-contract";
 import type {
   AbiMessage,
+  AbiEvent,
   ContractCallOutcome,
 } from "@polkadot/api-contract/types";
 import type { SignerOptions, SubmittableExtrinsic } from "@polkadot/api/types";
@@ -18,6 +19,7 @@ import {
   isObject,
   isU8a,
   stringCamelCase,
+  stringUpperFirst,
   u8aToHex,
 } from "@polkadot/util";
 import BN from "bn.js";
@@ -25,6 +27,7 @@ import chalk from "chalk";
 import log from "redspot/internal/log";
 import type { AccountSigner } from "redspot/types";
 import { buildTx, TransactionResponse } from "./buildTx";
+import { SubmittableResult } from "@polkadot/api";
 
 export function formatData(
   registry: Registry,
@@ -60,6 +63,12 @@ export interface CallParams {
   value: BigNumber;
   gasLimit: BigNumber;
   inputData: Uint8Array;
+}
+
+export interface DecodedEvent {
+  args: Codec[];
+  name: string;
+  event: AbiEvent;
 }
 
 async function populateTransaction(
@@ -123,6 +132,26 @@ function buildPopulate(
   };
 }
 
+function decodeEvents(
+  records: SubmittableResult,
+  abi: Abi
+): DecodedEvent[] | undefined {
+  const events = records.filterRecords("contracts", "ContractExecution");
+
+  if (!events.length) {
+    return undefined;
+  }
+
+  return events.map((event) => {
+    const decoded = abi.decodeEvent(event.event.data[1] as any) as Partial<
+      DecodedEvent
+    >;
+    decoded.name = stringUpperFirst(stringCamelCase(decoded.event.identifier));
+
+    return decoded as DecodedEvent;
+  });
+}
+
 function buildCall(
   contract: Contract,
   fragment: AbiMessage,
@@ -168,7 +197,7 @@ function buildCall(
     });
 
     const { debugMessage, gasConsumed, result } = mapExecResult(
-      this.registry,
+      contract.api.registry,
       json.toJSON()
     );
 
@@ -177,7 +206,11 @@ function buildCall(
       gasConsumed,
       output:
         result.isOk && fragment.returnType
-          ? formatData(this.registry, result.asOk.data, fragment.returnType)
+          ? formatData(
+              contract.api.registry,
+              result.asOk.data,
+              fragment.returnType
+            )
           : null,
       result,
     };
@@ -238,6 +271,8 @@ function buildSend(
       ...options,
     });
 
+    response.events = decodeEvents(response.result, contract.abi);
+
     if (!response.error) {
       log.success(`Execute successfully`);
       log.success(
@@ -266,10 +301,10 @@ function buildEstimate(
   return async function (...args: TransactionParams): Promise<BN> {
     const call = buildCall(contract, fragment, true);
     const callResult = await call(...args);
-    if (!callResult.result.isSuccess) {
+    if (callResult.result.isErr) {
       return new BN("0");
     } else {
-      return new BN(callResult.result.asSuccess.gasConsumed);
+      return new BN(callResult.gasConsumed);
     }
   };
 }
@@ -313,7 +348,10 @@ export default class Contract {
   public readonly signer: AccountSigner;
   public readonly api: ApiPromise;
   public readonly functions: { [name: string]: ContractFunction };
-  public readonly callStatic: { [name: string]: ContractFunction };
+  public readonly query: {
+    [name: string]: ContractFunction<ContractCallOutcome>;
+  };
+  public readonly tx: { [name: string]: ContractFunction<TransactionResponse> };
   public readonly estimateGas: { [name: string]: ContractFunction<BN> };
 
   public readonly populateTransaction: {
@@ -342,7 +380,8 @@ export default class Contract {
     this.api = apiProvider;
     this.signer = signer;
 
-    this.callStatic = {};
+    this.query = {};
+    this.tx = {};
     this.estimateGas = {};
     this.functions = {};
 
@@ -360,8 +399,12 @@ export default class Contract {
         });
       }
 
-      if (this.callStatic[messageName] == null) {
-        this.callStatic[messageName] = buildCall(this, fragment);
+      if (this.query[messageName] == null) {
+        this.query[messageName] = buildCall(this, fragment);
+      }
+
+      if (this.query[messageName] == null) {
+        this.tx[messageName] = buildSend(this, fragment);
       }
 
       if (this.populateTransaction[messageName] == null) {

@@ -1,9 +1,10 @@
 import { SubmittableResult } from "@polkadot/api";
 import type { SignerOptions } from "@polkadot/api/types";
 import { SubmittableExtrinsic } from "@polkadot/api/types";
-import type { EventRecord } from "@polkadot/types/interfaces";
+import { u64 } from "@polkadot/types/primitive";
 import type { Registry } from "@polkadot/types/types";
 import type { AccountSigner } from "redspot/types";
+import type { DecodedEvent } from "./contract";
 
 export interface TransactionResponse {
   from: string;
@@ -14,14 +15,8 @@ export interface TransactionResponse {
     data?: any;
   };
   result: SubmittableResult;
-  abiEvents?: {
-    bytes: string;
-    section: string;
-    method: string;
-    phaseType: string;
-    phaseIndex: number;
-    args: any[];
-  }[];
+  gasConsumed: u64;
+  events?: DecodedEvent[];
 }
 
 export async function buildTx(
@@ -51,8 +46,6 @@ export async function buildTx(
           }
 
           if (result.status.isFinalized || result.status.isInBlock) {
-            actionStatus.events = formatEvents(result.events);
-
             result.events
               .filter(
                 ({ event: { section } }: any): boolean => section === "system"
@@ -95,7 +88,7 @@ export async function buildTx(
             actionStatus.error = {
               data: result,
             };
-            actionStatus.events = formatEvents(result.events);
+            actionStatus.events = null;
 
             reject(actionStatus);
           }
@@ -108,25 +101,5 @@ export async function buildTx(
 
         reject(actionStatus);
       });
-  });
-}
-
-export function formatEvents(records: EventRecord[]) {
-  return records.map((record) => {
-    const documentation = (record.event.meta.toJSON() as any)?.documentation?.join(
-      "\n"
-    );
-
-    return {
-      doc: documentation,
-      bytes: record.toHex(),
-      section: record.event.section,
-      method: record.event.method,
-      phaseType: record.phase.type,
-      phaseIndex: record.phase.isNone
-        ? null
-        : (record.phase.value as any).toNumber(),
-      args: record.event.data.toJSON() as any[],
-    };
   });
 }
