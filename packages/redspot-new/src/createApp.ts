@@ -32,17 +32,17 @@ function init() {
     })
     .option("template", {
       type: "string",
-      default: "flipper",
+      default: "erc20",
       description: "specify a template for the created project",
     })
     .demandCommand(
       1,
       `Please specify the project name, for example: \n  ${chalk.cyan(
         "redspot-new"
-      )} ${chalk.green("flipper")}`
+      )} ${chalk.green("erc20")}`
     )
     .example(
-      "$0 flipper",
+      "$0 erc20",
       "initializes a new Substrate contract project in the specified directory"
     )
     .epilog("power by patract labs").argv;
