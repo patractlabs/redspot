@@ -183,7 +183,7 @@ function install(
 
     if (useYarn) {
       command = "yarnpkg";
-      args = ["add", "--exact"];
+      args = ["add"];
 
       [].push.apply(args, dependenciesWithTag as any);
 
