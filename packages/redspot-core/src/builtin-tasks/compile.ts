@@ -7,6 +7,7 @@ import {
   CargoMetadata,
   filterContractPackage,
   getResolvedWorkspace,
+  getToolchain,
 } from "../internal/ink/resolve";
 import {
   TASK_BUILD_ARTIFACTS,
@@ -19,8 +20,8 @@ import {
 } from "./task-names";
 
 export default function () {
-  internalTask(TASK_COMPILE_GET_RESOLVED_WORKSPACE, async (_) => {
-    return getResolvedWorkspace();
+  internalTask(TASK_COMPILE_GET_RESOLVED_WORKSPACE, async (_, { config }) => {
+    return getResolvedWorkspace(config.paths.sources);
   });
 
   internalTask(TASK_COMPILE_GET_COMPILER_INPUT, async (_, { run }) => {
@@ -55,19 +56,24 @@ export default function () {
     .addParam(
       "toolchain",
       "Specifies the tool chain to use to compile the contract",
-      "nightly",
+      undefined,
       types.string,
       true
     )
     .setAction(
-      async ({
-        input,
-        toolchain,
-      }: {
-        input: CargoMetadata;
-        toolchain: string;
-      }) => {
-        const compiler = new Compiler(input, { toolchain });
+      async (
+        {
+          input,
+          toolchain,
+        }: {
+          input: CargoMetadata;
+          toolchain: string;
+        },
+        { config }
+      ) => {
+        const compiler = new Compiler(input, {
+          toolchain: getToolchain(config, toolchain),
+        });
 
         return compiler.compileAll();
       }
@@ -83,19 +89,24 @@ export default function () {
     .addParam(
       "toolchain",
       "Specifies the tool chain to use to compile the contract",
-      "nightly",
+      undefined,
       types.string,
       true
     )
     .setAction(
-      async ({
-        input,
-        toolchain,
-      }: {
-        input: CargoMetadata;
-        toolchain: string;
-      }) => {
-        const compiler = new Compiler(input, { toolchain });
+      async (
+        {
+          input,
+          toolchain,
+        }: {
+          input: CargoMetadata;
+          toolchain: string;
+        },
+        { config }
+      ) => {
+        const compiler = new Compiler(input, {
+          toolchain: getToolchain(config, toolchain),
+        });
 
         return compiler.generateAllMetadata();
       }
@@ -151,11 +162,11 @@ export default function () {
     .addParam(
       "toolchain",
       "Specifies the tool chain to use to compile the contract",
-      "nightly",
+      undefined,
       types.string,
       true
     )
-    .setAction(async ({ toolchain }: { toolchain?: string }, { run }) =>
-      run(TASK_BUILD_ARTIFACTS, { toolchain })
+    .setAction(async ({ toolchain }: { toolchain?: string }, { config, run }) =>
+      run(TASK_BUILD_ARTIFACTS, { toolchain: getToolchain(config, toolchain) })
     );
 }

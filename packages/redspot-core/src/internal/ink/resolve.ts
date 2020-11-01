@@ -1,5 +1,8 @@
 import chalk from "chalk";
+import fs from "fs-extra";
+import path from "path";
 import { execSync } from "child_process";
+import { RedspotConfig } from "../../types";
 
 export interface CargoPackage {
   name: string;
@@ -45,11 +48,20 @@ export interface CargoMetadata {
   metadata: any;
 }
 
-export function getResolvedWorkspace(): CargoMetadata {
+export function getResolvedWorkspace(findDir?: string): CargoMetadata {
   const execCommand = "cargo metadata --no-deps --format-version 1";
+  const findDirs = ["./"];
+
+  if (findDir) {
+    findDirs.push(findDir);
+  }
+
+  const cwd = findDirs.find((d) => fs.existsSync(path.join(d, "Cargo.toml")));
+
   try {
     const output = execSync(execCommand, {
       maxBuffer: 1024 * 2048,
+      cwd,
     }).toString();
     return JSON.parse(output);
   } catch (error) {
@@ -69,4 +81,8 @@ export function filterContractPackage(metadata: CargoMetadata): CargoMetadata {
     ...metadata,
     packages: contracts,
   };
+}
+
+export function getToolchain(config: RedspotConfig, toolchain?: string) {
+  return toolchain || config?.rust?.toolchain || "nightly";
 }

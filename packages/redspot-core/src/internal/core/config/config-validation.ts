@@ -102,6 +102,11 @@ const AnalyticsConfig = t.type({
 const RedspotConfig = t.type(
   {
     defaultNetwork: optional(t.string),
+    rust: optional(
+      t.type({
+        toolchain: optional(t.string),
+      })
+    ),
     networks: optional(Networks),
     paths: optional(ProjectPaths),
     analytics: optional(AnalyticsConfig),

@@ -16,7 +16,7 @@ scale-info = { version = "0.4", default-features = false, features = ["derive"],
 
 [lib]
 name = "erc20"
-path = "contracts/lib.rs"
+path = "lib.rs"
 crate-type = ["cdylib"]
 
 [features]

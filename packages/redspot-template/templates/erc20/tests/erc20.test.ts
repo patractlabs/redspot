@@ -33,14 +33,14 @@ describe("ERC20", () => {
 
   it("Assigns initial balance", async () => {
     const { contract, sender } = await setup();
-    const result = await contract.balanceOf(sender.pair.address);
-    expect(result.output.toNumber()).toBe(1000);
+    const result = await contract.query.balanceOf(sender.pair.address);
+    expect(result?.output?.toString()).toBe("1000");
   });
 
   it("Transfer adds amount to destination account", async () => {
     const { contract, sender, receiver } = await setup();
 
-    await contract.transfer(receiver.pair.address, 7);
+    await contract.tx.transfer(receiver.pair.address, 7);
 
     const result = await contract.balanceOf(receiver.pair.address);
 
@@ -50,11 +50,11 @@ describe("ERC20", () => {
   it("Transfer emits event", async () => {
     const { contract, sender, receiver } = await setup();
 
-    const result = await contract.transfer(receiver.pair.address, 7);
+    const result = await contract.tx.transfer(receiver.pair.address, 7);
 
-    const event = result.events.find((e) => e.name === "Transfer");
+    const event = result?.events?.find((e) => e.name === "Transfer");
 
-    const [from, to, value] = event.args;
+    const [from, to, value] = event?.args as any;
 
     expect(from.unwrap().toString()).toBe(sender.pair.address);
     expect(to.unwrap().toString()).toBe(receiver.pair.address);
@@ -64,7 +64,7 @@ describe("ERC20", () => {
   it("Can not transfer above the amount", async () => {
     const { contract, receiver } = await setup();
 
-    const result = await contract.transfer(receiver.pair.address, 1007);
+    const result = await contract.tx.transfer(receiver.pair.address, 1007);
 
     const event = result?.events?.find((e) => e.name === "Transfer");
 
@@ -76,7 +76,7 @@ describe("ERC20", () => {
 
     const emptyAccount = await getRandomSigner(Alice, one.muln(2));
 
-    const result = await contract.transfer(sender.pair.address, 7, {
+    const result = await contract.tx.transfer(sender.pair.address, 7, {
       signer: emptyAccount,
     });
 

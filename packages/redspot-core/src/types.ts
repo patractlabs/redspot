@@ -59,6 +59,9 @@ export interface AnalyticsConfig {
 
 export interface RedspotConfig {
   defaultNetwork?: string;
+  rust?: {
+    toolchain?: string;
+  };
   networks?: Networks;
   paths?: Partial<ProjectPaths>;
   mocha?: Mocha.MochaOptions;

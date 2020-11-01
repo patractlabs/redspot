@@ -5,6 +5,9 @@ usePlugin("@redspot/patract");
 
 export default {
   defaultNetwork: "development",
+  rust: {
+    toolchain: "nightly-2020-10-07",
+  },
   networks: {
     development: {
       endpoint: "ws://127.0.0.1:9944",

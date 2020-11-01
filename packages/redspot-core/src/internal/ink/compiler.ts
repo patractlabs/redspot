@@ -101,7 +101,7 @@ export class Compiler {
 
       const child = spawn("cargo", args, {
         stdio: "inherit",
-        cwd: path.dirname(contract.manifest_path),
+        cwd: this._metadata.workspace_root,
       });
 
       console.log(`$ cargo ${args.join(" ")}`);
@@ -180,6 +180,7 @@ export class Compiler {
 
       const child = spawn("cargo", args, {
         stdio: "inherit",
+        cwd: path.dirname(contract.manifest_path),
       });
 
       console.log(`cargo ${args.join(" ")}`);

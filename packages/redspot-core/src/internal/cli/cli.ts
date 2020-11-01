@@ -19,7 +19,6 @@ import { Reporter } from "../sentry/reporter";
 import { getPackageJson, PackageJson } from "../util/packageInfo";
 import { Analytics } from "./analytics";
 import { ArgumentsParser } from "./ArgumentsParser";
-import logger from "../log";
 
 const log = debug("redspot:core:cli");
 
@@ -68,10 +67,6 @@ async function main() {
     if (Number(redspotArguments.logLevel) >= 4) {
       Reporter.setVerbose(true);
       debug.enable("redspot*");
-    }
-
-    if (Number(redspotArguments.logLevel)) {
-      logger.level = Number(redspotArguments.logLevel);
     }
 
     showStackTraces = redspotArguments.showStackTraces;

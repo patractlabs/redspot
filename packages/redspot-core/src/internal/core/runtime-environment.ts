@@ -17,6 +17,7 @@ import { lazyObject } from "../util/lazy";
 import { RedspotError } from "./errors";
 import { ERRORS } from "./errors-list";
 import { OverriddenTaskDefinition } from "./tasks/task-definitions";
+import logger from "../log";
 
 const log = debug("redspot:core:rse");
 
@@ -50,12 +51,21 @@ export class Environment implements RedspotRuntimeEnvironment {
   ) {
     log("Creating RedspotRuntimeEnvironment");
 
+    process.env["TS_NODE_TRANSPILE_ONLY"] =
+      process.env["TS_NODE_TRANSPILE_ONLY"] === undefined
+        ? "true"
+        : process.env["TS_NODE_TRANSPILE_ONLY"];
+
     const networkName =
       redspotArguments.network !== undefined
         ? redspotArguments.network
         : config.defaultNetwork;
 
     const networkConfig = config.networks[networkName];
+
+    if (Number(redspotArguments.logLevel)) {
+      logger.level = Number(redspotArguments.logLevel);
+    }
 
     if (networkConfig === undefined) {
       throw new RedspotError(ERRORS.NETWORK.CONFIG_NOT_FOUND, {

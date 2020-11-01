@@ -3,7 +3,13 @@
 
 /* eslint-disable camelcase */
 
-import { isChildClass, isNull, isUndefined } from "@polkadot/util";
+import {
+  isChildClass,
+  isNull,
+  isUndefined,
+  isString,
+  isNumber,
+} from "@polkadot/util";
 import WS from "@polkadot/x-ws";
 import assert from "assert";
 import chalk from "chalk";
@@ -43,6 +49,23 @@ const ALIASSES: { [index: string]: string } = {
 };
 
 const RETRY_DELAY = 1000;
+
+function shortParams(result: any, len: number) {
+  try {
+    const str =
+      isString(result) || isNumber(result)
+        ? result.toString()
+        : JSON.stringify(result);
+
+    if (str.length > len + 3) {
+      return `${str.substr(0, len)}...`;
+    }
+
+    return str;
+  } catch {
+    return "...";
+  }
+}
 
 /**
  * @name WsProvider
@@ -271,9 +294,8 @@ export default class WsProvider implements IWsProvider {
         log.debug(
           `${chalk.green(`⬆`)} Id: ${chalk.bold(`%d`)}, method: ${
             json.method
-          }, params: %j`,
-          json.id,
-          json.params
+          }, params: ${shortParams(json.params, 1000)}`,
+          json.id
         );
 
         this._handlers[id] = {
@@ -369,22 +391,11 @@ export default class WsProvider implements IWsProvider {
     const response = JSON.parse(message.data as string) as JsonRpcResponse;
     const isMsg = isUndefined(response.method);
 
-    const subresult = (result) => {
-      try {
-        const str = JSON.stringify(result);
-        if (str.length > 63) {
-          return `${str.substr(0, 60)}...`;
-        }
-        return str;
-      } catch {
-        return "...";
-      }
-    };
-
     if (isMsg) {
       log.debug(
-        `${chalk.red("⬇")} Id: ${chalk.bold(`%d`)}, result: ${subresult(
-          response.result
+        `${chalk.red("⬇")} Id: ${chalk.bold(`%d`)}, result: ${shortParams(
+          response.result,
+          60
         )}`,
         response.id
       );
@@ -394,7 +405,7 @@ export default class WsProvider implements IWsProvider {
       log.debug(
         `${chalk.red("⬇")} SubId: ${chalk.bold(
           response.params.subscription.toString()
-        )}, result: ${subresult(response.params.result)}`
+        )}, result: ${shortParams(response.params.result, 60)}`
       );
       this._onSocketMessageSubscribe(response);
     }
