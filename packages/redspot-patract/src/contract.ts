@@ -403,7 +403,7 @@ export default class Contract {
         this.query[messageName] = buildCall(this, fragment);
       }
 
-      if (this.query[messageName] == null) {
+      if (this.tx[messageName] == null) {
         this.tx[messageName] = buildSend(this, fragment);
       }
 
