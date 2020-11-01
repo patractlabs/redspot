@@ -1,7 +1,6 @@
 import BN from "bn.js";
 import { patract } from "redspot";
-
-jest.setTimeout(60000);
+import { expect } from "chai";
 
 const {
   disconnect,
@@ -12,7 +11,7 @@ const {
 } = patract!;
 
 describe("ERC20", () => {
-  afterAll(() => {
+  after(() => {
     return disconnect();
   });
 
@@ -34,7 +33,7 @@ describe("ERC20", () => {
   it("Assigns initial balance", async () => {
     const { contract, sender } = await setup();
     const result = await contract.query.balanceOf(sender.pair.address);
-    expect(result?.output?.toString()).toBe("1000");
+    expect(result?.output?.toString()).to.equal("1000");
   });
 
   it("Transfer adds amount to destination account", async () => {
@@ -44,7 +43,7 @@ describe("ERC20", () => {
 
     const result = await contract.balanceOf(receiver.pair.address);
 
-    expect(result.output.toNumber()).toBe(7);
+    expect(result.output.toNumber()).to.equal(7);
   });
 
   it("Transfer emits event", async () => {
@@ -56,9 +55,9 @@ describe("ERC20", () => {
 
     const [from, to, value] = event?.args as any;
 
-    expect(from.unwrap().toString()).toBe(sender.pair.address);
-    expect(to.unwrap().toString()).toBe(receiver.pair.address);
-    expect(value.toNumber()).toBe(7);
+    expect(from.unwrap().toString()).to.equal(sender.pair.address);
+    expect(to.unwrap().toString()).to.equal(receiver.pair.address);
+    expect(value.toNumber()).to.equal(7);
   });
 
   it("Can not transfer above the amount", async () => {
@@ -68,7 +67,7 @@ describe("ERC20", () => {
 
     const event = result?.events?.find((e) => e.name === "Transfer");
 
-    expect(event).toBeUndefined();
+    expect(event).to.be.undefined;
   });
 
   it("Can not transfer from empty account", async () => {
@@ -82,6 +81,6 @@ describe("ERC20", () => {
 
     const event = result?.events?.find((e) => e.name === "Transfer");
 
-    expect(event).toBeUndefined();
+    expect(event).to.be.undefined;
   });
 });
