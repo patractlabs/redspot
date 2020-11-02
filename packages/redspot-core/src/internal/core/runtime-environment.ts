@@ -51,11 +51,6 @@ export class Environment implements RedspotRuntimeEnvironment {
   ) {
     log("Creating RedspotRuntimeEnvironment");
 
-    process.env["TS_NODE_TRANSPILE_ONLY"] =
-      process.env["TS_NODE_TRANSPILE_ONLY"] === undefined
-        ? "true"
-        : process.env["TS_NODE_TRANSPILE_ONLY"];
-
     const networkName =
       redspotArguments.network !== undefined
         ? redspotArguments.network

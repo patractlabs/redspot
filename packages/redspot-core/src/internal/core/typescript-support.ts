@@ -41,6 +41,10 @@ export function loadTsNodeIfPresent() {
       process.env.TS_NODE_FILES = "true";
     }
 
+    if (process.env.TS_NODE_TRANSPILE_ONLY === undefined) {
+      process.env.TS_NODE_TRANSPILE_ONLY = "true";
+    }
+
     try {
       // tslint:disable-next-line no-implicit-dependencies
       require("ts-node/register");

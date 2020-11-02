@@ -6,7 +6,7 @@ usePlugin("@redspot/patract");
 export default {
   defaultNetwork: "development",
   rust: {
-    toolchain: "nightly-2020-10-07",
+    toolchain: "nightly",
   },
   networks: {
     development: {
