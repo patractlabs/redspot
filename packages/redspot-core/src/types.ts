@@ -300,7 +300,7 @@ export interface WsProvider {
 export interface RpcProvider extends WsProvider {
   accounts: NetworkConfigAccounts;
   keyring: Keyring;
-  gasLimit: BN;
+  gasLimit?: BN;
   registry: TypeRegistry;
   networkName: string;
   createSigner(keyringPair: KeyringPair): AccountSigner;
@@ -310,7 +310,7 @@ export interface RpcProvider extends WsProvider {
 export type IRpcProvider = RpcProvider;
 
 export interface AccountSigner extends Signer {
-  readonly gasLimit: BN;
+  readonly gasLimit?: BN;
   readonly pair: KeyringPair;
   getAddress(): Promise<string>;
 }

@@ -94,7 +94,7 @@ async function populateTransaction(
     gasLimit:
       overrides.gasLimit ||
       contract.signer.gasLimit ||
-      contract.api.consts.system.maximumBlockWeight.muln(64).divn(100),
+      contract.api.consts.system.maximumBlockWeight.muln(2).divn(10),
     inputData: data,
   };
 

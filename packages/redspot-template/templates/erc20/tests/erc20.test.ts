@@ -8,6 +8,7 @@ const {
   getRandomSigner,
   getSigners,
   getAbi,
+  api,
 } = patract!;
 
 describe("ERC20", () => {
@@ -16,14 +17,12 @@ describe("ERC20", () => {
   });
 
   async function setup() {
-    const one = new BN("10000000000");
+    const one = new BN(10).pow(new BN(api.registry.chainDecimals));
     const signers = await getSigners();
     const Alice = signers[0];
     const sender = await getRandomSigner(Alice, one.muln(10));
     const contractFactory = await getContractFactory("erc20", sender);
-    const contract = await contractFactory.deploy("new", "1000", {
-      value: 20002000000,
-    });
+    const contract = await contractFactory.deploy("new", "1000");
     const abi = getAbi("erc20");
     const receiver = await getRandomSigner();
 
@@ -43,7 +42,7 @@ describe("ERC20", () => {
 
     const result = await contract.query.balanceOf(receiver.pair.address);
 
-    expect(result.output.toString()).to.equal("7");
+    expect(result.output?.toString()).to.equal("7");
   });
 
   it("Transfer emits event", async () => {
@@ -73,7 +72,7 @@ describe("ERC20", () => {
   it("Can not transfer from empty account", async () => {
     const { contract, Alice, one, sender } = await setup();
 
-    const emptyAccount = await getRandomSigner(Alice, one.muln(2));
+    const emptyAccount = await getRandomSigner(Alice, one.muln(10));
 
     const result = await contract.tx.transfer(sender.pair.address, 7, {
       signer: emptyAccount,

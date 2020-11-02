@@ -169,7 +169,10 @@ export default class ContractFactory {
       .add(this.api.consts.contracts.tombstoneDeposit)
       .muln(2);
     const endowment = overrides.value || mindeposit;
-    const gasLimit = overrides.gasLimit || this.signer.gasLimit;
+    const gasLimit =
+      overrides.gasLimit ||
+      this.signer.gasLimit ||
+      this.api.consts.system.maximumBlockWeight.muln(2).divn(10);
 
     delete overrides.value;
     delete overrides.gasLimit;

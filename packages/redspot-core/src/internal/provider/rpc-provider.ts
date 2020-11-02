@@ -12,7 +12,7 @@ import AccountSigner from "./accountSigner";
 export class RpcProvider extends WsProvider implements IRpcProvider {
   readonly accounts: NetworkConfigAccounts;
   readonly keyring: Keyring;
-  readonly gasLimit: BN;
+  readonly gasLimit?: BN;
   readonly networkName: string;
   readonly registry: TypeRegistry;
   readonly extra?: {
@@ -32,14 +32,14 @@ export class RpcProvider extends WsProvider implements IRpcProvider {
       "//Eve",
       "//Ferdie",
     ],
-    gasLimit: BN | number | string = "50000000000",
+    gasLimit?: BN | number | string,
     extra?: {
       explorerUrl?: string;
     }
   ) {
     super(endpoint, httpHeaders);
     this.networkName = networkName;
-    this.gasLimit = new BN(gasLimit);
+    this.gasLimit = gasLimit && new BN(gasLimit);
     this.extra = extra;
     this.registry = new TypeRegistry();
 

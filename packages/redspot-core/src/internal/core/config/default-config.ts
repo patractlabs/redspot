@@ -5,7 +5,7 @@ import {
 } from "../../constants";
 
 const DEFAULT_REDSPOT_NETWORK_CONFIG: NetworkConfig = {
-  gasLimit: "5000000000",
+  gasLimit: "400000000000",
   accounts: ["//Alice", "//Bob", "//Charlie", "//Dave", "//Eve", "//Ferdie"],
   endpoint: ["ws://127.0.0.1:9944"],
   types: {},

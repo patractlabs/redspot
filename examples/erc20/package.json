@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@redspot/patract": "^0.3.3",
+    "@redspot/patract": "^0.3.3-1",
     "@types/jest": "^26.0.15",
     "jest": "^26.6.1",
-    "redspot": "^0.3.3",
+    "redspot": "^0.3.3-1",
     "ts-jest": "^26.4.3"
   },
   "scripts": {
