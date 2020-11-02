@@ -43,7 +43,7 @@ describe("ERC20", () => {
 
     const result = await contract.query.balanceOf(receiver.pair.address);
 
-    expect(result.output.toNumber()).to.equal(7);
+    expect(result.output.toString()).to.equal("7");
   });
 
   it("Transfer emits event", async () => {
