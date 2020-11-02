@@ -273,21 +273,24 @@ function buildSend(
 
     response.events = decodeEvents(response.result, contract.abi);
 
+    let url: string;
+    let base = "https://polkadot.js.org/apps/#/explorer/query/";
+
+    try {
+      // @ts-ignore
+      url = `${contract.api._rpcCore.provider.extra.explorerUrl || base}${
+        response.blockHash
+      }`;
+    } catch {
+      url = `${base}${response.blockHash}`;
+    }
+
     if (!response.error) {
       log.success(`Execute successfully`);
-      log.success(
-        `${chalk.cyanBright(
-          `https://polkadot.js.org/apps/#/explorer/query/${response.blockHash}`
-        )}`
-      );
+      log.success(`${chalk.cyanBright(url)}`);
     } else {
       log.error(`Execute failed. ${chalk.red(response.error?.message || "")}`);
-      response.blockHash &&
-        log.info(
-          `${chalk.cyanBright(
-            `https://polkadot.js.org/apps/#/explorer/query/${response.blockHash}`
-          )}`
-        );
+      response.blockHash && log.info(`${chalk.cyanBright(url)}`);
     }
 
     return response;

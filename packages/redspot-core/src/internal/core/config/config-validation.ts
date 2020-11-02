@@ -81,6 +81,7 @@ const WsNetworkConfig = t.type({
   types: optional(t.record(t.string, t.unknown)),
   endpoint: optional(t.union([t.string, t.array(t.string)])),
   httpHeaders: optional(HttpHeaders),
+  explorerUrl: optional(t.string),
 });
 
 const NetworkConfig = WsNetworkConfig;

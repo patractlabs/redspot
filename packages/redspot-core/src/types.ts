@@ -15,6 +15,8 @@ export interface CommonNetworkConfig {
   gasLimit?: string | number | BN;
   types?: Record<string, any>;
   from?: string;
+
+  explorerUrl?: string;
 }
 
 export interface RedspotNetworkAccount {

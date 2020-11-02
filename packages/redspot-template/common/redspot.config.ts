@@ -15,6 +15,14 @@ export default {
         Address: "AccountId",
         LookupSource: "AccountId",
       },
+      explorerUrl: "https://polkadot.js.org/apps/#/explorer/query/",
     },
+    substrate: {
+      endpoint: "ws://127.0.0.1:9944",
+      types: {},
+    },
+  },
+  mocha: {
+    timeout: 60000,
   },
 } as RedspotConfig;

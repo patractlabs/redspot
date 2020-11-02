@@ -11,6 +11,9 @@ export function createProvider(
     networkConfig.types,
     networkConfig.httpHeaders,
     networkConfig.accounts,
-    networkConfig.gasLimit
+    networkConfig.gasLimit,
+    {
+      explorerUrl: networkConfig.explorerUrl,
+    }
   );
 }

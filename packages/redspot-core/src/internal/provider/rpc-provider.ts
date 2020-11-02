@@ -15,6 +15,9 @@ export class RpcProvider extends WsProvider implements IRpcProvider {
   readonly gasLimit: BN;
   readonly networkName: string;
   readonly registry: TypeRegistry;
+  readonly extra?: {
+    explorerUrl?: string;
+  };
 
   constructor(
     networkName: string,
@@ -29,11 +32,15 @@ export class RpcProvider extends WsProvider implements IRpcProvider {
       "//Eve",
       "//Ferdie",
     ],
-    gasLimit: BN | number | string = "50000000000"
+    gasLimit: BN | number | string = "50000000000",
+    extra?: {
+      explorerUrl?: string;
+    }
   ) {
     super(endpoint, httpHeaders);
     this.networkName = networkName;
     this.gasLimit = new BN(gasLimit);
+    this.extra = extra;
     this.registry = new TypeRegistry();
 
     this.registry.setKnownTypes({

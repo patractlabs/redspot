@@ -10,6 +10,7 @@ const DEFAULT_REDSPOT_NETWORK_CONFIG: NetworkConfig = {
   endpoint: ["ws://127.0.0.1:9944"],
   types: {},
   httpHeaders: {},
+  explorerUrl: "https://polkadot.js.org/apps/#/explorer/query/",
 };
 
 const defaultConfig: RedspotConfig = {
