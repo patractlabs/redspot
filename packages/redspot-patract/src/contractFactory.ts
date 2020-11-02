@@ -165,9 +165,9 @@ export default class ContractFactory {
 
     const constructor = this.abi.findConstructor(constructorOrId);
     const encoded = constructor.toU8a(params);
-    const mindeposit = this.api.consts.balances.existentialDeposit.add(
-      this.api.consts.contracts.tombstoneDeposit
-    );
+    const mindeposit = this.api.consts.balances.existentialDeposit
+      .add(this.api.consts.contracts.tombstoneDeposit)
+      .muln(2);
     const endowment = overrides.value || mindeposit;
     const gasLimit = overrides.gasLimit || this.signer.gasLimit;
 

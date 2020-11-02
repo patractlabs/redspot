@@ -41,7 +41,7 @@ describe("ERC20", () => {
 
     await contract.tx.transfer(receiver.pair.address, 7);
 
-    const result = await contract.balanceOf(receiver.pair.address);
+    const result = await contract.query.balanceOf(receiver.pair.address);
 
     expect(result.output.toNumber()).to.equal(7);
   });

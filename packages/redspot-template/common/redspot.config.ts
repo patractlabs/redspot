@@ -15,10 +15,13 @@ export default {
         Address: "AccountId",
         LookupSource: "AccountId",
       },
+      gasLimit: "5000000000",
       explorerUrl: "https://polkadot.js.org/apps/#/explorer/query/",
     },
     substrate: {
       endpoint: "ws://127.0.0.1:9944",
+      gasLimit: "5000000000",
+      accounts: ["//Alice"],
       types: {},
     },
   },
