@@ -1,6 +1,6 @@
 {
   "name": "redspot",
-  "version": "0.3.3-1",
+  "version": "0.3.3-5",
   "author": "Patract Labs",
   "main": "internal/lib/redspot-lib.js",
   "types": "internal/lib/redspot-lib.d.ts",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@polkadot/types": "^2.4.2-18",
+    "@polkadot/keyring": "^3.5.1",
     "@polkadot/util": "^3.5.1",
     "@polkadot/util-crypto": "^3.5.1",
     "@polkadot/x-ws": "^0.3.2",
