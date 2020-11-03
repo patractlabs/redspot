@@ -1,7 +1,5 @@
 # Redspot
 
-TODO
-
 ---
 
 Redspot is named after Jupiter's Great Red Spot, which is also the largest DOT in the solar system. Redspot's target project is [Truffle](https://github.com/trufflesuite/truffle) in Truffle Suite. Redspot is a development environment, testing framework and asset pipeline for `pallet-contracts`. Redspot is trying to let the development of ink! be projectized and simplify the testing and interacting with contracts.
@@ -19,13 +17,10 @@ Riot group for disscusion: https://app.element.io/#/room/#PatractLabsDev:matrix.
 _WARNING!_
 **This repo is under developing. But after first version released, we would change current repo name from `redspot-0.2` to `redspot` to replace old repo [https://github.com/patractlabs/redspot](https://github.com/patractlabs/redspot)**
 
-## Installation
-
-TODO
 
 ## Documentation
 
-TODO
+https://patractlabs.github.io/redspot
 
 ## License
 
