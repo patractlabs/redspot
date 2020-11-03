@@ -28,7 +28,7 @@ async function run() {
   const { contract, sender } = await setup();
   const receiver = await getRandomSigner();
 
-  const result = await contract.approve(receiver.pair.address, 7, {
+  const result = await contract.approve(receiver.address, 7, {
     gasLimit: "100000000000",
   });
 

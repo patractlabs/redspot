@@ -16,7 +16,7 @@ async function run() {
 
   const contractFactory = await getContractFactory("erc20", signer);
 
-  const balance = await api.query.system.account(signer.pair.address);
+  const balance = await api.query.system.account(signer.address);
 
   console.log("Balance: ", balance.toHuman());
 

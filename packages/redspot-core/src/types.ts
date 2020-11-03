@@ -1,6 +1,6 @@
 import type { Signer } from "@polkadot/api/types";
 import type { Keyring } from "@polkadot/keyring";
-import type { KeyringPair } from "@polkadot/keyring/types";
+import type { KeyringPair, SignOptions } from "@polkadot/keyring/types";
 import type { TypeRegistry } from "@polkadot/types";
 import type { ContractProject } from "@polkadot/types/interfaces";
 import type BN from "bn.js";
@@ -312,7 +312,11 @@ export type IRpcProvider = RpcProvider;
 export interface AccountSigner extends Signer {
   readonly gasLimit?: BN;
   readonly pair: KeyringPair;
+  readonly address: string;
+  readonly addressRaw: Uint8Array;
+  readonly publicKey: Uint8Array;
   getAddress(): Promise<string>;
+  sign: (data: Uint8Array, options?: SignOptions) => Uint8Array;
 }
 
 export type IAccountSigner = AccountSigner;

@@ -50,7 +50,7 @@ export async function getRandomSigner(
 
     log.info(
       `Transfer ${chalk.yellow(amount.toString())} from ${chalk.cyan(
-        from.pair.address.toString()
+        from.address.toString()
       )} to ${chalk.cyan(keyringPair.address)}`
     );
 

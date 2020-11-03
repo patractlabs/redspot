@@ -33,7 +33,7 @@ describe("ERC20", () => {
 
   it("Assigns initial balance", async () => {
     const { contract, sender } = await setup();
-    const result = await contract.balanceOf(sender.pair.address);
+    const result = await contract.balanceOf(sender.address);
     expect(result.output.toNumber()).toBe(1000);
   });
 
@@ -41,9 +41,9 @@ describe("ERC20", () => {
     const { contract, sender } = await setup();
     const receiver = await getRandomSigner();
 
-    await contract.transfer(receiver.pair.address, 7);
+    await contract.transfer(receiver.address, 7);
 
-    const result = await contract.tx.balanceOf(receiver.pair.address);
+    const result = await contract.tx.balanceOf(receiver.address);
 
     expect(result.output.toNumber()).toBe(7);
   });
@@ -52,7 +52,7 @@ describe("ERC20", () => {
     const { contract, sender } = await setup();
     const receiver = await getRandomSigner();
 
-    const result = await contract.transfer(receiver.pair.address, 7);
+    const result = await contract.transfer(receiver.address, 7);
 
     console.log(result);
   });
