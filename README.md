@@ -14,8 +14,8 @@ Please refer to this for more information: https://github.com/patractlabs/jupite
 
 Riot group for disscusion: https://app.element.io/#/room/#PatractLabsDev:matrix.org
 
-_WARNING!_
-**This repo is under developing. But after first version released, we would change current repo name from `redspot-0.2` to `redspot` to replace old repo [https://github.com/patractlabs/redspot](https://github.com/patractlabs/redspot)**
+_NOTICE!_
+*redpot has an old version repo using for MVP(Minimum Viable Product), but now is archived and is not maintained any more. Refer to this repo [redspot-v0.1](https://github.com/patractlabs/redspot-v0.1)*
 
 
 ## Documentation
