@@ -4,9 +4,9 @@
 
 Redspot is named after Jupiter's Great Red Spot, which is also the largest DOT in the solar system. Redspot's target project is [Truffle](https://github.com/trufflesuite/truffle) in Truffle Suite. Redspot is a development environment, testing framework and asset pipeline for `pallet-contracts`. Redspot is trying to let the development of ink! be projectized and simplify the testing and interacting with contracts.
 
-Currently, Redspot has release v0.1 which is used for MVP (minimum viable product) verification ([https://github.com/patractlabs/redspot](https://github.com/patractlabs/redspot)). However we think basic architecture not suit for future requirements due to substrate has a more flexible system. Thus we decide using [buidler](https://github.com/nomiclabs/buidler) as Redspot new core architecture for it has an outstanding desigin to allow developer using plugin to add new features.
+We think Redspot needs to be a flexible system for the reason that `pallet-contracts` would be integrated to any substrate chain with some partial modification. Thus we decide using [hardhat](https://github.com/nomiclabs/hardhat) as Redspot core architecture for it has an outstanding design to allow developer using plugins to add new features.
 
-Therefore, from Redspot v0.2 milestones, we migrate Redspot features from old framework to buidler core framework and modify it a lot to suit substrate under MIT licence. From now, Redspot would build more features based on this forked buidler core.
+Therefore, we establish our project on the hardhat core framework and modify it a lot to suit substrate under MIT licence. In future, Redspot would build more features based on this forked hardhat core.
 
 This project is used for contracts developer, if developers want to deploy and test on a blockchain, we advice developer to use "jupiter" blockchain, which is a open testnet for substrate pallet-contracts. Better than that, jupiter also provide a develop type node, that could very easily for testing contracts.
 
@@ -24,10 +24,10 @@ https://patractlabs.github.io/redspot
 
 ## License
 
-This project is forked from [buidler](https://github.com/nomiclabs/buidler), and just base on the `redspot-core` part then modify it under MIT licence. (not include Redspot EVM, "sample-project/" and others which is under NOMIC LABS DEVELOPER LICENSE AGREEMENT and Unlicense, more details refer to [buidler LICENSE](https://github.com/nomiclabs/buidler/blob/development/LICENSE))
+This project is forked from [hardhat](https://github.com/nomiclabs/hardhat), and just base on the `hardhat-core` part then modify it under MIT license. (not include Hardhat Network, "sample-project/" and others which is under NOMIC LABS DEVELOPER LICENSE AGREEMENT and Unlicense, more details refer to [hardhat LICENSE](https://github.com/nomiclabs/hardhat/blob/master/packages/hardhat-core/LICENSE))
 
-And RedSpot would also be distributed under MIT license.
+And Redspot would also be distributed under MIT license.
 
 ## Thanks
 
-[buidler](https://github.com/nomiclabs/buidler) - Redspot is an Ethereum development environment. Compile your contracts and run them on a development network. Get Solidity stack traces & console.log.
+[hardhat](https://github.com/nomiclabs/hardhat) - Hardhat is a development environment to compile, deploy, test, and debug your Ethereum software. Get Solidity stack traces & console.log.
