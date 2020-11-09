@@ -4,15 +4,13 @@
   "author": "Patract Labs",
   "main": "internal/lib/redspot-lib.js",
   "types": "internal/lib/redspot-lib.d.ts",
-  "bin": {
-    "redspot": "internal/cli/cli.js"
-  },
+  "bin": "internal/cli/cli.js",
   "engines": {
     "node": ">=8.2.0"
   },
   "dependencies": {
-    "@polkadot/types": "^2.4.2-18",
     "@polkadot/keyring": "^3.5.1",
+    "@polkadot/types": "^2.4.2-18",
     "@polkadot/util": "^3.5.1",
     "@polkadot/util-crypto": "^3.5.1",
     "@polkadot/x-ws": "^0.3.2",

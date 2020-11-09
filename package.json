@@ -11,6 +11,7 @@
     "packages/*"
   ],
   "devDependencies": {
+    "@patract/dev": "^0.5.5",
     "@redspot/dev-cli": "0.3.3",
     "@types/chai": "^4.2.0",
     "@types/ci-info": "^2.0.0",
@@ -42,11 +43,12 @@
   },
   "scripts": {
     "build": "redspot-dev-build-ts",
-    "lint": "redspot-dev-run-lint"
+    "lint": "polkadot-dev-run-lint",
+    "clean": "polkadot-dev-clean-build"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged"
+      "pre-commit": "pretty-quick --pattern \"**/*.*(js|jsx|ts|tsx)\" --staged"
     }
   }
 }
