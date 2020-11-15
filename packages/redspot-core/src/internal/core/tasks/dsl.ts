@@ -2,22 +2,25 @@ import {
   ActionType,
   TaskArguments,
   TaskDefinition,
-  TasksMap,
-} from "../../../types";
+  TasksMap
+} from '../../../types';
+
 import {
   OverriddenTaskDefinition,
-  SimpleTaskDefinition,
-} from "./task-definitions";
+  SimpleTaskDefinition
+} from './task-definitions';
 
 /**
  * This class defines the DSL used in Redspot config files
  * for creating and overriding tasks.
  */
 export class TasksDSL {
+  public readonly internalTask = this.subtask;
+
   private readonly _tasks: TasksMap = {};
 
   /**
-   * Creates a task, overrdining any previous task with the same name.
+   * Creates a task, overriding any previous task with the same name.
    *
    * @remarks The action must await every async call made within it.
    *
@@ -33,7 +36,7 @@ export class TasksDSL {
   ): TaskDefinition;
 
   /**
-   * Creates a task without description, overrdining any previous task
+   * Creates a task without description, overriding any previous task
    * with the same name.
    *
    * @remarks The action must await every async call made within it.
@@ -57,9 +60,9 @@ export class TasksDSL {
   }
 
   /**
-   * Creates an internal task, overrdining any previous task with the same name.
+   * Creates a subtask, overriding any previous task with the same name.
    *
-   * @remarks The internal tasks won't be displayed in the CLI help messages.
+   * @remarks The subtasks won't be displayed in the CLI help messages.
    * @remarks The action must await every async call made within it.
    *
    * @param name The task's name.
@@ -67,28 +70,28 @@ export class TasksDSL {
    * @param action The task's action.
    * @returns A task definition.
    */
-  public internalTask<ArgsT extends TaskArguments>(
+  public subtask<ArgsT extends TaskArguments>(
     name: string,
     description?: string,
     action?: ActionType<ArgsT>
   ): TaskDefinition;
 
   /**
-   * Creates an internal task without description, overrdining any previous
+   * Creates a subtask without description, overriding any previous
    * task with the same name.
    *
-   * @remarks The internal tasks won't be displayed in the CLI help messages.
+   * @remarks The subtasks won't be displayed in the CLI help messages.
    * @remarks The action must await every async call made within it.
    *
    * @param name The task's name.
    * @param action The task's action.
    * @returns A task definition.
    */
-  public internalTask<ArgsT extends TaskArguments>(
+  public subtask<ArgsT extends TaskArguments>(
     name: string,
     action: ActionType<ArgsT>
   ): TaskDefinition;
-  public internalTask<ArgsT extends TaskArguments>(
+  public subtask<ArgsT extends TaskArguments>(
     name: string,
     descriptionOrAction?: string | ActionType<ArgsT>,
     action?: ActionType<ArgsT>
@@ -109,7 +112,7 @@ export class TasksDSL {
     name: string,
     descriptionOrAction?: string | ActionType<ArgT>,
     action?: ActionType<ArgT>,
-    isInternal?: boolean
+    isSubtask?: boolean
   ) {
     const parentTaskDefinition = this._tasks[name];
 
@@ -118,10 +121,10 @@ export class TasksDSL {
     if (parentTaskDefinition !== undefined) {
       taskDefinition = new OverriddenTaskDefinition(
         parentTaskDefinition,
-        isInternal
+        isSubtask
       );
     } else {
-      taskDefinition = new SimpleTaskDefinition(name, isInternal);
+      taskDefinition = new SimpleTaskDefinition(name, isSubtask);
     }
 
     if (descriptionOrAction instanceof Function) {
@@ -130,7 +133,7 @@ export class TasksDSL {
     }
 
     if (descriptionOrAction !== undefined) {
-      taskDefinition.setDescription(descriptionOrAction as any);
+      taskDefinition.setDescription(descriptionOrAction);
     }
 
     if (action !== undefined) {

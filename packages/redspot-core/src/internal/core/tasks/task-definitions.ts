@@ -1,15 +1,22 @@
 import {
   ActionType,
+  ArgumentType,
+  CLIArgumentType,
   ParamDefinition,
   ParamDefinitionsMap,
   TaskArguments,
-  TaskDefinition,
-} from "../../../types";
-import { RedspotError } from "../errors";
-import { ErrorDescriptor, ERRORS } from "../errors-list";
-import * as types from "../params/argumentTypes";
-import { REDSPOT_PARAM_DEFINITIONS } from "../params/redspot-params";
+  TaskDefinition
+} from '../../../types';
+import { RedspotError } from '../errors';
+import { ErrorDescriptor, ERRORS } from '../errors-list';
+import * as types from '../params/argumentTypes';
+import { HARDHAT_PARAM_DEFINITIONS } from '../params/redspot-params';
 
+function isCLIArgumentType(
+  type: ArgumentType<any>
+): type is CLIArgumentType<any> {
+  return 'parse' in type;
+}
 /**
  * This class creates a task definition, which consists of:
  * * a name, that should be unique and will be used to call the task.
@@ -34,21 +41,21 @@ export class SimpleTaskDefinition implements TaskDefinition {
   /**
    * Creates an empty task definition.
    *
-   * This definition will have no params, and will throw a BDLR205 if executed.
+   * This definition will have no params, and will throw a HH205 if executed.
    *
    * @param name The task's name.
-   * @param isInternal `true` if the task is internal, `false` otherwise.
+   * @param isSubtask `true` if the task is a subtask, `false` otherwise.
    */
   constructor(
     public readonly name: string,
-    public readonly isInternal: boolean = false
+    public readonly isSubtask: boolean = false
   ) {
     this._positionalParamNames = new Set();
     this._hasVariadicParam = false;
     this._hasOptionalPositionalParam = false;
     this.action = () => {
       throw new RedspotError(ERRORS.TASK_DEFINITIONS.ACTION_NOT_SET, {
-        taskName: name,
+        taskName: name
       });
     };
   }
@@ -88,7 +95,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
     name: string,
     description?: string,
     defaultValue?: T,
-    type?: types.ArgumentType<T>,
+    type?: ArgumentType<T>,
     isOptional: boolean = defaultValue !== undefined
   ): this {
     if (type === undefined) {
@@ -102,12 +109,12 @@ export class SimpleTaskDefinition implements TaskDefinition {
         );
       }
 
-      if (typeof defaultValue !== "string") {
+      if (typeof defaultValue !== 'string') {
         throw new RedspotError(
           ERRORS.TASK_DEFINITIONS.DEFAULT_VALUE_WRONG_TYPE,
           {
             paramName: name,
-            taskName: this.name,
+            taskName: this.name
           }
         );
       }
@@ -128,6 +135,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
       isOptional,
       name
     );
+    this._validateCLIArgumentTypesForExternalTasks(type);
 
     this.paramDefinitions[name] = {
       name,
@@ -136,7 +144,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
       description,
       isOptional,
       isFlag: false,
-      isVariadic: false,
+      isVariadic: false
     };
 
     return this;
@@ -156,7 +164,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
     name: string,
     description?: string,
     defaultValue?: T,
-    type?: types.ArgumentType<T>
+    type?: ArgumentType<T>
   ): this {
     return this.addParam(name, description, defaultValue, type, true);
   }
@@ -182,7 +190,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
       description,
       isFlag: true,
       isOptional: true,
-      isVariadic: false,
+      isVariadic: false
     };
 
     return this;
@@ -207,7 +215,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
     name: string,
     description?: string,
     defaultValue?: T,
-    type?: types.ArgumentType<T>,
+    type?: ArgumentType<T>,
     isOptional = defaultValue !== undefined
   ): this {
     if (type === undefined) {
@@ -221,12 +229,12 @@ export class SimpleTaskDefinition implements TaskDefinition {
         );
       }
 
-      if (typeof defaultValue !== "string") {
+      if (typeof defaultValue !== 'string') {
         throw new RedspotError(
           ERRORS.TASK_DEFINITIONS.DEFAULT_VALUE_WRONG_TYPE,
           {
             paramName: name,
-            taskName: this.name,
+            taskName: this.name
           }
         );
       }
@@ -249,6 +257,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
       isOptional,
       name
     );
+    this._validateCLIArgumentTypesForExternalTasks(type);
 
     const definition = {
       name,
@@ -257,7 +266,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
       description,
       isVariadic: false,
       isOptional,
-      isFlag: false,
+      isFlag: false
     };
 
     this._addPositionalParamDefinition(definition);
@@ -279,7 +288,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
     name: string,
     description?: string,
     defaultValue?: T,
-    type?: types.ArgumentType<T>
+    type?: ArgumentType<T>
   ): this {
     return this.addPositionalParam(name, description, defaultValue, type, true);
   }
@@ -298,7 +307,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
     name: string,
     description?: string,
     defaultValue?: T[] | T,
-    type?: types.ArgumentType<T>,
+    type?: ArgumentType<T>,
     isOptional = defaultValue !== undefined
   ): this {
     if (defaultValue !== undefined && !Array.isArray(defaultValue)) {
@@ -321,7 +330,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
           ERRORS.TASK_DEFINITIONS.DEFAULT_VALUE_WRONG_TYPE,
           {
             paramName: name,
-            taskName: this.name,
+            taskName: this.name
           }
         );
       }
@@ -344,6 +353,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
       isOptional,
       name
     );
+    this._validateCLIArgumentTypesForExternalTasks(type);
 
     const definition = {
       name,
@@ -352,7 +362,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
       description,
       isVariadic: true,
       isOptional,
-      isFlag: false,
+      isFlag: false
     };
 
     this._addPositionalParamDefinition(definition);
@@ -375,7 +385,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
     name: string,
     description?: string,
     defaultValue?: T[] | T,
-    type?: types.ArgumentType<T>
+    type?: ArgumentType<T>
   ): this {
     return this.addVariadicPositionalParam(
       name,
@@ -407,13 +417,13 @@ export class SimpleTaskDefinition implements TaskDefinition {
   /**
    * Validates if the given param's name is after a variadic parameter.
    * @param name the param's name.
-   * @throws BDLR200
+   * @throws HH200
    */
   private _validateNotAfterVariadicParam(name: string) {
     if (this._hasVariadicParam) {
       throw new RedspotError(ERRORS.TASK_DEFINITIONS.PARAM_AFTER_VARIADIC, {
         paramName: name,
-        taskName: this.name,
+        taskName: this.name
       });
     }
   }
@@ -422,23 +432,23 @@ export class SimpleTaskDefinition implements TaskDefinition {
    * Validates if the param's name is already used.
    * @param name the param's name.
    *
-   * @throws BDLR201 if `name` is already used as a param.
-   * @throws BDLR202 if `name` is already used as a param by Redspot
+   * @throws HH201 if `name` is already used as a param.
+   * @throws HH202 if `name` is already used as a param by Redspot
    */
   private _validateNameNotUsed(name: string) {
     if (this._hasParamDefined(name)) {
       throw new RedspotError(ERRORS.TASK_DEFINITIONS.PARAM_ALREADY_DEFINED, {
         paramName: name,
-        taskName: this.name,
+        taskName: this.name
       });
     }
 
-    if (Object.keys(REDSPOT_PARAM_DEFINITIONS).includes(name)) {
+    if (Object.keys(HARDHAT_PARAM_DEFINITIONS).includes(name)) {
       throw new RedspotError(
-        ERRORS.TASK_DEFINITIONS.PARAM_CLASHES_WITH_REDSPOT_PARAM,
+        ERRORS.TASK_DEFINITIONS.PARAM_CLASHES_WITH_HARDHAT_PARAM,
         {
           paramName: name,
-          taskName: this.name,
+          taskName: this.name
         }
       );
     }
@@ -461,7 +471,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
    * @param name the param's name to be added.
    * @param isOptional true if the new param is optional, false otherwise.
    *
-   * @throws BDLR203 if validation fail
+   * @throws HH203 if validation fail
    */
   private _validateNoMandatoryParamAfterOptionalOnes(
     name: string,
@@ -472,7 +482,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
         ERRORS.TASK_DEFINITIONS.MANDATORY_PARAM_AFTER_OPTIONAL,
         {
           paramName: name,
-          taskName: this.name,
+          taskName: this.name
         }
       );
     }
@@ -486,7 +496,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
         ERRORS.TASK_DEFINITIONS.INVALID_PARAM_NAME_CASING,
         {
           paramName: name,
-          taskName: this.name,
+          taskName: this.name
         }
       );
     }
@@ -502,14 +512,30 @@ export class SimpleTaskDefinition implements TaskDefinition {
         ERRORS.TASK_DEFINITIONS.DEFAULT_IN_MANDATORY_PARAM,
         {
           paramName: name,
-          taskName: this.name,
+          taskName: this.name
         }
       );
     }
   }
 
   private _isStringArray(values: any): values is string[] {
-    return Array.isArray(values) && values.every((v) => typeof v === "string");
+    return Array.isArray(values) && values.every((v) => typeof v === 'string');
+  }
+
+  private _validateCLIArgumentTypesForExternalTasks(type: ArgumentType<any>) {
+    if (this.isSubtask) {
+      return;
+    }
+
+    if (!isCLIArgumentType(type)) {
+      throw new RedspotError(
+        ERRORS.TASK_DEFINITIONS.CLI_ARGUMENT_TYPE_REQUIRED,
+        {
+          task: this.name,
+          type: type.name
+        }
+      );
+    }
   }
 }
 
@@ -517,7 +543,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
  * Allows you to override a previously defined task.
  *
  * When overriding a task you can:
- *  * flag it as internal
+ *  * flag it as a subtask
  *  * set a new description
  *  * set a new action
  *
@@ -528,9 +554,9 @@ export class OverriddenTaskDefinition implements TaskDefinition {
 
   constructor(
     public readonly parentTaskDefinition: TaskDefinition,
-    public readonly isInternal: boolean = false
+    public readonly isSubtask: boolean = false
   ) {
-    this.isInternal = isInternal;
+    this.isSubtask = isSubtask;
     this.parentTaskDefinition = parentTaskDefinition;
   }
 
@@ -601,7 +627,7 @@ export class OverriddenTaskDefinition implements TaskDefinition {
     name: string,
     description?: string,
     defaultValue?: T,
-    type?: types.ArgumentType<T>,
+    type?: ArgumentType<T>,
     isOptional?: boolean
   ): this {
     if (isOptional === undefined || !isOptional) {
@@ -619,7 +645,7 @@ export class OverriddenTaskDefinition implements TaskDefinition {
     name: string,
     description?: string,
     defaultValue?: T,
-    type?: types.ArgumentType<T>
+    type?: ArgumentType<T>
   ): this {
     this.parentTaskDefinition.addOptionalParam(
       name,
@@ -637,7 +663,7 @@ export class OverriddenTaskDefinition implements TaskDefinition {
     name: string,
     description?: string,
     defaultValue?: T,
-    type?: types.ArgumentType<T>,
+    type?: ArgumentType<T>,
     isOptional?: boolean
   ): this {
     return this._throwNoParamsOverrideError(
@@ -652,7 +678,7 @@ export class OverriddenTaskDefinition implements TaskDefinition {
     name: string,
     description?: string,
     defaultValue?: T,
-    type?: types.ArgumentType<T>
+    type?: ArgumentType<T>
   ): this {
     return this._throwNoParamsOverrideError(
       ERRORS.TASK_DEFINITIONS.OVERRIDE_NO_POSITIONAL_PARAMS
@@ -666,7 +692,7 @@ export class OverriddenTaskDefinition implements TaskDefinition {
     name: string,
     description?: string,
     defaultValue?: T[],
-    type?: types.ArgumentType<T>,
+    type?: ArgumentType<T>,
     isOptional?: boolean
   ): this {
     return this._throwNoParamsOverrideError(
@@ -681,7 +707,7 @@ export class OverriddenTaskDefinition implements TaskDefinition {
     name: string,
     description?: string,
     defaultValue?: T[],
-    type?: types.ArgumentType<T>
+    type?: ArgumentType<T>
   ): this {
     return this._throwNoParamsOverrideError(
       ERRORS.TASK_DEFINITIONS.OVERRIDE_NO_VARIADIC_PARAMS
@@ -690,8 +716,8 @@ export class OverriddenTaskDefinition implements TaskDefinition {
 
   /**
    * Add a flag param to the overridden task.
-   * @throws BDLR201 if param name was already defined in any parent task.
-   * @throws BDLR209 if param name is not in camelCase.
+   * @throws HH201 if param name was already defined in any parent task.
+   * @throws HH209 if param name is not in camelCase.
    */
   public addFlag(name: string, description?: string): this {
     this.parentTaskDefinition.addFlag(name, description);
@@ -700,7 +726,7 @@ export class OverriddenTaskDefinition implements TaskDefinition {
 
   private _throwNoParamsOverrideError(errorDescriptor: ErrorDescriptor): never {
     throw new RedspotError(errorDescriptor, {
-      taskName: this.name,
+      taskName: this.name
     });
   }
 }

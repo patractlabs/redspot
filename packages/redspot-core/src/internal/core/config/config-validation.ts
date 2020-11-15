@@ -1,19 +1,24 @@
-import * as t from "io-ts";
-import { Context, getFunctionName, ValidationError } from "io-ts/lib";
-import { Reporter } from "io-ts/lib/Reporter";
-import { REDSPOT_DEFAULT_NETWORK_NAME } from "../../constants";
-import { RedspotError } from "../errors";
-import { ERRORS } from "../errors-list";
+import * as t from 'io-ts';
+import { Context, getFunctionName, ValidationError } from 'io-ts/lib';
+import { Reporter } from 'io-ts/lib/Reporter';
+
+import {
+  HARDHAT_NETWORK_NAME,
+  HARDHAT_NETWORK_SUPPORTED_HARDFORKS
+} from '../../constants';
+import { fromEntries } from '../../util/lang';
+import { RedspotError } from '../errors';
+import { ERRORS } from '../errors-list';
 
 function stringify(v: any): string {
-  if (typeof v === "function") {
+  if (typeof v === 'function') {
     return getFunctionName(v);
   }
-  if (typeof v === "number" && !isFinite(v)) {
+  if (typeof v === 'number' && !isFinite(v)) {
     if (isNaN(v)) {
-      return "NaN";
+      return 'NaN';
     }
-    return v > 0 ? "Infinity" : "-Infinity";
+    return v > 0 ? 'Infinity' : '-Infinity';
   }
   return JSON.stringify(v);
 }
@@ -22,7 +27,7 @@ function getContextPath(context: Context): string {
   const keysPath = context
     .slice(1)
     .map((c) => c.key)
-    .join(".");
+    .join('.');
 
   return `${context[0].type.name}.${keysPath}`;
 }
@@ -54,7 +59,7 @@ export function success(): string[] {
 }
 
 export const DotPathReporter: Reporter<string[]> = {
-  report: (validation) => validation.fold(failure, success),
+  report: (validation) => validation.fold(failure, success)
 };
 
 function optional<TypeT, OutputT>(
@@ -69,22 +74,100 @@ function optional<TypeT, OutputT>(
   );
 }
 
+const HEX_STRING_REGEX = /^(0x)?([0-9a-f]{2})+$/gi;
+
+const HEX_PREFIX = '0x';
+
+function isHexString(v: unknown): v is string {
+  if (typeof v !== 'string') {
+    return false;
+  }
+
+  return v.trim().match(HEX_STRING_REGEX) !== null;
+}
+
+export const hexString = new t.Type<string>(
+  'hex string',
+  isHexString,
+  (u, c) => (isHexString(u) ? t.success(u) : t.failure(u, c)),
+  t.identity
+);
+
+// TODO: These types have outdated name. They should match the UserConfig types.
 // IMPORTANT: This t.types MUST be kept in sync with the actual types.
-const NetworkConfigAccounts = t.array(t.string);
 
-const HttpHeaders = t.record(t.string, t.string, "httpHeaders");
-
-const WsNetworkConfig = t.type({
-  accounts: optional(NetworkConfigAccounts),
-  gasLimit: optional(t.union([t.string, t.number])),
-  from: optional(t.string),
-  types: optional(t.record(t.string, t.unknown)),
-  endpoint: optional(t.union([t.string, t.array(t.string)])),
-  httpHeaders: optional(HttpHeaders),
-  explorerUrl: optional(t.string),
+const RedspotNetworkAccount = t.type({
+  privateKey: hexString,
+  balance: t.string
 });
 
-const NetworkConfig = WsNetworkConfig;
+const commonHDAccountsFields = {
+  initialIndex: optional(t.number),
+  count: optional(t.number),
+  path: optional(t.string)
+};
+
+const RedspotNetworkHDAccountsConfig = t.type({
+  mnemonic: optional(t.string),
+  accountsBalance: optional(t.string),
+  ...commonHDAccountsFields
+});
+
+const RedspotNetworkForkingConfig = t.type({
+  enabled: optional(t.boolean),
+  url: t.string,
+  blockNumber: optional(t.number)
+});
+
+const commonNetworkConfigFields = {
+  chainId: optional(t.number),
+  from: optional(t.string),
+  gas: optional(t.union([t.literal('auto'), t.number])),
+  gasPrice: optional(t.union([t.literal('auto'), t.number])),
+  gasMultiplier: optional(t.number)
+};
+
+const RedspotNetworkConfig = t.type({
+  ...commonNetworkConfigFields,
+  hardfork: optional(
+    t.keyof(
+      fromEntries(HARDHAT_NETWORK_SUPPORTED_HARDFORKS.map((hf) => [hf, null]))
+    )
+  ),
+  accounts: optional(
+    t.union([t.array(RedspotNetworkAccount), RedspotNetworkHDAccountsConfig])
+  ),
+  blockGasLimit: optional(t.number),
+  throwOnTransactionFailures: optional(t.boolean),
+  throwOnCallFailures: optional(t.boolean),
+  allowUnlimitedContractSize: optional(t.boolean),
+  initialDate: optional(t.string),
+  loggingEnabled: optional(t.boolean),
+  forking: optional(RedspotNetworkForkingConfig)
+});
+
+const HDAccountsConfig = t.type({
+  mnemonic: t.string,
+  ...commonHDAccountsFields
+});
+
+const NetworkConfigAccounts = t.union([
+  t.literal('remote'),
+  t.array(hexString),
+  HDAccountsConfig
+]);
+
+const HttpHeaders = t.record(t.string, t.string, 'httpHeaders');
+
+const HttpNetworkConfig = t.type({
+  ...commonNetworkConfigFields,
+  url: optional(t.string),
+  accounts: optional(NetworkConfigAccounts),
+  httpHeaders: optional(HttpHeaders),
+  timeout: optional(t.number)
+});
+
+const NetworkConfig = t.union([RedspotNetworkConfig, HttpNetworkConfig]);
 
 const Networks = t.record(t.string, NetworkConfig);
 
@@ -93,26 +176,29 @@ const ProjectPaths = t.type({
   cache: optional(t.string),
   artifacts: optional(t.string),
   sources: optional(t.string),
-  tests: optional(t.string),
+  tests: optional(t.string)
 });
 
-const AnalyticsConfig = t.type({
-  enabled: optional(t.boolean),
+const SingleSolcConfig = t.type({
+  version: t.string,
+  settings: optional(t.any)
 });
+
+const MultiSolcConfig = t.type({
+  compilers: t.array(SingleSolcConfig),
+  overrides: optional(t.record(t.string, SingleSolcConfig))
+});
+
+const SolidityConfig = t.union([t.string, SingleSolcConfig, MultiSolcConfig]);
 
 const RedspotConfig = t.type(
   {
     defaultNetwork: optional(t.string),
-    rust: optional(
-      t.type({
-        toolchain: optional(t.string),
-      })
-    ),
     networks: optional(Networks),
     paths: optional(ProjectPaths),
-    analytics: optional(AnalyticsConfig),
+    solidity: optional(SolidityConfig)
   },
-  "RedspotConfig"
+  'RedspotConfig'
 );
 
 /**
@@ -126,43 +212,112 @@ export function validateConfig(config: any) {
     return;
   }
 
-  let errorList = errors.join("\n  * ");
+  let errorList = errors.join('\n  * ');
   errorList = `  * ${errorList}`;
 
   throw new RedspotError(ERRORS.GENERAL.INVALID_CONFIG, { errors: errorList });
 }
 
 export function getValidationErrors(config: any): string[] {
-  const errors: string[] = [];
+  const errors = [];
 
   // These can't be validated with io-ts
-  if (config !== undefined && typeof config.networks === "object") {
-    const redspotNetwork = config.networks[REDSPOT_DEFAULT_NETWORK_NAME];
-
-    for (const [networkName, netConfig] of Object.entries<any>(
-      config.networks
-    )) {
-      if (networkName === REDSPOT_DEFAULT_NETWORK_NAME) {
-        continue;
+  if (config !== undefined && typeof config.networks === 'object') {
+    const redspotNetwork = config.networks[HARDHAT_NETWORK_NAME];
+    if (redspotNetwork !== undefined) {
+      if (redspotNetwork.url !== undefined) {
+        errors.push(
+          `RedspotConfig.networks.${HARDHAT_NETWORK_NAME} can't have an url`
+        );
       }
 
-      if (typeof netConfig.endpoint !== "string") {
+      // Validating the accounts with io-ts leads to very confusing errors messages
+      const configExceptAccounts = { ...redspotNetwork };
+      delete configExceptAccounts.accounts;
+
+      const netConfigResult = RedspotNetworkConfig.decode(configExceptAccounts);
+      if (netConfigResult.isLeft()) {
         errors.push(
           getErrorMessage(
-            `RedspotConfig.networks.${networkName}.url`,
-            netConfig.url,
-            "string"
+            `RedspotConfig.networks.${HARDHAT_NETWORK_NAME}`,
+            redspotNetwork,
+            'RedspotNetworkConfig'
           )
         );
       }
 
-      const netConfigResult = WsNetworkConfig.decode(netConfig);
+      if (Array.isArray(redspotNetwork.accounts)) {
+        for (const account of redspotNetwork.accounts) {
+          if (typeof account.privateKey !== 'string') {
+            errors.push(
+              getErrorMessage(
+                `RedspotConfig.networks.${HARDHAT_NETWORK_NAME}.accounts[].privateKey`,
+                account.privateKey,
+                'string'
+              )
+            );
+          }
+
+          if (typeof account.balance !== 'string') {
+            errors.push(
+              getErrorMessage(
+                `RedspotConfig.networks.${HARDHAT_NETWORK_NAME}.accounts[].balance`,
+                account.balance,
+                'string'
+              )
+            );
+          }
+        }
+      } else if (typeof redspotNetwork.accounts === 'object') {
+        const hdConfigResult = RedspotNetworkHDAccountsConfig.decode(
+          redspotNetwork.accounts
+        );
+        if (hdConfigResult.isLeft()) {
+          errors.push(
+            getErrorMessage(
+              `RedspotConfig.networks.${HARDHAT_NETWORK_NAME}.accounts`,
+              redspotNetwork.accounts,
+              '[{privateKey: string, balance: string}] | RedspotNetworkHDAccountsConfig | undefined'
+            )
+          );
+        }
+      } else if (redspotNetwork.accounts !== undefined) {
+        errors.push(
+          getErrorMessage(
+            `RedspotConfig.networks.${HARDHAT_NETWORK_NAME}.accounts`,
+            redspotNetwork.accounts,
+            '[{privateKey: string, balance: string}] | RedspotNetworkHDAccountsConfig | undefined'
+          )
+        );
+      }
+    }
+
+    for (const [networkName, netConfig] of Object.entries<any>(
+      config.networks
+    )) {
+      if (networkName === HARDHAT_NETWORK_NAME) {
+        continue;
+      }
+
+      if (networkName !== 'localhost' || netConfig.url !== undefined) {
+        if (typeof netConfig.url !== 'string') {
+          errors.push(
+            getErrorMessage(
+              `RedspotConfig.networks.${networkName}.url`,
+              netConfig.url,
+              'string'
+            )
+          );
+        }
+      }
+
+      const netConfigResult = HttpNetworkConfig.decode(netConfig);
       if (netConfigResult.isLeft()) {
         errors.push(
           getErrorMessage(
             `RedspotConfig.networks.${networkName}`,
             netConfig,
-            "WsNetworkConfig"
+            'HttpNetworkConfig'
           )
         );
       }
@@ -170,7 +325,7 @@ export function getValidationErrors(config: any): string[] {
   }
 
   // io-ts can get confused if there are errors that it can't understand.
-  // Especially around RedspotEVM's config. It will treat it as an HTTPConfig,
+  // Especially around Redspot Network's config. It will treat it as an HTTPConfig,
   // and may give a loot of errors.
   if (errors.length > 0) {
     return errors;

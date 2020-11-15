@@ -1,61 +1,324 @@
-import deepmerge from "deepmerge";
-import * as fs from "fs";
-import path from "path";
+import * as fs from 'fs';
+import cloneDeep from 'lodash/cloneDeep';
+import path from 'path';
+
 import {
   RedspotConfig,
-  ConfigExtender,
-  ProjectPaths,
-  ResolvedRedspotConfig,
-} from "../../../types";
-import { fromEntries } from "../../util/lang";
-import { RedspotError } from "../errors";
-import { ERRORS } from "../errors-list";
+  RedspotNetworkAccountsConfig,
+  RedspotNetworkConfig,
+  RedspotNetworkForkingConfig,
+  RedspotNetworkUserConfig,
+  RedspotUserConfig,
+  HDAccountsUserConfig,
+  HttpNetworkAccountsConfig,
+  HttpNetworkAccountsUserConfig,
+  HttpNetworkConfig,
+  HttpNetworkUserConfig,
+  MultiSolcUserConfig,
+  NetworksConfig,
+  NetworksUserConfig,
+  NetworkUserConfig,
+  ProjectPathsConfig,
+  ProjectPathsUserConfig,
+  SolcConfig,
+  SolcUserConfig,
+  SolidityConfig,
+  SolidityUserConfig
+} from '../../../types';
+import { HARDHAT_NETWORK_NAME } from '../../constants';
+import { fromEntries } from '../../util/lang';
+import { assertRedspotInvariant } from '../errors';
 
-function mergeUserAndDefaultConfigs(
-  defaultConfig: RedspotConfig,
-  userConfig: RedspotConfig
-): Partial<ResolvedRedspotConfig> {
-  return deepmerge(defaultConfig, userConfig, {
-    arrayMerge: (destination: any[], source: any[]) => source,
-  }) as any;
-}
+import {
+  DEFAULT_SOLC_VERSION,
+  defaultDefaultNetwork,
+  defaultRedspotNetworkHdAccountsConfigParams,
+  defaultRedspotNetworkParams,
+  defaultHdAccountsConfigParams,
+  defaultHttpNetworkParams,
+  defaultLocalhostNetworkParams,
+  defaultMochaOptions,
+  defaultSolcOutputSelection
+} from './default-config';
 
 /**
- * This functions resolves the redspot config by merging the user provided config
- * and the redspot default config.
+ * This functions resolves the redspot config, setting its defaults and
+ * normalizing its types if necessary.
  *
  * @param userConfigPath the user config filepath
- * @param defaultConfig  the redspot's default config object
  * @param userConfig     the user config object
- * @param configExtenders An array of ConfigExtenders
  *
  * @returns the resolved config
  */
 export function resolveConfig(
   userConfigPath: string,
-  defaultConfig: RedspotConfig,
-  userConfig: RedspotConfig,
-  configExtenders: ConfigExtender[]
-): ResolvedRedspotConfig {
-  userConfig = deepFreezeUserConfig(userConfig);
+  userConfig: RedspotUserConfig
+): RedspotConfig {
+  userConfig = cloneDeep(userConfig);
 
-  const config = mergeUserAndDefaultConfigs(defaultConfig, userConfig);
+  return {
+    ...userConfig,
+    defaultNetwork: userConfig.defaultNetwork ?? defaultDefaultNetwork,
+    paths: resolveProjectPaths(userConfigPath, userConfig.paths),
+    networks: resolveNetworksConfig(userConfig.networks),
+    solidity: resolveSolidityConfig(userConfig),
+    mocha: resolveMochaConfig(userConfig)
+  };
+}
 
-  const paths = resolveProjectPaths(userConfigPath, userConfig.paths);
+function resolveNetworksConfig(
+  networksConfig: NetworksUserConfig = {}
+): NetworksConfig {
+  const redspotNetworkConfig = networksConfig[HARDHAT_NETWORK_NAME];
 
-  const resolved = {
-    ...config,
-    paths,
-    networks: config.networks!,
-    defaultNetwork: config.defaultNetwork!,
-    analytics: config.analytics!,
+  const localhostNetworkConfig =
+    (networksConfig.localhost as HttpNetworkUserConfig) ?? undefined;
+
+  const redspot = resolveRedspotNetworkConfig(redspotNetworkConfig);
+  const localhost = resolveHttpNetworkConfig({
+    ...cloneDeep(defaultLocalhostNetworkParams),
+    ...localhostNetworkConfig
+  });
+
+  const otherNetworks: { [name: string]: HttpNetworkConfig } = fromEntries(
+    Object.entries(networksConfig)
+      .filter(
+        ([name, config]) =>
+          name !== 'localhost' &&
+          name !== 'redspot' &&
+          config !== undefined &&
+          isHttpNetworkConfig(config)
+      )
+      .map(([name, config]) => [
+        name,
+        resolveHttpNetworkConfig(config as HttpNetworkUserConfig)
+      ])
+  );
+
+  return {
+    redspot,
+    localhost,
+    ...otherNetworks
+  };
+}
+
+function isHttpNetworkConfig(
+  config: NetworkUserConfig
+): config is HttpNetworkUserConfig {
+  return 'url' in config;
+}
+
+function normalizeHexString(str: string): string {
+  const normalized = str.trim().toLowerCase();
+  if (normalized.startsWith('0x')) {
+    return normalized;
+  }
+
+  return `0x${normalized}`;
+}
+
+function resolveRedspotNetworkConfig(
+  redspotNetworkConfig: RedspotNetworkUserConfig = {}
+): RedspotNetworkConfig {
+  const clonedDefaultRedspotNetworkParams = cloneDeep(
+    defaultRedspotNetworkParams
+  );
+
+  const accounts: RedspotNetworkAccountsConfig =
+    redspotNetworkConfig.accounts === undefined
+      ? defaultRedspotNetworkHdAccountsConfigParams
+      : Array.isArray(redspotNetworkConfig.accounts)
+      ? redspotNetworkConfig.accounts.map(({ privateKey, balance }) => ({
+          privateKey: normalizeHexString(privateKey),
+          balance
+        }))
+      : {
+          ...defaultRedspotNetworkHdAccountsConfigParams,
+          ...redspotNetworkConfig.accounts
+        };
+
+  const forking: RedspotNetworkForkingConfig | undefined =
+    redspotNetworkConfig.forking !== undefined
+      ? {
+          url: redspotNetworkConfig.forking.url,
+          enabled: redspotNetworkConfig.forking.enabled ?? true
+        }
+      : undefined;
+
+  const blockNumber = redspotNetworkConfig?.forking?.blockNumber;
+  if (blockNumber !== undefined && forking !== undefined) {
+    forking.blockNumber = redspotNetworkConfig?.forking?.blockNumber;
+  }
+
+  const config = {
+    ...clonedDefaultRedspotNetworkParams,
+    ...redspotNetworkConfig,
+    accounts,
+    forking
   };
 
-  for (const extender of configExtenders) {
-    extender(resolved, userConfig);
+  // We do it this way because ts gets lost otherwise
+  if (config.forking === undefined) {
+    delete config.forking;
+  }
+
+  return config;
+}
+
+function isHdAccountsConfig(
+  accounts: HttpNetworkAccountsUserConfig
+): accounts is HDAccountsUserConfig {
+  return typeof accounts === 'object' && !Array.isArray(accounts);
+}
+
+function resolveHttpNetworkConfig(
+  networkConfig: HttpNetworkUserConfig
+): HttpNetworkConfig {
+  const accounts: HttpNetworkAccountsConfig =
+    networkConfig.accounts === undefined
+      ? defaultHttpNetworkParams.accounts
+      : isHdAccountsConfig(networkConfig.accounts)
+      ? {
+          ...defaultHdAccountsConfigParams,
+          ...networkConfig.accounts
+        }
+      : Array.isArray(networkConfig.accounts)
+      ? networkConfig.accounts.map(normalizeHexString)
+      : 'remote';
+
+  const url = networkConfig.url;
+
+  assertRedspotInvariant(
+    url !== undefined,
+    'Invalid http network config provided. URL missing.'
+  );
+
+  return {
+    ...cloneDeep(defaultHttpNetworkParams),
+    ...networkConfig,
+    accounts,
+    url
+  };
+}
+
+function resolveSolidityConfig(userConfig: RedspotUserConfig): SolidityConfig {
+  const userSolidityConfig = userConfig.solidity ?? DEFAULT_SOLC_VERSION;
+
+  const multiSolcConfig: MultiSolcUserConfig = normalizeSolidityConfig(
+    userSolidityConfig
+  );
+
+  const overrides = multiSolcConfig.overrides ?? {};
+
+  return {
+    compilers: multiSolcConfig.compilers.map(resolveCompiler),
+    overrides: fromEntries(
+      Object.entries(overrides).map(([name, config]) => [
+        name,
+        resolveCompiler(config)
+      ])
+    )
+  };
+}
+
+function normalizeSolidityConfig(
+  solidityConfig: SolidityUserConfig
+): MultiSolcUserConfig {
+  if (typeof solidityConfig === 'string') {
+    return {
+      compilers: [
+        {
+          version: solidityConfig
+        }
+      ]
+    };
+  }
+
+  if ('version' in solidityConfig) {
+    return { compilers: [solidityConfig] };
+  }
+
+  return solidityConfig;
+}
+
+function resolveCompiler(compiler: SolcUserConfig): SolcConfig {
+  const resolved: SolcConfig = {
+    version: compiler.version,
+    settings: compiler.settings ?? {}
+  };
+
+  resolved.settings.optimizer = {
+    enabled: false,
+    runs: 200,
+    ...resolved.settings.optimizer
+  };
+
+  if (resolved.settings.outputSelection === undefined) {
+    resolved.settings.outputSelection = {};
+  }
+
+  for (const [file, contractSelection] of Object.entries(
+    defaultSolcOutputSelection
+  )) {
+    if (resolved.settings.outputSelection[file] === undefined) {
+      resolved.settings.outputSelection[file] = {};
+    }
+
+    for (const [contract, outputs] of Object.entries(contractSelection)) {
+      if (resolved.settings.outputSelection[file][contract] === undefined) {
+        resolved.settings.outputSelection[file][contract] = [];
+      }
+
+      for (const output of outputs) {
+        if (
+          !resolved.settings.outputSelection[file][contract].includes(output)
+        ) {
+          resolved.settings.outputSelection[file][contract].push(output);
+        }
+      }
+    }
   }
 
   return resolved;
+}
+
+function resolveMochaConfig(userConfig: RedspotUserConfig): Mocha.MochaOptions {
+  return {
+    ...cloneDeep(defaultMochaOptions),
+    ...userConfig.mocha
+  };
+}
+
+/**
+ * This function resolves the ProjectPathsConfig object from the user-provided config
+ * and its path. The logic of this is not obvious and should well be document.
+ * The good thing is that most users will never use this.
+ *
+ * Explanation:
+ *    - paths.configFile is not overridable
+ *    - If a path is absolute it is used "as is".
+ *    - If the root path is relative, it's resolved from paths.configFile's dir.
+ *    - If any other path is relative, it's resolved from paths.root.
+ *    - Plugin-defined paths are not resolved, but encouraged to follow the same pattern.
+ */
+export function resolveProjectPaths(
+  userConfigPath: string,
+  userPaths: ProjectPathsUserConfig = {}
+): ProjectPathsConfig {
+  const configFile = fs.realpathSync(userConfigPath);
+  const configDir = path.dirname(configFile);
+
+  const root = resolvePathFrom(configDir, '', userPaths.root);
+
+  return {
+    ...userPaths,
+    root,
+    configFile,
+    sources: resolvePathFrom(root, 'contracts', userPaths.sources),
+    cache: resolvePathFrom(root, 'cache', userPaths.cache),
+    artifacts: resolvePathFrom(root, 'artifacts', userPaths.artifacts),
+    tests: resolvePathFrom(root, 'test', userPaths.tests)
+  };
 }
 
 function resolvePathFrom(
@@ -68,72 +331,4 @@ function resolvePathFrom(
   }
 
   return path.join(from, relativeOrAbsolutePath);
-}
-
-/**
- * This function resolves the ProjectPaths object from the user-provided config
- * and its path. The logic of this is not obvious and should well be document.
- * The good thing is that most users will never use this.
- *
- * Explanation:
- *    - paths.configFile is not overridable
- *    - If a path is absolute it is used "as is".
- *    - If the root path is relative, it's resolved from paths.configFile's dir.
- *    - If any other path is relative, it's resolved from paths.root.
- */
-export function resolveProjectPaths(
-  userConfigPath: string,
-  userPaths: any = {}
-): ProjectPaths {
-  const configFile = fs.realpathSync(userConfigPath);
-  const configDir = path.dirname(configFile);
-
-  const root = resolvePathFrom(configDir, "", userPaths.root);
-
-  const otherPathsEntries = Object.entries<string>(userPaths).map<
-    [string, string]
-  >(([name, value]) => [name, resolvePathFrom(root, value)]);
-
-  const otherPaths = fromEntries(otherPathsEntries);
-
-  return {
-    ...otherPaths,
-    root,
-    configFile,
-    sources: resolvePathFrom(root, "contracts", userPaths.sources),
-    cache: resolvePathFrom(root, "cache", userPaths.cache),
-    artifacts: resolvePathFrom(root, "artifacts", userPaths.artifacts),
-    tests: resolvePathFrom(root, "tests", userPaths.tests),
-  };
-}
-
-function deepFreezeUserConfig(
-  config: any,
-  propertyPath: Array<string | number | symbol> = []
-) {
-  if (typeof config !== "object" || config === null) {
-    return config;
-  }
-
-  return new Proxy(config, {
-    get(target: any, property: string | number | symbol, receiver: any): any {
-      return deepFreezeUserConfig(Reflect.get(target, property, receiver), [
-        ...propertyPath,
-        property,
-      ]);
-    },
-
-    set(
-      target: any,
-      property: string | number | symbol,
-      value: any,
-      receiver: any
-    ): boolean {
-      throw new RedspotError(ERRORS.GENERAL.USER_CONFIG_MODIFIED, {
-        path: [...propertyPath, property]
-          .map((pathPart) => pathPart.toString())
-          .join("."),
-      });
-    },
-  });
 }

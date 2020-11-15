@@ -1,10 +1,11 @@
-import debug from "debug";
-import path from "path";
-import { RedspotArguments } from "../../types";
-import { ExecutionMode, getExecutionMode } from "../core/execution-mode";
-import { getEnvVariablesMap } from "../core/params/env-variables";
+import debug from 'debug';
+import path from 'path';
 
-const log = debug("redspot:core:scripts-runner");
+import { RedspotArguments } from '../../types';
+import { isRunningRedspotCoreTests } from '../core/execution-mode';
+import { getEnvVariablesMap } from '../core/params/env-variables';
+
+const log = debug('redspot:core:scripts-runner');
 
 export async function runScript(
   scriptPath: string,
@@ -12,7 +13,7 @@ export async function runScript(
   extraNodeArgs: string[] = [],
   extraEnvVars: { [name: string]: string } = {}
 ): Promise<number> {
-  const { fork } = await import("child_process");
+  const { fork } = await import('child_process');
 
   return new Promise((resolve, reject) => {
     const processExecArgv = withFixedInspectArg(process.execArgv);
@@ -20,21 +21,23 @@ export async function runScript(
     const nodeArgs = [
       ...processExecArgv,
       ...getTsNodeArgsIfNeeded(scriptPath),
-      ...extraNodeArgs,
+      ...extraNodeArgs
     ];
 
+    const envVars = { ...process.env, ...extraEnvVars };
+
     const childProcess = fork(scriptPath, scriptArgs, {
-      stdio: "inherit" as any, // There's an error in the TS definition of ForkOptions
+      stdio: 'inherit',
       execArgv: nodeArgs,
-      env: { ...process.env, ...extraEnvVars },
+      env: envVars
     });
 
-    childProcess.once("close", (status) => {
+    childProcess.once('close', (status) => {
       log(`Script ${scriptPath} exited with status code ${status}`);
 
       resolve(status);
     });
-    childProcess.once("error", reject);
+    childProcess.once('error', reject);
   });
 }
 
@@ -47,15 +50,17 @@ export async function runScriptWithRedspot(
 ): Promise<number> {
   log(`Creating Redspot subprocess to run ${scriptPath}`);
 
-  const redspotRegisterPath = resolveRedspotRegisterPath();
-
   return runScript(
     scriptPath,
     scriptArgs,
-    [...extraNodeArgs, "--require", redspotRegisterPath],
+    [
+      ...extraNodeArgs,
+      '--require',
+      path.join(__dirname, '..', '..', 'register')
+    ],
     {
       ...getEnvVariablesMap(redspotArguments),
-      ...extraEnvVars,
+      ...extraEnvVars
     }
   );
 }
@@ -77,56 +82,29 @@ export async function runScriptWithRedspot(
  */
 function withFixedInspectArg(argv: string[]) {
   const fixIfInspectArg = (arg: string) => {
-    if (arg.toLowerCase().includes("--inspect-brk=")) {
-      return "--inspect";
+    if (arg.toLowerCase().includes('--inspect-brk=')) {
+      return '--inspect';
     }
     return arg;
   };
   return argv.map(fixIfInspectArg);
 }
 
-/**
- * Ensure redspot/register source file path is resolved to compiled JS file
- * instead of TS source file, so we don't need to run ts-node unnecessarily.
- */
-export function resolveRedspotRegisterPath() {
-  const executionMode = getExecutionMode();
-  const isCompiledInstallation = [
-    ExecutionMode.EXECUTION_MODE_LOCAL_INSTALLATION,
-    ExecutionMode.EXECUTION_MODE_GLOBAL_INSTALLATION,
-    ExecutionMode.EXECUTION_MODE_LINKED,
-  ].includes(executionMode);
-
-  const redspotCoreBaseDir = path.join(__dirname, "..", "..");
-
-  const redspotCoreCompiledDir = isCompiledInstallation
-    ? redspotCoreBaseDir
-    : path.join(redspotCoreBaseDir, "..");
-
-  const redspotCoreRegisterCompiledPath = path.join(
-    redspotCoreCompiledDir,
-    "register"
-  );
-
-  return redspotCoreRegisterCompiledPath;
-}
-
-function getTsNodeArgsIfNeeded(scriptPath: string) {
-  if (getExecutionMode() !== ExecutionMode.EXECUTION_MODE_TS_NODE_TESTS) {
+function getTsNodeArgsIfNeeded(scriptPath: string): string[] {
+  if (process.execArgv.includes('ts-node/register')) {
     return [];
   }
 
-  if (!/\.tsx?$/i.test(scriptPath)) {
-    return [];
+  // if we are running the tests we only want to transpile, or these tests
+  // take forever
+  if (isRunningRedspotCoreTests()) {
+    return ['--require', 'ts-node/register/transpile-only'];
   }
 
-  const extraNodeArgs: string[] = [];
-
-  if (!process.execArgv.includes("ts-node/register")) {
-    extraNodeArgs.push("--require");
-    extraNodeArgs.push("ts-node/register");
-    extraNodeArgs.push("TS_NODE_TRANSPILE_ONLY=true");
+  // If the script we are going to run is .ts we need ts-node
+  if (/\.tsx?$/i.test(scriptPath)) {
+    return ['--require', 'ts-node/register'];
   }
 
-  return extraNodeArgs;
+  return [];
 }

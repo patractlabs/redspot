@@ -1,15 +1,18 @@
 import {
   RedspotError,
   RedspotPluginError,
-  RedspotCorePluginError,
-} from "../core/errors";
-import { isLocalDev } from "../core/execution-mode";
-import { isRunningOnCiServer } from "../util/ci-detection";
-import { getRedspotVersion } from "../util/packageInfo";
-import { getSubprocessTransport } from "./transport";
+  NomicLabsRedspotPluginError
+} from '../core/errors';
+import { isLocalDev } from '../core/execution-mode';
+import { ProviderError } from '../../../../providers/errors';
+import { isRunningOnCiServer } from '../util/ci-detection';
+import { hasConsentedTelemetry } from '../util/global-dir';
+import { getRedspotVersion } from '../util/packageInfo';
+
+import { getSubprocessTransport } from './transport';
 
 export const SENTRY_DSN =
-  "https://38ba58bb85fa409e9bb7f50d2c419bc2@o385026.ingest.sentry.io/5224869";
+  'https://38ba58bb85fa409e9bb7f50d2c419bc2@o385026.ingest.sentry.io/5224869';
 
 /**
  * This class acts as a global singleton for reporting errors through Sentry.
@@ -28,13 +31,13 @@ export class Reporter {
 
     instance.init();
 
-    const Sentry = require("@sentry/node");
-    Sentry.setExtra("verbose", instance.verbose);
-    Sentry.setExtra("configPath", instance.configPath);
-    Sentry.setExtra("nodeVersion", process.version);
+    const Sentry = require('@sentry/node');
+    Sentry.setExtra('verbose', instance.verbose);
+    Sentry.setExtra('configPath', instance.configPath);
+    Sentry.setExtra('nodeVersion', process.version);
 
     const redspotVersion = getRedspotVersion();
-    Sentry.setExtra("redspotVersion", redspotVersion);
+    Sentry.setExtra('redspotVersion', redspotVersion);
 
     Sentry.captureException(error);
 
@@ -82,7 +85,7 @@ export class Reporter {
       return true;
     }
 
-    const Sentry = await import("@sentry/node");
+    const Sentry = await import('@sentry/node');
     return Sentry.close(timeout);
   }
 
@@ -95,11 +98,20 @@ export class Reporter {
     }
 
     if (RedspotPluginError.isRedspotPluginError(error)) {
-      if (RedspotCorePluginError.isRedspotCorePluginError(error)) {
+      if (NomicLabsRedspotPluginError.isNomicLabsRedspotPluginError(error)) {
         return error.shouldBeReported;
       }
 
       // don't log errors from third-party plugins
+      return false;
+    }
+
+    // We don't report network related errors
+    if (error instanceof ProviderError) {
+      return false;
+    }
+
+    if (!Reporter._hasTelemetryConsent()) {
       return false;
     }
 
@@ -116,6 +128,12 @@ export class Reporter {
     return this._instance;
   }
 
+  private static _hasTelemetryConsent(): boolean {
+    const telemetryConsent = hasConsentedTelemetry();
+
+    return telemetryConsent === true;
+  }
+
   public enabled: boolean;
   public initialized = false;
   public verbose = false;
@@ -127,8 +145,8 @@ export class Reporter {
       this.enabled = false;
     }
 
-    // set REDSPOT_ENABLE_SENTRY=true to enable sentry during development (for local testing)
-    if (isLocalDev() && process.env.REDSPOT_ENABLE_SENTRY === undefined) {
+    // set HARDHAT_ENABLE_SENTRY=true to enable sentry during development (for local testing)
+    if (isLocalDev() && process.env.HARDHAT_ENABLE_SENTRY === undefined) {
       this.enabled = false;
     }
   }
@@ -138,16 +156,16 @@ export class Reporter {
       return;
     }
 
-    const Sentry = require("@sentry/node");
+    const Sentry = require('@sentry/node');
 
     const linkedErrorsIntegration = new Sentry.Integrations.LinkedErrors({
-      key: "parent",
+      key: 'parent'
     });
 
     Sentry.init({
       dsn: SENTRY_DSN,
       transport: getSubprocessTransport(),
-      integrations: () => [linkedErrorsIntegration],
+      integrations: () => [linkedErrorsIntegration]
     });
 
     this.initialized = true;

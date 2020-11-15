@@ -1,47 +1,17 @@
-import * as fs from "fs";
-import fsExtra from "fs-extra";
-import { RedspotError } from "../errors";
-import { ERRORS } from "../errors-list";
+import * as fs from 'fs';
+import fsExtra from 'fs-extra';
 
-/**
- * Provides an interface for every valid task argument type.
- */
-export interface ArgumentType<T> {
-  /**
-   * Type's name.
-   */
-  name: string;
-
-  /**
-   * Parses strValue. This function MUST throw BDLR301 if it
-   * can parse the given value.
-   *
-   * @param argName argument's name - used for context in case of error.
-   * @param strValue argument's string value to be parsed.
-   *
-   * @throws BDLR301 if an invalid value is given.
-   * @returns the parsed value.
-   */
-  parse(argName: string, strValue: string): T;
-
-  /**
-   * Check if argument value is of type <T>. Optional method.
-   *
-   * @param argName {string} argument's name - used for context in case of error.
-   * @param argumentValue - value to be validated
-   *
-   * @throws BDLR301 if value is not of type <t>
-   */
-  validate?(argName: string, argumentValue: any): void;
-}
+import { ArgumentType, CLIArgumentType } from '../../../types';
+import { RedspotError } from '../errors';
+import { ERRORS } from '../errors-list';
 
 /**
  * String type.
  *
  * Accepts any kind of string.
  */
-export const string: ArgumentType<string> = {
-  name: "string",
+export const string: CLIArgumentType<string> = {
+  name: 'string',
   parse: (argName, strValue) => strValue,
   /**
    * Check if argument value is of type "string"
@@ -49,41 +19,41 @@ export const string: ArgumentType<string> = {
    * @param argName {string} argument's name - used for context in case of error.
    * @param value {any} argument's value to validate.
    *
-   * @throws BDLR301 if value is not of type "string"
+   * @throws HH301 if value is not of type "string"
    */
   validate: (argName: string, value: any): void => {
-    const isString = typeof value === "string";
+    const isString = typeof value === 'string';
 
     if (!isString) {
       throw new RedspotError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
         value,
         name: argName,
-        type: string.name,
+        type: string.name
       });
     }
-  },
+  }
 };
 
 /**
  * Boolean type.
  *
  * Accepts only 'true' or 'false' (case-insensitive).
- * @throws BDLR301
+ * @throws HH301
  */
-export const boolean: ArgumentType<boolean> = {
-  name: "boolean",
+export const boolean: CLIArgumentType<boolean> = {
+  name: 'boolean',
   parse: (argName, strValue) => {
-    if (strValue.toLowerCase() === "true") {
+    if (strValue.toLowerCase() === 'true') {
       return true;
     }
-    if (strValue.toLowerCase() === "false") {
+    if (strValue.toLowerCase() === 'false') {
       return false;
     }
 
     throw new RedspotError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
       value: strValue,
       name: argName,
-      type: "boolean",
+      type: 'boolean'
     });
   },
   /**
@@ -92,28 +62,28 @@ export const boolean: ArgumentType<boolean> = {
    * @param argName {string} argument's name - used for context in case of error.
    * @param value {any} argument's value to validate.
    *
-   * @throws BDLR301 if value is not of type "boolean"
+   * @throws HH301 if value is not of type "boolean"
    */
   validate: (argName: string, value: any): void => {
-    const isBoolean = typeof value === "boolean";
+    const isBoolean = typeof value === 'boolean';
 
     if (!isBoolean) {
       throw new RedspotError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
         value,
         name: argName,
-        type: boolean.name,
+        type: boolean.name
       });
     }
-  },
+  }
 };
 
 /**
  * Int type.
  * Accepts either a decimal string integer or hexadecimal string integer.
- * @throws BDLR301
+ * @throws HH301
  */
-export const int: ArgumentType<number> = {
-  name: "int",
+export const int: CLIArgumentType<number> = {
+  name: 'int',
   parse: (argName, strValue) => {
     const decimalPattern = /^\d+(?:[eE]\d+)?$/;
     const hexPattern = /^0[xX][\dABCDEabcde]+$/;
@@ -125,7 +95,7 @@ export const int: ArgumentType<number> = {
       throw new RedspotError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
         value: strValue,
         name: argName,
-        type: int.name,
+        type: int.name
       });
     }
 
@@ -137,7 +107,7 @@ export const int: ArgumentType<number> = {
    * @param argName {string} argument's name - used for context in case of error.
    * @param value {any} argument's value to validate.
    *
-   * @throws BDLR301 if value is not of type "int"
+   * @throws HH301 if value is not of type "int"
    */
   validate: (argName: string, value: any): void => {
     const isInt = Number.isInteger(value);
@@ -145,19 +115,19 @@ export const int: ArgumentType<number> = {
       throw new RedspotError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
         value,
         name: argName,
-        type: int.name,
+        type: int.name
       });
     }
-  },
+  }
 };
 
 /**
  * Float type.
  * Accepts either a decimal string number or hexadecimal string number.
- * @throws BDLR301
+ * @throws HH301
  */
-export const float: ArgumentType<number> = {
-  name: "float",
+export const float: CLIArgumentType<number> = {
+  name: 'float',
   parse: (argName, strValue) => {
     const decimalPattern = /^(?:\d+(?:\.\d*)?|\.\d+)(?:[eE]\d+)?$/;
     const hexPattern = /^0[xX][\dABCDEabcde]+$/;
@@ -169,7 +139,7 @@ export const float: ArgumentType<number> = {
       throw new RedspotError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
         value: strValue,
         name: argName,
-        type: float.name,
+        type: float.name
       });
     }
 
@@ -182,28 +152,28 @@ export const float: ArgumentType<number> = {
    * @param argName {string} argument's name - used for context in case of error.
    * @param value {any} argument's value to validate.
    *
-   * @throws BDLR301 if value is not of type "number"
+   * @throws HH301 if value is not of type "number"
    */
   validate: (argName: string, value: any): void => {
-    const isFloatOrInteger = typeof value === "number" && !isNaN(value);
+    const isFloatOrInteger = typeof value === 'number' && !isNaN(value);
 
     if (!isFloatOrInteger) {
       throw new RedspotError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
         value,
         name: argName,
-        type: float.name,
+        type: float.name
       });
     }
-  },
+  }
 };
 
 /**
  * Input file type.
  * Accepts a path to a readable file..
- * @throws BDLR302
+ * @throws HH302
  */
-export const inputFile: ArgumentType<string> = {
-  name: "inputFile",
+export const inputFile: CLIArgumentType<string> = {
+  name: 'inputFile',
   parse(argName: string, strValue: string): string {
     try {
       fs.accessSync(strValue, fsExtra.constants.R_OK);
@@ -219,7 +189,7 @@ export const inputFile: ArgumentType<string> = {
         ERRORS.ARGUMENTS.INVALID_INPUT_FILE,
         {
           name: argName,
-          value: strValue,
+          value: strValue
         },
         error
       );
@@ -227,6 +197,7 @@ export const inputFile: ArgumentType<string> = {
 
     return strValue;
   },
+
   /**
    * Check if argument value is of type "inputFile"
    * File string validation succeeds if it can be parsed, ie. is a valid accessible file dir
@@ -234,7 +205,7 @@ export const inputFile: ArgumentType<string> = {
    * @param argName {string} argument's name - used for context in case of error.
    * @param value {any} argument's value to validate.
    *
-   * @throws BDLR301 if value is not of type "inputFile"
+   * @throws HH301 if value is not of type "inputFile"
    */
   validate: (argName: string, value: any): void => {
     try {
@@ -246,16 +217,16 @@ export const inputFile: ArgumentType<string> = {
         {
           value,
           name: argName,
-          type: inputFile.name,
+          type: inputFile.name
         },
         error
       );
     }
-  },
+  }
 };
 
-export const json: ArgumentType<any> = {
-  name: "json",
+export const json: CLIArgumentType<any> = {
+  name: 'json',
   parse(argName: string, strValue: string): any {
     try {
       return JSON.parse(strValue);
@@ -264,12 +235,13 @@ export const json: ArgumentType<any> = {
         ERRORS.ARGUMENTS.INVALID_JSON_ARGUMENT,
         {
           param: argName,
-          error: error.message,
+          error: error.message
         },
         error
       );
     }
   },
+
   /**
    * Check if argument value is of type "json". We consider everything except
    * undefined to be json.
@@ -277,15 +249,20 @@ export const json: ArgumentType<any> = {
    * @param argName {string} argument's name - used for context in case of error.
    * @param value {any} argument's value to validate.
    *
-   * @throws BDLR301 if value is not of type "json"
+   * @throws HH301 if value is not of type "json"
    */
   validate: (argName: string, value: any): void => {
     if (value === undefined) {
       throw new RedspotError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
         value,
         name: argName,
-        type: json.name,
+        type: json.name
       });
     }
-  },
+  }
+};
+
+export const any: ArgumentType<any> = {
+  name: 'any',
+  validate(argName: string, argumentValue: any) {}
 };

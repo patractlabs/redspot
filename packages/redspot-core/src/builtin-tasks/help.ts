@@ -1,32 +1,31 @@
-import { HelpPrinter } from "../internal/cli/HelpPrinter";
-import { REDSPOT_EXECUTABLE_NAME, REDSPOT_NAME } from "../internal/constants";
-import { task } from "../internal/core/config/config-env";
-import { REDSPOT_PARAM_DEFINITIONS } from "../internal/core/params/redspot-params";
-import { getPackageJson } from "../internal/util/packageInfo";
-import { TASK_HELP } from "./task-names";
+import { HelpPrinter } from '../internal/cli/HelpPrinter';
+import { HARDHAT_EXECUTABLE_NAME, HARDHAT_NAME } from '../internal/constants';
+import { task } from '../internal/core/config/config-env';
+import { HARDHAT_PARAM_DEFINITIONS } from '../internal/core/params/redspot-params';
+import { getPackageJson } from '../internal/util/packageInfo';
 
-export default function () {
-  task(TASK_HELP, "Prints this message")
-    .addOptionalPositionalParam(
-      "task",
-      "An optional task to print more info about"
-    )
-    .setAction(async ({ task: taskName }: { task?: string }, { tasks }) => {
-      const packageJson = await getPackageJson();
+import { TASK_HELP } from './task-names';
 
-      const helpPrinter = new HelpPrinter(
-        REDSPOT_NAME,
-        REDSPOT_EXECUTABLE_NAME,
-        packageJson.version,
-        REDSPOT_PARAM_DEFINITIONS,
-        tasks
-      );
+task(TASK_HELP, 'Prints this message')
+  .addOptionalPositionalParam(
+    'task',
+    'An optional task to print more info about'
+  )
+  .setAction(async ({ task: taskName }: { task?: string }, { tasks }) => {
+    const packageJson = await getPackageJson();
 
-      if (taskName !== undefined) {
-        helpPrinter.printTaskHelp(taskName);
-        return;
-      }
+    const helpPrinter = new HelpPrinter(
+      HARDHAT_NAME,
+      HARDHAT_EXECUTABLE_NAME,
+      packageJson.version,
+      HARDHAT_PARAM_DEFINITIONS,
+      tasks
+    );
 
-      helpPrinter.printGlobalHelp();
-    });
-}
+    if (taskName !== undefined) {
+      helpPrinter.printTaskHelp(taskName);
+      return;
+    }
+
+    helpPrinter.printGlobalHelp();
+  });

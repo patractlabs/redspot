@@ -1,33 +1,42 @@
-import debug from "debug";
+import debug from 'debug';
+
 import {
-  RedspotArguments,
-  RedspotRuntimeEnvironment,
+  Artifacts as IArtifacts,
   EnvironmentExtender,
+  ExperimentalRedspotNetworkMessageTraceHook,
+  RedspotArguments,
+  RedspotConfig,
+  RedspotRuntimeEnvironment,
   Network,
+  NetworkConfig,
   ParamDefinition,
-  ResolvedRedspotConfig,
   RunSuperFunction,
   RunTaskFunction,
   TaskArguments,
   TaskDefinition,
-  TasksMap,
-} from "../../types";
-import { createProvider } from "../provider/";
-import { lazyObject } from "../util/lazy";
-import { RedspotError } from "./errors";
-import { ERRORS } from "./errors-list";
-import { OverriddenTaskDefinition } from "./tasks/task-definitions";
-import logger from "../log";
+  TasksMap
+} from '../../types';
+import { Artifacts } from '../artifacts';
+import { MessageTrace } from '../redspot-network/stack-traces/message-trace';
+import { lazyObject } from '../util/lazy';
 
-const log = debug("redspot:core:rse");
+import { analyzeModuleNotFoundError } from './config/config-loading';
+import { RedspotError } from './errors';
+import { ERRORS } from './errors-list';
+import { createProvider } from '../../../../providers/construction';
+import { OverriddenTaskDefinition } from './tasks/task-definitions';
+
+const log = debug('redspot:core:hre');
 
 export class Environment implements RedspotRuntimeEnvironment {
   private static readonly _BLACKLISTED_PROPERTIES: string[] = [
-    "injectToGlobal",
-    "_runTaskDefinition",
+    'injectToGlobal',
+    '_runTaskDefinition'
   ];
 
   public network: Network;
+
+  public artifacts: IArtifacts;
 
   private readonly _extenders: EnvironmentExtender[];
 
@@ -44,12 +53,13 @@ export class Environment implements RedspotRuntimeEnvironment {
    * @param extenders A list of extenders.
    */
   constructor(
-    public readonly config: ResolvedRedspotConfig,
+    public readonly config: RedspotConfig,
     public readonly redspotArguments: RedspotArguments,
     public readonly tasks: TasksMap,
-    extenders: EnvironmentExtender[] = []
+    extenders: EnvironmentExtender[] = [],
+    experimentalRedspotNetworkMessageTraceHooks: ExperimentalRedspotNetworkMessageTraceHook[] = []
   ) {
-    log("Creating RedspotRuntimeEnvironment");
+    log('Creating RedspotRuntimeEnvironment');
 
     const networkName =
       redspotArguments.network !== undefined
@@ -58,25 +68,32 @@ export class Environment implements RedspotRuntimeEnvironment {
 
     const networkConfig = config.networks[networkName];
 
-    if (Number(redspotArguments.logLevel)) {
-      logger.level = Number(redspotArguments.logLevel);
-    }
-
     if (networkConfig === undefined) {
       throw new RedspotError(ERRORS.NETWORK.CONFIG_NOT_FOUND, {
-        network: networkName,
+        network: networkName
       });
     }
 
+    this.artifacts = new Artifacts(config.paths.artifacts);
+
     const provider = lazyObject(() => {
       log(`Creating provider for network ${networkName}`);
-      return createProvider(networkName, networkConfig);
+      return createProvider(
+        networkName,
+        networkConfig,
+        this.config.paths,
+        this.artifacts,
+        experimentalRedspotNetworkMessageTraceHooks.map(
+          (hook) => (trace: MessageTrace, isCallMessageTrace: boolean) =>
+            hook(this, trace, isCallMessageTrace)
+        )
+      );
     });
 
     this.network = {
       name: networkName,
       config: config.networks[networkName],
-      provider,
+      provider
     };
 
     this._extenders = extenders;
@@ -90,17 +107,17 @@ export class Environment implements RedspotRuntimeEnvironment {
    * @param name The task's name.
    * @param taskArguments A map of task's arguments.
    *
-   * @throws a BDLR303 if there aren't any defined tasks with the given name.
+   * @throws a HH303 if there aren't any defined tasks with the given name.
    * @returns a promise with the task's execution result.
    */
   public readonly run: RunTaskFunction = async (name, taskArguments = {}) => {
     const taskDefinition = this.tasks[name];
 
-    log("Running task %s", name);
+    log('Running task %s', name);
 
     if (taskDefinition === undefined) {
       throw new RedspotError(ERRORS.ARGUMENTS.UNRECOGNIZED_TASK, {
-        task: name,
+        task: name
       });
     }
 
@@ -109,7 +126,17 @@ export class Environment implements RedspotRuntimeEnvironment {
       taskArguments
     );
 
-    return this._runTaskDefinition(taskDefinition, resolvedTaskArguments);
+    try {
+      return await this._runTaskDefinition(
+        taskDefinition,
+        resolvedTaskArguments
+      );
+    } catch (e) {
+      analyzeModuleNotFoundError(e, this.config.paths.configFile);
+
+      // tslint:disable-next-line only-redspot-error
+      throw e;
+    }
   };
 
   /**
@@ -126,6 +153,8 @@ export class Environment implements RedspotRuntimeEnvironment {
 
     const previousValues: { [name: string]: any } = {};
 
+    globalAsAny.hre = this;
+
     for (const [key, value] of Object.entries(this)) {
       if (blacklist.includes(key)) {
         continue;
@@ -141,6 +170,7 @@ export class Environment implements RedspotRuntimeEnvironment {
           continue;
         }
 
+        globalAsAny.hre = previousValues.hre;
         globalAsAny[key] = previousValues[key];
       }
     };
@@ -168,7 +198,7 @@ export class Environment implements RedspotRuntimeEnvironment {
     } else {
       runSuperFunction = async () => {
         throw new RedspotError(ERRORS.TASK_DEFINITIONS.RUNSUPER_NOT_AVAILABLE, {
-          taskName: taskDefinition.name,
+          taskName: taskDefinition.name
         });
       };
 
@@ -215,7 +245,7 @@ export class Environment implements RedspotRuntimeEnvironment {
     // gather all task param definitions
     const allTaskParamDefinitions = [
       ...nonPositionalParamDefinitions,
-      ...positionalParamDefinitions,
+      ...positionalParamDefinitions
     ];
 
     const initResolvedArguments: {
@@ -277,7 +307,7 @@ export class Environment implements RedspotRuntimeEnvironment {
 
       // undefined & mandatory argument -> error
       throw new RedspotError(ERRORS.ARGUMENTS.MISSING_TASK_ARGUMENT, {
-        param: name,
+        param: name
       });
     }
 
@@ -293,17 +323,13 @@ export class Environment implements RedspotRuntimeEnvironment {
    * @param paramDefinition {ParamDefinition} - the param definition for validation
    * @param argumentValue - the value to be validated
    * @private
-   * @throws BDLR301 if value is not valid for the param type
+   * @throws HH301 if value is not valid for the param type
    */
   private _checkTypeValidation(
     paramDefinition: ParamDefinition<any>,
     argumentValue: any
   ) {
     const { name: paramName, type, isVariadic } = paramDefinition;
-    if (type === undefined || type.validate === undefined) {
-      // no type or no validate() method defined, just skip validation.
-      return;
-    }
 
     // in case of variadic param, argValue is an array and the type validation must pass for all values.
     // otherwise, it's a single value that is to be validated

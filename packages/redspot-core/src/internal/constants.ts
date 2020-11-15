@@ -1,5 +1,19 @@
-export const REDSPOT_NAME = "Redspot";
+export const HARDHAT_NAME = 'Redspot';
 
-export const REDSPOT_EXECUTABLE_NAME = "redspot";
-export const REDSPOT_DEFAULT_NETWORK_NAME = "localhost";
-export const REDSPOT_DEFAULT_TOOLCHAIN = "nightly";
+export const HARDHAT_EXECUTABLE_NAME = 'redspot';
+export const HARDHAT_NETWORK_NAME = 'redspot';
+
+export const SOLIDITY_FILES_CACHE_FILENAME = 'solidity-files-cache.json';
+
+export const HARDHAT_NETWORK_SUPPORTED_HARDFORKS = [
+  'byzantium',
+  'constantinople',
+  'petersburg',
+  'istanbul',
+  'muirGlacier'
+];
+
+export const ARTIFACT_FORMAT_VERSION = 'hh-sol-artifact-1';
+export const DEBUG_FILE_FORMAT_VERSION = 'hh-sol-dbg-1';
+export const BUILD_INFO_FORMAT_VERSION = 'hh-sol-build-info-1';
+export const BUILD_INFO_DIR_NAME = 'build-info';

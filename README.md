@@ -24,10 +24,10 @@ https://patractlabs.github.io/redspot
 
 ## License
 
-This project is forked from [hardhat](https://github.com/nomiclabs/hardhat), and just base on the `hardhat-core` part then modify it under MIT license. (not include Hardhat Network, "sample-project/" and others which is under NOMIC LABS DEVELOPER LICENSE AGREEMENT and Unlicense, more details refer to [hardhat LICENSE](https://github.com/nomiclabs/hardhat/blob/master/packages/hardhat-core/LICENSE))
+This project is forked from [hardhat](https://github.com/nomiclabs/hardhat), and just base on the `hardhat-core` part then modify it under MIT license. (not include Redspot Network, "sample-project/" and others which is under NOMIC LABS DEVELOPER LICENSE AGREEMENT and Unlicense, more details refer to [hardhat LICENSE](https://github.com/nomiclabs/hardhat/blob/master/packages/hardhat-core/LICENSE))
 
 And Redspot would also be distributed under MIT license.
 
 ## Thanks
 
-[hardhat](https://github.com/nomiclabs/hardhat) - Hardhat is a development environment to compile, deploy, test, and debug your Ethereum software. Get Solidity stack traces & console.log.
+[hardhat](https://github.com/nomiclabs/hardhat) - Redspot is a development environment to compile, deploy, test, and debug your Ethereum software. Get Solidity stack traces & console.log.

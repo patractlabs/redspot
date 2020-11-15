@@ -1,32 +1,66 @@
-import { RedspotConfig, NetworkConfig } from "../../../types";
-import {
-  REDSPOT_DEFAULT_NETWORK_NAME,
-  REDSPOT_DEFAULT_TOOLCHAIN,
-} from "../../constants";
+import { HARDHAT_NETWORK_NAME } from '../../constants';
 
-const DEFAULT_REDSPOT_NETWORK_CONFIG: NetworkConfig = {
-  gasLimit: "400000000000",
-  accounts: ["//Alice", "//Bob", "//Charlie", "//Dave", "//Eve", "//Ferdie"],
-  endpoint: ["ws://127.0.0.1:9944"],
-  types: {},
+export const DEFAULT_SOLC_VERSION = '0.7.3';
+export const HARDHAT_NETWORK_DEFAULT_GAS_PRICE = 8e9;
+const HARDHAT_NETWORK_MNEMONIC =
+  'test test test test test test test test test test test junk';
+export const DEFAULT_HARDHAT_NETWORK_BALANCE = '10000000000000000000000';
+
+export const defaultDefaultNetwork = HARDHAT_NETWORK_NAME;
+
+export const defaultLocalhostNetworkParams = {
+  url: 'http://127.0.0.1:8545'
+};
+
+export const defaultHdAccountsConfigParams = {
+  initialIndex: 0,
+  count: 20,
+  path: "m/44'/60'/0'/0"
+};
+
+export const defaultRedspotNetworkHdAccountsConfigParams = {
+  ...defaultHdAccountsConfigParams,
+  mnemonic: HARDHAT_NETWORK_MNEMONIC,
+  accountsBalance: DEFAULT_HARDHAT_NETWORK_BALANCE
+};
+
+export const DEFAULT_GAS_MULTIPLIER = 1;
+
+export const defaultRedspotNetworkParams = {
+  hardfork: 'muirGlacier',
+  blockGasLimit: 9500000,
+  gas: 9500000,
+  gasPrice: HARDHAT_NETWORK_DEFAULT_GAS_PRICE,
+  chainId: 31337,
+  throwOnTransactionFailures: true,
+  throwOnCallFailures: true,
+  allowUnlimitedContractSize: false,
+  accounts: defaultRedspotNetworkHdAccountsConfigParams,
+  loggingEnabled: false,
+  gasMultiplier: DEFAULT_GAS_MULTIPLIER
+};
+
+export const defaultHttpNetworkParams = {
+  accounts: 'remote' as 'remote',
+  gas: 'auto' as 'auto',
+  gasPrice: 'auto' as 'auto',
+  gasMultiplier: DEFAULT_GAS_MULTIPLIER,
   httpHeaders: {},
-  explorerUrl: "https://polkadot.js.org/apps/#/explorer/query/",
+  timeout: 20000
 };
 
-const defaultConfig: RedspotConfig = {
-  defaultNetwork: REDSPOT_DEFAULT_NETWORK_NAME,
-  networks: {
-    [REDSPOT_DEFAULT_NETWORK_NAME]: DEFAULT_REDSPOT_NETWORK_CONFIG,
-  },
-  rust: {
-    toolchain: REDSPOT_DEFAULT_TOOLCHAIN,
-  },
-  analytics: {
-    enabled: true,
-  },
-  mocha: {
-    timeout: 60000,
-  },
+export const defaultMochaOptions: Mocha.MochaOptions = {
+  timeout: 20000
 };
 
-export default defaultConfig;
+export const defaultSolcOutputSelection = {
+  '*': {
+    '*': [
+      'abi',
+      'evm.bytecode',
+      'evm.deployedBytecode',
+      'evm.methodIdentifiers'
+    ],
+    '': ['ast']
+  }
+};

@@ -1,24 +1,25 @@
-import findUp from "find-up";
-import { RedspotError } from "./errors";
-import { ERRORS } from "./errors-list";
-import { isTypescriptSupported } from "./typescript-support";
+import findUp from 'find-up';
+import fsExtra from 'fs-extra';
+import path from 'path';
 
-const JS_CONFIG_FILENAME = "redspot.config.js";
-const TS_CONFIG_FILENAME = "redspot.config.ts";
+import { getPackageRoot } from '../util/packageInfo';
+
+import { RedspotError } from './errors';
+import { ERRORS } from './errors-list';
+const JS_CONFIG_FILENAME = 'redspot.config.js';
+const TS_CONFIG_FILENAME = 'redspot.config.ts';
 
 export function isCwdInsideProject() {
   return (
-    findUp.sync(JS_CONFIG_FILENAME) !== null ||
-    (isTypescriptSupported() && findUp.sync(TS_CONFIG_FILENAME) !== null)
+    findUp.sync(TS_CONFIG_FILENAME) !== null ||
+    findUp.sync(JS_CONFIG_FILENAME) !== null
   );
 }
 
 export function getUserConfigPath() {
-  if (isTypescriptSupported()) {
-    const tsConfigPath = findUp.sync(TS_CONFIG_FILENAME);
-    if (tsConfigPath !== null) {
-      return tsConfigPath;
-    }
+  const tsConfigPath = findUp.sync(TS_CONFIG_FILENAME);
+  if (tsConfigPath !== null) {
+    return tsConfigPath;
   }
 
   const pathToConfigFile = findUp.sync(JS_CONFIG_FILENAME);
@@ -27,4 +28,11 @@ export function getUserConfigPath() {
   }
 
   return pathToConfigFile;
+}
+
+export async function getRecommendedGitIgnore() {
+  const packageRoot = getPackageRoot();
+  const gitIgnorePath = path.join(packageRoot, 'recommended-gitignore.txt');
+
+  return fsExtra.readFile(gitIgnorePath, 'utf-8');
 }

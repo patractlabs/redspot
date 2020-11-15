@@ -1,6 +1,9 @@
-import util from "util";
-import { RedspotError } from "../core/errors";
-import { ERRORS } from "../core/errors-list";
+import util from 'util';
+
+import { RedspotError } from '../core/errors';
+import { ERRORS } from '../core/errors-list';
+
+const inspect = Symbol.for('nodejs.util.inspect.custom');
 
 /**
  * This module provides function to implement proxy-based object, functions, and
@@ -33,21 +36,21 @@ export function lazyObject<T extends object>(objectCreator: () => T): T {
   return createLazyProxy(
     objectCreator,
     (getRealTarget) => ({
-      [util.inspect.custom]() {
+      [inspect]() {
         const realTarget = getRealTarget();
         return util.inspect(realTarget);
-      },
+      }
     }),
     (object) => {
       if (object instanceof Function) {
         throw new RedspotError(ERRORS.GENERAL.UNSUPPORTED_OPERATION, {
-          operation: "Creating lazy functions or classes with lazyObject",
+          operation: 'Creating lazy functions or classes with lazyObject'
         });
       }
 
-      if (typeof object !== "object" || object === null) {
+      if (typeof object !== 'object' || object === null) {
         throw new RedspotError(ERRORS.GENERAL.UNSUPPORTED_OPERATION, {
-          operation: "Using lazyObject with anything other than objects",
+          operation: 'Using lazyObject with anything other than objects'
         });
       }
     }
@@ -61,7 +64,7 @@ export function lazyFunction<T extends Function>(functionCreator: () => T): T {
     (getRealTarget) => {
       function dummyTarget() {}
 
-      (dummyTarget as any)[util.inspect.custom] = function () {
+      (dummyTarget as any)[inspect] = function () {
         const realTarget = getRealTarget();
         return util.inspect(realTarget);
       };
@@ -72,7 +75,7 @@ export function lazyFunction<T extends Function>(functionCreator: () => T): T {
       if (!(object instanceof Function)) {
         throw new RedspotError(ERRORS.GENERAL.UNSUPPORTED_OPERATION, {
           operation:
-            "Using lazyFunction with anything other than functions or classes",
+            'Using lazyFunction with anything other than functions or classes'
         });
       }
     }
@@ -109,7 +112,7 @@ function createLazyProxy<ActualT extends GuardT, GuardT extends object>(
       if (Object.getPrototypeOf(target) === null) {
         throw new RedspotError(ERRORS.GENERAL.UNSUPPORTED_OPERATION, {
           operation:
-            "Using lazyFunction or lazyObject to construct objects/functions with prototype null",
+            'Using lazyFunction or lazyObject to construct objects/functions with prototype null'
         });
       }
 
@@ -158,7 +161,7 @@ function createLazyProxy<ActualT extends GuardT, GuardT extends object>(
       const stack = new Error().stack;
       if (
         stack !== undefined &&
-        stack.includes("givenProvider.js") &&
+        stack.includes('givenProvider.js') &&
         realTarget === undefined
       ) {
         return undefined;
@@ -209,7 +212,7 @@ function createLazyProxy<ActualT extends GuardT, GuardT extends object>(
     setPrototypeOf(target, prototype) {
       Reflect.setPrototypeOf(dummyTarget, prototype);
       return Reflect.setPrototypeOf(getRealTarget(), prototype);
-    },
+    }
   };
 
   if (dummyTarget instanceof Function) {

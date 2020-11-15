@@ -1,5 +1,5 @@
-import { RedspotError } from "../core/errors";
-import { ERRORS } from "../core/errors-list";
+import { RedspotError } from '../core/errors';
+import { ERRORS } from '../core/errors-list';
 
 export interface JsonRpcRequest {
   jsonrpc: string;
@@ -8,7 +8,7 @@ export interface JsonRpcRequest {
   id: number | string;
 }
 
-interface SuccessfulJsonRpcResponse {
+export interface SuccessfulJsonRpcResponse {
   jsonrpc: string;
   id: number | string;
   result: any;
@@ -26,35 +26,40 @@ export interface FailedJsonRpcResponse {
 
 export type JsonRpcResponse = SuccessfulJsonRpcResponse | FailedJsonRpcResponse;
 
-export function parseJsonResponse(text: string): JsonRpcResponse {
+export function parseJsonResponse(
+  text: string
+): JsonRpcResponse | JsonRpcResponse[] {
   try {
     const json = JSON.parse(text);
 
-    if (!isValidJsonResponse(json)) {
-      // We are sending the proper error inside the catch part of the statement.
-      // We just need to raise anything here.
-      // tslint:disable-next-line only-redspot-error
-      throw new Error();
+    const responses = Array.isArray(json) ? json : [json];
+    for (const response of responses) {
+      if (!isValidJsonResponse(response)) {
+        // We are sending the proper error inside the catch part of the statement.
+        // We just need to raise anything here.
+        // tslint:disable-next-line only-redspot-error
+        throw new Error();
+      }
     }
 
     return json;
   } catch (error) {
     throw new RedspotError(ERRORS.NETWORK.INVALID_JSON_RESPONSE, {
-      response: text,
+      response: text
     });
   }
 }
 
 export function isValidJsonRequest(payload: any): boolean {
-  if (payload.jsonrpc !== "2.0") {
+  if (payload.jsonrpc !== '2.0') {
     return false;
   }
 
-  if (typeof payload.id !== "number" && typeof payload.id !== "string") {
+  if (typeof payload.id !== 'number' && typeof payload.id !== 'string') {
     return false;
   }
 
-  if (typeof payload.method !== "string") {
+  if (typeof payload.method !== 'string') {
     return false;
   }
 
@@ -66,13 +71,13 @@ export function isValidJsonRequest(payload: any): boolean {
 }
 
 export function isValidJsonResponse(payload: any) {
-  if (payload.jsonrpc !== "2.0") {
+  if (payload.jsonrpc !== '2.0') {
     return false;
   }
 
   if (
-    typeof payload.id !== "number" &&
-    typeof payload.id !== "string" &&
+    typeof payload.id !== 'number' &&
+    typeof payload.id !== 'string' &&
     payload.id !== null
   ) {
     return false;
@@ -87,11 +92,11 @@ export function isValidJsonResponse(payload: any) {
   }
 
   if (payload.error !== undefined) {
-    if (typeof payload.error.code !== "number") {
+    if (typeof payload.error.code !== 'number') {
       return false;
     }
 
-    if (typeof payload.error.message !== "string") {
+    if (typeof payload.error.message !== 'string') {
       return false;
     }
   }
@@ -102,5 +107,5 @@ export function isValidJsonResponse(payload: any) {
 export function isSuccessfulJsonResponse(
   payload: JsonRpcResponse
 ): payload is SuccessfulJsonRpcResponse {
-  return "response" in payload;
+  return 'response' in payload;
 }
