@@ -3554,10 +3554,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:^8.10.44":
-  version: 8.10.66
-  resolution: "@types/node@npm:8.10.66"
-  checksum: d4f105d5c90fb4ed7437e136b47c0972c937aa680fb0b6665ff8fc1307796a42355417146e045873e83af3f7c0ac70b009442bad3a33c9023001be38ff47c7af
+"@types/node@npm:^10.17.24":
+  version: 10.17.44
+  resolution: "@types/node@npm:10.17.44"
+  checksum: 050261ca4345ff75a9f7942a8c9820b2ea7f30fec827ec8c2c6d7999b4a57244fd0412d969ce74327a30f48e1027fdab5979286815c0e21960a85765f00b22b8
   languageName: node
   linkType: hard
 
@@ -16872,7 +16872,7 @@ fsevents@^1.2.7:
     "@types/fs-extra": ^5.1.0
     "@types/glob": ^7.1.1
     "@types/mocha": ^5.2.6
-    "@types/node": ^8.10.44
+    "@types/node": ^10.17.24
     "@types/node-fetch": ^2.3.7
     "@types/qs": ^6.5.3
     "@types/semver": ^6.0.2
