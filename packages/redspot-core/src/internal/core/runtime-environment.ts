@@ -1,15 +1,13 @@
 import debug from 'debug';
-
+import { createProvider } from '../../provider';
 import {
   Artifacts as IArtifacts,
   EnvironmentExtender,
-  ExperimentalRedspotNetworkMessageTraceHook,
+  Network,
+  ParamDefinition,
   RedspotArguments,
   RedspotConfig,
   RedspotRuntimeEnvironment,
-  Network,
-  NetworkConfig,
-  ParamDefinition,
   RunSuperFunction,
   RunTaskFunction,
   TaskArguments,
@@ -17,13 +15,10 @@ import {
   TasksMap
 } from '../../types';
 import { Artifacts } from '../artifacts';
-import { MessageTrace } from '../redspot-network/stack-traces/message-trace';
 import { lazyObject } from '../util/lazy';
-
 import { analyzeModuleNotFoundError } from './config/config-loading';
 import { RedspotError } from './errors';
 import { ERRORS } from './errors-list';
-import { createProvider } from '../../../../providers/construction';
 import { OverriddenTaskDefinition } from './tasks/task-definitions';
 
 const log = debug('redspot:core:hre');
@@ -56,8 +51,7 @@ export class Environment implements RedspotRuntimeEnvironment {
     public readonly config: RedspotConfig,
     public readonly redspotArguments: RedspotArguments,
     public readonly tasks: TasksMap,
-    extenders: EnvironmentExtender[] = [],
-    experimentalRedspotNetworkMessageTraceHooks: ExperimentalRedspotNetworkMessageTraceHook[] = []
+    extenders: EnvironmentExtender[] = []
   ) {
     log('Creating RedspotRuntimeEnvironment');
 
@@ -78,16 +72,7 @@ export class Environment implements RedspotRuntimeEnvironment {
 
     const provider = lazyObject(() => {
       log(`Creating provider for network ${networkName}`);
-      return createProvider(
-        networkName,
-        networkConfig,
-        this.config.paths,
-        this.artifacts,
-        experimentalRedspotNetworkMessageTraceHooks.map(
-          (hook) => (trace: MessageTrace, isCallMessageTrace: boolean) =>
-            hook(this, trace, isCallMessageTrace)
-        )
-      );
+      return createProvider(networkName, networkConfig);
     });
 
     this.network = {
@@ -107,7 +92,7 @@ export class Environment implements RedspotRuntimeEnvironment {
    * @param name The task's name.
    * @param taskArguments A map of task's arguments.
    *
-   * @throws a HH303 if there aren't any defined tasks with the given name.
+   * @throws a RS303 if there aren't any defined tasks with the given name.
    * @returns a promise with the task's execution result.
    */
   public readonly run: RunTaskFunction = async (name, taskArguments = {}) => {
@@ -323,7 +308,7 @@ export class Environment implements RedspotRuntimeEnvironment {
    * @param paramDefinition {ParamDefinition} - the param definition for validation
    * @param argumentValue - the value to be validated
    * @private
-   * @throws HH301 if value is not valid for the param type
+   * @throws RS301 if value is not valid for the param type
    */
   private _checkTypeValidation(
     paramDefinition: ParamDefinition<any>,

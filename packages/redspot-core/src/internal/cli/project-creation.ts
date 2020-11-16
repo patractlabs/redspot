@@ -3,7 +3,7 @@ import fsExtra from 'fs-extra';
 import os from 'os';
 import path from 'path';
 
-import { HARDHAT_NAME } from '../constants';
+import { REDSPOT_NAME } from '../constants';
 import { DEFAULT_SOLC_VERSION } from '../core/config/default-config';
 import { getRecommendedGitIgnore } from '../core/project-structure';
 import {
@@ -16,14 +16,14 @@ import { getPackageJson, getPackageRoot } from '../util/packageInfo';
 import { emoji } from './emoji';
 
 const CREATE_SAMPLE_PROJECT_ACTION = 'Create a sample project';
-const CREATE_EMPTY_HARDHAT_CONFIG_ACTION = 'Create an empty redspot.config.js';
+const CREATE_EMPTY_REDSPOT_CONFIG_ACTION = 'Create an empty redspot.config.js';
 const QUIT_ACTION = 'Quit';
 
 interface Dependencies {
   [name: string]: string;
 }
 
-const HARDHAT_PACKAGE_NAME = 'redspot';
+const REDSPOT_PACKAGE_NAME = 'redspot';
 
 const SAMPLE_PROJECT_DEPENDENCIES: Dependencies = {
   '@nomiclabs/redspot-waffle': '^2.0.0',
@@ -81,7 +81,7 @@ async function printWelcomeMessage() {
 
   console.log(
     chalk.cyan(
-      `${emoji('👷 ')}Welcome to ${HARDHAT_NAME} v${packageJson.version}${emoji(
+      `${emoji('👷 ')}Welcome to ${REDSPOT_NAME} v${packageJson.version}${emoji(
         ' 👷‍'
       )}\n`
     )
@@ -166,9 +166,9 @@ async function getAction() {
             value: CREATE_SAMPLE_PROJECT_ACTION
           },
           {
-            name: CREATE_EMPTY_HARDHAT_CONFIG_ACTION,
-            message: CREATE_EMPTY_HARDHAT_CONFIG_ACTION,
-            value: CREATE_EMPTY_HARDHAT_CONFIG_ACTION
+            name: CREATE_EMPTY_REDSPOT_CONFIG_ACTION,
+            message: CREATE_EMPTY_REDSPOT_CONFIG_ACTION,
+            value: CREATE_EMPTY_REDSPOT_CONFIG_ACTION
           },
           { name: QUIT_ACTION, message: QUIT_ACTION, value: QUIT_ACTION }
         ]
@@ -212,17 +212,17 @@ export async function createProject() {
     await createPackageJson();
   }
 
-  if (action === CREATE_EMPTY_HARDHAT_CONFIG_ACTION) {
+  if (action === CREATE_EMPTY_REDSPOT_CONFIG_ACTION) {
     await writeEmptyRedspotConfig();
     console.log(
       `${emoji('✨ ')}${chalk.cyan(`Config file created`)}${emoji(' ✨')}`
     );
 
-    if (!isInstalled(HARDHAT_PACKAGE_NAME)) {
+    if (!isInstalled(REDSPOT_PACKAGE_NAME)) {
       console.log('');
       console.log(`You need to install redspot locally to use it. Please run:`);
       const cmd = await getRecommendedDependenciesInstallationCommand({
-        [HARDHAT_PACKAGE_NAME]: `^${(await getPackageJson()).version}`
+        [REDSPOT_PACKAGE_NAME]: `^${(await getPackageJson()).version}`
       });
 
       console.log('');
@@ -290,7 +290,7 @@ export async function createProject() {
 
     const installedRecommendedDeps = recommendedDeps.filter(isInstalled);
     const installedExceptRedspot = installedRecommendedDeps.filter(
-      (name) => name !== HARDHAT_PACKAGE_NAME
+      (name) => name !== REDSPOT_PACKAGE_NAME
     );
 
     if (installedRecommendedDeps.length === recommendedDeps.length) {
@@ -506,7 +506,7 @@ async function getRecommendedDependenciesInstallationCommand(
 
 async function getDependencies() {
   return {
-    [HARDHAT_PACKAGE_NAME]: `^${(await getPackageJson()).version}`,
+    [REDSPOT_PACKAGE_NAME]: `^${(await getPackageJson()).version}`,
     ...SAMPLE_PROJECT_DEPENDENCIES
   };
 }

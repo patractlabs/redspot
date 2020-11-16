@@ -1,9 +1,4 @@
-import {
-  RedspotNetworkAccountConfig,
-  RedspotNetworkAccountsConfig
-} from '../../../types';
 import { deriveKeyFromMnemonicAndPath } from '../../util/keys-derivation';
-import { DEFAULT_HARDHAT_NETWORK_BALANCE } from '../config/default-config';
 import { RedspotError } from '../errors';
 import { ERRORS } from '../errors-list';
 
@@ -42,24 +37,4 @@ export function derivePrivateKeys(
   }
 
   return privateKeys;
-}
-
-export function normalizeRedspotNetworkAccountsConfig(
-  accountsConfig: RedspotNetworkAccountsConfig
-): RedspotNetworkAccountConfig[] {
-  if (Array.isArray(accountsConfig)) {
-    return accountsConfig;
-  }
-
-  const { bufferToHex } = require('ethereumjs-util');
-
-  return derivePrivateKeys(
-    accountsConfig.mnemonic,
-    accountsConfig.path,
-    accountsConfig.initialIndex,
-    accountsConfig.count
-  ).map((pk) => ({
-    privateKey: bufferToHex(pk),
-    balance: accountsConfig.accountsBalance ?? DEFAULT_HARDHAT_NETWORK_BALANCE
-  }));
 }

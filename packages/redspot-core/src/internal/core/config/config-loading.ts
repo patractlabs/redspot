@@ -1,18 +1,14 @@
-import chalk from 'chalk';
 import fsExtra from 'fs-extra';
 import path from 'path';
 import type StackTraceParserT from 'stacktrace-parser';
-
 import { RedspotArguments, RedspotConfig } from '../../../types';
 import { RedspotContext } from '../../context';
 import { findClosestPackageJson } from '../../util/packageInfo';
 import { RedspotError } from '../errors';
 import { ERRORS } from '../errors-list';
 import { getUserConfigPath } from '../project-structure';
-
 import { resolveConfig } from './config-resolution';
 import { validateConfig } from './config-validation';
-import { DEFAULT_SOLC_VERSION } from './default-config';
 
 function importCsjOrEsModule(filePath: string): any {
   const imported = require(filePath);
@@ -32,8 +28,7 @@ export function resolveConfigPath(configPath: string | undefined) {
 }
 
 export function loadConfigAndTasks(
-  redspotArguments?: Partial<RedspotArguments>,
-  { showWarningIfNoSolidityConfig } = { showWarningIfNoSolidityConfig: true }
+  redspotArguments?: Partial<RedspotArguments>
 ): RedspotConfig {
   let configPath =
     redspotArguments !== undefined ? redspotArguments.config : undefined;
@@ -69,17 +64,6 @@ export function loadConfigAndTasks(
   }
 
   validateConfig(userConfig);
-
-  if (userConfig.solidity === undefined && showWarningIfNoSolidityConfig) {
-    console.warn(
-      chalk.yellow(
-        `Solidity compiler is not configured. Version ${DEFAULT_SOLC_VERSION} will be used by default. Add a 'solidity' entry to your configuration to supress this warning.
-
-Learn more about compiler configuration at https://redspot.org/config"
-`
-      )
-    );
-  }
 
   // To avoid bad practices we remove the previously exported stuff
   Object.keys(configEnv).forEach((key) => (globalAsAny[key] = undefined));

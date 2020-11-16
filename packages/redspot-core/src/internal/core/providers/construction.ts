@@ -12,7 +12,7 @@ import type {
   ProjectPathsConfig,
   ProjectPathsUserConfig
 } from '../../../types';
-import { HARDHAT_NETWORK_NAME } from '../../constants';
+import { REDSPOT_NETWORK_NAME } from '../../constants';
 import { ForkConfig } from '../../redspot-network/provider/node-types';
 import { getForkCacheDirPath } from '../../redspot-network/provider/utils/disk-cache';
 import { parseDateString } from '../../util/date';
@@ -52,7 +52,7 @@ export function createProvider(
 ): EthereumProvider {
   let eip1193Provider: EIP1193Provider;
 
-  if (networkName === HARDHAT_NETWORK_NAME) {
+  if (networkName === REDSPOT_NETWORK_NAME) {
     const redspotNetConfig = networkConfig as RedspotNetworkConfig;
 
     const RedspotNetworkProvider = importProvider<
@@ -78,7 +78,7 @@ export function createProvider(
 
     eip1193Provider = new RedspotNetworkProvider(
       redspotNetConfig.hardfork!,
-      HARDHAT_NETWORK_NAME,
+      REDSPOT_NETWORK_NAME,
       redspotNetConfig.chainId!,
       redspotNetConfig.chainId!,
       redspotNetConfig.blockGasLimit!,

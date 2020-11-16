@@ -12,104 +12,36 @@
 // fields), we don't use `extends` as that can interfere with plugin authors
 // trying to augment the config types.
 
-// Networks config
+import type BN from 'bn.js';
+import type { KeyringPair } from '@polkadot/keyring/types';
 
+// Networks config
+export type RedspotNetworkAccountsUserConfig = (string | KeyringPair)[];
+
+export interface RedspotNetworkUserConfig {
+  endpoint?: string | string[];
+  httpHeaders?: Record<string, string>;
+  accounts?: RedspotNetworkAccountsUserConfig;
+  gasLimit?: string | number | BN;
+  types?: Record<string, any>;
+  from?: string;
+  explorerUrl?: string;
+}
 export interface NetworksUserConfig {
-  redspot?: RedspotNetworkUserConfig;
+  europa?: RedspotNetworkUserConfig;
   [networkName: string]: NetworkUserConfig | undefined;
 }
 
-export type NetworkUserConfig =
-  | RedspotNetworkUserConfig
-  | HttpNetworkUserConfig;
+export type NetworkUserConfig = RedspotNetworkUserConfig;
 
-export interface RedspotNetworkUserConfig {
-  chainId?: number;
-  from?: string;
-  gas?: 'auto' | number;
-  gasPrice?: 'auto' | number;
-  gasMultiplier?: number;
-  hardfork?: string;
-  accounts?: RedspotNetworkAccountsUserConfig;
-  blockGasLimit?: number;
-  throwOnTransactionFailures?: boolean;
-  throwOnCallFailures?: boolean;
-  allowUnlimitedContractSize?: boolean;
-  initialDate?: string;
-  loggingEnabled?: boolean;
-  forking?: RedspotNetworkForkingUserConfig;
-}
+export interface RedspotNetworkConfig extends RedspotNetworkUserConfig {}
 
-export type RedspotNetworkAccountsUserConfig =
-  | RedspotNetworkAccountUserConfig[]
-  | RedspotNetworkHDAccountsUserConfig;
-
-export interface RedspotNetworkAccountUserConfig {
-  privateKey: string;
-  balance: string;
-}
-
-export interface RedspotNetworkHDAccountsUserConfig {
-  mnemonic?: string;
-  initialIndex?: number;
-  count?: number;
-  path?: string;
-  accountsBalance?: string;
-}
-
-export interface HDAccountsUserConfig {
-  mnemonic: string;
-  initialIndex?: number;
-  count?: number;
-  path?: string;
-}
-
-export interface RedspotNetworkForkingUserConfig {
-  enabled?: boolean;
-  url: string;
-  blockNumber?: number;
-}
-
-export type HttpNetworkAccountsUserConfig =
-  | 'remote'
-  | string[]
-  | HDAccountsUserConfig;
-
-export interface HttpNetworkUserConfig {
-  chainId?: number;
-  from?: string;
-  gas?: 'auto' | number;
-  gasPrice?: 'auto' | number;
-  gasMultiplier?: number;
-  url?: string;
-  timeout?: number;
-  httpHeaders?: { [name: string]: string };
-  accounts?: HttpNetworkAccountsUserConfig;
-}
+export type NetworkConfig = RedspotNetworkConfig;
 
 export interface NetworksConfig {
-  redspot: RedspotNetworkConfig;
-  localhost: HttpNetworkConfig;
-  [networkName: string]: NetworkConfig;
-}
-
-export type NetworkConfig = RedspotNetworkConfig | HttpNetworkConfig;
-
-export interface RedspotNetworkConfig {
-  chainId: number;
-  from?: string;
-  gas: 'auto' | number;
-  gasPrice: 'auto' | number;
-  gasMultiplier: number;
-  hardfork: string;
-  accounts: RedspotNetworkAccountsConfig;
-  blockGasLimit: number;
-  throwOnTransactionFailures: boolean;
-  throwOnCallFailures: boolean;
-  allowUnlimitedContractSize: boolean;
-  initialDate?: string;
-  loggingEnabled: boolean;
-  forking?: RedspotNetworkForkingConfig;
+  europa: RedspotNetworkConfig;
+  localhost: RedspotNetworkConfig;
+  [networkName: string]: RedspotNetworkConfig;
 }
 
 export type RedspotNetworkAccountsConfig =
@@ -226,3 +158,41 @@ export type ConfigExtender = (
   config: RedspotConfig,
   userConfig: Readonly<RedspotUserConfig>
 ) => void;
+
+export type HttpNetworkAccountsUserConfig =
+  | 'remote'
+  | string[]
+  | HDAccountsUserConfig;
+
+export interface HttpNetworkUserConfig {
+  chainId?: number;
+  from?: string;
+  gas?: 'auto' | number;
+  gasPrice?: 'auto' | number;
+  gasMultiplier?: number;
+  url?: string;
+  timeout?: number;
+  httpHeaders?: { [name: string]: string };
+  accounts?: HttpNetworkAccountsUserConfig;
+}
+
+export interface HDAccountsUserConfig {
+  mnemonic: string;
+  initialIndex?: number;
+  count?: number;
+  path?: string;
+}
+
+export interface RedspotNetworkForkingUserConfig {
+  enabled?: boolean;
+  url: string;
+  blockNumber?: number;
+}
+
+export interface RedspotNetworkHDAccountsUserConfig {
+  mnemonic?: string;
+  initialIndex?: number;
+  count?: number;
+  path?: string;
+  accountsBalance?: string;
+}

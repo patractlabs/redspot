@@ -1,25 +1,25 @@
 import { fork } from 'child_process';
 
 import { getEnvRedspotArguments } from '../core/params/env-variables';
-import { HARDHAT_PARAM_DEFINITIONS } from '../core/params/redspot-params';
+import { REDSPOT_PARAM_DEFINITIONS } from '../core/params/redspot-params';
 
 import { ArgumentsParser } from './ArgumentsParser';
 
 const nodeArgs = [...process.execArgv];
 
-if (process.env.DISABLE_HARDHAT_NETWORK_OPTIMIZATIONS === undefined) {
+if (process.env.DISABLE_REDSPOT_NETWORK_OPTIMIZATIONS === undefined) {
   nodeArgs.push('--max-semi-space-size=100');
 }
 
 const envVariableArguments = getEnvRedspotArguments(
-  HARDHAT_PARAM_DEFINITIONS,
+  REDSPOT_PARAM_DEFINITIONS,
   process.env
 );
 
 const argumentsParser = new ArgumentsParser();
 
 const { redspotArguments } = argumentsParser.parseRedspotArguments(
-  HARDHAT_PARAM_DEFINITIONS,
+  REDSPOT_PARAM_DEFINITIONS,
   envVariableArguments,
   process.argv.slice(2)
 );

@@ -1,44 +1,35 @@
 import * as fs from 'fs';
 import cloneDeep from 'lodash/cloneDeep';
 import path from 'path';
-
 import {
-  RedspotConfig,
-  RedspotNetworkAccountsConfig,
-  RedspotNetworkConfig,
-  RedspotNetworkForkingConfig,
-  RedspotNetworkUserConfig,
-  RedspotUserConfig,
   HDAccountsUserConfig,
   HttpNetworkAccountsConfig,
   HttpNetworkAccountsUserConfig,
   HttpNetworkConfig,
   HttpNetworkUserConfig,
-  MultiSolcUserConfig,
   NetworksConfig,
   NetworksUserConfig,
   NetworkUserConfig,
   ProjectPathsConfig,
   ProjectPathsUserConfig,
-  SolcConfig,
-  SolcUserConfig,
-  SolidityConfig,
-  SolidityUserConfig
+  RedspotConfig,
+  RedspotNetworkAccountsConfig,
+  RedspotNetworkConfig,
+  RedspotNetworkForkingConfig,
+  RedspotNetworkUserConfig,
+  RedspotUserConfig
 } from '../../../types';
-import { HARDHAT_NETWORK_NAME } from '../../constants';
+import { REDSPOT_NETWORK_NAME } from '../../constants';
 import { fromEntries } from '../../util/lang';
 import { assertRedspotInvariant } from '../errors';
-
 import {
-  DEFAULT_SOLC_VERSION,
   defaultDefaultNetwork,
-  defaultRedspotNetworkHdAccountsConfigParams,
-  defaultRedspotNetworkParams,
   defaultHdAccountsConfigParams,
   defaultHttpNetworkParams,
   defaultLocalhostNetworkParams,
   defaultMochaOptions,
-  defaultSolcOutputSelection
+  defaultRedspotNetworkHdAccountsConfigParams,
+  defaultRedspotNetworkParams
 } from './default-config';
 
 /**
@@ -61,7 +52,6 @@ export function resolveConfig(
     defaultNetwork: userConfig.defaultNetwork ?? defaultDefaultNetwork,
     paths: resolveProjectPaths(userConfigPath, userConfig.paths),
     networks: resolveNetworksConfig(userConfig.networks),
-    solidity: resolveSolidityConfig(userConfig),
     mocha: resolveMochaConfig(userConfig)
   };
 }
@@ -69,7 +59,7 @@ export function resolveConfig(
 function resolveNetworksConfig(
   networksConfig: NetworksUserConfig = {}
 ): NetworksConfig {
-  const redspotNetworkConfig = networksConfig[HARDHAT_NETWORK_NAME];
+  const redspotNetworkConfig = networksConfig[REDSPOT_NETWORK_NAME];
 
   const localhostNetworkConfig =
     (networksConfig.localhost as HttpNetworkUserConfig) ?? undefined;
@@ -201,87 +191,6 @@ function resolveHttpNetworkConfig(
   };
 }
 
-function resolveSolidityConfig(userConfig: RedspotUserConfig): SolidityConfig {
-  const userSolidityConfig = userConfig.solidity ?? DEFAULT_SOLC_VERSION;
-
-  const multiSolcConfig: MultiSolcUserConfig = normalizeSolidityConfig(
-    userSolidityConfig
-  );
-
-  const overrides = multiSolcConfig.overrides ?? {};
-
-  return {
-    compilers: multiSolcConfig.compilers.map(resolveCompiler),
-    overrides: fromEntries(
-      Object.entries(overrides).map(([name, config]) => [
-        name,
-        resolveCompiler(config)
-      ])
-    )
-  };
-}
-
-function normalizeSolidityConfig(
-  solidityConfig: SolidityUserConfig
-): MultiSolcUserConfig {
-  if (typeof solidityConfig === 'string') {
-    return {
-      compilers: [
-        {
-          version: solidityConfig
-        }
-      ]
-    };
-  }
-
-  if ('version' in solidityConfig) {
-    return { compilers: [solidityConfig] };
-  }
-
-  return solidityConfig;
-}
-
-function resolveCompiler(compiler: SolcUserConfig): SolcConfig {
-  const resolved: SolcConfig = {
-    version: compiler.version,
-    settings: compiler.settings ?? {}
-  };
-
-  resolved.settings.optimizer = {
-    enabled: false,
-    runs: 200,
-    ...resolved.settings.optimizer
-  };
-
-  if (resolved.settings.outputSelection === undefined) {
-    resolved.settings.outputSelection = {};
-  }
-
-  for (const [file, contractSelection] of Object.entries(
-    defaultSolcOutputSelection
-  )) {
-    if (resolved.settings.outputSelection[file] === undefined) {
-      resolved.settings.outputSelection[file] = {};
-    }
-
-    for (const [contract, outputs] of Object.entries(contractSelection)) {
-      if (resolved.settings.outputSelection[file][contract] === undefined) {
-        resolved.settings.outputSelection[file][contract] = [];
-      }
-
-      for (const output of outputs) {
-        if (
-          !resolved.settings.outputSelection[file][contract].includes(output)
-        ) {
-          resolved.settings.outputSelection[file][contract].push(output);
-        }
-      }
-    }
-  }
-
-  return resolved;
-}
-
 function resolveMochaConfig(userConfig: RedspotUserConfig): Mocha.MochaOptions {
   return {
     ...cloneDeep(defaultMochaOptions),
@@ -317,7 +226,7 @@ export function resolveProjectPaths(
     sources: resolvePathFrom(root, 'contracts', userPaths.sources),
     cache: resolvePathFrom(root, 'cache', userPaths.cache),
     artifacts: resolvePathFrom(root, 'artifacts', userPaths.artifacts),
-    tests: resolvePathFrom(root, 'test', userPaths.tests)
+    tests: resolvePathFrom(root, 'tests', userPaths.tests)
   };
 }
 

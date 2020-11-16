@@ -19,7 +19,7 @@ export const string: CLIArgumentType<string> = {
    * @param argName {string} argument's name - used for context in case of error.
    * @param value {any} argument's value to validate.
    *
-   * @throws HH301 if value is not of type "string"
+   * @throws RS301 if value is not of type "string"
    */
   validate: (argName: string, value: any): void => {
     const isString = typeof value === 'string';
@@ -38,7 +38,7 @@ export const string: CLIArgumentType<string> = {
  * Boolean type.
  *
  * Accepts only 'true' or 'false' (case-insensitive).
- * @throws HH301
+ * @throws RS301
  */
 export const boolean: CLIArgumentType<boolean> = {
   name: 'boolean',
@@ -62,7 +62,7 @@ export const boolean: CLIArgumentType<boolean> = {
    * @param argName {string} argument's name - used for context in case of error.
    * @param value {any} argument's value to validate.
    *
-   * @throws HH301 if value is not of type "boolean"
+   * @throws RS301 if value is not of type "boolean"
    */
   validate: (argName: string, value: any): void => {
     const isBoolean = typeof value === 'boolean';
@@ -80,7 +80,7 @@ export const boolean: CLIArgumentType<boolean> = {
 /**
  * Int type.
  * Accepts either a decimal string integer or hexadecimal string integer.
- * @throws HH301
+ * @throws RS301
  */
 export const int: CLIArgumentType<number> = {
   name: 'int',
@@ -107,7 +107,7 @@ export const int: CLIArgumentType<number> = {
    * @param argName {string} argument's name - used for context in case of error.
    * @param value {any} argument's value to validate.
    *
-   * @throws HH301 if value is not of type "int"
+   * @throws RS301 if value is not of type "int"
    */
   validate: (argName: string, value: any): void => {
     const isInt = Number.isInteger(value);
@@ -124,7 +124,7 @@ export const int: CLIArgumentType<number> = {
 /**
  * Float type.
  * Accepts either a decimal string number or hexadecimal string number.
- * @throws HH301
+ * @throws RS301
  */
 export const float: CLIArgumentType<number> = {
   name: 'float',
@@ -152,7 +152,7 @@ export const float: CLIArgumentType<number> = {
    * @param argName {string} argument's name - used for context in case of error.
    * @param value {any} argument's value to validate.
    *
-   * @throws HH301 if value is not of type "number"
+   * @throws RS301 if value is not of type "number"
    */
   validate: (argName: string, value: any): void => {
     const isFloatOrInteger = typeof value === 'number' && !isNaN(value);
@@ -170,7 +170,7 @@ export const float: CLIArgumentType<number> = {
 /**
  * Input file type.
  * Accepts a path to a readable file..
- * @throws HH302
+ * @throws RS302
  */
 export const inputFile: CLIArgumentType<string> = {
   name: 'inputFile',
@@ -205,7 +205,7 @@ export const inputFile: CLIArgumentType<string> = {
    * @param argName {string} argument's name - used for context in case of error.
    * @param value {any} argument's value to validate.
    *
-   * @throws HH301 if value is not of type "inputFile"
+   * @throws RS301 if value is not of type "inputFile"
    */
   validate: (argName: string, value: any): void => {
     try {
@@ -249,7 +249,7 @@ export const json: CLIArgumentType<any> = {
    * @param argName {string} argument's name - used for context in case of error.
    * @param value {any} argument's value to validate.
    *
-   * @throws HH301 if value is not of type "json"
+   * @throws RS301 if value is not of type "json"
    */
   validate: (argName: string, value: any): void => {
     if (value === undefined) {

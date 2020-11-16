@@ -1,6 +1,6 @@
 import { Artifacts } from './artifacts';
 import { RedspotConfig, NetworkConfig } from './config';
-import { EthereumProvider } from './provider';
+import { RpcProvider } from './provider';
 
 /**
  * This class is used to dynamically validate task's argument types.
@@ -17,7 +17,7 @@ export interface ArgumentType<T> {
    * @param argName {string} argument's name - used for context in case of error.
    * @param argumentValue - value to be validated
    *
-   * @throws HH301 if value is not of type <t>
+   * @throws RS301 if value is not of type <t>
    */
   validate(argName: string, argumentValue: any): void;
 }
@@ -30,7 +30,7 @@ export interface ArgumentType<T> {
  */
 export interface CLIArgumentType<T> extends ArgumentType<T> {
   /**
-   * Parses strValue into T. This function MUST throw HH301 if it
+   * Parses strValue into T. This function MUST throw RS301 if it
    * can parse the given value.
    *
    * @param argName argument's name - used for context in case of error.
@@ -195,7 +195,7 @@ export interface RedspotRuntimeEnvironment {
 export interface Network {
   name: string;
   config: NetworkConfig;
-  provider: EthereumProvider;
+  provider: RpcProvider;
 }
 
 /**

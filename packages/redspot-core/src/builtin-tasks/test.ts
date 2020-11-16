@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import path from 'path';
 
-import { HARDHAT_NETWORK_NAME } from '../internal/constants';
+import { REDSPOT_NETWORK_NAME } from '../internal/constants';
 import { subtask, task } from '../internal/core/config/config-env';
 import { isRunningWithTypescript } from '../internal/core/typescript-support';
 import { getForkCacheDirPath } from '../internal/redspot-network/provider/utils/disk-cache';
@@ -62,7 +62,7 @@ subtask(TASK_TEST_RUN_MOCHA_TESTS)
 
 subtask(TASK_TEST_RUN_SHOW_FORK_RECOMMENDATIONS).setAction(
   async (_, { config, network }) => {
-    if (network.name !== HARDHAT_NETWORK_NAME) {
+    if (network.name !== REDSPOT_NETWORK_NAME) {
       return;
     }
 
@@ -103,7 +103,7 @@ task(TASK_TEST, 'Runs mocha tests')
         testFiles: files
       });
 
-      if (network.name === HARDHAT_NETWORK_NAME) {
+      if (network.name === REDSPOT_NETWORK_NAME) {
         const stackTracesFailures = await network.provider.send(
           'redspot_getStackTraceFailuresCount'
         );

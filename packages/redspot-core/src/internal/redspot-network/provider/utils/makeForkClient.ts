@@ -1,7 +1,7 @@
 import chalk from 'chalk';
 import { BN, toBuffer } from 'ethereumjs-util';
 
-import { HARDHAT_NETWORK_NAME } from '../../../constants';
+import { REDSPOT_NETWORK_NAME } from '../../../constants';
 import { HttpProvider } from '../../../core/providers/http';
 import { JsonRpcClient } from '../../jsonrpc/client';
 import { ForkConfig } from '../node-types';
@@ -23,7 +23,7 @@ export async function makeForkClient(
 ): Promise<{ forkClient: JsonRpcClient; forkBlockNumber: BN }> {
   const provider = new HttpProvider(
     forkConfig.jsonRpcUrl,
-    HARDHAT_NETWORK_NAME,
+    REDSPOT_NETWORK_NAME,
     undefined,
     FORK_HTTP_TIMEOUT
   );

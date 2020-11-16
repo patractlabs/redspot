@@ -3,7 +3,7 @@ import debug from 'debug';
 import { RedspotContext } from './internal/context';
 import { loadConfigAndTasks } from './internal/core/config/config-loading';
 import { getEnvRedspotArguments } from './internal/core/params/env-variables';
-import { HARDHAT_PARAM_DEFINITIONS } from './internal/core/params/redspot-params';
+import { REDSPOT_PARAM_DEFINITIONS } from './internal/core/params/redspot-params';
 import { Environment } from './internal/core/runtime-environment';
 import {
   loadTsNode,
@@ -25,7 +25,7 @@ if (!RedspotContext.isCreated()) {
   }
 
   const redspotArguments = getEnvRedspotArguments(
-    HARDHAT_PARAM_DEFINITIONS,
+    REDSPOT_PARAM_DEFINITIONS,
     process.env
   );
 

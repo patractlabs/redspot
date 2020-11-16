@@ -1,33 +1,33 @@
-import { ApiPromise } from "@polkadot/api";
-import { Abi } from "@polkadot/api-contract";
+import { ApiPromise } from '@polkadot/api';
+import { Abi } from '@polkadot/api-contract';
 import type {
   AbiMessage,
   AbiEvent,
-  ContractCallOutcome,
-} from "@polkadot/api-contract/types";
-import type { SignerOptions, SubmittableExtrinsic } from "@polkadot/api/types";
-import { createTypeUnsafe, Raw } from "@polkadot/types";
-import type { AccountId, ContractExecResult } from "@polkadot/types/interfaces";
+  ContractCallOutcome
+} from '@polkadot/api-contract/types';
+import type { SignerOptions, SubmittableExtrinsic } from '@polkadot/api/types';
+import { createTypeUnsafe, Raw } from '@polkadot/types';
+import type { AccountId, ContractExecResult } from '@polkadot/types/interfaces';
 import type {
   AnyJson,
   CodecArg,
-  ISubmittableResult,
-} from "@polkadot/types/types";
-import { Codec, Registry, TypeDef } from "@polkadot/types/types";
+  ISubmittableResult
+} from '@polkadot/types/types';
+import { Codec, Registry, TypeDef } from '@polkadot/types/types';
 import {
   assert,
   isObject,
   isU8a,
   stringCamelCase,
   stringUpperFirst,
-  u8aToHex,
-} from "@polkadot/util";
-import BN from "bn.js";
-import chalk from "chalk";
-import log from "redspot/internal/log";
-import type { AccountSigner } from "redspot/types";
-import { buildTx, TransactionResponse } from "./buildTx";
-import { SubmittableResult } from "@polkadot/api";
+  u8aToHex
+} from '@polkadot/util';
+import BN from 'bn.js';
+import chalk from 'chalk';
+import log from 'redspot/logger';
+import type { AccountSigner } from 'redspot/types';
+import { buildTx, TransactionResponse } from './buildTx';
+import { SubmittableResult } from '@polkadot/api';
 
 export function formatData(
   registry: Registry,
@@ -48,7 +48,7 @@ export type ContractAbi = AnyJson | Abi;
 export interface PopulatedTransaction extends Partial<SignerOptions> {
   signer: AccountSigner;
   callParams?: CallParams;
-  extrinsic: SubmittableExtrinsic<"promise", ISubmittableResult>;
+  extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
 }
 
 export interface CallOverrides extends SignerOptions {
@@ -80,7 +80,7 @@ async function populateTransaction(
 
   if (
     args.length === fragment.args.length + 1 &&
-    typeof args[args.length - 1] === "object"
+    typeof args[args.length - 1] === 'object'
   ) {
     overrides = { ...(args.pop() as Partial<CallOverrides>) };
   }
@@ -90,12 +90,12 @@ async function populateTransaction(
 
   const callParams: CallParams = {
     dest: overrides.dest || contract.address,
-    value: overrides.value || new BN("0"),
+    value: overrides.value || new BN('0'),
     gasLimit:
       overrides.gasLimit ||
       contract.signer.gasLimit ||
       contract.api.consts.system.maximumBlockWeight.muln(2).divn(10),
-    inputData: data,
+    inputData: data
   };
 
   const signer = overrides.signer || contract.signer;
@@ -115,7 +115,7 @@ async function populateTransaction(
       callParams.value,
       callParams.gasLimit,
       callParams.inputData
-    ),
+    )
   };
 }
 
@@ -136,7 +136,7 @@ function decodeEvents(
   records: SubmittableResult,
   abi: Abi
 ): DecodedEvent[] | undefined {
-  const events = records.filterRecords("contracts", "ContractExecution");
+  const events = records.filterRecords('contracts', 'ContractExecution');
 
   if (!events.length) {
     return undefined;
@@ -171,9 +171,9 @@ function buildCall(
 
     const params = {
       ...callParams,
-      origin,
+      origin
     };
-    log.log("");
+    log.log('');
     if (!isEstimateGas) {
       log.log(chalk.magenta(`===== Read ${messageName} =====`));
     } else {
@@ -193,7 +193,7 @@ function buildCall(
 
     const json = await contract.api.rpc.contracts.call.json({
       ...callParams,
-      origin,
+      origin
     });
 
     const { debugMessage, gasConsumed, result } = mapExecResult(
@@ -212,7 +212,7 @@ function buildCall(
               fragment.returnType
             )
           : null,
-      result,
+      result
     };
 
     if (result.isOk) {
@@ -253,7 +253,7 @@ function buildSend(
     );
     const messageName = formatIdentifier(fragment.identifier);
 
-    log.log("");
+    log.log('');
     log.log(chalk.magenta(`===== Exec ${messageName} =====`));
     Object.keys(callParams).map((key) => {
       try {
@@ -268,13 +268,13 @@ function buildSend(
     });
 
     const response = await buildTx(contract.api.registry, extrinsic, {
-      ...options,
+      ...options
     });
 
     response.events = decodeEvents(response.result, contract.abi);
 
     let url: string;
-    let base = "https://polkadot.js.org/apps/#/explorer/query/";
+    let base = 'https://polkadot.js.org/apps/#/explorer/query/';
 
     try {
       // @ts-ignore
@@ -289,7 +289,7 @@ function buildSend(
       log.success(`Execute successfully`);
       log.success(`${chalk.cyanBright(url)}`);
     } else {
-      log.error(`Execute failed. ${chalk.red(response.error?.message || "")}`);
+      log.error(`Execute failed. ${chalk.red(response.error?.message || '')}`);
       response.blockHash && log.info(`${chalk.cyanBright(url)}`);
     }
 
@@ -305,7 +305,7 @@ function buildEstimate(
     const call = buildCall(contract, fragment, true);
     const callResult = await call(...args);
     if (callResult.result.isErr) {
-      return new BN("0");
+      return new BN('0');
     } else {
       return new BN(callResult.gasConsumed);
     }
@@ -315,33 +315,33 @@ function buildEstimate(
 function mapExecResult(registry: Registry, json: AnyJson): ContractExecResult {
   assert(
     isObject(json) && !Array.isArray(json),
-    "Invalid JSON result retrieved"
+    'Invalid JSON result retrieved'
   );
 
-  if (!Object.keys(json).some((key) => ["error", "success"].includes(key))) {
-    return registry.createType("ContractExecResult", json);
+  if (!Object.keys(json).some((key) => ['error', 'success'].includes(key))) {
+    return registry.createType('ContractExecResult', json);
   }
 
-  const from = registry.createType("ContractExecResultTo260", json);
+  const from = registry.createType('ContractExecResultTo260', json);
 
   if (from.isSuccess) {
     const s = from.asSuccess;
 
-    return registry.createType("ContractExecResult", {
+    return registry.createType('ContractExecResult', {
       gasConsumed: s.gasConsumed,
       result: {
         ok: {
           data: s.data,
-          flags: s.flags,
-        },
-      },
+          flags: s.flags
+        }
+      }
     });
   }
 
   // in the old format error has no additional information,
   // map it as-is with an "unknown" error
-  return registry.createType("ContractExecResult", {
-    result: { err: { other: "unknown" } },
+  return registry.createType('ContractExecResult', {
+    result: { err: { other: 'unknown' } }
   });
 }
 
@@ -373,7 +373,7 @@ export default class Contract {
     apiProvider: ApiPromise,
     signer: AccountSigner
   ) {
-    this.address = apiProvider.registry.createType("AccountId", address);
+    this.address = apiProvider.registry.createType('AccountId', address);
 
     this.abi =
       contractAbi instanceof Abi
@@ -389,7 +389,7 @@ export default class Contract {
     this.functions = {};
 
     this.populateTransaction = {};
-    this.address = this.api.registry.createType("AccountId", address);
+    this.address = this.api.registry.createType('AccountId', address);
 
     for (const fragment of this.abi.messages) {
       const messageName = formatIdentifier(fragment.identifier);
@@ -398,7 +398,7 @@ export default class Contract {
         Object.defineProperty(this, messageName, {
           enumerable: true,
           value: buildDefault(this, fragment),
-          writable: false,
+          writable: false
         });
       }
 

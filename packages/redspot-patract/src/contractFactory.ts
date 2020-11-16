@@ -1,37 +1,37 @@
-import { ApiPromise } from "@polkadot/api";
-import { Abi } from "@polkadot/api-contract";
-import type { AbiConstructor } from "@polkadot/api-contract/types";
-import type { SubmittableExtrinsic } from "@polkadot/api/types";
-import type { Bytes } from "@polkadot/types";
-import type { CodeHash } from "@polkadot/types/interfaces/contracts";
-import type { AccountId } from "@polkadot/types/interfaces/types";
-import type { AnyJson, ISubmittableResult } from "@polkadot/types/types";
-import { CodecArg } from "@polkadot/types/types";
+import { ApiPromise } from '@polkadot/api';
+import { Abi } from '@polkadot/api-contract';
+import type { AbiConstructor } from '@polkadot/api-contract/types';
+import type { SubmittableExtrinsic } from '@polkadot/api/types';
+import type { Bytes } from '@polkadot/types';
+import type { CodeHash } from '@polkadot/types/interfaces/contracts';
+import type { AccountId } from '@polkadot/types/interfaces/types';
+import type { AnyJson, ISubmittableResult } from '@polkadot/types/types';
+import { CodecArg } from '@polkadot/types/types';
 import {
   compactStripLength,
   isU8a,
   u8aConcat,
   u8aToHex,
-  u8aToU8a,
-} from "@polkadot/util";
-import { blake2AsU8a } from "@polkadot/util-crypto";
-import BN from "bn.js";
-import chalk from "chalk";
-import log from "redspot/internal/log";
-import { RedspotPluginError } from "redspot/plugins";
-import type { AccountSigner } from "redspot/types";
-import { buildTx } from "./buildTx";
+  u8aToU8a
+} from '@polkadot/util';
+import { blake2AsU8a } from '@polkadot/util-crypto';
+import BN from 'bn.js';
+import chalk from 'chalk';
+import log from 'redspot/logger';
+import { RedspotPluginError } from 'redspot/plugins';
+import type { AccountSigner } from 'redspot/types';
+import { buildTx } from './buildTx';
 import Contract, {
   CallOverrides,
   TransactionParams,
-  BigNumber,
-} from "./contract";
+  BigNumber
+} from './contract';
 
 export type ContractFunction<T = any> = (...args: Array<any>) => Promise<T>;
 
 type ContractAbi = AnyJson | Abi;
 type ConstructorOrId = AbiConstructor | string | number;
-const pluginName = "redspot-patract";
+const pluginName = 'redspot-patract';
 
 export default class ContractFactory {
   readonly abi: Abi;
@@ -42,13 +42,13 @@ export default class ContractFactory {
   readonly populateTransaction: {
     putCode: (
       code: string | Bytes | Uint8Array
-    ) => SubmittableExtrinsic<"promise", ISubmittableResult>;
+    ) => SubmittableExtrinsic<'promise', ISubmittableResult>;
     instantiate: (
       codeHash: string | Uint8Array | CodeHash,
       data: string | Uint8Array | Bytes,
       endowment: BigNumber,
       gasLimit: BigNumber
-    ) => SubmittableExtrinsic<"promise", ISubmittableResult>;
+    ) => SubmittableExtrinsic<'promise', ISubmittableResult>;
   };
 
   constructor(
@@ -68,7 +68,7 @@ export default class ContractFactory {
 
     this.populateTransaction = {
       putCode: this._buildPutCode,
-      instantiate: this._buildInstantiate,
+      instantiate: this._buildInstantiate
     };
     this.abi;
   }
@@ -101,7 +101,7 @@ export default class ContractFactory {
     );
 
     if (!codeStorage.isNone) {
-      const hash = this.api.registry.createType("CodeHash", wasmHash);
+      const hash = this.api.registry.createType('CodeHash', wasmHash);
       log.info(`Use the uploaded codehash: ${hash.toString()}`);
       return hash;
     }
@@ -112,25 +112,25 @@ export default class ContractFactory {
 
     const contractName = this.abi.project.contract.name;
     const wasmCode = u8aToHex(this.wasm);
-    log.log("");
+    log.log('');
     log.log(chalk.magenta(`===== PutCode ${contractName} =====`));
     log.log(
-      "WasmCode: ",
-      wasmCode.replace(/^(\w{32})(\w*)(\w{30})$/g, "$1......$3")
+      'WasmCode: ',
+      wasmCode.replace(/^(\w{32})(\w*)(\w{30})$/g, '$1......$3')
     );
 
     const tx = this._buildPutCode(wasmCode);
 
     const status = await buildTx(this.api.registry, tx, {
       signer: this.signer,
-      ...options,
+      ...options
     }).catch((error) => {
       log.error(error.error || error);
-      throw new RedspotPluginError(pluginName, "PutCode failed");
+      throw new RedspotPluginError(pluginName, 'PutCode failed');
     });
 
-    const record = status.result.findRecord("contracts", "CodeStored");
-    const depositRecord = status.result.findRecord("balances", "Deposit");
+    const record = status.result.findRecord('contracts', 'CodeStored');
+    const depositRecord = status.result.findRecord('balances', 'Deposit');
 
     const codeHash = record?.event.data[0] as CodeHash;
 
@@ -180,29 +180,29 @@ export default class ContractFactory {
 
     const tx = this._buildInstantiate(codeHash, encoded, endowment, gasLimit);
 
-    log.log("");
+    log.log('');
     log.log(chalk.magenta(`===== Instantiate ${contractName} =====`));
-    log.log("Endowment: ", endowment.toString());
-    log.log("GasLimit: ", gasLimit.toString());
+    log.log('Endowment: ', endowment.toString());
+    log.log('GasLimit: ', gasLimit.toString());
     log.log(
-      "CodeHash: ",
+      'CodeHash: ',
       isU8a(codeHash) ? u8aToHex(codeHash) : codeHash.toString()
     );
-    log.log("InputData: ", u8aToHex(encoded));
+    log.log('InputData: ', u8aToHex(encoded));
 
     const status = await buildTx(this.api.registry, tx, {
       signer: this.signer,
-      ...overrides,
+      ...overrides
     }).catch((error) => {
       log.error(error.error || error);
-      throw new RedspotPluginError(pluginName, "Instantiation failed");
+      throw new RedspotPluginError(pluginName, 'Instantiation failed');
     });
 
-    const record = status.result.findRecord("contracts", "Instantiated");
-    const depositRecord = status.result.findRecord("balances", "Deposit");
+    const record = status.result.findRecord('contracts', 'Instantiated');
+    const depositRecord = status.result.findRecord('balances', 'Deposit');
     const successRecord = status.result.findRecord(
-      "system",
-      "ExtrinsicSuccess"
+      'system',
+      'ExtrinsicSuccess'
     );
 
     const address = record.event.data[1] as AccountId;
@@ -276,7 +276,7 @@ export default class ContractFactory {
     }
 
     log.warn(
-      "The same WASM code and the instantiation parameter contract have been deployed."
+      'The same WASM code and the instantiation parameter contract have been deployed.'
     );
     log.info(
       `Use contracts that have already been deployed: ${chalk.cyan(
@@ -308,7 +308,7 @@ export default class ContractFactory {
     const buf = u8aConcat(codeHash, dataHash, this.signer.pair.publicKey);
     const address = blake2AsU8a(buf);
 
-    return this.api.registry.createType("AccountId", address);
+    return this.api.registry.createType('AccountId', address);
   }
 
   attach(address: string): Contract {
@@ -332,7 +332,7 @@ export default class ContractFactory {
 
     if (
       args.length === constructor.args.length + 1 &&
-      typeof args[args.length - 1] === "object"
+      typeof args[args.length - 1] === 'object'
     ) {
       overrides = { ...(args[args.length - 1] as Partial<CallOverrides>) };
       params = [...(args.slice(0, -1) as CodecArg[])];
@@ -347,7 +347,7 @@ export default class ContractFactory {
 
     return {
       overrides,
-      params,
+      params
     };
   }
 

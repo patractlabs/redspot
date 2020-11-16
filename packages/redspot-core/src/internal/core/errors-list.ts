@@ -1,4 +1,4 @@
-export const ERROR_PREFIX = 'HH';
+export const ERROR_PREFIX = 'RS';
 
 export interface ErrorDescriptor {
   number: number;
@@ -191,6 +191,24 @@ Please run: npm install --save-dev typescript`,
 
 Please run this and try again: npm install --save-dev typescript`,
       shouldBeReported: false
+    },
+    BAD_SURI: {
+      number: 15,
+      message: `Can't parse suri "%uri%"`,
+      title: 'BAD SURI',
+      description: `The account cannot be imported from this suri.
+
+Please check that the configured accounts are correct.`,
+      shouldBeReported: false
+    },
+    BAD_KEYPAIR: {
+      number: 16,
+      message: `Cannot import keypair`,
+      title: 'BAD KEYPAIR',
+      description: `The keypair cannot be imported.
+
+Please check that the configured keypair are correct.`,
+      shouldBeReported: false
     }
   },
   NETWORK: {
@@ -336,7 +354,7 @@ Please double check your task definitions.`,
 Please double check your task definitions.`,
       shouldBeReported: false
     },
-    PARAM_CLASHES_WITH_HARDHAT_PARAM: {
+    PARAM_CLASHES_WITH_REDSPOT_PARAM: {
       number: 202,
       message:
         'Could not set param %paramName% for task %taskName% because its name is used as a param for Redspot.',

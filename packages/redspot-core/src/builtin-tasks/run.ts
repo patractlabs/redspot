@@ -1,11 +1,9 @@
 import debug from 'debug';
 import fsExtra from 'fs-extra';
-
 import { task } from '../internal/core/config/config-env';
 import { RedspotError } from '../internal/core/errors';
 import { ERRORS } from '../internal/core/errors-list';
 import { runScriptWithRedspot } from '../internal/util/scripts-runner';
-
 import { TASK_COMPILE, TASK_RUN } from './task-names';
 
 const log = debug('redspot:core:tasks:run');

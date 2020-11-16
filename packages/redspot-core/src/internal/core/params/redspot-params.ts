@@ -2,7 +2,7 @@ import { RedspotParamDefinitions } from '../../../types';
 
 import * as types from './argumentTypes';
 
-export const HARDHAT_PARAM_DEFINITIONS: RedspotParamDefinitions = {
+export const REDSPOT_PARAM_DEFINITIONS: RedspotParamDefinitions = {
   network: {
     name: 'network',
     defaultValue: undefined,

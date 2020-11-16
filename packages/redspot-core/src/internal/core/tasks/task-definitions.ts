@@ -10,7 +10,7 @@ import {
 import { RedspotError } from '../errors';
 import { ErrorDescriptor, ERRORS } from '../errors-list';
 import * as types from '../params/argumentTypes';
-import { HARDHAT_PARAM_DEFINITIONS } from '../params/redspot-params';
+import { REDSPOT_PARAM_DEFINITIONS } from '../params/redspot-params';
 
 function isCLIArgumentType(
   type: ArgumentType<any>
@@ -41,7 +41,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
   /**
    * Creates an empty task definition.
    *
-   * This definition will have no params, and will throw a HH205 if executed.
+   * This definition will have no params, and will throw a RS205 if executed.
    *
    * @param name The task's name.
    * @param isSubtask `true` if the task is a subtask, `false` otherwise.
@@ -417,7 +417,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
   /**
    * Validates if the given param's name is after a variadic parameter.
    * @param name the param's name.
-   * @throws HH200
+   * @throws RS200
    */
   private _validateNotAfterVariadicParam(name: string) {
     if (this._hasVariadicParam) {
@@ -432,8 +432,8 @@ export class SimpleTaskDefinition implements TaskDefinition {
    * Validates if the param's name is already used.
    * @param name the param's name.
    *
-   * @throws HH201 if `name` is already used as a param.
-   * @throws HH202 if `name` is already used as a param by Redspot
+   * @throws RS201 if `name` is already used as a param.
+   * @throws RS202 if `name` is already used as a param by Redspot
    */
   private _validateNameNotUsed(name: string) {
     if (this._hasParamDefined(name)) {
@@ -443,9 +443,9 @@ export class SimpleTaskDefinition implements TaskDefinition {
       });
     }
 
-    if (Object.keys(HARDHAT_PARAM_DEFINITIONS).includes(name)) {
+    if (Object.keys(REDSPOT_PARAM_DEFINITIONS).includes(name)) {
       throw new RedspotError(
-        ERRORS.TASK_DEFINITIONS.PARAM_CLASHES_WITH_HARDHAT_PARAM,
+        ERRORS.TASK_DEFINITIONS.PARAM_CLASHES_WITH_REDSPOT_PARAM,
         {
           paramName: name,
           taskName: this.name
@@ -471,7 +471,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
    * @param name the param's name to be added.
    * @param isOptional true if the new param is optional, false otherwise.
    *
-   * @throws HH203 if validation fail
+   * @throws RS203 if validation fail
    */
   private _validateNoMandatoryParamAfterOptionalOnes(
     name: string,
@@ -716,8 +716,8 @@ export class OverriddenTaskDefinition implements TaskDefinition {
 
   /**
    * Add a flag param to the overridden task.
-   * @throws HH201 if param name was already defined in any parent task.
-   * @throws HH209 if param name is not in camelCase.
+   * @throws RS201 if param name was already defined in any parent task.
+   * @throws RS209 if param name is not in camelCase.
    */
   public addFlag(name: string, description?: string): this {
     this.parentTaskDefinition.addFlag(name, description);

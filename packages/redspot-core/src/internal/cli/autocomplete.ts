@@ -1,4 +1,4 @@
-import { HARDHAT_PARAM_DEFINITIONS } from '../core/params/redspot-params';
+import { REDSPOT_PARAM_DEFINITIONS } from '../core/params/redspot-params';
 import type redspot from '../lib/redspot-lib';
 
 import { ArgumentsParser } from './ArgumentsParser';
@@ -32,7 +32,7 @@ export async function complete({
   // `hh compile --network ha|` => prev: "--network" last: "ha"
   const [prev, last] = wordsBeforeCursor.slice(-2);
 
-  const coreParams = Object.values(HARDHAT_PARAM_DEFINITIONS)
+  const coreParams = Object.values(REDSPOT_PARAM_DEFINITIONS)
     .map((x) => x.name)
     .map(ArgumentsParser.paramNameToCLA)
     .filter((x) => !words.includes(x));
@@ -70,7 +70,7 @@ export async function complete({
   if (prev.startsWith('-')) {
     const paramName = ArgumentsParser.cLAToParamName(prev);
 
-    const globalParam: any = (HARDHAT_PARAM_DEFINITIONS as any)[paramName];
+    const globalParam: any = (REDSPOT_PARAM_DEFINITIONS as any)[paramName];
     if (globalParam !== undefined && !globalParam.isFlag) {
       return [];
     }
@@ -102,10 +102,10 @@ export async function complete({
 
 function isGlobalFlag(param: string): boolean {
   const paramName = ArgumentsParser.cLAToParamName(param);
-  return (HARDHAT_PARAM_DEFINITIONS as any)[paramName]?.isFlag === true;
+  return (REDSPOT_PARAM_DEFINITIONS as any)[paramName]?.isFlag === true;
 }
 
 function isGlobalParam(param: string): boolean {
   const paramName = ArgumentsParser.cLAToParamName(param);
-  return (HARDHAT_PARAM_DEFINITIONS as any)[paramName]?.isFlag === false;
+  return (REDSPOT_PARAM_DEFINITIONS as any)[paramName]?.isFlag === false;
 }

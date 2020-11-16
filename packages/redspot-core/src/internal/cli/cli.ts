@@ -3,28 +3,25 @@ import chalk from 'chalk';
 import debug from 'debug';
 import semver from 'semver';
 import 'source-map-support/register';
-
 import { TASK_COMPILE, TASK_HELP } from '../../builtin-tasks/task-names';
 import { TaskArguments } from '../../types';
-import { HARDHAT_NAME } from '../constants';
+import { REDSPOT_NAME } from '../constants';
 import { RedspotContext } from '../context';
 import { loadConfigAndTasks } from '../core/config/config-loading';
 import { RedspotError, RedspotPluginError } from '../core/errors';
 import { ERRORS, getErrorCode } from '../core/errors-list';
 import { isRedspotInstalledLocallyOrLinked } from '../core/execution-mode';
 import { getEnvRedspotArguments } from '../core/params/env-variables';
-import { HARDHAT_PARAM_DEFINITIONS } from '../core/params/redspot-params';
+import { REDSPOT_PARAM_DEFINITIONS } from '../core/params/redspot-params';
 import { isCwdInsideProject } from '../core/project-structure';
 import { Environment } from '../core/runtime-environment';
 import { loadTsNode, willRunWithTypescript } from '../core/typescript-support';
-import { Reporter } from '../sentry/reporter';
 import { isRunningOnCiServer } from '../util/ci-detection';
 import {
   hasConsentedTelemetry,
   writeTelemetryConsent
 } from '../util/global-dir';
 import { getPackageJson, PackageJson } from '../util/packageInfo';
-
 import { Analytics } from './analytics';
 import { ArgumentsParser } from './ArgumentsParser';
 import { enableEmoji } from './emoji';
@@ -58,7 +55,7 @@ async function main() {
     ensureValidNodeVersion(packageJson);
 
     const envVariableArguments = getEnvRedspotArguments(
-      HARDHAT_PARAM_DEFINITIONS,
+      REDSPOT_PARAM_DEFINITIONS,
       process.env
     );
 
@@ -69,13 +66,12 @@ async function main() {
       taskName: parsedTaskName,
       unparsedCLAs
     } = argumentsParser.parseRedspotArguments(
-      HARDHAT_PARAM_DEFINITIONS,
+      REDSPOT_PARAM_DEFINITIONS,
       envVariableArguments,
       process.argv.slice(2)
     );
 
     if (redspotArguments.verbose) {
-      Reporter.setVerbose(true);
       debug.enable('redspot*');
     }
 
@@ -90,7 +86,14 @@ async function main() {
       !isCwdInsideProject() &&
       process.stdout.isTTY === true
     ) {
-      await createProject();
+      // await createProject();
+      console.log(chalk.red(`You are not inside a Redspot project.`));
+      console.log('');
+      console.log(
+        `Run the following command to create a new Redspot project: `
+      );
+      console.log(chalk.cyan(`  $ npx redspot-new <project-name>`));
+      console.log('');
       return;
     }
 
@@ -135,11 +138,6 @@ async function main() {
 
     const analytics = await Analytics.getInstance(telemetryConsent);
 
-    Reporter.setConfigPath(config.paths.configFile);
-    if (telemetryConsent === true) {
-      Reporter.setEnabled(true);
-    }
-
     const envExtenders = ctx.extendersManager.getExtenders();
     const taskDefinitions = ctx.tasksDSL.getTaskDefinitions();
 
@@ -177,8 +175,7 @@ async function main() {
       config,
       redspotArguments,
       taskDefinitions,
-      envExtenders,
-      ctx.experimentalRedspotNetworkMessageTraceHooks
+      envExtenders
     );
 
     ctx.setRedspotRuntimeEnvironment(env);
@@ -218,18 +215,12 @@ async function main() {
 
     console.log('');
 
-    try {
-      Reporter.reportError(error);
-    } catch (error) {
-      log("Couldn't report error to sentry: %O", error);
-    }
-
     if (showStackTraces) {
       console.error(error);
     } else {
       if (!isRedspotError) {
         console.error(
-          `If you think this is a bug in Redspot, please report it here: https://redspot.org/reportbug`
+          `If you think this is a bug in Redspot, please report it here: https://github.com/patractlabs/redspot-0.2/issues/new`
         );
       }
 
@@ -239,16 +230,15 @@ async function main() {
         )}`;
 
         console.error(
-          `For more info go to ${link} or run ${HARDHAT_NAME} with --show-stack-traces`
+          `For more info go to ${link} or run ${REDSPOT_NAME} with --show-stack-traces`
         );
       } else {
         console.error(
-          `For more info run ${HARDHAT_NAME} with --show-stack-traces`
+          `For more info run ${REDSPOT_NAME} with --show-stack-traces`
         );
       }
     }
 
-    await Reporter.close(1000);
     process.exit(1);
   }
 }

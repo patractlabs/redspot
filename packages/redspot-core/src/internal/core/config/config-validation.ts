@@ -3,8 +3,8 @@ import { Context, getFunctionName, ValidationError } from 'io-ts/lib';
 import { Reporter } from 'io-ts/lib/Reporter';
 
 import {
-  HARDHAT_NETWORK_NAME,
-  HARDHAT_NETWORK_SUPPORTED_HARDFORKS
+  REDSPOT_NETWORK_NAME,
+  REDSPOT_NETWORK_SUPPORTED_HARDFORKS
 } from '../../constants';
 import { fromEntries } from '../../util/lang';
 import { RedspotError } from '../errors';
@@ -131,7 +131,7 @@ const RedspotNetworkConfig = t.type({
   ...commonNetworkConfigFields,
   hardfork: optional(
     t.keyof(
-      fromEntries(HARDHAT_NETWORK_SUPPORTED_HARDFORKS.map((hf) => [hf, null]))
+      fromEntries(REDSPOT_NETWORK_SUPPORTED_HARDFORKS.map((hf) => [hf, null]))
     )
   ),
   accounts: optional(
@@ -223,11 +223,11 @@ export function getValidationErrors(config: any): string[] {
 
   // These can't be validated with io-ts
   if (config !== undefined && typeof config.networks === 'object') {
-    const redspotNetwork = config.networks[HARDHAT_NETWORK_NAME];
+    const redspotNetwork = config.networks[REDSPOT_NETWORK_NAME];
     if (redspotNetwork !== undefined) {
       if (redspotNetwork.url !== undefined) {
         errors.push(
-          `RedspotConfig.networks.${HARDHAT_NETWORK_NAME} can't have an url`
+          `RedspotConfig.networks.${REDSPOT_NETWORK_NAME} can't have an url`
         );
       }
 
@@ -239,7 +239,7 @@ export function getValidationErrors(config: any): string[] {
       if (netConfigResult.isLeft()) {
         errors.push(
           getErrorMessage(
-            `RedspotConfig.networks.${HARDHAT_NETWORK_NAME}`,
+            `RedspotConfig.networks.${REDSPOT_NETWORK_NAME}`,
             redspotNetwork,
             'RedspotNetworkConfig'
           )
@@ -251,7 +251,7 @@ export function getValidationErrors(config: any): string[] {
           if (typeof account.privateKey !== 'string') {
             errors.push(
               getErrorMessage(
-                `RedspotConfig.networks.${HARDHAT_NETWORK_NAME}.accounts[].privateKey`,
+                `RedspotConfig.networks.${REDSPOT_NETWORK_NAME}.accounts[].privateKey`,
                 account.privateKey,
                 'string'
               )
@@ -261,7 +261,7 @@ export function getValidationErrors(config: any): string[] {
           if (typeof account.balance !== 'string') {
             errors.push(
               getErrorMessage(
-                `RedspotConfig.networks.${HARDHAT_NETWORK_NAME}.accounts[].balance`,
+                `RedspotConfig.networks.${REDSPOT_NETWORK_NAME}.accounts[].balance`,
                 account.balance,
                 'string'
               )
@@ -275,7 +275,7 @@ export function getValidationErrors(config: any): string[] {
         if (hdConfigResult.isLeft()) {
           errors.push(
             getErrorMessage(
-              `RedspotConfig.networks.${HARDHAT_NETWORK_NAME}.accounts`,
+              `RedspotConfig.networks.${REDSPOT_NETWORK_NAME}.accounts`,
               redspotNetwork.accounts,
               '[{privateKey: string, balance: string}] | RedspotNetworkHDAccountsConfig | undefined'
             )
@@ -284,7 +284,7 @@ export function getValidationErrors(config: any): string[] {
       } else if (redspotNetwork.accounts !== undefined) {
         errors.push(
           getErrorMessage(
-            `RedspotConfig.networks.${HARDHAT_NETWORK_NAME}.accounts`,
+            `RedspotConfig.networks.${REDSPOT_NETWORK_NAME}.accounts`,
             redspotNetwork.accounts,
             '[{privateKey: string, balance: string}] | RedspotNetworkHDAccountsConfig | undefined'
           )
@@ -295,7 +295,7 @@ export function getValidationErrors(config: any): string[] {
     for (const [networkName, netConfig] of Object.entries<any>(
       config.networks
     )) {
-      if (networkName === HARDHAT_NETWORK_NAME) {
+      if (networkName === REDSPOT_NETWORK_NAME) {
         continue;
       }
 

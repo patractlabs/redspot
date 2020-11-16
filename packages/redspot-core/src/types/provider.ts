@@ -1,58 +1,91 @@
-import { EventEmitter } from 'events';
+import type { Signer } from '@polkadot/api/types';
+import type { Keyring } from '@polkadot/keyring';
+import type { KeyringPair, SignOptions } from '@polkadot/keyring/types';
+import type { TypeRegistry } from '@polkadot/types';
+import type BN from 'bn.js';
+import type { RedspotNetworkAccountsUserConfig } from './config';
 
-export interface RequestArguments {
-  readonly method: string;
-  readonly params?: readonly unknown[] | object;
+export interface AccountSigner extends Signer {
+  readonly gasLimit?: BN;
+  readonly pair: KeyringPair;
+  readonly address: string;
+  readonly addressRaw: Uint8Array;
+  readonly publicKey: Uint8Array;
+  getAddress(): Promise<string>;
+  sign: (data: Uint8Array, options?: SignOptions) => Uint8Array;
+}
+export interface JsonRpcObject {
+  id: number;
+  jsonrpc: '2.0';
 }
 
-export interface ProviderRpcError extends Error {
-  code: number;
-  data?: unknown;
-}
-
-export interface ProviderMessage {
-  readonly type: string;
-  readonly data: unknown;
-}
-
-export interface EthSubscription extends ProviderMessage {
-  readonly type: 'eth_subscription';
-  readonly data: {
-    readonly subscription: string;
-    readonly result: unknown;
-  };
-}
-
-export interface ProviderConnectInfo {
-  readonly chainId: string;
-}
-
-export interface EIP1193Provider extends EventEmitter {
-  request(args: RequestArguments): Promise<unknown>;
-}
-
-export interface JsonRpcRequest {
-  jsonrpc: string;
+export interface JsonRpcRequest extends JsonRpcObject {
   method: string;
-  params: any[];
-  id: number;
+  params: unknown[];
 }
 
-export interface JsonRpcResponse {
-  jsonrpc: string;
-  id: number;
-  result?: any;
-  error?: {
-    code: number;
-    message: string;
-    data?: any;
+export interface JsonRpcResponseBaseError {
+  code: number;
+  data?: number | string;
+  message: string;
+}
+
+interface JsonRpcResponseSingle {
+  error?: JsonRpcResponseBaseError;
+  result?: unknown;
+}
+
+interface JsonRpcResponseSubscription {
+  method?: string;
+  params: {
+    error?: JsonRpcResponseBaseError;
+    result: unknown;
+    subscription: number | string;
   };
 }
 
-export interface EthereumProvider extends EIP1193Provider {
-  send(method: string, params?: any[]): Promise<any>;
-  sendAsync(
-    payload: JsonRpcRequest,
-    callback: (error: any, response: JsonRpcResponse) => void
-  ): void;
+export type JsonRpcResponseBase = JsonRpcResponseSingle &
+  JsonRpcResponseSubscription;
+
+export type JsonRpcResponse = JsonRpcObject & JsonRpcResponseBase;
+
+export type ProviderInterfaceCallback = (
+  error: Error | null,
+  result: any
+) => void;
+
+export type ProviderInterfaceEmitted = 'connected' | 'disconnected' | 'error';
+
+export type ProviderInterfaceEmitCb = (value?: any) => any;
+
+export interface WsProvider {
+  readonly hasSubscriptions: boolean;
+  readonly isConnected: boolean;
+
+  clone(): WsProvider;
+  connect(): Promise<void>;
+  disconnect(): Promise<void>;
+  on(type: ProviderInterfaceEmitted, sub: ProviderInterfaceEmitCb): () => void;
+  send(method: string, params: any[]): Promise<any>;
+  subscribe(
+    type: string,
+    method: string,
+    params: any[],
+    cb: ProviderInterfaceCallback
+  ): Promise<number | string>;
+  unsubscribe(
+    type: string,
+    method: string,
+    id: number | string
+  ): Promise<boolean>;
+}
+
+export interface RpcProvider extends WsProvider {
+  accounts: RedspotNetworkAccountsUserConfig;
+  keyring: Keyring;
+  gasLimit?: BN;
+  registry: TypeRegistry;
+  networkName: string;
+  createSigner(keyringPair: KeyringPair): AccountSigner;
+  getKeyringPairs(): Promise<KeyringPair[]>;
 }

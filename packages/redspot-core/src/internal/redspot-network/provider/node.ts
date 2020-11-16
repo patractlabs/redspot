@@ -21,7 +21,7 @@ import {
 import EventEmitter from 'events';
 
 import { CompilerInput, CompilerOutput } from '../../../types';
-import { HARDHAT_NETWORK_DEFAULT_GAS_PRICE } from '../../core/config/default-config';
+import { REDSPOT_NETWORK_DEFAULT_GAS_PRICE } from '../../core/config/default-config';
 import { Reporter } from '../../sentry/reporter';
 import { getDifferenceInSeconds } from '../../util/date';
 import { createModelsAndDecodeBytecodes } from '../stack-traces/compiler-to-model';
@@ -536,7 +536,7 @@ export class RedspotNode extends EventEmitter {
   }
 
   public async getGasPrice(): Promise<BN> {
-    return new BN(HARDHAT_NETWORK_DEFAULT_GAS_PRICE);
+    return new BN(REDSPOT_NETWORK_DEFAULT_GAS_PRICE);
   }
 
   public async getCoinbaseAddress(): Promise<Buffer> {

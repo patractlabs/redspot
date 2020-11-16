@@ -6,7 +6,7 @@ import { loadConfigAndTasks } from '../core/config/config-loading';
 import { RedspotError } from '../core/errors';
 import { ERRORS } from '../core/errors-list';
 import { getEnvRedspotArguments } from '../core/params/env-variables';
-import { HARDHAT_PARAM_DEFINITIONS } from '../core/params/redspot-params';
+import { REDSPOT_PARAM_DEFINITIONS } from '../core/params/redspot-params';
 import { Environment } from '../core/runtime-environment';
 
 let ctx: RedspotContext;
@@ -26,7 +26,7 @@ if (RedspotContext.isCreated()) {
   ctx = RedspotContext.createRedspotContext();
 
   const redspotArguments = getEnvRedspotArguments(
-    HARDHAT_PARAM_DEFINITIONS,
+    REDSPOT_PARAM_DEFINITIONS,
     process.env
   );
 
