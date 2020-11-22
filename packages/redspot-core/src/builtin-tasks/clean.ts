@@ -1,8 +1,6 @@
 import fsExtra from 'fs-extra';
-
 import { subtask, task } from '../internal/core/config/config-env';
 import { getCacheDir } from '../internal/util/global-dir';
-
 import { TASK_CLEAN, TASK_CLEAN_GLOBAL } from './task-names';
 
 subtask(TASK_CLEAN_GLOBAL, async () => {

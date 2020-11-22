@@ -1,6 +1,6 @@
-import { KeyringPair } from "@polkadot/keyring/types";
-import { readWasm } from "redspot/plugins";
-import Api from "./api";
+import { KeyringPair } from '@polkadot/keyring/types';
+import { readWasm } from 'redspot/plugins';
+import Api from './api';
 
 export default class ContractFactory {
   readonly #api: Api;
@@ -20,7 +20,7 @@ export default class ContractFactory {
     const extrinsic = this.#api.tx.contracts.putCode(`0x${wasmCode}`);
 
     const status = await this.#api.extrinsicHelper(extrinsic, signer);
-    const record = status.result.findRecord("contracts", "CodeStored");
+    const record = status.result.findRecord('contracts', 'CodeStored');
 
     const codeHash = record?.event.data[0].toHex();
 
@@ -34,7 +34,7 @@ export default class ContractFactory {
     _endowment?: number,
     _gasRequired?: number
   ): Promise<string> {
-    const endowment = "20000000000";
+    const endowment = '20000000000';
     const gasRequired = this.#api.network.provider.gasLimit;
 
     const extrinsic = this.#api.tx.contracts.instantiate(
@@ -46,7 +46,7 @@ export default class ContractFactory {
 
     const status = await this.#api.extrinsicHelper(extrinsic, signer);
 
-    const record = status.result.findRecord("contracts", "Instantiated");
+    const record = status.result.findRecord('contracts', 'Instantiated');
 
     const address = record.event.data[1];
 

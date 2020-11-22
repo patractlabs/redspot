@@ -1,12 +1,11 @@
 import {
-  RedspotParamDefinitions,
   ParamDefinition,
   ParamDefinitionsMap,
+  RedspotParamDefinitions,
   TasksMap
 } from '../../types';
 import { RedspotError } from '../core/errors';
 import { ERRORS } from '../core/errors-list';
-
 import { ArgumentsParser } from './ArgumentsParser';
 
 export class HelpPrinter {

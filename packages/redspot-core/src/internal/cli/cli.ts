@@ -24,8 +24,6 @@ import {
 import { getPackageJson, PackageJson } from '../util/packageInfo';
 import { Analytics } from './analytics';
 import { ArgumentsParser } from './ArgumentsParser';
-import { enableEmoji } from './emoji';
-import { confirmTelemetryConsent, createProject } from './project-creation';
 
 const log = debug('redspot:core:cli');
 
@@ -75,10 +73,6 @@ async function main() {
       debug.enable('redspot*');
     }
 
-    if (redspotArguments.emoji) {
-      enableEmoji();
-    }
-
     showStackTraces = redspotArguments.showStackTraces;
 
     if (
@@ -113,28 +107,10 @@ async function main() {
 
     let taskName = parsedTaskName ?? TASK_HELP;
 
-    const showWarningIfNoSolidityConfig = taskName === TASK_COMPILE;
-
     const ctx = RedspotContext.createRedspotContext();
-    const config = loadConfigAndTasks(redspotArguments, {
-      showWarningIfNoSolidityConfig
-    });
+    const config = loadConfigAndTasks(redspotArguments);
 
     let telemetryConsent: boolean | undefined = hasConsentedTelemetry();
-
-    const isHelpCommand = redspotArguments.help || taskName === TASK_HELP;
-    if (
-      telemetryConsent === undefined &&
-      !isHelpCommand &&
-      !isRunningOnCiServer() &&
-      process.stdout.isTTY === true
-    ) {
-      telemetryConsent = await confirmTelemetryConsent();
-
-      if (telemetryConsent !== undefined) {
-        writeTelemetryConsent(telemetryConsent);
-      }
-    }
 
     const analytics = await Analytics.getInstance(telemetryConsent);
 

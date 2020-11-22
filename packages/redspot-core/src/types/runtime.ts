@@ -161,7 +161,6 @@ export interface RedspotArguments {
   showStackTraces: boolean;
   version: boolean;
   help: boolean;
-  emoji: boolean;
   config?: string;
   verbose: boolean;
   maxMemory?: number;

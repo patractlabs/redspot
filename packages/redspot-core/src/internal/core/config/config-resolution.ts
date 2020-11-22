@@ -2,34 +2,24 @@ import * as fs from 'fs';
 import cloneDeep from 'lodash/cloneDeep';
 import path from 'path';
 import {
-  HDAccountsUserConfig,
-  HttpNetworkAccountsConfig,
-  HttpNetworkAccountsUserConfig,
   HttpNetworkConfig,
-  HttpNetworkUserConfig,
+  InkConfig,
   NetworksConfig,
   NetworksUserConfig,
-  NetworkUserConfig,
   ProjectPathsConfig,
   ProjectPathsUserConfig,
   RedspotConfig,
-  RedspotNetworkAccountsConfig,
   RedspotNetworkConfig,
-  RedspotNetworkForkingConfig,
   RedspotNetworkUserConfig,
   RedspotUserConfig
 } from '../../../types';
 import { REDSPOT_NETWORK_NAME } from '../../constants';
 import { fromEntries } from '../../util/lang';
-import { assertRedspotInvariant } from '../errors';
 import {
   defaultDefaultNetwork,
-  defaultHdAccountsConfigParams,
-  defaultHttpNetworkParams,
+  defaultEuropaNetworkParams,
   defaultLocalhostNetworkParams,
-  defaultMochaOptions,
-  defaultRedspotNetworkHdAccountsConfigParams,
-  defaultRedspotNetworkParams
+  defaultMochaOptions
 } from './default-config';
 
 /**
@@ -52,7 +42,8 @@ export function resolveConfig(
     defaultNetwork: userConfig.defaultNetwork ?? defaultDefaultNetwork,
     paths: resolveProjectPaths(userConfigPath, userConfig.paths),
     networks: resolveNetworksConfig(userConfig.networks),
-    mocha: resolveMochaConfig(userConfig)
+    mocha: resolveMochaConfig(userConfig),
+    ink: resolveRustConfig(userConfig)
   };
 }
 
@@ -61,140 +52,56 @@ function resolveNetworksConfig(
 ): NetworksConfig {
   const redspotNetworkConfig = networksConfig[REDSPOT_NETWORK_NAME];
 
-  const localhostNetworkConfig =
-    (networksConfig.localhost as HttpNetworkUserConfig) ?? undefined;
+  const localhostNetworkConfig = networksConfig.localhost ?? undefined;
 
-  const redspot = resolveRedspotNetworkConfig(redspotNetworkConfig);
-  const localhost = resolveHttpNetworkConfig({
+  const europa = resolveEuropaNetworkConfig(redspotNetworkConfig);
+  const localhost = {
     ...cloneDeep(defaultLocalhostNetworkParams),
     ...localhostNetworkConfig
-  });
+  };
 
   const otherNetworks: { [name: string]: HttpNetworkConfig } = fromEntries(
     Object.entries(networksConfig)
       .filter(
         ([name, config]) =>
-          name !== 'localhost' &&
-          name !== 'redspot' &&
-          config !== undefined &&
-          isHttpNetworkConfig(config)
+          name !== 'localhost' && name !== 'europa' && config !== undefined
       )
-      .map(([name, config]) => [
-        name,
-        resolveHttpNetworkConfig(config as HttpNetworkUserConfig)
-      ])
+      .map(([name, config]) => [name, config])
   );
 
   return {
-    redspot,
+    europa,
     localhost,
     ...otherNetworks
   };
 }
 
-function isHttpNetworkConfig(
-  config: NetworkUserConfig
-): config is HttpNetworkUserConfig {
-  return 'url' in config;
-}
-
-function normalizeHexString(str: string): string {
-  const normalized = str.trim().toLowerCase();
-  if (normalized.startsWith('0x')) {
-    return normalized;
-  }
-
-  return `0x${normalized}`;
-}
-
-function resolveRedspotNetworkConfig(
+function resolveEuropaNetworkConfig(
   redspotNetworkConfig: RedspotNetworkUserConfig = {}
 ): RedspotNetworkConfig {
   const clonedDefaultRedspotNetworkParams = cloneDeep(
-    defaultRedspotNetworkParams
+    defaultEuropaNetworkParams
   );
-
-  const accounts: RedspotNetworkAccountsConfig =
-    redspotNetworkConfig.accounts === undefined
-      ? defaultRedspotNetworkHdAccountsConfigParams
-      : Array.isArray(redspotNetworkConfig.accounts)
-      ? redspotNetworkConfig.accounts.map(({ privateKey, balance }) => ({
-          privateKey: normalizeHexString(privateKey),
-          balance
-        }))
-      : {
-          ...defaultRedspotNetworkHdAccountsConfigParams,
-          ...redspotNetworkConfig.accounts
-        };
-
-  const forking: RedspotNetworkForkingConfig | undefined =
-    redspotNetworkConfig.forking !== undefined
-      ? {
-          url: redspotNetworkConfig.forking.url,
-          enabled: redspotNetworkConfig.forking.enabled ?? true
-        }
-      : undefined;
-
-  const blockNumber = redspotNetworkConfig?.forking?.blockNumber;
-  if (blockNumber !== undefined && forking !== undefined) {
-    forking.blockNumber = redspotNetworkConfig?.forking?.blockNumber;
-  }
 
   const config = {
     ...clonedDefaultRedspotNetworkParams,
-    ...redspotNetworkConfig,
-    accounts,
-    forking
+    ...redspotNetworkConfig
   };
-
-  // We do it this way because ts gets lost otherwise
-  if (config.forking === undefined) {
-    delete config.forking;
-  }
 
   return config;
-}
-
-function isHdAccountsConfig(
-  accounts: HttpNetworkAccountsUserConfig
-): accounts is HDAccountsUserConfig {
-  return typeof accounts === 'object' && !Array.isArray(accounts);
-}
-
-function resolveHttpNetworkConfig(
-  networkConfig: HttpNetworkUserConfig
-): HttpNetworkConfig {
-  const accounts: HttpNetworkAccountsConfig =
-    networkConfig.accounts === undefined
-      ? defaultHttpNetworkParams.accounts
-      : isHdAccountsConfig(networkConfig.accounts)
-      ? {
-          ...defaultHdAccountsConfigParams,
-          ...networkConfig.accounts
-        }
-      : Array.isArray(networkConfig.accounts)
-      ? networkConfig.accounts.map(normalizeHexString)
-      : 'remote';
-
-  const url = networkConfig.url;
-
-  assertRedspotInvariant(
-    url !== undefined,
-    'Invalid http network config provided. URL missing.'
-  );
-
-  return {
-    ...cloneDeep(defaultHttpNetworkParams),
-    ...networkConfig,
-    accounts,
-    url
-  };
 }
 
 function resolveMochaConfig(userConfig: RedspotUserConfig): Mocha.MochaOptions {
   return {
     ...cloneDeep(defaultMochaOptions),
     ...userConfig.mocha
+  };
+}
+
+function resolveRustConfig(userConfig: RedspotUserConfig): InkConfig {
+  return {
+    ...cloneDeep(defaultMochaOptions),
+    ...userConfig.ink
   };
 }
 

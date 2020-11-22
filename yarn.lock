@@ -16242,6 +16242,7 @@ fsevents@^1.2.7:
     semver: ^6.3.0
     source-map-support: ^0.5.13
     stacktrace-parser: ^0.1.10
+    true-case-path: ^2.2.1
     ts-essentials: ^2.0.7
     ts-node: ^9.0.0
     typescript: ^4.0.3
@@ -18578,6 +18579,13 @@ fsevents@^1.2.7:
   dependencies:
     escape-string-regexp: ^1.0.2
   checksum: f65350e3272927ac5d12991d0bacc59d905a35b0f740a592638203a72943a906587e07e7552f27f7f7d1568533b069d342dee9c360f12d373abe18a1e07a6445
+  languageName: node
+  linkType: hard
+
+"true-case-path@npm:^2.2.1":
+  version: 2.2.1
+  resolution: "true-case-path@npm:2.2.1"
+  checksum: 963316436960f9fa2c396b50b065218b6d9a6690ef5c0e70c3e560168272da46d14cb8c19e361c5e9c29fa0425f18b5d44ded8fdb55a38e06a58fe218522be5f
   languageName: node
   linkType: hard
 

@@ -1,12 +1,7 @@
 import * as t from 'io-ts';
 import { Context, getFunctionName, ValidationError } from 'io-ts/lib';
 import { Reporter } from 'io-ts/lib/Reporter';
-
-import {
-  REDSPOT_NETWORK_NAME,
-  REDSPOT_NETWORK_SUPPORTED_HARDFORKS
-} from '../../constants';
-import { fromEntries } from '../../util/lang';
+import { REDSPOT_NETWORK_NAME } from '../../constants';
 import { RedspotError } from '../errors';
 import { ERRORS } from '../errors-list';
 
@@ -93,14 +88,6 @@ export const hexString = new t.Type<string>(
   t.identity
 );
 
-// TODO: These types have outdated name. They should match the UserConfig types.
-// IMPORTANT: This t.types MUST be kept in sync with the actual types.
-
-const RedspotNetworkAccount = t.type({
-  privateKey: hexString,
-  balance: t.string
-});
-
 const commonHDAccountsFields = {
   initialIndex: optional(t.number),
   count: optional(t.number),
@@ -113,63 +100,27 @@ const RedspotNetworkHDAccountsConfig = t.type({
   ...commonHDAccountsFields
 });
 
-const RedspotNetworkForkingConfig = t.type({
-  enabled: optional(t.boolean),
-  url: t.string,
-  blockNumber: optional(t.number)
-});
-
-const commonNetworkConfigFields = {
-  chainId: optional(t.number),
-  from: optional(t.string),
-  gas: optional(t.union([t.literal('auto'), t.number])),
-  gasPrice: optional(t.union([t.literal('auto'), t.number])),
-  gasMultiplier: optional(t.number)
-};
-
-const RedspotNetworkConfig = t.type({
-  ...commonNetworkConfigFields,
-  hardfork: optional(
-    t.keyof(
-      fromEntries(REDSPOT_NETWORK_SUPPORTED_HARDFORKS.map((hf) => [hf, null]))
-    )
-  ),
-  accounts: optional(
-    t.union([t.array(RedspotNetworkAccount), RedspotNetworkHDAccountsConfig])
-  ),
-  blockGasLimit: optional(t.number),
-  throwOnTransactionFailures: optional(t.boolean),
-  throwOnCallFailures: optional(t.boolean),
-  allowUnlimitedContractSize: optional(t.boolean),
-  initialDate: optional(t.string),
-  loggingEnabled: optional(t.boolean),
-  forking: optional(RedspotNetworkForkingConfig)
-});
-
-const HDAccountsConfig = t.type({
-  mnemonic: t.string,
-  ...commonHDAccountsFields
-});
-
-const NetworkConfigAccounts = t.union([
-  t.literal('remote'),
-  t.array(hexString),
-  HDAccountsConfig
-]);
+const NetworkConfigAccounts = t.array(t.string);
 
 const HttpHeaders = t.record(t.string, t.string, 'httpHeaders');
 
-const HttpNetworkConfig = t.type({
-  ...commonNetworkConfigFields,
-  url: optional(t.string),
+const RedspotNetworkConfig = t.type({
   accounts: optional(NetworkConfigAccounts),
+  gasLimit: optional(t.union([t.string, t.number])),
+  from: optional(t.string),
+  types: optional(t.record(t.string, t.unknown)),
+  endpoint: optional(t.union([t.string, t.array(t.string)])),
   httpHeaders: optional(HttpHeaders),
-  timeout: optional(t.number)
+  explorerUrl: optional(t.string)
 });
 
-const NetworkConfig = t.union([RedspotNetworkConfig, HttpNetworkConfig]);
+const NetworkConfig = RedspotNetworkConfig;
 
 const Networks = t.record(t.string, NetworkConfig);
+
+const InkConfig = t.type({
+  toolchain: optional(t.string)
+});
 
 const ProjectPaths = t.type({
   root: optional(t.string),
@@ -179,24 +130,12 @@ const ProjectPaths = t.type({
   tests: optional(t.string)
 });
 
-const SingleSolcConfig = t.type({
-  version: t.string,
-  settings: optional(t.any)
-});
-
-const MultiSolcConfig = t.type({
-  compilers: t.array(SingleSolcConfig),
-  overrides: optional(t.record(t.string, SingleSolcConfig))
-});
-
-const SolidityConfig = t.union([t.string, SingleSolcConfig, MultiSolcConfig]);
-
 const RedspotConfig = t.type(
   {
     defaultNetwork: optional(t.string),
+    ink: optional(InkConfig),
     networks: optional(Networks),
-    paths: optional(ProjectPaths),
-    solidity: optional(SolidityConfig)
+    paths: optional(ProjectPaths)
   },
   'RedspotConfig'
 );
@@ -225,99 +164,12 @@ export function getValidationErrors(config: any): string[] {
   if (config !== undefined && typeof config.networks === 'object') {
     const redspotNetwork = config.networks[REDSPOT_NETWORK_NAME];
     if (redspotNetwork !== undefined) {
-      if (redspotNetwork.url !== undefined) {
-        errors.push(
-          `RedspotConfig.networks.${REDSPOT_NETWORK_NAME} can't have an url`
-        );
-      }
-
-      // Validating the accounts with io-ts leads to very confusing errors messages
-      const configExceptAccounts = { ...redspotNetwork };
-      delete configExceptAccounts.accounts;
-
-      const netConfigResult = RedspotNetworkConfig.decode(configExceptAccounts);
-      if (netConfigResult.isLeft()) {
+      if (typeof redspotNetwork.endpoint !== 'string') {
         errors.push(
           getErrorMessage(
-            `RedspotConfig.networks.${REDSPOT_NETWORK_NAME}`,
-            redspotNetwork,
-            'RedspotNetworkConfig'
-          )
-        );
-      }
-
-      if (Array.isArray(redspotNetwork.accounts)) {
-        for (const account of redspotNetwork.accounts) {
-          if (typeof account.privateKey !== 'string') {
-            errors.push(
-              getErrorMessage(
-                `RedspotConfig.networks.${REDSPOT_NETWORK_NAME}.accounts[].privateKey`,
-                account.privateKey,
-                'string'
-              )
-            );
-          }
-
-          if (typeof account.balance !== 'string') {
-            errors.push(
-              getErrorMessage(
-                `RedspotConfig.networks.${REDSPOT_NETWORK_NAME}.accounts[].balance`,
-                account.balance,
-                'string'
-              )
-            );
-          }
-        }
-      } else if (typeof redspotNetwork.accounts === 'object') {
-        const hdConfigResult = RedspotNetworkHDAccountsConfig.decode(
-          redspotNetwork.accounts
-        );
-        if (hdConfigResult.isLeft()) {
-          errors.push(
-            getErrorMessage(
-              `RedspotConfig.networks.${REDSPOT_NETWORK_NAME}.accounts`,
-              redspotNetwork.accounts,
-              '[{privateKey: string, balance: string}] | RedspotNetworkHDAccountsConfig | undefined'
-            )
-          );
-        }
-      } else if (redspotNetwork.accounts !== undefined) {
-        errors.push(
-          getErrorMessage(
-            `RedspotConfig.networks.${REDSPOT_NETWORK_NAME}.accounts`,
-            redspotNetwork.accounts,
-            '[{privateKey: string, balance: string}] | RedspotNetworkHDAccountsConfig | undefined'
-          )
-        );
-      }
-    }
-
-    for (const [networkName, netConfig] of Object.entries<any>(
-      config.networks
-    )) {
-      if (networkName === REDSPOT_NETWORK_NAME) {
-        continue;
-      }
-
-      if (networkName !== 'localhost' || netConfig.url !== undefined) {
-        if (typeof netConfig.url !== 'string') {
-          errors.push(
-            getErrorMessage(
-              `RedspotConfig.networks.${networkName}.url`,
-              netConfig.url,
-              'string'
-            )
-          );
-        }
-      }
-
-      const netConfigResult = HttpNetworkConfig.decode(netConfig);
-      if (netConfigResult.isLeft()) {
-        errors.push(
-          getErrorMessage(
-            `RedspotConfig.networks.${networkName}`,
-            netConfig,
-            'HttpNetworkConfig'
+            `RedspotConfig.networks.${redspotNetwork}.endpoint`,
+            redspotNetwork.endpoint,
+            'string'
           )
         );
       }

@@ -2,10 +2,8 @@ import debug from 'debug';
 import fsExtra from 'fs-extra';
 import * as path from 'path';
 import * as semver from 'semver';
-
 import { task } from '../internal/core/config/config-env';
 import { runScriptWithRedspot } from '../internal/util/scripts-runner';
-
 import { TASK_COMPILE, TASK_CONSOLE } from './task-names';
 
 const log = debug('redspot:core:tasks:console');

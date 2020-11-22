@@ -1,7 +1,7 @@
-import { extendEnvironment } from "redspot/config";
-import { lazyObject } from "redspot/plugins";
-import type { RedspotRuntimeEnvironment } from "redspot/types";
-import Api from "./api";
+import { extendEnvironment } from 'redspot/config';
+import { lazyObject } from 'redspot/plugins';
+import type { RedspotRuntimeEnvironment } from 'redspot/types';
+import Api from './api';
 
 export default function () {
   extendEnvironment((env: RedspotRuntimeEnvironment) => {
@@ -15,7 +15,7 @@ export default function () {
       return new Api(
         {
           provider,
-          registry,
+          registry
         },
         network,
         paths

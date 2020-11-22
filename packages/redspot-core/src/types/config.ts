@@ -140,16 +140,20 @@ export interface RedspotUserConfig {
   defaultNetwork?: string;
   paths?: ProjectPathsUserConfig;
   networks?: NetworksUserConfig;
-  solidity?: SolidityUserConfig;
   mocha?: Mocha.MochaOptions;
+  ink?: InkConfig;
+}
+
+export interface InkConfig {
+  toolchain?: string;
 }
 
 export interface RedspotConfig {
   defaultNetwork: string;
   paths: ProjectPathsConfig;
   networks: NetworksConfig;
-  solidity: SolidityConfig;
   mocha: Mocha.MochaOptions;
+  ink?: InkConfig;
 }
 
 // Plugins config functionality

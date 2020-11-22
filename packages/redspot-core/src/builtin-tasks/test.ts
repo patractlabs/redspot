@@ -1,20 +1,12 @@
-import chalk from 'chalk';
 import path from 'path';
-
-import { REDSPOT_NETWORK_NAME } from '../internal/constants';
 import { subtask, task } from '../internal/core/config/config-env';
 import { isRunningWithTypescript } from '../internal/core/typescript-support';
-import { getForkCacheDirPath } from '../internal/redspot-network/provider/utils/disk-cache';
-import { showForkRecommendationsBannerIfNecessary } from '../internal/redspot-network/provider/utils/fork-recomendations-banner';
 import { glob } from '../internal/util/glob';
-import { pluralize } from '../internal/util/strings';
-
 import {
   TASK_COMPILE,
   TASK_TEST,
   TASK_TEST_GET_TEST_FILES,
   TASK_TEST_RUN_MOCHA_TESTS,
-  TASK_TEST_RUN_SHOW_FORK_RECOMMENDATIONS,
   TASK_TEST_SETUP_TEST_ENVIRONMENT
 } from './task-names';
 
@@ -60,17 +52,6 @@ subtask(TASK_TEST_RUN_MOCHA_TESTS)
     return testFailures;
   });
 
-subtask(TASK_TEST_RUN_SHOW_FORK_RECOMMENDATIONS).setAction(
-  async (_, { config, network }) => {
-    if (network.name !== REDSPOT_NETWORK_NAME) {
-      return;
-    }
-
-    const forkCache = getForkCacheDirPath(config.paths);
-    await showForkRecommendationsBannerIfNecessary(network.config, forkCache);
-  }
-);
-
 task(TASK_TEST, 'Runs mocha tests')
   .addOptionalVariadicPositionalParam(
     'testFiles',
@@ -97,28 +78,9 @@ task(TASK_TEST, 'Runs mocha tests')
 
       await run(TASK_TEST_SETUP_TEST_ENVIRONMENT);
 
-      await run(TASK_TEST_RUN_SHOW_FORK_RECOMMENDATIONS);
-
       const testFailures = await run(TASK_TEST_RUN_MOCHA_TESTS, {
         testFiles: files
       });
-
-      if (network.name === REDSPOT_NETWORK_NAME) {
-        const stackTracesFailures = await network.provider.send(
-          'redspot_getStackTraceFailuresCount'
-        );
-
-        if (stackTracesFailures !== 0) {
-          console.warn(
-            chalk.yellow(
-              `Failed to generate ${stackTracesFailures} ${pluralize(
-                stackTracesFailures,
-                'stack trace'
-              )}. Run Redspot with --verbose to learn more.`
-            )
-          );
-        }
-      }
 
       process.exitCode = testFailures;
       return testFailures;

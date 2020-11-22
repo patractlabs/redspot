@@ -14,5 +14,11 @@ module.exports = {
   parserOptions: {
     ...base.parserOptions,
     project: ['./tsconfig.json']
+  },
+  rules: {
+    ...base.rules,
+    'no-useless-constructor': 'off',
+    '@typescript-eslint/no-useless-constructor': 'off',
+    '@typescript-eslint/no-explicit-any': 'off'
   }
 };

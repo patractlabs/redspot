@@ -1,6 +1,5 @@
 import { REDSPOT_PARAM_DEFINITIONS } from '../core/params/redspot-params';
 import type redspot from '../lib/redspot-lib';
-
 import { ArgumentsParser } from './ArgumentsParser';
 
 interface CompletionEnv {

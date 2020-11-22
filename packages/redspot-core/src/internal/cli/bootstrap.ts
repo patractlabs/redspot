@@ -1,8 +1,6 @@
 import { fork } from 'child_process';
-
 import { getEnvRedspotArguments } from '../core/params/env-variables';
 import { REDSPOT_PARAM_DEFINITIONS } from '../core/params/redspot-params';
-
 import { ArgumentsParser } from './ArgumentsParser';
 
 const nodeArgs = [...process.execArgv];

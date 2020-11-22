@@ -1,11 +1,10 @@
 import findUp from 'find-up';
 import fsExtra from 'fs-extra';
 import path from 'path';
-
 import { getPackageRoot } from '../util/packageInfo';
-
 import { RedspotError } from './errors';
 import { ERRORS } from './errors-list';
+
 const JS_CONFIG_FILENAME = 'redspot.config.js';
 const TS_CONFIG_FILENAME = 'redspot.config.ts';
 

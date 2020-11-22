@@ -1,5 +1,4 @@
 import { RedspotConfig } from '../../types';
-
 import { resolveConfigPath } from './config/config-loading';
 import { RedspotError } from './errors';
 import { ERRORS } from './errors-list';

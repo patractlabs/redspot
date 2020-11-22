@@ -37,6 +37,7 @@
     "semver": "^6.3.0",
     "source-map-support": "^0.5.13",
     "stacktrace-parser": "^0.1.10",
+    "true-case-path": "^2.2.1",
     "ts-essentials": "^2.0.7",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.3",

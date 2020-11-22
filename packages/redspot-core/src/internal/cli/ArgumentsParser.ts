@@ -1,9 +1,9 @@
 import {
   CLIArgumentType,
-  RedspotArguments,
-  RedspotParamDefinitions,
   ParamDefinition,
   ParamDefinitionsMap,
+  RedspotArguments,
+  RedspotParamDefinitions,
   TaskArguments,
   TaskDefinition
 } from '../../types';
