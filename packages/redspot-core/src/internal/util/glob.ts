@@ -8,10 +8,12 @@ export async function glob(
 ): Promise<string[]> {
   const { default: globModule } = await import('glob');
   const files = await util.promisify(globModule)(pattern, options);
+
   return files.map(path.normalize);
 }
 
 export function globSync(pattern: string, options: GlobOptions = {}): string[] {
   const files = require('glob').sync(pattern, options);
+
   return files.map(path.normalize);
 }

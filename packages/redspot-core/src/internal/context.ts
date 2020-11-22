@@ -17,6 +17,7 @@ export type GlobalWithRedspotContext = NodeJS.Global & {
 export class RedspotContext {
   public static isCreated(): boolean {
     const globalWithRedspotContext = global as GlobalWithRedspotContext;
+
     return globalWithRedspotContext.__redspotContext !== undefined;
   }
 
@@ -24,23 +25,29 @@ export class RedspotContext {
     if (this.isCreated()) {
       throw new RedspotError(ERRORS.GENERAL.CONTEXT_ALREADY_CREATED);
     }
+
     const globalWithRedspotContext = global as GlobalWithRedspotContext;
     const ctx = new RedspotContext();
+
     globalWithRedspotContext.__redspotContext = ctx;
+
     return ctx;
   }
 
   public static getRedspotContext(): RedspotContext {
     const globalWithRedspotContext = global as GlobalWithRedspotContext;
     const ctx = globalWithRedspotContext.__redspotContext;
+
     if (ctx === undefined) {
       throw new RedspotError(ERRORS.GENERAL.CONTEXT_NOT_CREATED);
     }
+
     return ctx;
   }
 
   public static deleteRedspotContext() {
     const globalAsAny = global as any;
+
     globalAsAny.__redspotContext = undefined;
   }
 
@@ -59,6 +66,7 @@ export class RedspotContext {
     if (this.environment !== undefined) {
       throw new RedspotError(ERRORS.GENERAL.CONTEXT_HRE_ALREADY_DEFINED);
     }
+
     this.environment = env;
   }
 
@@ -66,6 +74,7 @@ export class RedspotContext {
     if (this.environment === undefined) {
       throw new RedspotError(ERRORS.GENERAL.CONTEXT_HRE_NOT_DEFINED);
     }
+
     return this.environment;
   }
 

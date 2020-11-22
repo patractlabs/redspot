@@ -33,6 +33,7 @@ export function parseJsonResponse(
     const json = JSON.parse(text);
 
     const responses = Array.isArray(json) ? json : [json];
+
     for (const response of responses) {
       if (!isValidJsonResponse(response)) {
         // We are sending the proper error inside the catch part of the statement.

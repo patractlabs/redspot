@@ -133,11 +133,12 @@ subtask(
           .map((p) => path.basename(p))
           .join(', ')}`
       );
-      artifacts.saveArtifact(output.wasmPaths);
+      await artifacts.saveArtifact(output.wasmPaths);
     }
+
     if (output.metadataPaths?.length) {
       console.log(`🚚  Copy abi files: ${output.metadataPaths.join(', ')}`);
-      artifacts.saveArtifact(output.metadataPaths);
+      await artifacts.saveArtifact(output.metadataPaths);
     }
 
     console.log(

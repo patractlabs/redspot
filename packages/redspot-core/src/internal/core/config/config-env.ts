@@ -127,11 +127,13 @@ export const types = argumentTypes;
 export function extendEnvironment(extender: EnvironmentExtender) {
   const ctx = RedspotContext.getRedspotContext();
   const extenderManager = ctx.extendersManager;
+
   extenderManager.add(extender);
 }
 
 export function extendConfig(extender: ConfigExtender) {
   const ctx = RedspotContext.getRedspotContext();
+
   ctx.configExtenders.push(extender);
 }
 
@@ -141,5 +143,6 @@ export function experimentalAddRedspotNetworkMessageTraceHook(
   hook: ExperimentalRedspotNetworkMessageTraceHook
 ) {
   const ctx = RedspotContext.getRedspotContext();
+
   ctx.experimentalRedspotNetworkMessageTraceHooks.push(hook);
 }

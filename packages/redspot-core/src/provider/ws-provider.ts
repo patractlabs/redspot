@@ -1,8 +1,3 @@
-// Copyright 2017-2020 @polkadot/rpc-provider authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
-/* eslint-disable camelcase */
-
 import {
   isChildClass,
   isNull,
@@ -182,6 +177,7 @@ export default class WsProvider implements IWsProvider {
           eventemitter.removeListener('connected', onConnect);
           eventemitter.removeListener('disconnected', onClose);
           eventemitter.removeListener('error', onClose);
+
           if (isConnected) {
             resolve();
           } else {
@@ -450,8 +446,7 @@ export default class WsProvider implements IWsProvider {
   };
 
   _onSocketMessageSubscribe = (response: JsonRpcResponse): void => {
-    const method =
-      ALIASSES[response.method as string] || response.method || 'invalid';
+    const method = ALIASSES[response.method] || response.method || 'invalid';
     const subId = `${method}::${response.params.subscription}`;
     const handler = this._subscriptions[subId];
 
@@ -495,8 +490,8 @@ export default class WsProvider implements IWsProvider {
 
     this._subscriptions = {};
 
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     Object.keys(subscriptions).forEach(
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       async (id): Promise<void> => {
         const { callback, method, params, type } = subscriptions[id];
 
@@ -520,7 +515,7 @@ export default class WsProvider implements IWsProvider {
     Object.keys(this._queued).forEach((id): void => {
       try {
         // we have done the websocket check in onSocketOpen, if an issue, will catch it
-        (this._websocket as WebSocket).send(this._queued[id]);
+        this._websocket.send(this._queued[id]);
 
         delete this._queued[id];
       } catch (error) {

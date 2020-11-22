@@ -12,6 +12,7 @@ import { validateConfig } from './config-validation';
 
 function importCsjOrEsModule(filePath: string): any {
   const imported = require(filePath);
+
   return imported.default !== undefined ? imported.default : imported;
 }
 
@@ -24,6 +25,7 @@ export function resolveConfigPath(configPath: string | undefined) {
       configPath = path.normalize(configPath);
     }
   }
+
   return configPath;
 }
 
@@ -123,10 +125,11 @@ export function analyzeModuleNotFoundError(error: any, configPath: string) {
   if (error.code !== 'MODULE_NOT_FOUND') {
     return;
   }
+
   const stackTrace = stackTraceParser.parse(error.stack);
   const throwingFile = stackTrace
     .filter((x) => x.file !== null)
-    .map((x) => x.file!)
+    .map((x) => x.file)
     .find((x) => path.isAbsolute(x));
 
   if (throwingFile === null || throwingFile === undefined) {
@@ -161,14 +164,17 @@ export function analyzeModuleNotFoundError(error: any, configPath: string) {
   }
 
   const missingPeerDependencies: { [name: string]: string } = {};
+
   for (const [peerDependency, version] of Object.entries(peerDependencies)) {
     const peerDependencyPackageJson = readPackageJson(peerDependency);
+
     if (peerDependencyPackageJson === undefined) {
       missingPeerDependencies[peerDependency] = version;
     }
   }
 
   const missingPeerDependenciesNames = Object.keys(missingPeerDependencies);
+
   if (missingPeerDependenciesNames.length > 0) {
     throw new RedspotError(ERRORS.PLUGINS.MISSING_DEPENDENCIES, {
       plugin: packageJson.name,

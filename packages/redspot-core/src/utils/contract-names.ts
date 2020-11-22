@@ -26,7 +26,7 @@ export function isFullyQualifiedName(name: string): boolean {
 export function parseFullyQualifiedName(
   fullyQualifiedName: string
 ): { sourceName: string; contractName: string } {
-  const { sourceName, contractName } = parseName(fullyQualifiedName);
+  const { contractName, sourceName } = parseName(fullyQualifiedName);
 
   if (sourceName === undefined) {
     throw new RedspotError(ERRORS.CONTRACT_NAMES.INVALID_FULLY_QUALIFIED_NAME, {

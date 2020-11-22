@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-types */
+
 import util from 'util';
 
 import { RedspotError } from '../core/errors';
@@ -38,6 +40,7 @@ export function lazyObject<T extends object>(objectCreator: () => T): T {
     (getRealTarget) => ({
       [inspect]() {
         const realTarget = getRealTarget();
+
         return util.inspect(realTarget);
       }
     }),
@@ -57,7 +60,6 @@ export function lazyObject<T extends object>(objectCreator: () => T): T {
   );
 }
 
-// tslint:disable-next-line ban-types
 export function lazyFunction<T extends Function>(functionCreator: () => T): T {
   return createLazyProxy(
     functionCreator,
@@ -66,6 +68,7 @@ export function lazyFunction<T extends Function>(functionCreator: () => T): T {
 
       (dummyTarget as any)[inspect] = function () {
         const realTarget = getRealTarget();
+
         return util.inspect(realTarget);
       };
 
@@ -95,13 +98,16 @@ function createLazyProxy<ActualT extends GuardT, GuardT extends object>(
   function getRealTarget(): ActualT {
     if (realTarget === undefined) {
       const target = targetCreator();
+
       validator(target);
 
       // We copy all properties. We won't use them, but help us avoid Proxy
       // invariant violations
       const properties = Object.getOwnPropertyNames(target);
+
       for (const property of properties) {
         const descriptor = Object.getOwnPropertyDescriptor(target, property)!;
+
         Object.defineProperty(dummyTarget, property, descriptor);
       }
 
@@ -129,11 +135,13 @@ function createLazyProxy<ActualT extends GuardT, GuardT extends object>(
   const handler: ProxyHandler<ActualT> = {
     defineProperty(target, property, descriptor) {
       Reflect.defineProperty(dummyTarget, property, descriptor);
+
       return Reflect.defineProperty(getRealTarget(), property, descriptor);
     },
 
     deleteProperty(target, property) {
       Reflect.deleteProperty(dummyTarget, property);
+
       return Reflect.deleteProperty(getRealTarget(), property);
     },
 
@@ -159,6 +167,7 @@ function createLazyProxy<ActualT extends GuardT, GuardT extends object>(
       // **THIS IS NOT ENOUGH** Users, and libraries (!!!!), will have their own
       // `require`s that we can't control and will trigger the same bug.
       const stack = new Error().stack;
+
       if (
         stack !== undefined &&
         stack.includes('givenProvider.js') &&
@@ -201,16 +210,19 @@ function createLazyProxy<ActualT extends GuardT, GuardT extends object>(
 
     preventExtensions(target) {
       Object.preventExtensions(dummyTarget);
+
       return Reflect.preventExtensions(getRealTarget());
     },
 
     set(target, property, value, receiver) {
       Reflect.set(dummyTarget, property, value, receiver);
+
       return Reflect.set(getRealTarget(), property, value, receiver);
     },
 
     setPrototypeOf(target, prototype) {
       Reflect.setPrototypeOf(dummyTarget, prototype);
+
       return Reflect.setPrototypeOf(getRealTarget(), prototype);
     }
   };
@@ -218,12 +230,10 @@ function createLazyProxy<ActualT extends GuardT, GuardT extends object>(
   if (dummyTarget instanceof Function) {
     // If dummy target is a function, the actual target must be a function too.
     handler.apply = (target, thisArg: any, argArray?: any) => {
-      // tslint:disable-next-line ban-types
       return Reflect.apply(getRealTarget() as Function, thisArg, argArray);
     };
 
     handler.construct = (target, argArray: any, newTarget?: any) => {
-      // tslint:disable-next-line ban-types
       return Reflect.construct(getRealTarget() as Function, argArray);
     };
   }

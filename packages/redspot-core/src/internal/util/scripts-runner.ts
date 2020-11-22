@@ -85,8 +85,10 @@ function withFixedInspectArg(argv: string[]) {
     if (arg.toLowerCase().includes('--inspect-brk=')) {
       return '--inspect';
     }
+
     return arg;
   };
+
   return argv.map(fixIfInspectArg);
 }
 

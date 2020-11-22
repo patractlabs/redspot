@@ -91,6 +91,7 @@ export class TasksDSL {
     name: string,
     action: ActionType<ArgsT>
   ): TaskDefinition;
+
   public subtask<ArgsT extends TaskArguments>(
     name: string,
     descriptionOrAction?: string | ActionType<ArgsT>,
@@ -141,6 +142,7 @@ export class TasksDSL {
     }
 
     this._tasks[name] = taskDefinition;
+
     return taskDefinition;
   }
 }

@@ -168,6 +168,7 @@ export function isAbsolutePathSourceName(sourceName: string): boolean {
  */
 function isExplicitRelativePath(sourceName: string): boolean {
   const [base] = sourceName.split('/', 1);
+
   return base === '.' || base === '..';
 }
 
@@ -178,6 +179,7 @@ function isExplicitRelativePath(sourceName: string): boolean {
  */
 export function replaceBackslashes(str: string): string {
   const slash = require('slash');
+
   return slash(str);
 }
 
@@ -190,6 +192,7 @@ async function getPathTrueCase(fromDir: string, p: string): Promise<string> {
 
   try {
     const tcp = await trueCasePath(p, fromDir);
+
     return normalizeSourceName(path.relative(fromDir, tcp));
   } catch (error) {
     if (

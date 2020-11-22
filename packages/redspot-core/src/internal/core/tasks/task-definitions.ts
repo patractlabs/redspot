@@ -17,6 +17,7 @@ function isCLIArgumentType(
 ): type is CLIArgumentType<any> {
   return 'parse' in type;
 }
+
 /**
  * This class creates a task definition, which consists of:
  * * a name, that should be unique and will be used to call the task.
@@ -29,6 +30,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
   get description() {
     return this._description;
   }
+
   public readonly paramDefinitions: ParamDefinitionsMap = {};
   public readonly positionalParamDefinitions: Array<ParamDefinition<any>> = [];
   public action: ActionType<TaskArguments>;
@@ -53,6 +55,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
     this._positionalParamNames = new Set();
     this._hasVariadicParam = false;
     this._hasOptionalPositionalParam = false;
+
     this.action = () => {
       throw new RedspotError(ERRORS.TASK_DEFINITIONS.ACTION_NOT_SET, {
         taskName: name
@@ -66,6 +69,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
    */
   public setDescription(description: string) {
     this._description = description;
+
     return this;
   }
 
@@ -76,6 +80,7 @@ export class SimpleTaskDefinition implements TaskDefinition {
   public setAction<ArgsT extends TaskArguments>(action: ActionType<ArgsT>) {
     // TODO: There's probably something bad here. See types.ts for more info.
     this.action = action;
+
     return this;
   }
 
@@ -490,7 +495,8 @@ export class SimpleTaskDefinition implements TaskDefinition {
 
   private _validateParamNameCasing(name: string) {
     const pattern = /^[a-z]+([a-zA-Z0-9])*$/;
-    const match = name.match(pattern);
+    const match = pattern.exec(name);
+
     if (match === null) {
       throw new RedspotError(
         ERRORS.TASK_DEFINITIONS.INVALID_PARAM_NAME_CASING,
@@ -562,6 +568,7 @@ export class OverriddenTaskDefinition implements TaskDefinition {
 
   public setDescription(description: string) {
     this._description = description;
+
     return this;
   }
 
@@ -572,6 +579,7 @@ export class OverriddenTaskDefinition implements TaskDefinition {
   public setAction<ArgsT extends TaskArguments>(action: ActionType<ArgsT>) {
     // TODO: There's probably something bad here. See types.ts for more info.
     this._action = action;
+
     return this;
   }
 
@@ -635,6 +643,7 @@ export class OverriddenTaskDefinition implements TaskDefinition {
         ERRORS.TASK_DEFINITIONS.OVERRIDE_NO_MANDATORY_PARAMS
       );
     }
+
     return this.addOptionalParam(name, description, defaultValue, type);
   }
 
@@ -653,6 +662,7 @@ export class OverriddenTaskDefinition implements TaskDefinition {
       defaultValue,
       type
     );
+
     return this;
   }
 
@@ -721,6 +731,7 @@ export class OverriddenTaskDefinition implements TaskDefinition {
    */
   public addFlag(name: string, description?: string): this {
     this.parentTaskDefinition.addFlag(name, description);
+
     return this;
   }
 

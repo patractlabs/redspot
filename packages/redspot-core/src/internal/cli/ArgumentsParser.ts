@@ -177,6 +177,7 @@ export class ArgumentsParser {
       if (taskArguments[paramName] !== undefined) {
         continue;
       }
+
       if (!definition.isOptional) {
         throw new RedspotError(ERRORS.ARGUMENTS.MISSING_TASK_ARGUMENT, {
           param: ArgumentsParser.paramNameToCLA(paramName)
@@ -193,6 +194,7 @@ export class ArgumentsParser {
     }
 
     const name = ArgumentsParser.cLAToParamName(str);
+
     return paramDefinitions[name] !== undefined;
   }
 
@@ -231,6 +233,7 @@ export class ArgumentsParser {
       // We only parse the arguments of non-subtasks, and those only
       // accept CLIArgumentTypes.
       const type = definition.type as CLIArgumentType<any>;
+
       parsedArguments[paramName] = type.parse(paramName, value);
     }
 

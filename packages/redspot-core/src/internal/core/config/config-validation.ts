@@ -9,12 +9,15 @@ function stringify(v: any): string {
   if (typeof v === 'function') {
     return getFunctionName(v);
   }
+
   if (typeof v === 'number' && !isFinite(v)) {
     if (isNaN(v)) {
       return 'NaN';
     }
+
     return v > 0 ? 'Infinity' : '-Infinity';
   }
+
   return JSON.stringify(v);
 }
 
@@ -59,7 +62,7 @@ export const DotPathReporter: Reporter<string[]> = {
 
 function optional<TypeT, OutputT>(
   codec: t.Type<TypeT, OutputT, unknown>,
-  name: string = `${codec.name} | undefined`
+  name = `${codec.name} | undefined`
 ): t.Type<TypeT | undefined, OutputT | undefined, unknown> {
   return new t.Type(
     name,
@@ -152,6 +155,7 @@ export function validateConfig(config: any) {
   }
 
   let errorList = errors.join('\n  * ');
+
   errorList = `  * ${errorList}`;
 
   throw new RedspotError(ERRORS.GENERAL.INVALID_CONFIG, { errors: errorList });
@@ -163,6 +167,7 @@ export function getValidationErrors(config: any): string[] {
   // These can't be validated with io-ts
   if (config !== undefined && typeof config.networks === 'object') {
     const redspotNetwork = config.networks[REDSPOT_NETWORK_NAME];
+
     if (redspotNetwork !== undefined) {
       if (typeof redspotNetwork.endpoint !== 'string') {
         errors.push(
@@ -190,5 +195,6 @@ export function getValidationErrors(config: any): string[] {
   }
 
   const ioTsErrors = DotPathReporter.report(result);
+
   return [...errors, ...ioTsErrors];
 }

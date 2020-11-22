@@ -35,6 +35,7 @@ async function printVersionMessage(packageJson: PackageJson) {
 
 function ensureValidNodeVersion(packageJson: PackageJson) {
   const requirement = packageJson.engines.node;
+
   if (!semver.satisfies(process.version, requirement)) {
     throw new RedspotError(ERRORS.GENERAL.INVALID_NODE_VERSION, {
       requirement
@@ -88,12 +89,14 @@ async function main() {
       );
       console.log(chalk.cyan(`  $ npx redspot-new <project-name>`));
       console.log('');
+
       return;
     }
 
     // --version is a special case
     if (redspotArguments.version) {
       await printVersionMessage(packageJson);
+
       return;
     }
 
@@ -110,7 +113,7 @@ async function main() {
     const ctx = RedspotContext.createRedspotContext();
     const config = loadConfigAndTasks(redspotArguments);
 
-    let telemetryConsent: boolean | undefined = hasConsentedTelemetry();
+    const telemetryConsent: boolean | undefined = hasConsentedTelemetry();
 
     const analytics = await Analytics.getInstance(telemetryConsent);
 
@@ -118,7 +121,7 @@ async function main() {
     const taskDefinitions = ctx.tasksDSL.getTaskDefinitions();
 
     // tslint:disable-next-line: prefer-const
-    let [abortAnalytics, hitPromise] = await analytics.sendTaskHit(taskName);
+    const [abortAnalytics, hitPromise] = await analytics.sendTaskHit(taskName);
 
     let taskArguments: TaskArguments;
 
@@ -161,6 +164,7 @@ async function main() {
     await env.run(taskName, taskArguments);
 
     const timestampAfterRun = new Date().getTime();
+
     if (
       timestampAfterRun - timestampBeforeRun >
       ANALYTICS_SLOW_TASK_THRESHOLD
@@ -169,6 +173,7 @@ async function main() {
     } else {
       abortAnalytics();
     }
+
     log(`Killing Redspot after successfully running task ${taskName}`);
   } catch (error) {
     let isRedspotError = false;

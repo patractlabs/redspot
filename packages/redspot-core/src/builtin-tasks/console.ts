@@ -13,7 +13,7 @@ task(TASK_CONSOLE, 'Opens a redspot console')
   .setAction(
     async (
       { noCompile }: { noCompile: boolean },
-      { config, run, redspotArguments }
+      { config, redspotArguments, run }
     ) => {
       if (!noCompile) {
         await run(TASK_COMPILE, { quiet: true });
@@ -23,6 +23,7 @@ task(TASK_CONSOLE, 'Opens a redspot console')
       const historyFile = path.join(config.paths.cache, 'console-history.txt');
 
       const nodeArgs = [];
+
       if (semver.gte(process.version, '10.0.0')) {
         nodeArgs.push('--experimental-repl-await');
       }

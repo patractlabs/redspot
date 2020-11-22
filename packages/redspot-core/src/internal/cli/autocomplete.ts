@@ -12,11 +12,13 @@ export async function complete({
   point
 }: CompletionEnv): Promise<string[]> {
   let hre: typeof redspot;
+
   try {
     process.env.TS_NODE_TRANSPILE_ONLY = '1';
     require('../../register');
     const { RedspotContext } = require('../context');
     const context = RedspotContext.getRedspotContext();
+
     hre = context.getRedspotRuntimeEnvironment();
   } catch (e) {
     return [];
@@ -39,6 +41,7 @@ export async function complete({
   // check if the user entered a task
   let task: string | undefined;
   let index = 1;
+
   while (index < words.length) {
     if (isGlobalFlag(words[index])) {
       index += 1;
@@ -70,6 +73,7 @@ export async function complete({
     const paramName = ArgumentsParser.cLAToParamName(prev);
 
     const globalParam: any = (REDSPOT_PARAM_DEFINITIONS as any)[paramName];
+
     if (globalParam !== undefined && !globalParam.isFlag) {
       return [];
     }
@@ -80,9 +84,11 @@ export async function complete({
     const tasks = Object.values(hre.tasks)
       .map((x) => x.name)
       .filter((x) => !x.includes(':'));
+
     if (last.startsWith('-')) {
       return coreParams;
     }
+
     return tasks;
   }
 
@@ -101,10 +107,12 @@ export async function complete({
 
 function isGlobalFlag(param: string): boolean {
   const paramName = ArgumentsParser.cLAToParamName(param);
+
   return (REDSPOT_PARAM_DEFINITIONS as any)[paramName]?.isFlag === true;
 }
 
 function isGlobalParam(param: string): boolean {
   const paramName = ArgumentsParser.cLAToParamName(param);
+
   return (REDSPOT_PARAM_DEFINITIONS as any)[paramName]?.isFlag === false;
 }

@@ -9,10 +9,6 @@ export interface Artifacts {
     contractNameOrFullyQualifiedName: string,
     type: 'abi' | 'wasm' | 'json'
   ): Artifact;
-  readArtifact(
-    contractNameOrFullyQualifiedName: string,
-    type: 'abi' | 'wasm' | 'json'
-  ): Promise<Artifact>;
   artifactExists(
     contractNameOrFullyQualifiedName: string,
     type: 'abi' | 'wasm' | 'json'
@@ -21,4 +17,4 @@ export interface Artifacts {
   saveArtifact(paths: string[]): Promise<void>;
 }
 
-export interface Artifact extends ContractProject {}
+export type Artifact = ContractProject;

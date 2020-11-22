@@ -46,6 +46,7 @@ export const boolean: CLIArgumentType<boolean> = {
     if (strValue.toLowerCase() === 'true') {
       return true;
     }
+
     if (strValue.toLowerCase() === 'false') {
       return false;
     }
@@ -111,6 +112,7 @@ export const int: CLIArgumentType<number> = {
    */
   validate: (argName: string, value: any): void => {
     const isInt = Number.isInteger(value);
+
     if (!isInt) {
       throw new RedspotError(ERRORS.ARGUMENTS.INVALID_VALUE_FOR_TYPE, {
         value,

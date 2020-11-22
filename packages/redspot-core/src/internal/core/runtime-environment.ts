@@ -72,6 +72,7 @@ export class Environment implements RedspotRuntimeEnvironment {
 
     const provider = lazyObject(() => {
       log(`Creating provider for network ${networkName}`);
+
       return createProvider(networkName, networkConfig);
     });
 
@@ -194,6 +195,7 @@ export class Environment implements RedspotRuntimeEnvironment {
 
     const globalAsAny = global as any;
     const previousRunSuper: any = globalAsAny.runSuper;
+
     globalAsAny.runSuper = runSuper;
 
     const uninjectFromGlobal = this.injectToGlobal();
@@ -247,12 +249,14 @@ export class Environment implements RedspotRuntimeEnvironment {
             paramDefinition,
             argumentValue
           );
+
           if (resolvedArgumentValue !== undefined) {
             values[paramName] = resolvedArgumentValue;
           }
         } catch (error) {
           errors.push(error);
         }
+
         return { errors, values };
       },
       initResolvedArguments
@@ -282,7 +286,7 @@ export class Environment implements RedspotRuntimeEnvironment {
     paramDefinition: ParamDefinition<any>,
     argumentValue: any
   ) {
-    const { name, isOptional, defaultValue, type } = paramDefinition;
+    const { defaultValue, isOptional, name, type } = paramDefinition;
 
     if (argumentValue === undefined) {
       if (isOptional) {
@@ -314,7 +318,7 @@ export class Environment implements RedspotRuntimeEnvironment {
     paramDefinition: ParamDefinition<any>,
     argumentValue: any
   ) {
-    const { name: paramName, type, isVariadic } = paramDefinition;
+    const { isVariadic, name: paramName, type } = paramDefinition;
 
     // in case of variadic param, argValue is an array and the type validation must pass for all values.
     // otherwise, it's a single value that is to be validated

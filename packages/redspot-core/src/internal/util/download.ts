@@ -16,6 +16,7 @@ export async function download(
 
   if (response.ok && response.body !== null) {
     await fsExtra.ensureDir(path.dirname(filePath));
+
     return streamPipeline(response.body, fs.createWriteStream(filePath));
   }
 

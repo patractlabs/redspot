@@ -43,6 +43,7 @@ subtask(TASK_TEST_RUN_MOCHA_TESTS)
   .setAction(async ({ testFiles }: { testFiles: string[] }, { config }) => {
     const { default: Mocha } = await import('mocha');
     const mocha = new Mocha(config.mocha);
+
     testFiles.forEach((file) => mocha.addFile(file));
 
     const testFailures = await new Promise<number>((resolve, _) => {
@@ -62,13 +63,13 @@ task(TASK_TEST, 'Runs mocha tests')
   .setAction(
     async (
       {
-        testFiles,
-        noCompile
+        noCompile,
+        testFiles
       }: {
         testFiles: string[];
         noCompile: boolean;
       },
-      { run, network }
+      { network, run }
     ) => {
       if (!noCompile) {
         await run(TASK_COMPILE, { quiet: true });
@@ -83,6 +84,7 @@ task(TASK_TEST, 'Runs mocha tests')
       });
 
       process.exitCode = testFailures;
+
       return testFailures;
     }
   );

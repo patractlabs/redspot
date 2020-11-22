@@ -26,6 +26,7 @@ export function findClosestPackageJson(file: string): string | null {
 
 export async function getPackageJson(): Promise<PackageJson> {
   const root = getPackageRoot();
+
   return fsExtra.readJSON(path.join(root, 'package.json'));
 }
 
@@ -38,6 +39,7 @@ export function getRedspotVersion(): string | null {
 
   try {
     const packageJson = fsExtra.readJsonSync(packageJsonPath);
+
     return packageJson.version;
   } catch (e) {
     return null;

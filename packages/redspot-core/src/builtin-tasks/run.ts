@@ -16,8 +16,8 @@ task(TASK_RUN, 'Runs a user-defined script after compiling the project')
   .addFlag('noCompile', "Don't compile before running this task")
   .setAction(
     async (
-      { script, noCompile }: { script: string; noCompile: boolean },
-      { run, redspotArguments }
+      { noCompile, script }: { script: string; noCompile: boolean },
+      { redspotArguments, run }
     ) => {
       if (!(await fsExtra.pathExists(script))) {
         throw new RedspotError(ERRORS.BUILTIN_TASKS.RUN_FILE_NOT_FOUND, {

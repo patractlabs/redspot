@@ -34,7 +34,7 @@ export interface NetworksUserConfig {
 
 export type NetworkUserConfig = RedspotNetworkUserConfig;
 
-export interface RedspotNetworkConfig extends RedspotNetworkUserConfig {}
+export type RedspotNetworkConfig = RedspotNetworkUserConfig;
 
 export type NetworkConfig = RedspotNetworkConfig;
 

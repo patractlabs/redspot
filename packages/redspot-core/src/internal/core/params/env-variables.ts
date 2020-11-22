@@ -1,10 +1,10 @@
-import ProcessEnv = NodeJS.ProcessEnv;
-
 import { RedspotArguments, RedspotParamDefinitions } from '../../../types';
 import { ArgumentsParser } from '../../cli/ArgumentsParser';
 import { unsafeObjectKeys } from '../../util/unsafe';
 import { RedspotError } from '../errors';
 import { ERRORS } from '../errors-list';
+
+import ProcessEnv = NodeJS.ProcessEnv;
 
 const REDSPOT_ENV_ARGUMENT_PREFIX = 'REDSPOT_';
 

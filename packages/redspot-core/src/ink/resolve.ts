@@ -4,6 +4,7 @@ import fs from 'fs-extra';
 import path from 'path';
 import { RedspotConfig } from '../types';
 
+/* eslint-disable camelcase */
 export interface CargoPackage {
   name: string;
   version: string;
@@ -63,6 +64,7 @@ export function getResolvedWorkspace(findDir?: string): CargoMetadata {
       maxBuffer: 1024 * 2048,
       cwd
     }).toString();
+
     return JSON.parse(output);
   } catch (error) {
     throw new Error(chalk.red(`$ \`${execCommand}\` has failed`));
@@ -70,7 +72,7 @@ export function getResolvedWorkspace(findDir?: string): CargoMetadata {
 }
 
 export function filterContractPackage(metadata: CargoMetadata): CargoMetadata {
-  const contracts = metadata.packages.filter(({ id, dependencies }) => {
+  const contracts = metadata.packages.filter(({ dependencies, id }) => {
     return (
       (metadata.workspace_members || []).includes(id) &&
       !!dependencies.find(({ name }: any) => name === 'ink_lang')

@@ -23,6 +23,7 @@ export class CustomError extends Error {
 
   public [inspect]() {
     let str = this.stack;
+
     if (this.parent !== undefined) {
       const parentAsAny = this.parent as any;
       const causeString =
@@ -35,10 +36,12 @@ export class CustomError extends Error {
         .map((line: string) => `    ${line}`)
         .join('\n')
         .trim();
+
       str += `
 
     Caused by: ${nestedCauseStr}`;
     }
+
     return str;
   }
 }

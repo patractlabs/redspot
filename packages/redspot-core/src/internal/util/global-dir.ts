@@ -8,41 +8,52 @@ const log = debug('redspot:core:global-dir');
 
 async function generatePaths(packageName = 'redspot') {
   const { default: envPaths } = await import('env-paths');
+
   return envPaths(packageName);
 }
 
 function generatePathsSync(packageName = 'redspot') {
   const envPaths: typeof envPathsT = require('env-paths');
+
   return envPaths(packageName);
 }
 
 async function getConfigDir(): Promise<string> {
   const { config } = await generatePaths();
+
   await fs.ensureDir(config);
+
   return config;
 }
 
 function getConfigDirSync(): string {
   const { config } = generatePathsSync();
+
   fs.ensureDirSync(config);
+
   return config;
 }
 
 async function getDataDir(packageName?: string): Promise<string> {
   const { data } = await generatePaths(packageName);
+
   await fs.ensureDir(data);
+
   return data;
 }
 
 export async function getCacheDir(): Promise<string> {
   const { cache } = await generatePaths();
+
   await fs.ensureDir(cache);
+
   return cache;
 }
 
 export async function readAnalyticsId() {
   const globalDataDir = await getDataDir();
   const idFile = path.join(globalDataDir, 'analytics.json');
+
   return readId(idFile);
 }
 
@@ -51,6 +62,7 @@ export async function readAnalyticsId() {
  */
 export function readFirstLegacyAnalyticsId() {
   const oldIdFile = path.join(os.homedir(), '.buidler', 'config.json');
+
   return readId(oldIdFile);
 }
 
@@ -61,26 +73,31 @@ export function readFirstLegacyAnalyticsId() {
 export async function readSecondLegacyAnalyticsId() {
   const globalDataDir = await getDataDir('buidler');
   const idFile = path.join(globalDataDir, 'analytics.json');
+
   return readId(idFile);
 }
 
 async function readId(idFile: string): Promise<string | undefined> {
   log(`Looking up Client Id at ${idFile}`);
   let clientId: string;
+
   try {
     const data = await fs.readJSON(idFile, { encoding: 'utf8' });
+
     clientId = data.analytics.clientId;
   } catch (error) {
     return undefined;
   }
 
   log(`Client Id found: ${clientId}`);
+
   return clientId;
 }
 
 export async function writeAnalyticsId(clientId: string) {
   const globalDataDir = await getDataDir();
   const idFile = path.join(globalDataDir, 'analytics.json');
+
   await fs.writeJSON(
     idFile,
     {
@@ -96,7 +113,9 @@ export async function writeAnalyticsId(clientId: string) {
 export async function getCompilersDir() {
   const cache = await getCacheDir();
   const compilersCache = path.join(cache, 'compilers');
+
   await fs.ensureDir(compilersCache);
+
   return compilersCache;
 }
 
@@ -116,6 +135,7 @@ export function hasConsentedTelemetry(): boolean | undefined {
   }
 
   const { consent } = fs.readJSONSync(telemetryConsentPath);
+
   return consent;
 }
 

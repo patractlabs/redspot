@@ -12,7 +12,6 @@
   ],
   "devDependencies": {
     "@patract/dev": "^0.5.5",
-    "@redspot/dev-cli": "0.3.3",
     "@types/chai": "^4.2.0",
     "@types/ci-info": "^2.0.0",
     "@types/cross-spawn": "^6.0.2",

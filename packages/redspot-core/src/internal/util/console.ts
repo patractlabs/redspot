@@ -1,5 +1,6 @@
 export function isNodeCalledWithoutAScript() {
   const script = process.argv[1];
+
   return script === undefined || script.trim() === '';
 }
 

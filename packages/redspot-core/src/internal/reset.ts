@@ -8,12 +8,14 @@ export function resetRedspotContext() {
 
     if (ctx.environment !== undefined) {
       const globalAsAny = global as any;
+
       for (const key of Object.keys(ctx.environment)) {
         globalAsAny[key] = undefined;
       }
     }
 
     const filesLoadedDuringConfig = ctx.getFilesLoadedDuringConfig();
+
     filesLoadedDuringConfig.forEach(unloadModule);
 
     RedspotContext.deleteRedspotContext();

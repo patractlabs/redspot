@@ -12,6 +12,7 @@ let cachedIsTypescriptSupported: boolean | undefined;
  */
 export function willRunWithTypescript(configPath?: string): boolean {
   const config = resolveConfigPath(configPath);
+
   return isTypescriptFile(config);
 }
 
@@ -54,6 +55,7 @@ export function loadTsNode() {
   if (isRunningRedspotCoreTests()) {
     // tslint:disable-next-line no-implicit-dependencies
     require('ts-node/register/transpile-only');
+
     return;
   }
 

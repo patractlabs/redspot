@@ -12,7 +12,6 @@ export default class AccountSigner implements IAccountSigner {
   readonly pair: KeyringPair;
   readonly gasLimit: BN;
   readonly registry: Registry;
-  readonly sign: (data: Uint8Array, options?: SignOptions) => Uint8Array;
 
   constructor(
     registry: Registry,
@@ -24,7 +23,6 @@ export default class AccountSigner implements IAccountSigner {
     this.registry = registry;
     this.pair = keyringPair;
     this.gasLimit = defaults.gasLimit;
-    this.sign = keyringPair.sign;
   }
 
   get address() {
@@ -37,6 +35,10 @@ export default class AccountSigner implements IAccountSigner {
 
   get publicKey() {
     return this.pair.publicKey;
+  }
+
+  public sign(data: Uint8Array, options?: SignOptions): Uint8Array {
+    return this.pair.sign(data, options);
   }
 
   public async signPayload(payload: SignerPayloadJSON): Promise<SignerResult> {

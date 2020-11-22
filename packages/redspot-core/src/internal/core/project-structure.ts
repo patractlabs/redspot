@@ -17,11 +17,13 @@ export function isCwdInsideProject() {
 
 export function getUserConfigPath() {
   const tsConfigPath = findUp.sync(TS_CONFIG_FILENAME);
+
   if (tsConfigPath !== null) {
     return tsConfigPath;
   }
 
   const pathToConfigFile = findUp.sync(JS_CONFIG_FILENAME);
+
   if (pathToConfigFile === null) {
     throw new RedspotError(ERRORS.GENERAL.NOT_INSIDE_PROJECT);
   }

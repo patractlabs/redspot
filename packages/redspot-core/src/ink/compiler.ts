@@ -23,16 +23,15 @@ export class Compiler {
     this._metadata = metadata;
     this._toolchain = toolchain;
     this._verbose = verbose;
-    const pass = this.checkRustEnv();
-    if (!pass) {
-      throw new Error('Unable to compile the contracts');
-    }
+    this.checkRustEnv();
   }
 
-  public async checkRustEnv() {
+  public checkRustEnv() {
     let version: string;
+
     try {
       const versionData = execSync('cargo contract -V');
+
       version = versionData.toString().split(' ')[1];
     } catch (error) {
       console.log(chalk.red('ERROR: No `cargo-contract` found'));
@@ -42,6 +41,7 @@ export class Compiler {
           `$ cargo install --git https://github.com/paritytech/cargo-contract cargo-contract --force`
         )
       );
+
       return false;
     }
 
@@ -55,8 +55,11 @@ export class Compiler {
           `$ cargo install --git https://github.com/paritytech/cargo-contract cargo-contract --force`
         )
       );
+
       return false;
     }
+
+    return true;
   }
 
   public async compileAll(): Promise<string[]> {
@@ -64,6 +67,7 @@ export class Compiler {
 
     for (const contract of this._metadata.packages) {
       const wasmPath = await this.compile(contract.name);
+
       wasmFiles.push(wasmPath);
     }
 
@@ -95,6 +99,7 @@ export class Compiler {
   public async runCompile(contract: CargoPackage) {
     return new Promise((resolve, reject) => {
       let args = [`+${this._toolchain}`, `contract`, 'build'];
+
       if (this._verbose) {
         args = args.concat('--', 'verbose');
       }
@@ -114,11 +119,14 @@ export class Compiler {
               `Failed to compile the contract ${chalk.yellow(contract.name)}`
             )
           );
+          // eslint-disable-next-line prefer-promise-reject-errors
           reject({
             command: `cargo ${args.join(' ')}`
           });
+
           return;
         }
+
         resolve();
       });
     });
@@ -193,11 +201,14 @@ export class Compiler {
               `Failed to generate the metadata ${chalk.yellow(contract.name)}`
             )
           );
+          // eslint-disable-next-line prefer-promise-reject-errors
           reject({
             command: `cargo ${args.join(' ')}`
           });
+
           return;
         }
+
         resolve();
       });
     });

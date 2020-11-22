@@ -88,6 +88,7 @@ export class Artifacts implements IArtifacts {
   ): Promise<boolean> {
     try {
       await this.readArtifact(name, type);
+
       return true;
     } catch (e) {
       return false;
@@ -120,6 +121,7 @@ export class Artifacts implements IArtifacts {
     type: 'abi' | 'wasm' | 'json'
   ): Promise<string> {
     const files = await this.getArtifactPaths(type);
+
     return this._getArtifactPathFromFiles(name, files, type);
   }
 
@@ -134,6 +136,7 @@ export class Artifacts implements IArtifacts {
     type: 'abi' | 'wasm' | 'json'
   ): string {
     const files = this._getArtifactPathsSync(type);
+
     return this._getArtifactPathFromFiles(name, files, type);
   }
 

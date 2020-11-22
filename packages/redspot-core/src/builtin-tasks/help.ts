@@ -23,6 +23,7 @@ task(TASK_HELP, 'Prints this message')
 
     if (taskName !== undefined) {
       helpPrinter.printTaskHelp(taskName);
+
       return;
     }
 

@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-types */
+
 import { EventEmitter } from 'events';
 
 // IMPORTANT NOTE: This class is type-checked against the currently installed
@@ -18,11 +20,13 @@ export class EventEmitterWrapper implements EventEmitter {
     listener: (...args: any[]) => void
   ): this {
     this._wrapped.addListener(event, listener);
+
     return this;
   }
 
   public on(event: string | symbol, listener: (...args: any[]) => void): this {
     this._wrapped.on(event, listener);
+
     return this;
   }
 
@@ -31,6 +35,7 @@ export class EventEmitterWrapper implements EventEmitter {
     listener: (...args: any[]) => void
   ): this {
     this._wrapped.once(event, listener);
+
     return this;
   }
 
@@ -39,6 +44,7 @@ export class EventEmitterWrapper implements EventEmitter {
     listener: (...args: any[]) => void
   ): this {
     this._wrapped.prependListener(event, listener);
+
     return this;
   }
 
@@ -47,6 +53,7 @@ export class EventEmitterWrapper implements EventEmitter {
     listener: (...args: any[]) => void
   ): this {
     this._wrapped.prependOnceListener(event, listener);
+
     return this;
   }
 
@@ -55,21 +62,25 @@ export class EventEmitterWrapper implements EventEmitter {
     listener: (...args: any[]) => void
   ): this {
     this._wrapped.removeListener(event, listener);
+
     return this;
   }
 
   public off(event: string | symbol, listener: (...args: any[]) => void): this {
     this._wrapped.off(event, listener);
+
     return this;
   }
 
   public removeAllListeners(event?: string | symbol | undefined): this {
     this._wrapped.removeAllListeners(event);
+
     return this;
   }
 
   public setMaxListeners(n: number): this {
     this._wrapped.setMaxListeners(n);
+
     return this;
   }
 
@@ -77,12 +88,10 @@ export class EventEmitterWrapper implements EventEmitter {
     return this._wrapped.getMaxListeners();
   }
 
-  // tslint:disable-next-line ban-types
   public listeners(event: string | symbol): Function[] {
     return this._wrapped.listeners(event);
   }
 
-  // tslint:disable-next-line ban-types
   public rawListeners(event: string | symbol): Function[] {
     return this._wrapped.rawListeners(event);
   }

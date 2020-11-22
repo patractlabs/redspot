@@ -31,6 +31,7 @@ export class HelpPrinter {
     console.log('\n\nAVAILABLE TASKS:\n');
 
     const tasksToShow: TasksMap = {};
+
     for (const [taskName, taskDefinition] of Object.entries(this._tasks)) {
       if (includeSubtasks || !taskDefinition.isSubtask) {
         tasksToShow[taskName] = taskDefinition;
@@ -168,10 +169,10 @@ export class HelpPrinter {
 
     for (const name of Object.keys(paramDefinitions).sort()) {
       const {
-        description,
         defaultValue,
-        isOptional,
-        isFlag
+        description,
+        isFlag,
+        isOptional
       } = paramDefinitions[name];
 
       let msg = `  ${ArgumentsParser.paramNameToCLA(name).padEnd(
@@ -198,7 +199,7 @@ export class HelpPrinter {
       .reduce((a, b) => Math.max(a, b), 0);
 
     for (const definition of positionalParamDefinitions) {
-      const { name, description, isOptional, defaultValue } = definition;
+      const { defaultValue, description, isOptional, name } = definition;
 
       let msg = `  ${name.padEnd(paramsNameLength)}\t`;
 
