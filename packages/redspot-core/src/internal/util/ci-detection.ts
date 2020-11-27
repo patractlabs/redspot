@@ -1,5 +1,5 @@
-import ci from "ci-info";
-import os from "os";
+import ci from 'ci-info';
+import os from 'os';
 
 // This has been tested in:
 //   - Travis CI
@@ -31,7 +31,7 @@ function isGithubActions(): boolean {
 }
 
 function isLinuxWithoutDisplayServer(): boolean {
-  if (os.type() !== "Linux") {
+  if (os.type() !== 'Linux') {
     return false;
   }
 

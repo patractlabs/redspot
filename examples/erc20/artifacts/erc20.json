@@ -1,14 +1,16 @@
 {
   "metadataVersion": "0.1.0",
   "source": {
-    "hash": "0xd04100ad921d8304934ecb3a0c77b4a6523b695f82276467edb1c598410c7689",
+    "hash": "0xa065be2f598bfb6b3595f936eb22c1d6e03333eb8aa1194e433f77cb0a6968ba",
     "language": "ink! 3.0.0-rc2",
-    "compiler": "rustc 1.49.0-nightly"
+    "compiler": "rustc 1.48.0-nightly"
   },
   "contract": {
     "name": "erc20",
     "version": "3.0.0",
-    "authors": ["Parity Technologies <admin@parity.io>"]
+    "authors": [
+      "Parity Technologies <admin@parity.io>"
+    ]
   },
   "spec": {
     "constructors": [
@@ -17,7 +19,9 @@
           {
             "name": "initial_supply",
             "type": {
-              "displayName": ["Balance"],
+              "displayName": [
+                "Balance"
+              ],
               "type": 1
             }
           }
@@ -25,7 +29,9 @@
         "docs": [
           " Creates a new ERC-20 contract with the specified initial supply."
         ],
-        "name": ["new"],
+        "name": [
+          "new"
+        ],
         "selector": "0xd183512b"
       }
     ],
@@ -38,7 +44,9 @@
             "indexed": true,
             "name": "from",
             "type": {
-              "displayName": ["Option"],
+              "displayName": [
+                "Option"
+              ],
               "type": 15
             }
           },
@@ -47,7 +55,9 @@
             "indexed": true,
             "name": "to",
             "type": {
-              "displayName": ["Option"],
+              "displayName": [
+                "Option"
+              ],
               "type": 15
             }
           },
@@ -56,12 +66,16 @@
             "indexed": true,
             "name": "value",
             "type": {
-              "displayName": ["Balance"],
+              "displayName": [
+                "Balance"
+              ],
               "type": 1
             }
           }
         ],
-        "docs": [" Event emitted when a token transfer occurs."],
+        "docs": [
+          " Event emitted when a token transfer occurs."
+        ],
         "name": "Transfer"
       },
       {
@@ -71,7 +85,9 @@
             "indexed": true,
             "name": "owner",
             "type": {
-              "displayName": ["AccountId"],
+              "displayName": [
+                "AccountId"
+              ],
               "type": 5
             }
           },
@@ -80,7 +96,9 @@
             "indexed": true,
             "name": "spender",
             "type": {
-              "displayName": ["AccountId"],
+              "displayName": [
+                "AccountId"
+              ],
               "type": 5
             }
           },
@@ -89,7 +107,9 @@
             "indexed": true,
             "name": "value",
             "type": {
-              "displayName": ["Balance"],
+              "displayName": [
+                "Balance"
+              ],
               "type": 1
             }
           }
@@ -104,12 +124,18 @@
     "messages": [
       {
         "args": [],
-        "docs": [" Returns the total token supply."],
+        "docs": [
+          " Returns the total token supply."
+        ],
         "mutates": false,
-        "name": ["total_supply"],
+        "name": [
+          "total_supply"
+        ],
         "payable": false,
         "returnType": {
-          "displayName": ["Balance"],
+          "displayName": [
+            "Balance"
+          ],
           "type": 1
         },
         "selector": "0xdcb736b5"
@@ -119,7 +145,9 @@
           {
             "name": "owner",
             "type": {
-              "displayName": ["AccountId"],
+              "displayName": [
+                "AccountId"
+              ],
               "type": 5
             }
           }
@@ -130,10 +158,14 @@
           " Returns `0` if the account is non-existent."
         ],
         "mutates": false,
-        "name": ["balance_of"],
+        "name": [
+          "balance_of"
+        ],
         "payable": false,
         "returnType": {
-          "displayName": ["Balance"],
+          "displayName": [
+            "Balance"
+          ],
           "type": 1
         },
         "selector": "0x56e929b2"
@@ -143,14 +175,18 @@
           {
             "name": "owner",
             "type": {
-              "displayName": ["AccountId"],
+              "displayName": [
+                "AccountId"
+              ],
               "type": 5
             }
           },
           {
             "name": "spender",
             "type": {
-              "displayName": ["AccountId"],
+              "displayName": [
+                "AccountId"
+              ],
               "type": 5
             }
           }
@@ -161,10 +197,14 @@
           " Returns `0` if no allowance has been set `0`."
         ],
         "mutates": false,
-        "name": ["allowance"],
+        "name": [
+          "allowance"
+        ],
         "payable": false,
         "returnType": {
-          "displayName": ["Balance"],
+          "displayName": [
+            "Balance"
+          ],
           "type": 1
         },
         "selector": "0xf3cfff66"
@@ -174,14 +214,18 @@
           {
             "name": "to",
             "type": {
-              "displayName": ["AccountId"],
+              "displayName": [
+                "AccountId"
+              ],
               "type": 5
             }
           },
           {
             "name": "value",
             "type": {
-              "displayName": ["Balance"],
+              "displayName": [
+                "Balance"
+              ],
               "type": 1
             }
           }
@@ -197,10 +241,14 @@
           " the caller's account balance."
         ],
         "mutates": true,
-        "name": ["transfer"],
+        "name": [
+          "transfer"
+        ],
         "payable": false,
         "returnType": {
-          "displayName": ["Result"],
+          "displayName": [
+            "Result"
+          ],
           "type": 12
         },
         "selector": "0xfae3a09d"
@@ -210,14 +258,18 @@
           {
             "name": "spender",
             "type": {
-              "displayName": ["AccountId"],
+              "displayName": [
+                "AccountId"
+              ],
               "type": 5
             }
           },
           {
             "name": "value",
             "type": {
-              "displayName": ["Balance"],
+              "displayName": [
+                "Balance"
+              ],
               "type": 1
             }
           }
@@ -231,10 +283,14 @@
           " An `Approval` event is emitted."
         ],
         "mutates": true,
-        "name": ["approve"],
+        "name": [
+          "approve"
+        ],
         "payable": false,
         "returnType": {
-          "displayName": ["Result"],
+          "displayName": [
+            "Result"
+          ],
           "type": 12
         },
         "selector": "0x03d0e114"
@@ -244,21 +300,27 @@
           {
             "name": "from",
             "type": {
-              "displayName": ["AccountId"],
+              "displayName": [
+                "AccountId"
+              ],
               "type": 5
             }
           },
           {
             "name": "to",
             "type": {
-              "displayName": ["AccountId"],
+              "displayName": [
+                "AccountId"
+              ],
               "type": 5
             }
           },
           {
             "name": "value",
             "type": {
-              "displayName": ["Balance"],
+              "displayName": [
+                "Balance"
+              ],
               "type": 1
             }
           }
@@ -280,10 +342,14 @@
           " the the account balance of `from`."
         ],
         "mutates": true,
-        "name": ["transfer_from"],
+        "name": [
+          "transfer_from"
+        ],
         "payable": false,
         "returnType": {
-          "displayName": ["Result"],
+          "displayName": [
+            "Result"
+          ],
           "type": 12
         },
         "selector": "0xfcfb2ccd"
@@ -490,7 +556,12 @@
           ]
         }
       },
-      "path": ["ink_storage", "collections", "stash", "Header"]
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "Header"
+      ]
     },
     {
       "def": {
@@ -520,8 +591,15 @@
           ]
         }
       },
-      "params": [5],
-      "path": ["ink_storage", "collections", "stash", "Entry"]
+      "params": [
+        5
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "Entry"
+      ]
     },
     {
       "def": {
@@ -533,7 +611,11 @@
           ]
         }
       },
-      "path": ["ink_env", "types", "AccountId"]
+      "path": [
+        "ink_env",
+        "types",
+        "AccountId"
+      ]
     },
     {
       "def": {
@@ -563,7 +645,12 @@
           ]
         }
       },
-      "path": ["ink_storage", "collections", "stash", "VacantEntry"]
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "VacantEntry"
+      ]
     },
     {
       "def": {
@@ -580,8 +667,15 @@
           ]
         }
       },
-      "params": [1],
-      "path": ["ink_storage", "collections", "hashmap", "ValueEntry"]
+      "params": [
+        1
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "hashmap",
+        "ValueEntry"
+      ]
     },
     {
       "def": {
@@ -606,12 +700,22 @@
           ]
         }
       },
-      "params": [11],
-      "path": ["ink_storage", "collections", "stash", "Entry"]
+      "params": [
+        11
+      ],
+      "path": [
+        "ink_storage",
+        "collections",
+        "stash",
+        "Entry"
+      ]
     },
     {
       "def": {
-        "tuple": [5, 5]
+        "tuple": [
+          5,
+          5
+        ]
       }
     },
     {
@@ -637,8 +741,13 @@
           ]
         }
       },
-      "params": [13, 14],
-      "path": ["Result"]
+      "params": [
+        13,
+        14
+      ],
+      "path": [
+        "Result"
+      ]
     },
     {
       "def": {
@@ -660,7 +769,11 @@
           ]
         }
       },
-      "path": ["erc20", "erc20", "Error"]
+      "path": [
+        "erc20",
+        "erc20",
+        "Error"
+      ]
     },
     {
       "def": {
@@ -680,8 +793,12 @@
           ]
         }
       },
-      "params": [5],
-      "path": ["Option"]
+      "params": [
+        5
+      ],
+      "path": [
+        "Option"
+      ]
     }
   ]
 }

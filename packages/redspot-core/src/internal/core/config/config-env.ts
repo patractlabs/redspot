@@ -3,18 +3,39 @@ import {
   ConfigExtender,
   ConfigurableTaskDefinition,
   EnvironmentExtender,
-  TaskArguments,
-} from "../../../types";
-import { RedspotContext } from "../../context";
-import * as argumentTypes from "../params/argumentTypes";
-import { usePlugin as usePluginImplementation } from "../plugins";
+  ExperimentalRedspotNetworkMessageTraceHook,
+  TaskArguments
+} from '../../../types';
+import { RedspotContext } from '../../context';
+import * as argumentTypes from '../params/argumentTypes';
 
+/**
+ * Creates a task, overriding any previous task with the same name.
+ *
+ * @remarks The action must await every async call made within it.
+ *
+ * @param name The task's name.
+ * @param description The task's description.
+ * @param action The task's action.
+ * @returns A task definition.
+ */
 export function task<ArgsT extends TaskArguments>(
   name: string,
   description?: string,
   action?: ActionType<ArgsT>
 ): ConfigurableTaskDefinition;
 
+/**
+ * Creates a task without description, overriding any previous task
+ * with the same name.
+ *
+ * @remarks The action must await every async call made within it.
+ *
+ * @param name The task's name.
+ * @param action The task's action.
+ *
+ * @returns A task definition.
+ */
 export function task<ArgsT extends TaskArguments>(
   name: string,
   action: ActionType<ArgsT>
@@ -32,25 +53,47 @@ export function task<ArgsT extends TaskArguments>(
     return dsl.task(name);
   }
 
-  if (typeof descriptionOrAction !== "string") {
+  if (typeof descriptionOrAction !== 'string') {
     return dsl.task(name, descriptionOrAction);
   }
 
   return dsl.task(name, descriptionOrAction, action);
 }
 
-export function internalTask<ArgsT extends TaskArguments>(
+/**
+ * Creates a subtask, overriding any previous task with the same name.
+ *
+ * @remarks The subtasks won't be displayed in the CLI help messages.
+ * @remarks The action must await every async call made within it.
+ *
+ * @param name The task's name.
+ * @param description The task's description.
+ * @param action The task's action.
+ * @returns A task definition.
+ */
+export function subtask<ArgsT extends TaskArguments>(
   name: string,
   description?: string,
   action?: ActionType<ArgsT>
 ): ConfigurableTaskDefinition;
 
-export function internalTask<ArgsT extends TaskArguments>(
+/**
+ * Creates a subtask without description, overriding any previous
+ * task with the same name.
+ *
+ * @remarks The subtasks won't be displayed in the CLI help messages.
+ * @remarks The action must await every async call made within it.
+ *
+ * @param name The task's name.
+ * @param action The task's action.
+ * @returns A task definition.
+ */
+export function subtask<ArgsT extends TaskArguments>(
   name: string,
   action: ActionType<ArgsT>
 ): ConfigurableTaskDefinition;
 
-export function internalTask<ArgsT extends TaskArguments>(
+export function subtask<ArgsT extends TaskArguments>(
   name: string,
   descriptionOrAction?: string | ActionType<ArgsT>,
   action?: ActionType<ArgsT>
@@ -59,15 +102,18 @@ export function internalTask<ArgsT extends TaskArguments>(
   const dsl = ctx.tasksDSL;
 
   if (descriptionOrAction === undefined) {
-    return dsl.internalTask(name);
+    return dsl.subtask(name);
   }
 
-  if (typeof descriptionOrAction !== "string") {
-    return dsl.internalTask(name, descriptionOrAction);
+  if (typeof descriptionOrAction !== 'string') {
+    return dsl.subtask(name, descriptionOrAction);
   }
 
-  return dsl.internalTask(name, descriptionOrAction, action);
+  return dsl.subtask(name, descriptionOrAction, action);
 }
+
+// Backwards compatibility alias
+export const internalTask = subtask;
 
 export const types = argumentTypes;
 
@@ -81,19 +127,22 @@ export const types = argumentTypes;
 export function extendEnvironment(extender: EnvironmentExtender) {
   const ctx = RedspotContext.getRedspotContext();
   const extenderManager = ctx.extendersManager;
+
   extenderManager.add(extender);
 }
 
 export function extendConfig(extender: ConfigExtender) {
   const ctx = RedspotContext.getRedspotContext();
+
   ctx.configExtenders.push(extender);
 }
 
-/**
- * Loads a Redspot plugin
- * @param pluginName The plugin name.
- */
-export function usePlugin(pluginName: string) {
+// NOTE: This is experimental and will be removed. Please contact our team
+// if you are planning to use it.
+export function experimentalAddRedspotNetworkMessageTraceHook(
+  hook: ExperimentalRedspotNetworkMessageTraceHook
+) {
   const ctx = RedspotContext.getRedspotContext();
-  usePluginImplementation(ctx, pluginName);
+
+  ctx.experimentalRedspotNetworkMessageTraceHooks.push(hook);
 }

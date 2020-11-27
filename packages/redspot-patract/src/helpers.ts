@@ -1,16 +1,16 @@
-import type { ApiPromise } from "@polkadot/api";
-import { Abi } from "@polkadot/api-contract";
-import type { AccountId } from "@polkadot/types/interfaces/types";
-import { cryptoWaitReady, mnemonicGenerate } from "@polkadot/util-crypto";
-import BN from "bn.js";
-import chalk from "chalk";
-import log from "redspot/internal/log";
-import { readAbiSync, readWasmSync } from "redspot/plugins";
-import type { RedspotRuntimeEnvironment } from "redspot/types";
-import { AccountSigner } from "redspot/types";
-import { buildTx } from "./buildTx";
-import Contract from "./contract";
-import ContractFactory from "./contractFactory";
+import type { ApiPromise } from '@polkadot/api';
+import { Abi } from '@polkadot/api-contract';
+import type { AccountId } from '@polkadot/types/interfaces/types';
+import { cryptoWaitReady, mnemonicGenerate } from '@polkadot/util-crypto';
+import BN from 'bn.js';
+import chalk from 'chalk';
+import log from 'redspot/logger';
+import { readAbiSync, readWasmSync } from 'redspot/plugins';
+import type { RedspotRuntimeEnvironment } from 'redspot/types';
+import { AccountSigner } from 'redspot/types';
+import { buildTx } from './buildTx';
+import Contract from './contract';
+import ContractFactory from './contractFactory';
 
 export async function getSigners(
   env: RedspotRuntimeEnvironment
@@ -39,7 +39,7 @@ export async function getRandomSigner(
         api.registry,
         api.tx.balances.transfer(keyringPair.address, amount),
         {
-          signer: from,
+          signer: from
         }
       );
     } catch (error) {
@@ -101,10 +101,10 @@ export function getAbi(env: RedspotRuntimeEnvironment, contractName: string) {
   const abiJSON = readAbiSync(paths.artifacts, contractName);
   const abi = new Abi(
     abiJSON as any,
-    registry.createType("ChainProperties", {
+    registry.createType('ChainProperties', {
       tokenDecimals: env.network.provider.registry.chainDecimals,
       ss58Format: env.network.provider.registry.chainSS58,
-      tokenSymbol: env.network.provider.registry.chainToken,
+      tokenSymbol: env.network.provider.registry.chainToken
     })
   );
 

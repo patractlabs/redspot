@@ -1,2 +1,2 @@
-export * from "./internal/core/config/config-env";
-export { RedspotConfig } from "./types";
+export * from './internal/core/config/config-env';
+export { RedspotUserConfig } from './types';

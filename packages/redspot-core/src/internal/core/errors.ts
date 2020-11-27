@@ -1,10 +1,10 @@
-import { getClosestCallerPackage } from "../util/caller-package";
-import { replaceAll } from "../util/strings";
-import { ErrorDescriptor, ERRORS, getErrorCode } from "./errors-list";
+import { getClosestCallerPackage } from '../util/caller-package';
+import { replaceAll } from '../util/strings';
+import { ErrorDescriptor, ERRORS, getErrorCode } from './errors-list';
 
-const inspect = Symbol.for("nodejs.util.inspect.custom");
+const inspect = Symbol.for('nodejs.util.inspect.custom');
 
-class CustomError extends Error {
+export class CustomError extends Error {
   constructor(message: string, public readonly parent?: Error) {
     // WARNING: Using super when extending a builtin class doesn't work well
     // with TS if you are compiling to a version of JavaScript that doesn't have
@@ -23,6 +23,7 @@ class CustomError extends Error {
 
   public [inspect]() {
     let str = this.stack;
+
     if (this.parent !== undefined) {
       const parentAsAny = this.parent as any;
       const causeString =
@@ -31,14 +32,16 @@ class CustomError extends Error {
         parentAsAny.stack ??
         parentAsAny.toString();
       const nestedCauseStr = causeString
-        .split("\n")
+        .split('\n')
         .map((line: string) => `    ${line}`)
-        .join("\n")
+        .join('\n')
         .trim();
+
       str += `
 
     Caused by: ${nestedCauseStr}`;
     }
+
     return str;
   }
 }
@@ -50,14 +53,25 @@ export class RedspotError extends CustomError {
     );
   }
 
+  public static isRedspotErrorType(
+    other: any,
+    descriptor: ErrorDescriptor
+  ): other is RedspotError {
+    return (
+      RedspotError.isRedspotError(other) &&
+      other.errorDescriptor.number === descriptor.number
+    );
+  }
+
   public readonly errorDescriptor: ErrorDescriptor;
   public readonly number: number;
+  public readonly messageArguments: Record<string, any>;
 
   private readonly _isRedspotError: boolean;
 
   constructor(
     errorDescriptor: ErrorDescriptor,
-    messageArguments: { [p: string]: any } = {},
+    messageArguments: Record<string, any> = {},
     parentError?: Error
   ) {
     const prefix = `${getErrorCode(errorDescriptor)}: `;
@@ -71,6 +85,7 @@ export class RedspotError extends CustomError {
 
     this.errorDescriptor = errorDescriptor;
     this.number = errorDescriptor.number;
+    this.messageArguments = messageArguments;
 
     this._isRedspotError = true;
     Object.setPrototypeOf(this, RedspotError.prototype);
@@ -118,7 +133,7 @@ export class RedspotPluginError extends CustomError {
     messageOrParent?: string | Error,
     parent?: Error
   ) {
-    if (typeof messageOrParent === "string") {
+    if (typeof messageOrParent === 'string') {
       super(messageOrParent, parent);
       this.pluginName = pluginNameOrMessage;
     } else {
@@ -131,18 +146,18 @@ export class RedspotPluginError extends CustomError {
   }
 }
 
-export class RedspotCorePluginError extends RedspotPluginError {
-  public static isRedspotCorePluginError(
+export class NomicLabsRedspotPluginError extends RedspotPluginError {
+  public static isNomicLabsRedspotPluginError(
     other: any
-  ): other is RedspotCorePluginError {
+  ): other is NomicLabsRedspotPluginError {
     return (
       other !== undefined &&
       other !== null &&
-      other._isRedspotCorePluginError === true
+      other._isNomicLabsRedspotPluginError === true
     );
   }
 
-  private readonly _isRedspotCorePluginError: boolean;
+  private readonly _isNomicLabsRedspotPluginError: boolean;
 
   /**
    * This class is used to throw errors from *core* redspot plugins. If you are
@@ -156,8 +171,8 @@ export class RedspotCorePluginError extends RedspotPluginError {
   ) {
     super(pluginName, message, parent);
 
-    this._isRedspotCorePluginError = true;
-    Object.setPrototypeOf(this, RedspotCorePluginError.prototype);
+    this._isNomicLabsRedspotPluginError = true;
+    Object.setPrototypeOf(this, NomicLabsRedspotPluginError.prototype);
   }
 }
 
@@ -192,7 +207,7 @@ function _applyErrorMessageTemplate(
     for (const variableName of Object.keys(values)) {
       if (variableName.match(/^[a-zA-Z][a-zA-Z0-9]*$/) === null) {
         throw new RedspotError(ERRORS.INTERNAL.TEMPLATE_INVALID_VARIABLE_NAME, {
-          variable: variableName,
+          variable: variableName
         });
       }
 
@@ -200,32 +215,32 @@ function _applyErrorMessageTemplate(
 
       if (!template.includes(variableTag)) {
         throw new RedspotError(ERRORS.INTERNAL.TEMPLATE_VARIABLE_TAG_MISSING, {
-          variable: variableName,
+          variable: variableName
         });
       }
     }
   }
 
-  if (template.includes("%%")) {
+  if (template.includes('%%')) {
     return template
-      .split("%%")
+      .split('%%')
       .map((part) => _applyErrorMessageTemplate(part, values, true))
-      .join("%");
+      .join('%');
   }
 
   for (const variableName of Object.keys(values)) {
     let value: string;
 
     if (values[variableName] === undefined) {
-      value = "undefined";
+      value = 'undefined';
     } else if (values[variableName] === null) {
-      value = "null";
+      value = 'null';
     } else {
       value = values[variableName].toString();
     }
 
     if (value === undefined) {
-      value = "undefined";
+      value = 'undefined';
     }
 
     const variableTag = `%${variableName}%`;
@@ -241,4 +256,13 @@ function _applyErrorMessageTemplate(
   }
 
   return template;
+}
+
+export function assertRedspotInvariant(
+  invariant: boolean,
+  message: string
+): asserts invariant {
+  if (!invariant) {
+    throw new RedspotError(ERRORS.GENERAL.ASSERTION_ERROR, { message });
+  }
 }

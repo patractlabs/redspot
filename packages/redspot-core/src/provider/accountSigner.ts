@@ -1,10 +1,10 @@
-import { SignerResult } from "@polkadot/api/types";
-import type { SignOptions } from "@polkadot/keyring/types";
-import { KeyringPair } from "@polkadot/keyring/types";
-import type { Registry } from "@polkadot/types/types";
-import { SignerPayloadJSON } from "@polkadot/types/types";
-import BN from "bn.js";
-import { IAccountSigner } from "../../types";
+import { SignerResult } from '@polkadot/api/types';
+import type { SignOptions } from '@polkadot/keyring/types';
+import { KeyringPair } from '@polkadot/keyring/types';
+import type { Registry } from '@polkadot/types/types';
+import { SignerPayloadJSON } from '@polkadot/types/types';
+import BN from 'bn.js';
+import type { AccountSigner as IAccountSigner } from '../types';
 
 let id = 0;
 
@@ -12,7 +12,6 @@ export default class AccountSigner implements IAccountSigner {
   readonly pair: KeyringPair;
   readonly gasLimit: BN;
   readonly registry: Registry;
-  readonly sign: (data: Uint8Array, options?: SignOptions) => Uint8Array;
 
   constructor(
     registry: Registry,
@@ -24,7 +23,6 @@ export default class AccountSigner implements IAccountSigner {
     this.registry = registry;
     this.pair = keyringPair;
     this.gasLimit = defaults.gasLimit;
-    this.sign = keyringPair.sign;
   }
 
   get address() {
@@ -39,10 +37,14 @@ export default class AccountSigner implements IAccountSigner {
     return this.pair.publicKey;
   }
 
+  public sign(data: Uint8Array, options?: SignOptions): Uint8Array {
+    return this.pair.sign(data, options);
+  }
+
   public async signPayload(payload: SignerPayloadJSON): Promise<SignerResult> {
     return new Promise((resolve): void => {
       const signed = this.registry
-        .createType("ExtrinsicPayload", payload, { version: payload.version })
+        .createType('ExtrinsicPayload', payload, { version: payload.version })
         .sign(this.pair);
 
       resolve({ id: ++id, ...signed });
@@ -56,10 +58,10 @@ export default class AccountSigner implements IAccountSigner {
   public setKeyPair() {}
 
   public setGasLimit(gasLimit: BN | string | bigint): void {
-    Object.defineProperty(this, "gasLimit", {
+    Object.defineProperty(this, 'gasLimit', {
       enumerable: true,
       value: gasLimit,
-      writable: false,
+      writable: false
     });
   }
 }

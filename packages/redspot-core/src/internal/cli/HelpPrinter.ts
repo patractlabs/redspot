@@ -1,12 +1,12 @@
 import {
-  RedspotParamDefinitions,
   ParamDefinition,
   ParamDefinitionsMap,
-  TasksMap,
-} from "../../types";
-import { RedspotError } from "../core/errors";
-import { ERRORS } from "../core/errors-list";
-import { ArgumentsParser } from "./ArgumentsParser";
+  RedspotParamDefinitions,
+  TasksMap
+} from '../../types';
+import { RedspotError } from '../core/errors';
+import { ERRORS } from '../core/errors-list';
+import { ArgumentsParser } from './ArgumentsParser';
 
 export class HelpPrinter {
   constructor(
@@ -17,22 +17,23 @@ export class HelpPrinter {
     private readonly _tasks: TasksMap
   ) {}
 
-  public printGlobalHelp(includeInternalTasks = false) {
+  public printGlobalHelp(includeSubtasks = false) {
     console.log(`${this._programName} version ${this._version}\n`);
 
     console.log(
       `Usage: ${this._executableName} [GLOBAL OPTIONS] <TASK> [TASK OPTIONS]\n`
     );
 
-    console.log("GLOBAL OPTIONS:\n");
+    console.log('GLOBAL OPTIONS:\n');
 
     this._printParamDetails(this._redspotParamDefinitions);
 
-    console.log("\n\nAVAILABLE TASKS:\n");
+    console.log('\n\nAVAILABLE TASKS:\n');
 
     const tasksToShow: TasksMap = {};
+
     for (const [taskName, taskDefinition] of Object.entries(this._tasks)) {
-      if (includeInternalTasks || !taskDefinition.isInternal) {
+      if (includeSubtasks || !taskDefinition.isSubtask) {
         tasksToShow[taskName] = taskDefinition;
       }
     }
@@ -42,12 +43,12 @@ export class HelpPrinter {
       .reduce((a, b) => Math.max(a, b), 0);
 
     for (const name of Object.keys(tasksToShow).sort()) {
-      const { description = "" } = this._tasks[name];
+      const { description = '' } = this._tasks[name];
 
       console.log(`  ${name.padEnd(nameLength)}\t${description}`);
     }
 
-    console.log("");
+    console.log('');
 
     console.log(
       `To get help for a specific task run: npx ${this._executableName} help [task]\n`
@@ -59,15 +60,15 @@ export class HelpPrinter {
 
     if (taskDefinition === undefined) {
       throw new RedspotError(ERRORS.ARGUMENTS.UNRECOGNIZED_TASK, {
-        task: taskName,
+        task: taskName
       });
     }
 
     const {
-      description = "",
+      description = '',
       name,
       paramDefinitions,
-      positionalParamDefinitions,
+      positionalParamDefinitions
     } = taskDefinition;
 
     console.log(`${this._programName} version ${this._version}\n`);
@@ -82,19 +83,19 @@ export class HelpPrinter {
     );
 
     if (Object.keys(paramDefinitions).length > 0) {
-      console.log("OPTIONS:\n");
+      console.log('OPTIONS:\n');
 
       this._printParamDetails(paramDefinitions);
 
-      console.log("");
+      console.log('');
     }
 
     if (positionalParamDefinitions.length > 0) {
-      console.log("POSITIONAL ARGUMENTS:\n");
+      console.log('POSITIONAL ARGUMENTS:\n');
 
       this._printPositionalParamDetails(positionalParamDefinitions);
 
-      console.log("");
+      console.log('');
     }
 
     console.log(`${name}: ${description}\n`);
@@ -107,16 +108,16 @@ export class HelpPrinter {
   }
 
   private _getParamsList(paramDefinitions: ParamDefinitionsMap) {
-    let paramsList = "";
+    let paramsList = '';
 
     for (const name of Object.keys(paramDefinitions).sort()) {
       const definition = paramDefinitions[name];
       const { defaultValue, isFlag } = definition;
 
-      paramsList += " ";
+      paramsList += ' ';
 
       if (defaultValue !== undefined) {
-        paramsList += "[";
+        paramsList += '[';
       }
 
       paramsList += `${ArgumentsParser.paramNameToCLA(name)}`;
@@ -126,7 +127,7 @@ export class HelpPrinter {
       }
 
       if (defaultValue !== undefined) {
-        paramsList += "]";
+        paramsList += ']';
       }
     }
 
@@ -136,25 +137,25 @@ export class HelpPrinter {
   private _getPositionalParamsList(
     positionalParamDefinitions: Array<ParamDefinition<any>>
   ) {
-    let paramsList = "";
+    let paramsList = '';
 
     for (const definition of positionalParamDefinitions) {
       const { defaultValue, isVariadic, name } = definition;
 
-      paramsList += " ";
+      paramsList += ' ';
 
       if (defaultValue !== undefined) {
-        paramsList += "[";
+        paramsList += '[';
       }
 
       if (isVariadic) {
-        paramsList += "...";
+        paramsList += '...';
       }
 
       paramsList += name;
 
       if (defaultValue !== undefined) {
-        paramsList += "]";
+        paramsList += ']';
       }
     }
 
@@ -168,10 +169,10 @@ export class HelpPrinter {
 
     for (const name of Object.keys(paramDefinitions).sort()) {
       const {
-        description,
         defaultValue,
-        isOptional,
+        description,
         isFlag,
+        isOptional
       } = paramDefinitions[name];
 
       let msg = `  ${ArgumentsParser.paramNameToCLA(name).padEnd(
@@ -198,7 +199,7 @@ export class HelpPrinter {
       .reduce((a, b) => Math.max(a, b), 0);
 
     for (const definition of positionalParamDefinitions) {
-      const { name, description, isOptional, defaultValue } = definition;
+      const { defaultValue, description, isOptional, name } = definition;
 
       let msg = `  ${name.padEnd(paramsNameLength)}\t`;
 

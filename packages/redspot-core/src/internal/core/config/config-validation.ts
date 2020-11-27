@@ -1,20 +1,23 @@
-import * as t from "io-ts";
-import { Context, getFunctionName, ValidationError } from "io-ts/lib";
-import { Reporter } from "io-ts/lib/Reporter";
-import { REDSPOT_DEFAULT_NETWORK_NAME } from "../../constants";
-import { RedspotError } from "../errors";
-import { ERRORS } from "../errors-list";
+import * as t from 'io-ts';
+import { Context, getFunctionName, ValidationError } from 'io-ts/lib';
+import { Reporter } from 'io-ts/lib/Reporter';
+import { REDSPOT_NETWORK_NAME } from '../../constants';
+import { RedspotError } from '../errors';
+import { ERRORS } from '../errors-list';
 
 function stringify(v: any): string {
-  if (typeof v === "function") {
+  if (typeof v === 'function') {
     return getFunctionName(v);
   }
-  if (typeof v === "number" && !isFinite(v)) {
+
+  if (typeof v === 'number' && !isFinite(v)) {
     if (isNaN(v)) {
-      return "NaN";
+      return 'NaN';
     }
-    return v > 0 ? "Infinity" : "-Infinity";
+
+    return v > 0 ? 'Infinity' : '-Infinity';
   }
+
   return JSON.stringify(v);
 }
 
@@ -22,7 +25,7 @@ function getContextPath(context: Context): string {
   const keysPath = context
     .slice(1)
     .map((c) => c.key)
-    .join(".");
+    .join('.');
 
   return `${context[0].type.name}.${keysPath}`;
 }
@@ -54,12 +57,12 @@ export function success(): string[] {
 }
 
 export const DotPathReporter: Reporter<string[]> = {
-  report: (validation) => validation.fold(failure, success),
+  report: (validation) => validation.fold(failure, success)
 };
 
 function optional<TypeT, OutputT>(
   codec: t.Type<TypeT, OutputT, unknown>,
-  name: string = `${codec.name} | undefined`
+  name = `${codec.name} | undefined`
 ): t.Type<TypeT | undefined, OutputT | undefined, unknown> {
   return new t.Type(
     name,
@@ -69,50 +72,75 @@ function optional<TypeT, OutputT>(
   );
 }
 
-// IMPORTANT: This t.types MUST be kept in sync with the actual types.
+const HEX_STRING_REGEX = /^(0x)?([0-9a-f]{2})+$/gi;
+
+const HEX_PREFIX = '0x';
+
+function isHexString(v: unknown): v is string {
+  if (typeof v !== 'string') {
+    return false;
+  }
+
+  return v.trim().match(HEX_STRING_REGEX) !== null;
+}
+
+export const hexString = new t.Type<string>(
+  'hex string',
+  isHexString,
+  (u, c) => (isHexString(u) ? t.success(u) : t.failure(u, c)),
+  t.identity
+);
+
+const commonHDAccountsFields = {
+  initialIndex: optional(t.number),
+  count: optional(t.number),
+  path: optional(t.string)
+};
+
+const RedspotNetworkHDAccountsConfig = t.type({
+  mnemonic: optional(t.string),
+  accountsBalance: optional(t.string),
+  ...commonHDAccountsFields
+});
+
 const NetworkConfigAccounts = t.array(t.string);
 
-const HttpHeaders = t.record(t.string, t.string, "httpHeaders");
+const HttpHeaders = t.record(t.string, t.string, 'httpHeaders');
 
-const WsNetworkConfig = t.type({
+const RedspotNetworkConfig = t.type({
   accounts: optional(NetworkConfigAccounts),
   gasLimit: optional(t.union([t.string, t.number])),
   from: optional(t.string),
   types: optional(t.record(t.string, t.unknown)),
   endpoint: optional(t.union([t.string, t.array(t.string)])),
   httpHeaders: optional(HttpHeaders),
-  explorerUrl: optional(t.string),
+  explorerUrl: optional(t.string)
 });
 
-const NetworkConfig = WsNetworkConfig;
+const NetworkConfig = RedspotNetworkConfig;
 
 const Networks = t.record(t.string, NetworkConfig);
+
+const InkConfig = t.type({
+  toolchain: optional(t.string)
+});
 
 const ProjectPaths = t.type({
   root: optional(t.string),
   cache: optional(t.string),
   artifacts: optional(t.string),
   sources: optional(t.string),
-  tests: optional(t.string),
-});
-
-const AnalyticsConfig = t.type({
-  enabled: optional(t.boolean),
+  tests: optional(t.string)
 });
 
 const RedspotConfig = t.type(
   {
     defaultNetwork: optional(t.string),
-    rust: optional(
-      t.type({
-        toolchain: optional(t.string),
-      })
-    ),
+    ink: optional(InkConfig),
     networks: optional(Networks),
-    paths: optional(ProjectPaths),
-    analytics: optional(AnalyticsConfig),
+    paths: optional(ProjectPaths)
   },
-  "RedspotConfig"
+  'RedspotConfig'
 );
 
 /**
@@ -126,43 +154,27 @@ export function validateConfig(config: any) {
     return;
   }
 
-  let errorList = errors.join("\n  * ");
+  let errorList = errors.join('\n  * ');
+
   errorList = `  * ${errorList}`;
 
   throw new RedspotError(ERRORS.GENERAL.INVALID_CONFIG, { errors: errorList });
 }
 
 export function getValidationErrors(config: any): string[] {
-  const errors: string[] = [];
+  const errors = [];
 
   // These can't be validated with io-ts
-  if (config !== undefined && typeof config.networks === "object") {
-    const redspotNetwork = config.networks[REDSPOT_DEFAULT_NETWORK_NAME];
+  if (config !== undefined && typeof config.networks === 'object') {
+    const redspotNetwork = config.networks[REDSPOT_NETWORK_NAME];
 
-    for (const [networkName, netConfig] of Object.entries<any>(
-      config.networks
-    )) {
-      if (networkName === REDSPOT_DEFAULT_NETWORK_NAME) {
-        continue;
-      }
-
-      if (typeof netConfig.endpoint !== "string") {
+    if (redspotNetwork !== undefined) {
+      if (typeof redspotNetwork.endpoint !== 'string') {
         errors.push(
           getErrorMessage(
-            `RedspotConfig.networks.${networkName}.url`,
-            netConfig.url,
-            "string"
-          )
-        );
-      }
-
-      const netConfigResult = WsNetworkConfig.decode(netConfig);
-      if (netConfigResult.isLeft()) {
-        errors.push(
-          getErrorMessage(
-            `RedspotConfig.networks.${networkName}`,
-            netConfig,
-            "WsNetworkConfig"
+            `RedspotConfig.networks.${redspotNetwork}.endpoint`,
+            redspotNetwork.endpoint,
+            'string'
           )
         );
       }
@@ -170,7 +182,7 @@ export function getValidationErrors(config: any): string[] {
   }
 
   // io-ts can get confused if there are errors that it can't understand.
-  // Especially around RedspotEVM's config. It will treat it as an HTTPConfig,
+  // Especially around Redspot Network's config. It will treat it as an HTTPConfig,
   // and may give a loot of errors.
   if (errors.length > 0) {
     return errors;
@@ -183,5 +195,6 @@ export function getValidationErrors(config: any): string[] {
   }
 
   const ioTsErrors = DotPathReporter.report(result);
+
   return [...errors, ...ioTsErrors];
 }

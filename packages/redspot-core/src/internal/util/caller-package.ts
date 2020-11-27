@@ -1,8 +1,8 @@
-import findup from "find-up";
-import path from "path";
+import findup from 'find-up';
+import path from 'path';
 
 function findClosestPackageJson(file: string): string | null {
-  return findup.sync("package.json", { cwd: path.dirname(file) });
+  return findup.sync('package.json', { cwd: path.dirname(file) });
 }
 
 /**
@@ -22,6 +22,7 @@ export function getClosestCallerPackage(): string | undefined {
 
   for (const callSite of stack) {
     const fileName = callSite.getFileName();
+
     if (fileName !== null && path.isAbsolute(fileName)) {
       const callerPackage = findClosestPackageJson(fileName);
 

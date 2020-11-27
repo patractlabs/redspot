@@ -1,12 +1,13 @@
-import debug from "debug";
-import { RedspotRuntimeEnvironment } from "../../types";
-import { RedspotContext } from "../context";
-import { loadConfigAndTasks } from "../core/config/config-loading";
-import { RedspotError } from "../core/errors";
-import { ERRORS } from "../core/errors-list";
-import { getEnvRedspotArguments } from "../core/params/env-variables";
-import { REDSPOT_PARAM_DEFINITIONS } from "../core/params/redspot-params";
-import { Environment } from "../core/runtime-environment";
+import debug from 'debug';
+
+import { RedspotRuntimeEnvironment } from '../../types';
+import { RedspotContext } from '../context';
+import { loadConfigAndTasks } from '../core/config/config-loading';
+import { RedspotError } from '../core/errors';
+import { ERRORS } from '../core/errors-list';
+import { getEnvRedspotArguments } from '../core/params/env-variables';
+import { REDSPOT_PARAM_DEFINITIONS } from '../core/params/redspot-params';
+import { Environment } from '../core/runtime-environment';
 
 let ctx: RedspotContext;
 let env: RedspotRuntimeEnvironment;
@@ -29,13 +30,18 @@ if (RedspotContext.isCreated()) {
     process.env
   );
 
+  if (redspotArguments.verbose) {
+    debug.enable('redspot*');
+  }
+
   const config = loadConfigAndTasks(redspotArguments);
 
   env = new Environment(
     config,
     redspotArguments,
     ctx.tasksDSL.getTaskDefinitions(),
-    ctx.extendersManager.getExtenders()
+    ctx.extendersManager.getExtenders(),
+    ctx.experimentalRedspotNetworkMessageTraceHooks
   );
 
   ctx.setRedspotRuntimeEnvironment(env);

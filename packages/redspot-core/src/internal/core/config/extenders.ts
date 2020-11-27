@@ -1,4 +1,4 @@
-import { EnvironmentExtender } from "../../../types";
+import { EnvironmentExtender } from '../../../types';
 
 export class ExtenderManager {
   private readonly _extenders: EnvironmentExtender[] = [];

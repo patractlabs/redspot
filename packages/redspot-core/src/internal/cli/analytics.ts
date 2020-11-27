@@ -1,21 +1,21 @@
-import AbortController from "abort-controller";
-import debug from "debug";
-import { keccak256 } from "ethereumjs-util";
-import fetch from "node-fetch";
-import os from "os";
-import qs from "qs";
-import uuid from "uuid/v4";
-import * as builtinTaskNames from "../../builtin-tasks/task-names";
-import { isLocalDev } from "../core/execution-mode";
-import { isRunningOnCiServer } from "../util/ci-detection";
+import AbortController from 'abort-controller';
+import debug from 'debug';
+import fetch from 'node-fetch';
+import os from 'os';
+import qs from 'qs';
+import uuid from 'uuid/v4';
+import * as builtinTaskNames from '../../builtin-tasks/task-names';
+import { isLocalDev } from '../core/execution-mode';
+import { isRunningOnCiServer } from '../util/ci-detection';
 import {
   readAnalyticsId,
-  readLegacyAnalyticsId,
-  writeAnalyticsId,
-} from "../util/global-dir";
-import { getPackageJson } from "../util/packageInfo";
+  readFirstLegacyAnalyticsId,
+  readSecondLegacyAnalyticsId,
+  writeAnalyticsId
+} from '../util/global-dir';
+import { getPackageJson } from '../util/packageInfo';
 
-const log = debug("redspot:core:analytics");
+const log = debug('redspot:core:analytics');
 
 // VERY IMPORTANT:
 // The documentation doesn't say so, but the user-agent parameter is required (ua).
@@ -23,7 +23,7 @@ const log = debug("redspot:core:analytics");
 //
 // https://stackoverflow.com/questions/27357954/google-analytics-measurement-protocol-not-working
 interface RawAnalytics {
-  v: "1";
+  v: '1';
   tid: string;
   cid: string;
   dp: string;
@@ -39,41 +39,37 @@ interface RawAnalytics {
 
 type AbortAnalytics = () => void;
 
-const googleAnalyticsUrl = "https://www.google-analytics.com/collect";
+const googleAnalyticsUrl = 'https://www.google-analytics.com/collect';
 
 export class Analytics {
-  public static async getInstance(rootPath: string, enabled: boolean) {
+  public static async getInstance(telemetryConsent: boolean | undefined) {
     const analytics: Analytics = new Analytics({
-      projectId: getProjectId(rootPath),
       clientId: await getClientId(),
-      enabled,
-      userType: getUserType(),
+      telemetryConsent,
+      userType: getUserType()
     });
 
     return analytics;
   }
 
-  private readonly _projectId: string;
   private readonly _clientId: string;
   private readonly _enabled: boolean;
   private readonly _userType: string;
   // Redspot's tracking id. I guess there's no other choice than keeping it here.
-  private readonly _trackingId: string = "UA-117668706-3";
+  private readonly _trackingId: string = 'UA-117668706-3';
 
   private constructor({
-    projectId,
     clientId,
-    enabled,
-    userType,
+    telemetryConsent,
+    userType
   }: {
-    projectId: string;
     clientId: string;
-    enabled: boolean;
+    telemetryConsent: boolean | undefined;
     userType: string;
   }) {
-    this._projectId = projectId;
     this._clientId = clientId;
-    this._enabled = enabled && !isLocalDev() && !isRunningOnCiServer();
+    this._enabled =
+      !isLocalDev() && !isRunningOnCiServer() && telemetryConsent === true;
     this._userType = userType;
   }
 
@@ -93,9 +89,9 @@ export class Analytics {
     taskName: string
   ): Promise<[AbortAnalytics, Promise<void>]> {
     if (this._isABuiltinTaskName(taskName)) {
-      taskName = "builtin";
+      taskName = 'builtin';
     } else {
-      taskName = "custom";
+      taskName = 'custom';
     }
 
     if (!this._enabled) {
@@ -112,10 +108,10 @@ export class Analytics {
   private async _taskHit(taskName: string): Promise<RawAnalytics> {
     return {
       // Measurement protocol version.
-      v: "1",
+      v: '1',
 
       // Hit type, we're only using pageviews for now.
-      t: "pageview",
+      t: 'pageview',
 
       // Redspot's tracking Id.
       tid: this._trackingId,
@@ -127,7 +123,7 @@ export class Analytics {
       dp: `/task/${taskName}`,
 
       // Host name.
-      dh: "cli.redspot.dev",
+      dh: 'cli.redspot.org',
 
       // User agent, must be present.
       // We use it to inform Node version used and OS.
@@ -138,7 +134,7 @@ export class Analytics {
       // We're using the following values (Campaign source, Campaign medium) to track
       // whether the user is a Developer or CI, as Custom Dimensions are not working for us atm.
       cs: this._userType,
-      cm: "User Type",
+      cm: 'User Type',
 
       // We're using custom dimensions for tracking different user projects, and user types (Developer/CI).
       //
@@ -149,14 +145,13 @@ export class Analytics {
       // https://support.google.com/tagmanager/answer/6164990
       //
       // Custom dimension 1: Project Id
-      // This is computed as the keccak256 hash of the project's absolute path.
-      cd1: this._projectId,
+      cd1: 'redspot-project',
       // Custom dimension 2: User type
       //   Possible values: "CI", "Developer".
       cd2: this._userType,
       // Custom dimension 3: Redspot Version
       //   Example: "Redspot 1.0.0".
-      cd3: await getRedspotVersion(),
+      cd3: await getRedspotVersion()
     };
   }
 
@@ -177,15 +172,15 @@ export class Analytics {
 
     const hitPromise = fetch(googleAnalyticsUrl, {
       body: hitPayload,
-      method: "POST",
-      signal: controller.signal,
+      method: 'POST',
+      signal: controller.signal
     })
       .then(() => {
         log(`Hit for ${JSON.stringify(hit.dp)} sent successfully`);
       })
       // We're not really interested in handling failed analytics requests
       .catch(() => {
-        log("Hit request failed");
+        log('Hit request failed');
       });
 
     return [abortAnalytics, hitPromise];
@@ -195,29 +190,24 @@ export class Analytics {
 async function getClientId() {
   let clientId = await readAnalyticsId();
 
-  if (clientId === null) {
-    clientId = await readLegacyAnalyticsId();
-    if (clientId === null) {
-      log("Client Id not found, generating a new one");
+  if (clientId === undefined) {
+    clientId =
+      (await readSecondLegacyAnalyticsId()) ??
+      (await readFirstLegacyAnalyticsId());
+
+    if (clientId === undefined) {
+      log('Client Id not found, generating a new one');
       clientId = uuid();
     }
+
     await writeAnalyticsId(clientId);
   }
 
   return clientId;
 }
 
-function getProjectId(rootPath: string) {
-  log(`Computing Project Id for ${rootPath}`);
-
-  const projectId = keccak256(rootPath).toString("hex");
-
-  log(`Project Id set to ${projectId}`);
-  return projectId;
-}
-
 function getUserType(): string {
-  return isRunningOnCiServer() ? "CI" : "Developer";
+  return isRunningOnCiServer() ? 'CI' : 'Developer';
 }
 
 /**
@@ -228,14 +218,14 @@ function getUserType(): string {
  */
 function getOperatingSystem(): string {
   switch (os.type()) {
-    case "Windows_NT":
-      return "(Windows NT 6.1; Win64; x64)";
-    case "Darwin":
-      return "(Macintosh; Intel Mac OS X 10_13_6)";
-    case "Linux":
-      return "(X11; Linux x86_64)";
+    case 'Windows_NT':
+      return '(Windows NT 6.1; Win64; x64)';
+    case 'Darwin':
+      return '(Macintosh; Intel Mac OS X 10_13_6)';
+    case 'Linux':
+      return '(X11; Linux x86_64)';
     default:
-      return "(Unknown)";
+      return '(Unknown)';
   }
 }
 

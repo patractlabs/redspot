@@ -1,27 +1,27 @@
 // Copyright 2017-2020 @polkadot/rpc-provider authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import { isNumber, isString, isUndefined } from "@polkadot/util";
-import assert from "assert";
+import { isNumber, isString, isUndefined } from '@polkadot/util';
+import assert from 'assert';
 import {
   JsonRpcRequest,
   JsonRpcResponse,
-  JsonRpcResponseBaseError,
-} from "../../types";
+  JsonRpcResponseBaseError
+} from '../types';
 
 function formatErrorData(data?: string | number): string {
   if (isUndefined(data)) {
-    return "";
+    return '';
   }
 
   const formatted = `: ${
     isString(data)
       ? data
-          .replace(/Error\("/g, "")
-          .replace(/\("/g, "(")
-          .replace(/"\)/g, ")")
-          .replace(/\(/g, ", ")
-          .replace(/\)/g, "")
+          .replace(/Error\("/g, '')
+          .replace(/\("/g, '(')
+          .replace(/"\)/g, ')')
+          .replace(/\(/g, ', ')
+          .replace(/\)/g, '')
       : JSON.stringify(data)
   }`;
 
@@ -35,10 +35,10 @@ export default class RpcCoder {
   #id = 0;
 
   public decodeResponse(response: JsonRpcResponse): unknown {
-    assert(response, "Empty response object received");
+    assert(response, 'Empty response object received');
     assert(
-      response.jsonrpc === "2.0",
-      "Invalid jsonrpc field in decoded object"
+      response.jsonrpc === '2.0',
+      'Invalid jsonrpc field in decoded object'
     );
 
     const isSubscription =
@@ -49,14 +49,14 @@ export default class RpcCoder {
         (isSubscription &&
           (isNumber(response.params.subscription) ||
             isString(response.params.subscription))),
-      "Invalid id field in decoded object"
+      'Invalid id field in decoded object'
     );
 
     this._checkError(response.error);
 
     assert(
       !isUndefined(response.result) || isSubscription,
-      "No result found in JsonRpc response"
+      'No result found in JsonRpc response'
     );
 
     if (isSubscription) {
@@ -75,9 +75,9 @@ export default class RpcCoder {
   public encodeObject(method: string, params: unknown[]): JsonRpcRequest {
     return {
       id: ++this.#id,
-      jsonrpc: "2.0",
+      jsonrpc: '2.0',
       method,
-      params,
+      params
     };
   }
 

@@ -1,29 +1,24 @@
-// Copyright 2017-2020 @polkadot/rpc-provider authors & contributors
-// SPDX-License-Identifier: Apache-2.0
-
-/* eslint-disable camelcase */
-
 import {
   isChildClass,
   isNull,
-  isUndefined,
-  isString,
   isNumber,
-} from "@polkadot/util";
-import WS from "@polkadot/x-ws";
-import assert from "assert";
-import chalk from "chalk";
-import EventEmitter from "eventemitter3";
+  isString,
+  isUndefined
+} from '@polkadot/util';
+import WS from '@polkadot/x-ws';
+import assert from 'assert';
+import chalk from 'chalk';
+import EventEmitter from 'eventemitter3';
+import log from '../logger';
 import {
-  WsProvider as IWsProvider,
   JsonRpcResponse,
   ProviderInterfaceCallback,
   ProviderInterfaceEmitCb,
   ProviderInterfaceEmitted,
-} from "../../types";
-import log from "../log";
-import Coder from "./coder";
-import { getWSErrorString } from "./errors";
+  WsProvider as IWsProvider
+} from '../types';
+import Coder from './coder';
+import { getWSErrorString } from './errors';
 
 interface SubscriptionHandler {
   callback: ProviderInterfaceCallback;
@@ -43,9 +38,9 @@ interface WsStateSubscription extends SubscriptionHandler {
 }
 
 const ALIASSES: { [index: string]: string } = {
-  chain_finalisedHead: "chain_finalizedHead",
-  chain_subscribeFinalisedHeads: "chain_subscribeFinalizedHeads",
-  chain_unsubscribeFinalisedHeads: "chain_unsubscribeFinalizedHeads",
+  chain_finalisedHead: 'chain_finalizedHead',
+  chain_subscribeFinalisedHeads: 'chain_subscribeFinalizedHeads',
+  chain_unsubscribeFinalisedHeads: 'chain_unsubscribeFinalizedHeads'
 };
 
 const RETRY_DELAY = 1000;
@@ -63,7 +58,7 @@ function shortParams(result: any, len: number) {
 
     return str;
   } catch {
-    return "...";
+    return '...';
   }
 }
 
@@ -109,7 +104,7 @@ export default class WsProvider implements IWsProvider {
   ) {
     const endpoints = Array.isArray(endpoint) ? endpoint : [endpoint];
 
-    assert(endpoints.length !== 0, "WsProvider requires at least one Endpoint");
+    assert(endpoints.length !== 0, 'WsProvider requires at least one Endpoint');
 
     endpoints.forEach((endpoint) => {
       assert(
@@ -158,7 +153,7 @@ export default class WsProvider implements IWsProvider {
     try {
       this._endpointIndex = (this._endpointIndex + 1) % this._endpoints.length;
       this._websocket =
-        typeof WebSocket !== "undefined" && isChildClass(WebSocket, WS)
+        typeof WebSocket !== 'undefined' && isChildClass(WebSocket, WS)
           ? new WS(this._endpoints[this._endpointIndex])
           : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // WS may be an instance of w3cwebsocket, which supports headers
@@ -179,9 +174,10 @@ export default class WsProvider implements IWsProvider {
         const eventemitter = this._eventemitter;
 
         function removeAll(event?) {
-          eventemitter.removeListener("connected", onConnect);
-          eventemitter.removeListener("disconnected", onClose);
-          eventemitter.removeListener("error", onClose);
+          eventemitter.removeListener('connected', onConnect);
+          eventemitter.removeListener('disconnected', onClose);
+          eventemitter.removeListener('error', onClose);
+
           if (isConnected) {
             resolve();
           } else {
@@ -199,14 +195,14 @@ export default class WsProvider implements IWsProvider {
           removeAll(event);
         }
 
-        this._eventemitter.once("connected", onConnect);
-        this._eventemitter.once("disconnected", onClose);
-        this._eventemitter.once("error", onClose);
+        this._eventemitter.once('connected', onConnect);
+        this._eventemitter.once('disconnected', onClose);
+        this._eventemitter.once('error', onClose);
       });
     } catch (error) {
       log.error(chalk.red(error));
 
-      this._emit("error", error);
+      this._emit('error', error);
 
       throw error;
     }
@@ -235,7 +231,7 @@ export default class WsProvider implements IWsProvider {
     try {
       assert(
         !isNull(this._websocket),
-        "Cannot disconnect on a non-connected websocket"
+        'Cannot disconnect on a non-connected websocket'
       );
 
       // switch off autoConnect, we are in manual mode now
@@ -247,7 +243,7 @@ export default class WsProvider implements IWsProvider {
     } catch (error) {
       log.error(chalk.red(error));
 
-      this._emit("error", error);
+      this._emit('error', error);
 
       throw error;
     }
@@ -302,7 +298,7 @@ export default class WsProvider implements IWsProvider {
           callback,
           method,
           params,
-          subscription,
+          subscription
         };
 
         if (this.isConnected && !isNull(this._websocket)) {
@@ -379,12 +375,12 @@ export default class WsProvider implements IWsProvider {
     );
 
     this._isConnected = false;
-    this._emit("disconnected");
+    this._emit('disconnected');
   };
 
   _onSocketError = (error: Event): void => {
     log.warn(`Socket event: ${error.type}`);
-    this._emit("error", error);
+    this._emit('error', error);
   };
 
   _onSocketMessage = (message: MessageEvent): void => {
@@ -393,7 +389,7 @@ export default class WsProvider implements IWsProvider {
 
     if (isMsg) {
       log.debug(
-        `${chalk.red("⬇")} Id: ${chalk.bold(`%d`)}, result: ${shortParams(
+        `${chalk.red('⬇')} Id: ${chalk.bold(`%d`)}, result: ${shortParams(
           response.result,
           60
         )}`,
@@ -403,7 +399,7 @@ export default class WsProvider implements IWsProvider {
       return this._onSocketMessageResult(response);
     } else {
       log.debug(
-        `${chalk.red("⬇")} SubId: ${chalk.bold(
+        `${chalk.red('⬇')} SubId: ${chalk.bold(
           response.params.subscription.toString()
         )}, result: ${shortParams(response.params.result, 60)}`
       );
@@ -434,7 +430,7 @@ export default class WsProvider implements IWsProvider {
         this._subscriptions[subId] = {
           ...subscription,
           method,
-          params,
+          params
         };
 
         // if we have a result waiting for this subscription already
@@ -450,8 +446,7 @@ export default class WsProvider implements IWsProvider {
   };
 
   _onSocketMessageSubscribe = (response: JsonRpcResponse): void => {
-    const method =
-      ALIASSES[response.method as string] || response.method || "invalid";
+    const method = ALIASSES[response.method] || response.method || 'invalid';
     const subId = `${method}::${response.params.subscription}`;
     const handler = this._subscriptions[subId];
 
@@ -477,13 +472,13 @@ export default class WsProvider implements IWsProvider {
   };
 
   _onSocketOpen = (): boolean => {
-    assert(!isNull(this._websocket), "WebSocket cannot be null in onOpen");
+    assert(!isNull(this._websocket), 'WebSocket cannot be null in onOpen');
 
-    log.info("Connected to", this._endpoints[this._endpointIndex]);
+    log.info('Connected to', this._endpoints[this._endpointIndex]);
 
     this._isConnected = true;
 
-    this._emit("connected");
+    this._emit('connected');
     this._sendQueue();
     this._resubscribe();
 
@@ -495,15 +490,15 @@ export default class WsProvider implements IWsProvider {
 
     this._subscriptions = {};
 
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     Object.keys(subscriptions).forEach(
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises
       async (id): Promise<void> => {
         const { callback, method, params, type } = subscriptions[id];
 
         // only re-create subscriptions which are not in author (only area where
         // transactions are created, i.e. submissions such as 'author_submitAndWatchExtrinsic'
         // are not included (and will not be re-broadcast)
-        if (type.startsWith("author_")) {
+        if (type.startsWith('author_')) {
           return;
         }
 
@@ -520,7 +515,7 @@ export default class WsProvider implements IWsProvider {
     Object.keys(this._queued).forEach((id): void => {
       try {
         // we have done the websocket check in onSocketOpen, if an issue, will catch it
-        (this._websocket as WebSocket).send(this._queued[id]);
+        this._websocket.send(this._queued[id]);
 
         delete this._queued[id];
       } catch (error) {

@@ -1,26 +1,31 @@
 #!/usr/bin/env node
-import chalk from "chalk";
-import debug from "debug";
-import semver from "semver";
-import "source-map-support/register";
-import { TASK_HELP } from "../../builtin-tasks/task-names";
-import { TaskArguments } from "../../types";
-import { REDSPOT_NAME } from "../constants";
-import { RedspotContext } from "../context";
-import { loadConfigAndTasks } from "../core/config/config-loading";
-import { RedspotError, RedspotPluginError } from "../core/errors";
-import { ERRORS, getErrorCode } from "../core/errors-list";
-import { getEnvRedspotArguments } from "../core/params/env-variables";
-import { REDSPOT_PARAM_DEFINITIONS } from "../core/params/redspot-params";
-import { isCwdInsideProject } from "../core/project-structure";
-import { Environment } from "../core/runtime-environment";
-import { loadTsNodeIfPresent } from "../core/typescript-support";
-import { Reporter } from "../sentry/reporter";
-import { getPackageJson, PackageJson } from "../util/packageInfo";
-import { Analytics } from "./analytics";
-import { ArgumentsParser } from "./ArgumentsParser";
+import chalk from 'chalk';
+import debug from 'debug';
+import semver from 'semver';
+import 'source-map-support/register';
+import { TASK_COMPILE, TASK_HELP } from '../../builtin-tasks/task-names';
+import { TaskArguments } from '../../types';
+import { REDSPOT_NAME } from '../constants';
+import { RedspotContext } from '../context';
+import { loadConfigAndTasks } from '../core/config/config-loading';
+import { RedspotError, RedspotPluginError } from '../core/errors';
+import { ERRORS, getErrorCode } from '../core/errors-list';
+import { isRedspotInstalledLocallyOrLinked } from '../core/execution-mode';
+import { getEnvRedspotArguments } from '../core/params/env-variables';
+import { REDSPOT_PARAM_DEFINITIONS } from '../core/params/redspot-params';
+import { isCwdInsideProject } from '../core/project-structure';
+import { Environment } from '../core/runtime-environment';
+import { loadTsNode, willRunWithTypescript } from '../core/typescript-support';
+import { isRunningOnCiServer } from '../util/ci-detection';
+import {
+  hasConsentedTelemetry,
+  writeTelemetryConsent
+} from '../util/global-dir';
+import { getPackageJson, PackageJson } from '../util/packageInfo';
+import { Analytics } from './analytics';
+import { ArgumentsParser } from './ArgumentsParser';
 
-const log = debug("redspot:core:cli");
+const log = debug('redspot:core:cli');
 
 const ANALYTICS_SLOW_TASK_THRESHOLD = 300;
 
@@ -30,9 +35,10 @@ async function printVersionMessage(packageJson: PackageJson) {
 
 function ensureValidNodeVersion(packageJson: PackageJson) {
   const requirement = packageJson.engines.node;
+
   if (!semver.satisfies(process.version, requirement)) {
     throw new RedspotError(ERRORS.GENERAL.INVALID_NODE_VERSION, {
-      requirement,
+      requirement
     });
   }
 }
@@ -40,7 +46,7 @@ function ensureValidNodeVersion(packageJson: PackageJson) {
 async function main() {
   // We first accept this argument anywhere, so we know if the user wants
   // stack traces before really parsing the arguments.
-  let showStackTraces = process.argv.includes("--show-stack-traces");
+  let showStackTraces = process.argv.includes('--show-stack-traces');
 
   try {
     const packageJson = await getPackageJson();
@@ -57,16 +63,15 @@ async function main() {
     const {
       redspotArguments,
       taskName: parsedTaskName,
-      unparsedCLAs,
+      unparsedCLAs
     } = argumentsParser.parseRedspotArguments(
       REDSPOT_PARAM_DEFINITIONS,
       envVariableArguments,
       process.argv.slice(2)
     );
 
-    if (Number(redspotArguments.logLevel) >= 4) {
-      Reporter.setVerbose(true);
-      debug.enable("redspot*");
+    if (redspotArguments.verbose) {
+      debug.enable('redspot*');
     }
 
     showStackTraces = redspotArguments.showStackTraces;
@@ -76,13 +81,14 @@ async function main() {
       !isCwdInsideProject() &&
       process.stdout.isTTY === true
     ) {
+      // await createProject();
       console.log(chalk.red(`You are not inside a Redspot project.`));
-      console.log("");
+      console.log('');
       console.log(
         `Run the following command to create a new Redspot project: `
       );
       console.log(chalk.cyan(`  $ npx redspot-new <project-name>`));
-      console.log("");
+      console.log('');
 
       return;
     }
@@ -90,29 +96,32 @@ async function main() {
     // --version is a special case
     if (redspotArguments.version) {
       await printVersionMessage(packageJson);
+
       return;
     }
 
-    loadTsNodeIfPresent();
+    if (!isRedspotInstalledLocallyOrLinked()) {
+      throw new RedspotError(ERRORS.GENERAL.NON_LOCAL_INSTALLATION);
+    }
+
+    if (willRunWithTypescript(redspotArguments.config)) {
+      loadTsNode();
+    }
+
+    let taskName = parsedTaskName ?? TASK_HELP;
 
     const ctx = RedspotContext.createRedspotContext();
     const config = loadConfigAndTasks(redspotArguments);
 
-    const analytics = await Analytics.getInstance(
-      config.paths.root,
-      config.analytics.enabled
-    );
+    const telemetryConsent: boolean | undefined = hasConsentedTelemetry();
 
-    Reporter.setConfigPath(config.paths.configFile);
-    Reporter.setEnabled(config.analytics.enabled);
+    const analytics = await Analytics.getInstance(telemetryConsent);
 
     const envExtenders = ctx.extendersManager.getExtenders();
     const taskDefinitions = ctx.tasksDSL.getTaskDefinitions();
 
-    let taskName = parsedTaskName !== undefined ? parsedTaskName : "help";
-
     // tslint:disable-next-line: prefer-const
-    let [abortAnalytics, hitPromise] = await analytics.sendTaskHit(taskName);
+    const [abortAnalytics, hitPromise] = await analytics.sendTaskHit(taskName);
 
     let taskArguments: TaskArguments;
 
@@ -125,7 +134,13 @@ async function main() {
 
       if (taskDefinition === undefined) {
         throw new RedspotError(ERRORS.ARGUMENTS.UNRECOGNIZED_TASK, {
-          task: taskName,
+          task: taskName
+        });
+      }
+
+      if (taskDefinition.isSubtask) {
+        throw new RedspotError(ERRORS.ARGUMENTS.RUNNING_SUBTASK_FROM_CLI, {
+          name: taskDefinition.name
         });
       }
 
@@ -149,6 +164,7 @@ async function main() {
     await env.run(taskName, taskArguments);
 
     const timestampAfterRun = new Date().getTime();
+
     if (
       timestampAfterRun - timestampBeforeRun >
       ANALYTICS_SLOW_TASK_THRESHOLD
@@ -157,6 +173,7 @@ async function main() {
     } else {
       abortAnalytics();
     }
+
     log(`Killing Redspot after successfully running task ${taskName}`);
   } catch (error) {
     let isRedspotError = false;
@@ -170,20 +187,14 @@ async function main() {
         chalk.red(`Error in plugin ${error.pluginName}: ${error.message}`)
       );
     } else if (error instanceof Error) {
-      console.error(chalk.red("An unexpected error occurred:"));
+      console.error(chalk.red('An unexpected error occurred:'));
       showStackTraces = true;
     } else {
-      console.error(chalk.red("An unexpected error occurred."));
+      console.error(chalk.red('An unexpected error occurred.'));
       showStackTraces = true;
     }
 
-    console.log("");
-
-    try {
-      Reporter.reportError(error);
-    } catch (error) {
-      log("Couldn't report error to sentry: %O", error);
-    }
+    console.log('');
 
     if (showStackTraces) {
       console.error(error);
@@ -194,12 +205,21 @@ async function main() {
         );
       }
 
-      console.error(
-        `For more info run ${REDSPOT_NAME} with --show-stack-traces`
-      );
+      if (RedspotError.isRedspotError(error)) {
+        const link = `https://redspot.org/${getErrorCode(
+          error.errorDescriptor
+        )}`;
+
+        console.error(
+          `For more info go to ${link} or run ${REDSPOT_NAME} with --show-stack-traces`
+        );
+      } else {
+        console.error(
+          `For more info run ${REDSPOT_NAME} with --show-stack-traces`
+        );
+      }
     }
 
-    await Reporter.close(1000);
     process.exit(1);
   }
 }

@@ -1,13 +1,13 @@
-import findup from "find-up";
-import fsExtra from "fs-extra";
-import path from "path";
+import findup from 'find-up';
+import fsExtra from 'fs-extra';
+import path from 'path';
 
-async function getPackageJsonPath(): Promise<string> {
+export function getPackageJsonPath(): string {
   return findClosestPackageJson(__filename)!;
 }
 
-export async function getPackageRoot(): Promise<string> {
-  const packageJsonPath = await getPackageJsonPath();
+export function getPackageRoot(): string {
+  const packageJsonPath = getPackageJsonPath();
 
   return path.dirname(packageJsonPath);
 }
@@ -20,13 +20,14 @@ export interface PackageJson {
   };
 }
 
-function findClosestPackageJson(file: string): string | null {
-  return findup.sync("package.json", { cwd: path.dirname(file) });
+export function findClosestPackageJson(file: string): string | null {
+  return findup.sync('package.json', { cwd: path.dirname(file) });
 }
 
 export async function getPackageJson(): Promise<PackageJson> {
-  const root = await getPackageRoot();
-  return fsExtra.readJSON(path.join(root, "package.json"));
+  const root = getPackageRoot();
+
+  return fsExtra.readJSON(path.join(root, 'package.json'));
 }
 
 export function getRedspotVersion(): string | null {
@@ -38,6 +39,7 @@ export function getRedspotVersion(): string | null {
 
   try {
     const packageJson = fsExtra.readJsonSync(packageJsonPath);
+
     return packageJson.version;
   } catch (e) {
     return null;

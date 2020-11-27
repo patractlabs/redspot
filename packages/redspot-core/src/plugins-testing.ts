@@ -1,2 +1,1 @@
-export { loadPluginFile } from "./internal/core/plugins";
-export { resetRedspotContext } from "./internal/reset";
+export { resetRedspotContext } from './internal/reset';

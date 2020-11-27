@@ -1,19 +1,19 @@
-import { ApiPromise } from "@polkadot/api";
-import { Abi } from "@polkadot/api-contract";
-import { extendEnvironment } from "redspot/config";
-import { lazyObject } from "redspot/plugins";
-import type { RedspotRuntimeEnvironment } from "redspot/types";
-import Contract from "./contract";
-import ContractFactory from "./contractFactory";
+import { ApiPromise } from '@polkadot/api';
+import { Abi } from '@polkadot/api-contract';
+import { extendEnvironment } from 'redspot/config';
+import { lazyObject } from 'redspot/plugins';
+import type { RedspotRuntimeEnvironment } from 'redspot/types';
+import Contract from './contract';
+import ContractFactory from './contractFactory';
 import {
   getAbi,
   getContractAt,
   getContractFactory,
   getRandomSigner,
   getSigners,
-  getWasm,
-} from "./helpers";
-import "./type-extensions";
+  getWasm
+} from './helpers';
+import './type-extensions';
 
 export default function () {
   extendEnvironment((env: RedspotRuntimeEnvironment) => {
@@ -26,7 +26,7 @@ export default function () {
         provider,
         registry,
         // hack
-        ...registry.knownTypes,
+        ...registry.knownTypes
       });
 
       return {
@@ -50,7 +50,7 @@ export default function () {
         getAbi: getAbi.bind(null, env),
         getWasm: getWasm.bind(null, env),
         getRandomSigner: getRandomSigner.bind(null, env),
-        getSigners: async () => getSigners(env),
+        getSigners: async () => getSigners(env)
       };
     });
   });

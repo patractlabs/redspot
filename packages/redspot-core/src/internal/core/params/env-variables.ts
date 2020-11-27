@@ -1,21 +1,19 @@
-import { RedspotArguments, RedspotParamDefinitions } from "../../../types";
-import { ArgumentsParser } from "../../cli/ArgumentsParser";
-import { unsafeObjectKeys } from "../../util/unsafe";
-import { RedspotError } from "../errors";
-import { ERRORS } from "../errors-list";
+import { RedspotArguments, RedspotParamDefinitions } from '../../../types';
+import { ArgumentsParser } from '../../cli/ArgumentsParser';
+import { unsafeObjectKeys } from '../../util/unsafe';
+import { RedspotError } from '../errors';
+import { ERRORS } from '../errors-list';
 
-const REDSPOT_ENV_ARGUMENT_PREFIX = "REDSPOT_";
+import ProcessEnv = NodeJS.ProcessEnv;
 
-interface ProcessEnv {
-  [key: string]: string | undefined;
-}
+const REDSPOT_ENV_ARGUMENT_PREFIX = 'REDSPOT_';
 
 export function paramNameToEnvVariable(paramName: string): string {
   // We create it starting from the result of ArgumentsParser.paramNameToCLA
   // so it's easier to explain and understand their equivalences.
   return ArgumentsParser.paramNameToCLA(paramName)
     .replace(ArgumentsParser.PARAM_PREFIX, REDSPOT_ENV_ARGUMENT_PREFIX)
-    .replace(/-/g, "_")
+    .replace(/-/g, '_')
     .toUpperCase();
 }
 
@@ -54,7 +52,7 @@ export function getEnvRedspotArguments(
           ERRORS.ARGUMENTS.INVALID_ENV_VAR_VALUE,
           {
             varName: envVarName,
-            value: rawValue,
+            value: rawValue
           },
           error
         );

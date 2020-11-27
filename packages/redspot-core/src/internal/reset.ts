@@ -1,43 +1,30 @@
-/**
- * This function resets the redspot context.
- *
- * This doesn't unload any loaded Redspot plugin, so those have to be unloaded
- * manually with `unloadModule`.
- */
-import { RedspotContext } from "./context";
-import { getUserConfigPath } from "./core/project-structure";
+import { RedspotContext } from './context';
 
+// This function isn't meant to be used during the Redspot execution,
+// but rather to reset Redspot in between tests.
 export function resetRedspotContext() {
   if (RedspotContext.isCreated()) {
     const ctx = RedspotContext.getRedspotContext();
-    const globalAsAny = global as any;
+
     if (ctx.environment !== undefined) {
+      const globalAsAny = global as any;
+
       for (const key of Object.keys(ctx.environment)) {
         globalAsAny[key] = undefined;
       }
-      // unload config file too.
-      unloadModule(ctx.environment.config.paths.configFile);
-    } else {
-      // We may get here if loading the config has thrown, so be unload it
-      let configPath: string | undefined;
-
-      try {
-        configPath = getUserConfigPath();
-      } catch (error) {
-        // We weren't in a redspot project
-      }
-
-      if (configPath !== undefined) {
-        unloadModule(configPath);
-      }
     }
+
+    const filesLoadedDuringConfig = ctx.getFilesLoadedDuringConfig();
+
+    filesLoadedDuringConfig.forEach(unloadModule);
+
     RedspotContext.deleteRedspotContext();
   }
 
   // Unload all the redspot's entry-points.
-  unloadModule("../register");
-  unloadModule("./cli/cli");
-  unloadModule("./lib/redspot-lib");
+  unloadModule('../register');
+  unloadModule('./cli/cli');
+  unloadModule('./lib/redspot-lib');
 }
 
 function unloadModule(path: string) {

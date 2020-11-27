@@ -1,9 +1,9 @@
-import { NetworkConfig } from "../../types";
-import { RpcProvider } from "./rpc-provider";
+import { RedspotNetworkUserConfig } from '../types';
+import { RpcProvider } from './rpc-provider';
 
 export function createProvider(
   networkName: string,
-  networkConfig: NetworkConfig
+  networkConfig: RedspotNetworkUserConfig
 ) {
   return new RpcProvider(
     networkName,
@@ -13,7 +13,7 @@ export function createProvider(
     networkConfig.accounts,
     networkConfig.gasLimit,
     {
-      explorerUrl: networkConfig.explorerUrl,
+      explorerUrl: networkConfig.explorerUrl
     }
   );
 }

@@ -1,32 +1,28 @@
-import { RedspotConfig, NetworkConfig } from "../../../types";
-import {
-  REDSPOT_DEFAULT_NETWORK_NAME,
-  REDSPOT_DEFAULT_TOOLCHAIN,
-} from "../../constants";
+import { REDSPOT_NETWORK_NAME } from '../../constants';
 
-const DEFAULT_REDSPOT_NETWORK_CONFIG: NetworkConfig = {
-  gasLimit: "400000000000",
-  accounts: ["//Alice", "//Bob", "//Charlie", "//Dave", "//Eve", "//Ferdie"],
-  endpoint: ["ws://127.0.0.1:9944"],
+export const REDSPOT_NETWORK_DEFAULT_GAS_PRICE = '400000000000';
+export const DEFAULT_REDSPOT_NETWORK_BALANCE = '10000000000000000000000';
+
+export const defaultDefaultNetwork = REDSPOT_NETWORK_NAME;
+
+export const defaultEuropaNetworkParams = {
+  gasLimit: REDSPOT_NETWORK_DEFAULT_GAS_PRICE,
+  accounts: ['//Alice', '//Bob', '//Charlie', '//Dave', '//Eve', '//Ferdie'],
+  endpoint: ['ws://127.0.0.1:9944'],
   types: {},
   httpHeaders: {},
-  explorerUrl: "https://polkadot.js.org/apps/#/explorer/query/",
+  explorerUrl: 'https://polkadot.js.org/apps/#/explorer/query/'
 };
 
-const defaultConfig: RedspotConfig = {
-  defaultNetwork: REDSPOT_DEFAULT_NETWORK_NAME,
-  networks: {
-    [REDSPOT_DEFAULT_NETWORK_NAME]: DEFAULT_REDSPOT_NETWORK_CONFIG,
-  },
-  rust: {
-    toolchain: REDSPOT_DEFAULT_TOOLCHAIN,
-  },
-  analytics: {
-    enabled: true,
-  },
-  mocha: {
-    timeout: 60000,
-  },
+export const defaultLocalhostNetworkParams = {
+  gasLimit: REDSPOT_NETWORK_DEFAULT_GAS_PRICE,
+  accounts: ['//Alice', '//Bob', '//Charlie', '//Dave', '//Eve', '//Ferdie'],
+  endpoint: ['ws://127.0.0.1:9944'],
+  types: {},
+  httpHeaders: {},
+  explorerUrl: 'https://polkadot.js.org/apps/#/explorer/query/'
 };
 
-export default defaultConfig;
+export const defaultMochaOptions: Mocha.MochaOptions = {
+  timeout: 20000
+};

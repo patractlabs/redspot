@@ -1,10 +1,10 @@
-import chalk from "chalk";
-import { execSync } from "child_process";
-import spawn from "cross-spawn";
-import fs from "fs-extra";
-import path from "path";
-import semver from "semver";
-import { CargoMetadata, CargoPackage } from "./resolve";
+import chalk from 'chalk';
+import { execSync } from 'child_process';
+import spawn from 'cross-spawn';
+import fs from 'fs-extra';
+import path from 'path';
+import semver from 'semver';
+import { CargoMetadata, CargoPackage } from './resolve';
 
 export interface CompilerOptions {
   toolchain: string;
@@ -23,31 +23,31 @@ export class Compiler {
     this._metadata = metadata;
     this._toolchain = toolchain;
     this._verbose = verbose;
-    const pass = this.checkRustEnv();
-    if (!pass) {
-      throw new Error("Unable to compile the contracts");
-    }
+    this.checkRustEnv();
   }
 
-  public async checkRustEnv() {
+  public checkRustEnv() {
     let version: string;
+
     try {
-      const versionData = execSync("cargo contract -V");
-      version = versionData.toString().split(" ")[1];
+      const versionData = execSync('cargo contract -V');
+
+      version = versionData.toString().split(' ')[1];
     } catch (error) {
-      console.log(chalk.red("ERROR: No `cargo-contract` found"));
+      console.log(chalk.red('ERROR: No `cargo-contract` found'));
       console.log(`Run the following command to install it:`);
       console.log(
         chalk.cyan(
           `$ cargo install --git https://github.com/paritytech/cargo-contract cargo-contract --force`
         )
       );
+
       return false;
     }
 
-    if (semver.lt(version, "0.7.0")) {
+    if (semver.lt(version, '0.7.0')) {
       console.log(
-        chalk.red("ERROR: `cargo-contract` requires v0.7.0 or above")
+        chalk.red('ERROR: `cargo-contract` requires v0.7.0 or above')
       );
       console.log(`Run the following command to install it:`);
       console.log(
@@ -55,8 +55,11 @@ export class Compiler {
           `$ cargo install --git https://github.com/paritytech/cargo-contract cargo-contract --force`
         )
       );
+
       return false;
     }
+
+    return true;
   }
 
   public async compileAll(): Promise<string[]> {
@@ -64,6 +67,7 @@ export class Compiler {
 
     for (const contract of this._metadata.packages) {
       const wasmPath = await this.compile(contract.name);
+
       wasmFiles.push(wasmPath);
     }
 
@@ -80,11 +84,11 @@ export class Compiler {
     }
 
     console.log(chalk.magenta(`===== Compile ${contract.name} =====`));
-    console.log("");
+    console.log('');
 
     await this.runCompile(contract);
 
-    console.log("");
+    console.log('');
 
     return path.resolve(
       this._metadata.target_directory,
@@ -94,19 +98,20 @@ export class Compiler {
 
   public async runCompile(contract: CargoPackage) {
     return new Promise((resolve, reject) => {
-      let args = [`+${this._toolchain}`, `contract`, "build"];
+      let args = [`+${this._toolchain}`, `contract`, 'build'];
+
       if (this._verbose) {
-        args = args.concat("--", "verbose");
+        args = args.concat('--', 'verbose');
       }
 
-      const child = spawn("cargo", args, {
-        stdio: "inherit",
-        cwd: this._metadata.workspace_root,
+      const child = spawn('cargo', args, {
+        stdio: 'inherit',
+        cwd: this._metadata.workspace_root
       });
 
-      console.log(`$ cargo ${args.join(" ")}`);
+      console.log(`$ cargo ${args.join(' ')}`);
 
-      child.on("close", (code) => {
+      child.on('close', (code) => {
         if (code !== 0) {
           console.log();
           console.log(
@@ -114,11 +119,14 @@ export class Compiler {
               `Failed to compile the contract ${chalk.yellow(contract.name)}`
             )
           );
+          // eslint-disable-next-line prefer-promise-reject-errors
           reject({
-            command: `cargo ${args.join(" ")}`,
+            command: `cargo ${args.join(' ')}`
           });
+
           return;
         }
+
         resolve();
       });
     });
@@ -150,11 +158,11 @@ export class Compiler {
     console.log(
       chalk.magenta(`===== Generate metadata ${contract.name} =====`)
     );
-    console.log("");
+    console.log('');
 
     await this.runGenerateMetadata(contract);
 
-    console.log("");
+    console.log('');
 
     const metadataPath = path.resolve(
       this._metadata.target_directory,
@@ -172,20 +180,20 @@ export class Compiler {
 
   public async runGenerateMetadata(contract: CargoPackage) {
     return new Promise((resolve, reject) => {
-      let args = [`+${this._toolchain}`, `contract`, "generate-metadata"];
+      let args = [`+${this._toolchain}`, `contract`, 'generate-metadata'];
 
       if (this._verbose) {
-        args = args.concat("--", "verbose");
+        args = args.concat('--', 'verbose');
       }
 
-      const child = spawn("cargo", args, {
-        stdio: "inherit",
-        cwd: path.dirname(contract.manifest_path),
+      const child = spawn('cargo', args, {
+        stdio: 'inherit',
+        cwd: path.dirname(contract.manifest_path)
       });
 
-      console.log(`cargo ${args.join(" ")}`);
+      console.log(`cargo ${args.join(' ')}`);
 
-      child.on("close", (code) => {
+      child.on('close', (code) => {
         if (code !== 0) {
           console.log();
           console.log(
@@ -193,11 +201,14 @@ export class Compiler {
               `Failed to generate the metadata ${chalk.yellow(contract.name)}`
             )
           );
+          // eslint-disable-next-line prefer-promise-reject-errors
           reject({
-            command: `cargo ${args.join(" ")}`,
+            command: `cargo ${args.join(' ')}`
           });
+
           return;
         }
+
         resolve();
       });
     });

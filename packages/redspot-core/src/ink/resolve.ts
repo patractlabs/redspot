@@ -1,9 +1,10 @@
-import chalk from "chalk";
-import fs from "fs-extra";
-import path from "path";
-import { execSync } from "child_process";
-import { RedspotConfig } from "../../types";
+import chalk from 'chalk';
+import { execSync } from 'child_process';
+import fs from 'fs-extra';
+import path from 'path';
+import { RedspotConfig } from '../types';
 
+/* eslint-disable camelcase */
 export interface CargoPackage {
   name: string;
   version: string;
@@ -49,20 +50,21 @@ export interface CargoMetadata {
 }
 
 export function getResolvedWorkspace(findDir?: string): CargoMetadata {
-  const execCommand = "cargo metadata --no-deps --format-version 1";
-  const findDirs = ["./"];
+  const execCommand = 'cargo metadata --no-deps --format-version 1';
+  const findDirs = ['./'];
 
   if (findDir) {
     findDirs.push(findDir);
   }
 
-  const cwd = findDirs.find((d) => fs.existsSync(path.join(d, "Cargo.toml")));
+  const cwd = findDirs.find((d) => fs.existsSync(path.join(d, 'Cargo.toml')));
 
   try {
     const output = execSync(execCommand, {
       maxBuffer: 1024 * 2048,
-      cwd,
+      cwd
     }).toString();
+
     return JSON.parse(output);
   } catch (error) {
     throw new Error(chalk.red(`$ \`${execCommand}\` has failed`));
@@ -70,19 +72,19 @@ export function getResolvedWorkspace(findDir?: string): CargoMetadata {
 }
 
 export function filterContractPackage(metadata: CargoMetadata): CargoMetadata {
-  const contracts = metadata.packages.filter(({ id, dependencies }) => {
+  const contracts = metadata.packages.filter(({ dependencies, id }) => {
     return (
       (metadata.workspace_members || []).includes(id) &&
-      !!dependencies.find(({ name }: any) => name === "ink_lang")
+      !!dependencies.find(({ name }: any) => name === 'ink_lang')
     );
   });
 
   return {
     ...metadata,
-    packages: contracts,
+    packages: contracts
   };
 }
 
 export function getToolchain(config: RedspotConfig, toolchain?: string) {
-  return toolchain || config?.rust?.toolchain || "nightly";
+  return toolchain || config?.ink?.toolchain || 'nightly';
 }

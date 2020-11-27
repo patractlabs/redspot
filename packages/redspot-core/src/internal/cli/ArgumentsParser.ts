@@ -1,16 +1,17 @@
 import {
-  RedspotArguments,
-  RedspotParamDefinitions,
+  CLIArgumentType,
   ParamDefinition,
   ParamDefinitionsMap,
+  RedspotArguments,
+  RedspotParamDefinitions,
   TaskArguments,
-  TaskDefinition,
-} from "../../types";
-import { RedspotError } from "../core/errors";
-import { ERRORS } from "../core/errors-list";
+  TaskDefinition
+} from '../../types';
+import { RedspotError } from '../core/errors';
+import { ERRORS } from '../core/errors-list';
 
 export class ArgumentsParser {
-  public static readonly PARAM_PREFIX = "--";
+  public static readonly PARAM_PREFIX = '--';
 
   public static paramNameToCLA(paramName: string): string {
     return (
@@ -18,25 +19,28 @@ export class ArgumentsParser {
       paramName
         .split(/(?=[A-Z])/g)
         .map((s) => s.toLowerCase())
-        .join("-")
+        .join('-')
     );
   }
 
   public static cLAToParamName(cLA: string): string {
     if (cLA.toLowerCase() !== cLA) {
       throw new RedspotError(ERRORS.ARGUMENTS.PARAM_NAME_INVALID_CASING, {
-        param: cLA,
+        param: cLA
       });
     }
 
-    const parts = cLA.slice(ArgumentsParser.PARAM_PREFIX.length).split("-");
+    const parts = cLA
+      .slice(ArgumentsParser.PARAM_PREFIX.length)
+      .split('-')
+      .filter((x) => x.length > 0);
 
     return (
       parts[0] +
       parts
         .slice(1)
         .map((s) => s[0].toUpperCase() + s.slice(1))
-        .join("")
+        .join('')
     );
   }
 
@@ -97,7 +101,7 @@ export class ArgumentsParser {
         redspotArguments
       ),
       taskName,
-      unparsedCLAs,
+      unparsedCLAs
     };
   }
 
@@ -107,7 +111,7 @@ export class ArgumentsParser {
   ): TaskArguments {
     const {
       paramArguments,
-      rawPositionalArguments,
+      rawPositionalArguments
     } = this._parseTaskParamArguments(taskDefinition, rawCLAs);
 
     const positionalArguments = this._parsePositionalParamArgs(
@@ -135,7 +139,7 @@ export class ArgumentsParser {
 
       if (!this._isCLAParamName(arg, taskDefinition.paramDefinitions)) {
         throw new RedspotError(ERRORS.ARGUMENTS.UNRECOGNIZED_PARAM_NAME, {
-          param: arg,
+          param: arg
         });
       }
 
@@ -159,7 +163,7 @@ export class ArgumentsParser {
   ): RedspotArguments {
     return {
       ...envVariableArguments,
-      ...redspotArguments,
+      ...redspotArguments
     };
   }
 
@@ -173,9 +177,10 @@ export class ArgumentsParser {
       if (taskArguments[paramName] !== undefined) {
         continue;
       }
+
       if (!definition.isOptional) {
         throw new RedspotError(ERRORS.ARGUMENTS.MISSING_TASK_ARGUMENT, {
-          param: ArgumentsParser.paramNameToCLA(paramName),
+          param: ArgumentsParser.paramNameToCLA(paramName)
         });
       }
 
@@ -189,6 +194,7 @@ export class ArgumentsParser {
     }
 
     const name = ArgumentsParser.cLAToParamName(str);
+
     return paramDefinitions[name] !== undefined;
   }
 
@@ -208,7 +214,7 @@ export class ArgumentsParser {
 
     if (parsedArguments[paramName] !== undefined) {
       throw new RedspotError(ERRORS.ARGUMENTS.REPEATED_PARAM, {
-        param: claArg,
+        param: claArg
       });
     }
 
@@ -220,11 +226,15 @@ export class ArgumentsParser {
 
       if (value === undefined) {
         throw new RedspotError(ERRORS.ARGUMENTS.MISSING_TASK_ARGUMENT, {
-          param: ArgumentsParser.paramNameToCLA(paramName),
+          param: ArgumentsParser.paramNameToCLA(paramName)
         });
       }
 
-      parsedArguments[paramName] = definition.type.parse(paramName, value);
+      // We only parse the arguments of non-subtasks, and those only
+      // accept CLIArgumentTypes.
+      const type = definition.type as CLIArgumentType<any>;
+
+      parsedArguments[paramName] = type.parse(paramName, value);
     }
 
     return index;
@@ -238,23 +248,26 @@ export class ArgumentsParser {
 
     for (let i = 0; i < positionalParamDefinitions.length; i++) {
       const definition = positionalParamDefinitions[i];
+      // We only parse the arguments of non-subtasks, and those only
+      // accept CLIArgumentTypes.
+      const type = definition.type as CLIArgumentType<any>;
 
       const rawArg = rawPositionalParamArgs[i];
 
       if (rawArg === undefined) {
         if (!definition.isOptional) {
           throw new RedspotError(ERRORS.ARGUMENTS.MISSING_POSITIONAL_ARG, {
-            param: definition.name,
+            param: definition.name
           });
         }
 
         args[definition.name] = definition.defaultValue;
       } else if (!definition.isVariadic) {
-        args[definition.name] = definition.type.parse(definition.name, rawArg);
+        args[definition.name] = type.parse(definition.name, rawArg);
       } else {
         args[definition.name] = rawPositionalParamArgs
           .slice(i)
-          .map((raw) => definition.type.parse(definition.name, raw));
+          .map((raw) => type.parse(definition.name, raw));
       }
     }
 
@@ -269,7 +282,7 @@ export class ArgumentsParser {
       rawPositionalParamArgs.length > positionalParamDefinitions.length
     ) {
       throw new RedspotError(ERRORS.ARGUMENTS.UNRECOGNIZED_POSITIONAL_ARG, {
-        argument: rawPositionalParamArgs[positionalParamDefinitions.length],
+        argument: rawPositionalParamArgs[positionalParamDefinitions.length]
       });
     }
 
