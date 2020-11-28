@@ -10,7 +10,6 @@ import yargs, { argv } from 'yargs';
 const packageToInstall = 'redspot';
 const templateToInstall = '@redspot/redspot-template';
 const defaultToInstall = '@redspot/patract';
-const tag = 'latest';
 
 function init() {
   const currentNodeVersion = process.versions.node;
@@ -33,7 +32,12 @@ function init() {
     .option('template', {
       type: 'string',
       default: 'erc20',
-      description: 'specify a template for the created project'
+      description: 'Specify a template for the created project'
+    })
+    .option('version', {
+      type: 'string',
+      default: '',
+      description: 'Specify a version to install'
     })
     .demandCommand(
       1,
@@ -43,9 +47,9 @@ function init() {
     )
     .example(
       '$0 erc20',
-      'initializes a new Substrate contract project in the specified directory'
+      'Initializes a new Substrate contract project in the specified directory'
     )
-    .epilog('power by patract labs').argv;
+    .epilog('Power by patract labs').argv;
 
   const projectName = argv._[0];
 
@@ -94,6 +98,8 @@ function run(
   verbose: boolean
 ) {
   const templateName = argv.template;
+  const intallVersion = argv.version as string;
+
   const allDependencies = [
     packageToInstall,
     templateToInstall,
@@ -102,7 +108,7 @@ function run(
 
   console.log('Installing packages. This might take a while.');
 
-  install(root, allDependencies, useYarn, tag, verbose)
+  install(root, allDependencies, useYarn, intallVersion, verbose)
     .then(async () => {
       checkNodeVersion(packageToInstall);
 
@@ -170,22 +176,22 @@ function install(
   root: string,
   dependencies: string[],
   useYarn: boolean,
-  tag: string,
+  intallVersion: string,
   verbose: boolean
 ) {
   return new Promise((resolve, reject) => {
     let command: string;
     let args: string[];
 
-    const dependenciesWithTag = !tag
+    const dependenciesWithVersion = !intallVersion
       ? dependencies
-      : dependencies.map((d) => `${d}@${tag}`);
+      : dependencies.map((d) => `${d}@${intallVersion}`);
 
     if (useYarn) {
       command = 'yarnpkg';
       args = ['add'];
 
-      [].push.apply(args, dependenciesWithTag as any);
+      [].push.apply(args, dependenciesWithVersion as any);
 
       args.push('--cwd');
       args.push(root);
@@ -197,7 +203,7 @@ function install(
         '--save-exact',
         '--loglevel',
         'error'
-      ].concat(dependenciesWithTag);
+      ].concat(dependenciesWithVersion);
     }
 
     if (verbose) {
