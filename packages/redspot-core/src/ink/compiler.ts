@@ -45,7 +45,7 @@ export class Compiler {
       return false;
     }
 
-    if (!semver.eq(version, '0.7.0')) {
+    if (!semver.eq(version, '0.7.1')) {
       console.log(
         chalk.red('ERROR: `cargo-contract` requires v0.7.0 or above')
       );
