@@ -1,5 +1,6 @@
 import type { ContractProject } from '@polkadot/types/interfaces';
 
+export type Artifact = ContractProject;
 export interface Artifacts {
   readArtifact(
     contractNameOrFullyQualifiedName: string,
@@ -16,5 +17,3 @@ export interface Artifacts {
   getArtifactPaths(type: 'abi' | 'wasm' | 'json'): Promise<string[]>;
   saveArtifact(paths: string[]): Promise<void>;
 }
-
-export type Artifact = ContractProject;

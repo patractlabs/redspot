@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 import { Artifacts } from './artifacts';
 import { RedspotConfig, NetworkConfig } from './config';
 import { RpcProvider } from './provider';

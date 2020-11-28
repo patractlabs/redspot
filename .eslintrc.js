@@ -30,6 +30,7 @@ module.exports = {
     '@typescript-eslint/unbound-method': 'off',
     '@typescript-eslint/prefer-regexp-exec': 'off',
     '@typescript-eslint/restrict-template-expressions': 'off',
+    'default-param-last': 'off',
     'promise/param-names': 'off',
     'node/no-path-concat': 'off',
     'sort-keys': 'off'
