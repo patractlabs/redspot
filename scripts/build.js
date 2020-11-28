@@ -49,7 +49,7 @@ function buildTs() {
     tsProject
       .src()
       .pipe(tsProject())
-      .js.pipe(
+      .pipe(
         rename(function (path) {
           return {
             dirname: path.dirname.replace(
