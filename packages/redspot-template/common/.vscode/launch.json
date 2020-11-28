@@ -8,13 +8,15 @@
       "name": "ts",
       "type": "pwa-node",
       "request": "launch",
-      "args": ["${relativeFile}"],
-      "runtimeArgs": ["-r", "ts-node/register"],
+      "args": [
+        "${relativeFile}"
+      ],
+      "runtimeArgs": [
+        "-r",
+        "ts-node/register/transpile-only"
+      ],
       "sourceMaps": true,
       "cwd": "${workspaceRoot}",
-      "env": {
-        "TS_NODE_TRANSPILE_ONLY": "true"
-      },
       "resolveSourceMapLocations": [
         "${workspaceFolder}/**",
         "!**/node_modules/**"

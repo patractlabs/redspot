@@ -7,10 +7,13 @@
     "outDir": "dist",
     "noImplicitAny": false
   },
-  "include": ["**/*.ts"],
-  "exclude": ["node_modules"],
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ],
   "files": [
     "./redspot.config.ts",
-    "./node_modules/@redspot/patract/type-extensions.d.ts"
   ]
 }
