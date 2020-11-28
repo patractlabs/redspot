@@ -34,7 +34,7 @@ function init() {
       default: 'erc20',
       description: 'Specify a template for the created project'
     })
-    .option('version', {
+    .option('vers', {
       type: 'string',
       default: '',
       description: 'Specify a version to install'
@@ -98,7 +98,7 @@ function run(
   verbose: boolean
 ) {
   const templateName = argv.template;
-  const intallVersion = argv.version as string;
+  const intallVersion = argv.vers as string;
 
   const allDependencies = [
     packageToInstall,
