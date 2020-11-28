@@ -6,60 +6,77 @@ const execSync = require('@patract/dev/scripts/execSync');
 
 const dist = 'build';
 
-function cleanBuild() {
+function cleanBuild(callback) {
   execSync('yarn polkadot-dev-clean-build');
 }
 
 function copyTemplate() {
-  console.log('Copy template');
-  return gulp
-    .src('packages/redspot-template/**/*', {
-      ignore: ['**/node_modules/**/*']
-    })
-    .pipe(gulp.dest(`${dist}/redspot-template`));
+  return new Promise((resolve, reject) => {
+    console.log('Copy template');
+    return gulp
+      .src('packages/redspot-template/**/*', {
+        ignore: ['**/node_modules/**/*']
+      })
+      .pipe(gulp.dest(`${dist}/redspot-template`))
+      .on('end', resolve)
+      .on('error', reject);
+  });
 }
 
 function copyFiles() {
-  console.log('Copy files');
-  const CPX = ['css', 'gif', 'hbs', 'jpg', 'js', 'png', 'svg', 'd.ts', 'json']
-    .map((ext) => `src/**/*.${ext}`)
-    .concat(['package.json', 'LICENSE']);
+  return new Promise((resolve, reject) => {
+    console.log('Copy files');
+    const CPX = ['css', 'gif', 'hbs', 'jpg', 'js', 'png', 'svg', 'd.ts', 'json']
+      .map((ext) => `src/**/*.${ext}`)
+      .concat(['package.json', 'LICENSE']);
 
-  return gulp
-    .src(
-      CPX.map((x) => `packages/*/${x}`),
-      {
-        ignore: ['**/node_modules/**/*', '**/redspot-template/**/*']
-      }
-    )
-    .pipe(gulp.dest(dist));
+    return gulp
+      .src(
+        CPX.map((x) => `packages/*/${x}`),
+        {
+          ignore: ['**/node_modules/**/*', '**/redspot-template/**/*']
+        }
+      )
+      .pipe(gulp.dest(dist))
+      .on('end', resolve)
+      .on('error', reject);
+  });
 }
 
 function buildTs() {
-  console.log('Build typescript');
-  return tsProject
-    .src()
-    .pipe(tsProject())
-    .js.pipe(
-      rename(function (path) {
-        return {
-          dirname: path.dirname.replace(
-            /^([a-zA-Z0-9-_]*)(\/src)(\/.*|$)/g,
-            '$1$3'
-          ),
-          basename: path.basename,
-          extname: path.extname
-        };
-      })
-    )
-    .pipe(gulp.dest(dist));
+  return new Promise((resolve, reject) => {
+    console.log('Build typescript');
+    tsProject
+      .src()
+      .pipe(tsProject())
+      .js.pipe(
+        rename(function (path) {
+          return {
+            dirname: path.dirname.replace(
+              /^([a-zA-Z0-9-_]*)(\/src)(\/.*|$)/g,
+              '$1$3'
+            ),
+            basename: path.basename,
+            extname: path.extname
+          };
+        })
+      )
+      .pipe(gulp.dest(dist))
+      .on('end', resolve)
+      .on('error', reject);
+  });
 }
 
-function run() {
+async function run() {
   cleanBuild();
-  buildTs();
-  copyTemplate();
-  copyFiles();
+
+  await buildTs();
+  await copyTemplate();
+  await copyFiles();
+
+  console.log('Build complete');
 }
 
-run();
+run().catch((error) => {
+  console.log(error);
+});
