@@ -38,21 +38,21 @@ export class Compiler {
       console.log(`Run the following command to install it:`);
       console.log(
         chalk.cyan(
-          `$ cargo install --git https://github.com/paritytech/cargo-contract cargo-contract --force`
+          `$ cargo install cargo-contract --vers 0.7.1 --force --locked`
         )
       );
 
       return false;
     }
 
-    if (semver.lt(version, '0.7.0')) {
+    if (!semver.eq(version, '0.7.0')) {
       console.log(
         chalk.red('ERROR: `cargo-contract` requires v0.7.0 or above')
       );
       console.log(`Run the following command to install it:`);
       console.log(
         chalk.cyan(
-          `$ cargo install --git https://github.com/paritytech/cargo-contract cargo-contract --force`
+          `$ cargo install cargo-contract --vers 0.7.1 --force --locked`
         )
       );
 
