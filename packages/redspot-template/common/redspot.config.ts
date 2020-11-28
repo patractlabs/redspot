@@ -1,31 +1,29 @@
-import { usePlugin } from "redspot/config";
-import { RedspotConfig } from "redspot/types";
-
-usePlugin("@redspot/patract");
+import { RedspotUserConfig } from 'redspot/types';
+import '@redspot/patract';
 
 export default {
-  defaultNetwork: "development",
-  rust: {
-    toolchain: "nightly",
+  defaultNetwork: 'development',
+  ink: {
+    toolchain: 'nightly'
   },
   networks: {
     development: {
-      endpoint: "ws://127.0.0.1:9944",
+      endpoint: 'ws://127.0.0.1:9944',
       types: {
-        Address: "AccountId",
-        LookupSource: "AccountId",
+        Address: 'AccountId',
+        LookupSource: 'AccountId'
       },
-      gasLimit: "400000000000",
-      explorerUrl: "https://polkadot.js.org/apps/#/explorer/query/",
+      gasLimit: '400000000000',
+      explorerUrl: 'https://polkadot.js.org/apps/#/explorer/query/'
     },
     substrate: {
-      endpoint: "ws://127.0.0.1:9944",
-      gasLimit: "400000000000",
-      accounts: ["//Alice"],
-      types: {},
-    },
+      endpoint: 'ws://127.0.0.1:9944',
+      gasLimit: '400000000000',
+      accounts: ['//Alice'],
+      types: {}
+    }
   },
   mocha: {
-    timeout: 60000,
-  },
-} as RedspotConfig;
+    timeout: 60000
+  }
+} as RedspotUserConfig;

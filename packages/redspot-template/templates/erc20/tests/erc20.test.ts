@@ -9,7 +9,7 @@ const {
   getSigners,
   getAbi,
   api
-} = patract!;
+} = patract;
 
 describe('ERC20', () => {
   after(() => {
