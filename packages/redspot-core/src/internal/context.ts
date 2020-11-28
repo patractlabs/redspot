@@ -11,6 +11,7 @@ import { TasksDSL } from './core/tasks/dsl';
 import { getRequireCachedFiles } from './util/platform';
 
 export type GlobalWithRedspotContext = NodeJS.Global & {
+  // eslint-disable-next-line no-use-before-define
   __redspotContext: RedspotContext;
 };
 

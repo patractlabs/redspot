@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 // This file defines the different config types.
 //
 // For each possible kind of config value, we have two type:

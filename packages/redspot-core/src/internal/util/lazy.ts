@@ -85,6 +85,7 @@ export function lazyFunction<T extends Function>(functionCreator: () => T): T {
   );
 }
 
+// eslint-disable-next-line no-use-before-define
 function createLazyProxy<ActualT extends GuardT, GuardT extends object>(
   targetCreator: () => ActualT,
   dummyTargetCreator: (getRealTarget: () => ActualT) => GuardT,
