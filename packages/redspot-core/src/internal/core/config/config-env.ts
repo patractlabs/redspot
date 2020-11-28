@@ -3,7 +3,6 @@ import {
   ConfigExtender,
   ConfigurableTaskDefinition,
   EnvironmentExtender,
-  ExperimentalRedspotNetworkMessageTraceHook,
   TaskArguments
 } from '../../../types';
 import { RedspotContext } from '../../context';
@@ -135,14 +134,4 @@ export function extendConfig(extender: ConfigExtender) {
   const ctx = RedspotContext.getRedspotContext();
 
   ctx.configExtenders.push(extender);
-}
-
-// NOTE: This is experimental and will be removed. Please contact our team
-// if you are planning to use it.
-export function experimentalAddRedspotNetworkMessageTraceHook(
-  hook: ExperimentalRedspotNetworkMessageTraceHook
-) {
-  const ctx = RedspotContext.getRedspotContext();
-
-  ctx.experimentalRedspotNetworkMessageTraceHooks.push(hook);
 }

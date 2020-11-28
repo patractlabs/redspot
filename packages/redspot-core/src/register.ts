@@ -43,8 +43,7 @@ if (!RedspotContext.isCreated()) {
     config,
     redspotArguments,
     ctx.tasksDSL.getTaskDefinitions(),
-    ctx.extendersManager.getExtenders(),
-    ctx.experimentalRedspotNetworkMessageTraceHooks
+    ctx.extendersManager.getExtenders()
   );
 
   ctx.setRedspotRuntimeEnvironment(env);

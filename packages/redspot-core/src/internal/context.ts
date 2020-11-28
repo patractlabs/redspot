@@ -1,8 +1,4 @@
-import {
-  ConfigExtender,
-  ExperimentalRedspotNetworkMessageTraceHook,
-  RedspotRuntimeEnvironment
-} from '../types';
+import { ConfigExtender, RedspotRuntimeEnvironment } from '../types';
 
 import { ExtenderManager } from './core/config/extenders';
 import { assertRedspotInvariant, RedspotError } from './core/errors';
@@ -57,9 +53,6 @@ export class RedspotContext {
   public environment?: RedspotRuntimeEnvironment;
   public readonly configExtenders: ConfigExtender[] = [];
 
-  // NOTE: This is experimental and will be removed. Please contact our team if
-  // you are planning to use it.
-  public readonly experimentalRedspotNetworkMessageTraceHooks: ExperimentalRedspotNetworkMessageTraceHook[] = [];
   private _filesLoadedBeforeConfig?: string[];
   private _filesLoadedAfterConfig?: string[];
 

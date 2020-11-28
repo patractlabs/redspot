@@ -2,7 +2,6 @@ import { ApiPromise } from '@polkadot/api';
 import { Abi } from '@polkadot/api-contract';
 import { extendEnvironment } from 'redspot/config';
 import { lazyObject } from 'redspot/plugins';
-import type { RedspotRuntimeEnvironment } from 'redspot/types';
 import Contract from './contract';
 import ContractFactory from './contractFactory';
 import {
@@ -16,7 +15,7 @@ import {
 import './type-extensions';
 
 export default function () {
-  extendEnvironment((env: RedspotRuntimeEnvironment) => {
+  extendEnvironment((env) => {
     env.patract = lazyObject(() => {
       const network = env.network;
       const provider = network.provider;

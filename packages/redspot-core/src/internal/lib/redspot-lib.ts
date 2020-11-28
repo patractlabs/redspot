@@ -1,6 +1,6 @@
 import debug from 'debug';
 
-import { RedspotRuntimeEnvironment } from '../../types';
+import { RedspotRuntimeEnvironment, RuntimeEnvironment } from '../../types';
 import { RedspotContext } from '../context';
 import { loadConfigAndTasks } from '../core/config/config-loading';
 import { RedspotError } from '../core/errors';
@@ -40,11 +40,10 @@ if (RedspotContext.isCreated()) {
     config,
     redspotArguments,
     ctx.tasksDSL.getTaskDefinitions(),
-    ctx.extendersManager.getExtenders(),
-    ctx.experimentalRedspotNetworkMessageTraceHooks
+    ctx.extendersManager.getExtenders()
   );
 
   ctx.setRedspotRuntimeEnvironment(env);
 }
 
-export = env;
+export = env as RuntimeEnvironment;

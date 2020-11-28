@@ -5,8 +5,7 @@ import Keyring from '@polkadot/keyring';
 import { KeyringPair } from '@polkadot/keyring/types';
 import { AccountId, EventRecord } from '@polkadot/types/interfaces';
 import { KeypairType } from '@polkadot/util-crypto/types';
-import { readAbiSync } from 'redspot/plugins';
-import { Artifact, Network, ProjectPaths } from 'redspot/types';
+import { Artifact, Artifacts, Network } from 'redspot/types';
 import ContractFactory from './contract-factory';
 
 interface TxStatus {
@@ -28,15 +27,15 @@ interface TxStatus {
 }
 
 export default class Api extends ApiPromise {
-  public readonly paths: ProjectPaths;
-  public readonly network: Network;
   public readonly keyring: Keyring;
   public readonly contract: ContractFactory;
 
-  constructor(apiOptions: ApiOptions, network: Network, paths: ProjectPaths) {
+  constructor(
+    apiOptions: ApiOptions,
+    public readonly network: Network,
+    public readonly artifacts: Artifacts
+  ) {
     super(apiOptions);
-    this.network = network;
-    this.paths = paths;
     this.keyring = new Keyring({
       ss58Format: this.registry.chainSS58
     });
@@ -60,7 +59,7 @@ export default class Api extends ApiPromise {
   getContract(nameOrAbi: string | Artifact | Abi, address: string | AccountId) {
     const abi =
       typeof nameOrAbi === 'string'
-        ? readAbiSync(this.paths.artifacts, nameOrAbi)
+        ? this.artifacts.readAbiSync(nameOrAbi)
         : nameOrAbi;
 
     return new ContractPromise(this, abi as any, address);
@@ -69,7 +68,7 @@ export default class Api extends ApiPromise {
   getAbi(nameOrAbi: string | Artifact) {
     const abi =
       typeof nameOrAbi === 'string'
-        ? readAbiSync(this.paths.artifacts, nameOrAbi)
+        ? this.artifacts.readAbiSync(nameOrAbi)
         : nameOrAbi;
 
     return new Abi(this.registry as any, abi as any);

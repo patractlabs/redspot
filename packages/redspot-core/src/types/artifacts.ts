@@ -2,14 +2,18 @@ import type { ContractProject } from '@polkadot/types/interfaces';
 
 export type Artifact = ContractProject;
 export interface Artifacts {
-  readArtifact(
+  getArtifactPath(
     contractNameOrFullyQualifiedName: string,
     type: 'abi' | 'wasm' | 'json'
-  ): Promise<Artifact>;
-  readArtifactSync(
+  ): Promise<string>;
+  getArtifactPathSync(
     contractNameOrFullyQualifiedName: string,
     type: 'abi' | 'wasm' | 'json'
-  ): Artifact;
+  ): string;
+  readAbi(contractNameOrFullyQualifiedName: string): Promise<Artifact>;
+  readAbiSync(contractNameOrFullyQualifiedName: string): Artifact;
+  readWasm(contractNameOrFullyQualifiedName: string): Promise<string>;
+  readWasmSync(contractNameOrFullyQualifiedName: string): string;
   artifactExists(
     contractNameOrFullyQualifiedName: string,
     type: 'abi' | 'wasm' | 'json'

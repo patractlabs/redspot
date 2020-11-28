@@ -1,5 +1,4 @@
 import { KeyringPair } from '@polkadot/keyring/types';
-import { readWasm } from 'redspot/plugins';
 import Api from './api';
 
 export default class ContractFactory {
@@ -13,9 +12,7 @@ export default class ContractFactory {
     contractName: string,
     signer: KeyringPair
   ): Promise<string> {
-    const outDir = this.#api.paths.artifacts;
-
-    const wasmCode = await readWasm(outDir, contractName);
+    const wasmCode = await this.#api.artifacts.readWasm(contractName);
 
     const extrinsic = this.#api.tx.contracts.putCode(`0x${wasmCode}`);
 

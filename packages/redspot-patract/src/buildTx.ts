@@ -1,10 +1,10 @@
-import { SubmittableResult } from "@polkadot/api";
-import type { SignerOptions } from "@polkadot/api/types";
-import { SubmittableExtrinsic } from "@polkadot/api/types";
-import { u64 } from "@polkadot/types/primitive";
-import type { Registry } from "@polkadot/types/types";
-import type { AccountSigner } from "redspot/types";
-import type { DecodedEvent } from "./contract";
+import { SubmittableResult } from '@polkadot/api';
+import type { SignerOptions } from '@polkadot/api/types';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { u64 } from '@polkadot/types/primitive';
+import type { Registry } from '@polkadot/types/types';
+import type { AccountSigner } from 'redspot/types';
+import type { DecodedEvent } from './contract';
 
 export interface TransactionResponse {
   from: string;
@@ -21,7 +21,7 @@ export interface TransactionResponse {
 
 export async function buildTx(
   registry: Registry,
-  extrinsic: SubmittableExtrinsic<"promise">,
+  extrinsic: SubmittableExtrinsic<'promise'>,
   options: Partial<SignerOptions> & {
     signer: AccountSigner;
   }
@@ -31,14 +31,14 @@ export async function buildTx(
   return new Promise((resolve, reject) => {
     const actionStatus = {
       from: signerAddress.toString(),
-      txHash: extrinsic.hash.toHex(),
+      txHash: extrinsic.hash.toHex()
     } as Partial<TransactionResponse>;
 
     extrinsic
       .signAndSend(
         signerAddress,
         {
-          ...options,
+          ...options
         },
         (result: SubmittableResult) => {
           if (result.status.isInBlock) {
@@ -48,14 +48,14 @@ export async function buildTx(
           if (result.status.isFinalized || result.status.isInBlock) {
             result.events
               .filter(
-                ({ event: { section } }: any): boolean => section === "system"
+                ({ event: { section } }: any): boolean => section === 'system'
               )
               .forEach((event: any): void => {
                 const {
-                  event: { data, method },
+                  event: { data, method }
                 } = event;
 
-                if (method === "ExtrinsicFailed") {
+                if (method === 'ExtrinsicFailed') {
                   const [dispatchError] = data;
                   let message = dispatchError.type;
 
@@ -65,7 +65,7 @@ export async function buildTx(
                       const error = registry.findMetaError(
                         new Uint8Array([
                           mod.index.toNumber(),
-                          mod.error.toNumber(),
+                          mod.error.toNumber()
                         ])
                       );
                       message = `${error.section}.${error.name}`;
@@ -75,18 +75,18 @@ export async function buildTx(
                   }
 
                   actionStatus.error = {
-                    message,
+                    message
                   };
 
                   reject(actionStatus);
-                } else if (method === "ExtrinsicSuccess") {
+                } else if (method === 'ExtrinsicSuccess') {
                   actionStatus.result = result;
                   resolve(actionStatus as TransactionResponse);
                 }
               });
           } else if (result.isError) {
             actionStatus.error = {
-              data: result,
+              data: result
             };
             actionStatus.events = null;
 
@@ -96,7 +96,7 @@ export async function buildTx(
       )
       .catch((error: any) => {
         actionStatus.error = {
-          message: error.message,
+          message: error.message
         };
 
         reject(actionStatus);

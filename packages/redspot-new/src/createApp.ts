@@ -1,21 +1,21 @@
-import chalk from "chalk";
-import { execSync } from "child_process";
-import spawn from "cross-spawn";
-import fs from "fs-extra";
-import os from "os";
-import path from "path";
-import semver from "semver";
-import yargs, { argv } from "yargs";
+import chalk from 'chalk';
+import { execSync } from 'child_process';
+import spawn from 'cross-spawn';
+import fs from 'fs-extra';
+import os from 'os';
+import path from 'path';
+import semver from 'semver';
+import yargs, { argv } from 'yargs';
 
-const packageToInstall = "redspot";
-const templateToInstall = "@redspot/redspot-template";
-const defaultToInstall = "@redspot/patract";
-const tag = "latest";
+const packageToInstall = 'redspot';
+const templateToInstall = '@redspot/redspot-template';
+const defaultToInstall = '@redspot/patract';
+const tag = 'latest';
 
 function init() {
   const currentNodeVersion = process.versions.node;
 
-  if (+currentNodeVersion.split(".")[0] < 10) {
+  if (+currentNodeVersion.split('.')[0] < 10) {
     console.error(
       `You are running Node ${currentNodeVersion}. \nRedspot requires Node 10 or higher. \nPlease update your version of Node.`
     );
@@ -23,29 +23,29 @@ function init() {
   }
 
   const argv = yargs
-    .usage(`Usage: $0 ${chalk.green("<project-name>")} [options]`)
-    .option("verbose", {
-      alias: "v",
-      type: "boolean",
+    .usage(`Usage: $0 ${chalk.green('<project-name>')} [options]`)
+    .option('verbose', {
+      alias: 'v',
+      type: 'boolean',
       default: false,
-      description: "Run with verbose logging",
+      description: 'Run with verbose logging'
     })
-    .option("template", {
-      type: "string",
-      default: "erc20",
-      description: "specify a template for the created project",
+    .option('template', {
+      type: 'string',
+      default: 'erc20',
+      description: 'specify a template for the created project'
     })
     .demandCommand(
       1,
       `Please specify the project name, for example: \n  ${chalk.cyan(
-        "redspot-new"
-      )} ${chalk.green("erc20")}`
+        'redspot-new'
+      )} ${chalk.green('erc20')}`
     )
     .example(
-      "$0 erc20",
-      "initializes a new Substrate contract project in the specified directory"
+      '$0 erc20',
+      'initializes a new Substrate contract project in the specified directory'
     )
-    .epilog("power by patract labs").argv;
+    .epilog('power by patract labs').argv;
 
   const projectName = argv._[0];
 
@@ -69,12 +69,12 @@ function createApp(name: string, verbose: boolean): void {
 
   const packageJson = {
     name: appName,
-    version: "0.1.0",
-    private: true,
+    version: '0.1.0',
+    private: true
   };
 
   fs.writeFileSync(
-    path.join(root, "package.json"),
+    path.join(root, 'package.json'),
     JSON.stringify(packageJson, null, 2) + os.EOL
   );
 
@@ -97,10 +97,10 @@ function run(
   const allDependencies = [
     packageToInstall,
     templateToInstall,
-    defaultToInstall,
+    defaultToInstall
   ];
 
-  console.log("Installing packages. This might take a while.");
+  console.log('Installing packages. This might take a while.');
 
   install(root, allDependencies, useYarn, tag, verbose)
     .then(async () => {
@@ -109,7 +109,7 @@ function run(
       await executeNodeScript(
         {
           cwd: process.cwd(),
-          args: [],
+          args: []
         },
         [
           root,
@@ -117,7 +117,7 @@ function run(
           verbose,
           originalDirectory,
           templateToInstall,
-          templateName,
+          templateName
         ],
         `
     var { init } = require('${packageToInstall}/internal/cli/init.js');
@@ -127,20 +127,20 @@ function run(
     })
     .catch((reason) => {
       console.log();
-      console.log("Aborting installation.");
+      console.log('Aborting installation.');
       if (reason.command) {
         console.log(`  ${chalk.cyan(reason.command)} has failed.`);
       } else {
-        console.log(chalk.red("Unexpected error. Please report it as a bug:"));
+        console.log(chalk.red('Unexpected error. Please report it as a bug:'));
         console.log(reason);
       }
       console.log();
 
       const knownGeneratedFiles = [
-        "package.json",
-        "yarn.lock",
-        "package-lock.json",
-        "node_modules",
+        'package.json',
+        'yarn.lock',
+        'package-lock.json',
+        'node_modules'
       ];
       const currentFiles = fs.readdirSync(path.join(root));
       currentFiles.forEach((file) => {
@@ -155,13 +155,13 @@ function run(
       if (!remainingFiles.length) {
         console.log(
           `Deleting ${chalk.cyan(`${appName}/`)} from ${chalk.cyan(
-            path.resolve(root, "..")
+            path.resolve(root, '..')
           )}`
         );
-        process.chdir(path.resolve(root, ".."));
+        process.chdir(path.resolve(root, '..'));
         fs.removeSync(path.join(root));
       }
-      console.log("Done.");
+      console.log('Done.');
       process.exit(1);
     });
 }
@@ -182,34 +182,35 @@ function install(
       : dependencies.map((d) => `${d}@${tag}`);
 
     if (useYarn) {
-      command = "yarnpkg";
-      args = ["add"];
+      command = 'yarnpkg';
+      args = ['add'];
 
       [].push.apply(args, dependenciesWithTag as any);
 
-      args.push("--cwd");
+      args.push('--cwd');
       args.push(root);
     } else {
-      command = "npm";
+      command = 'npm';
       args = [
-        "install",
-        "--save",
-        "--save-exact",
-        "--loglevel",
-        "error",
+        'install',
+        '--save',
+        '--save-exact',
+        '--loglevel',
+        'error'
       ].concat(dependenciesWithTag);
     }
 
     if (verbose) {
-      args.push("--verbose");
+      args.push('--verbose');
     }
 
-    const child = spawn(command, args, { stdio: "inherit" });
+    const child = spawn(command, args, { stdio: 'inherit' });
 
-    child.on("close", (code) => {
+    child.on('close', (code) => {
       if (code !== 0) {
+        // eslint-disable-next-line prefer-promise-reject-errors
         reject({
-          command: `${command} ${args.join(" ")}`,
+          command: `${command} ${args.join(' ')}`
         });
         return;
       }
@@ -220,7 +221,7 @@ function install(
 
 function shouldUseYarn() {
   try {
-    execSync("yarnpkg --version", { stdio: "ignore" });
+    execSync('yarnpkg --version', { stdio: 'ignore' });
     return true;
   } catch (e) {
     return false;
@@ -232,9 +233,9 @@ function checkDirName(dirname: string): void {}
 function checkNodeVersion(packageName: string) {
   const packageJsonPath = path.resolve(
     process.cwd(),
-    "node_modules",
+    'node_modules',
     packageName,
-    "package.json"
+    'package.json'
   );
 
   if (!fs.existsSync(packageJsonPath)) {
@@ -249,9 +250,9 @@ function checkNodeVersion(packageName: string) {
   if (!semver.satisfies(process.version, packageJson.engines.node)) {
     console.error(
       chalk.red(
-        "You are running Node %s.\n" +
-          "Redspot requires Node %s or higher. \n" +
-          "Please update your version of Node."
+        'You are running Node %s.\n' +
+          'Redspot requires Node %s or higher. \n' +
+          'Please update your version of Node.'
       ),
       process.version,
       packageJson.engines.node
@@ -284,17 +285,18 @@ function executeNodeScript(
   return new Promise((resolve, reject) => {
     const child = spawn(
       process.execPath,
-      [...args, "-e", source, "--", JSON.stringify(data)],
+      [...args, '-e', source, '--', JSON.stringify(data)],
       {
         cwd,
-        stdio: "inherit",
+        stdio: 'inherit'
       }
     );
 
-    child.on("close", (code) => {
+    child.on('close', (code) => {
       if (code !== 0) {
+        // eslint-disable-next-line prefer-promise-reject-errors
         reject({
-          command: `node ${args.join(" ")}`,
+          command: `node ${args.join(' ')}`
         });
         return;
       }

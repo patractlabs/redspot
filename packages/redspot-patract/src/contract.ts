@@ -1,8 +1,8 @@
-import { ApiPromise } from '@polkadot/api';
+import { ApiPromise, SubmittableResult } from '@polkadot/api';
 import { Abi } from '@polkadot/api-contract';
 import type {
-  AbiMessage,
   AbiEvent,
+  AbiMessage,
   ContractCallOutcome
 } from '@polkadot/api-contract/types';
 import type { SignerOptions, SubmittableExtrinsic } from '@polkadot/api/types';
@@ -27,30 +27,8 @@ import chalk from 'chalk';
 import log from 'redspot/logger';
 import type { AccountSigner } from 'redspot/types';
 import { buildTx, TransactionResponse } from './buildTx';
-import { SubmittableResult } from '@polkadot/api';
-
-export function formatData(
-  registry: Registry,
-  data: Raw,
-  { type }: TypeDef
-): Codec {
-  return createTypeUnsafe(registry, type, [data], true);
-}
 
 export type BigNumber = BN | string | bigint;
-export type TransactionParams = (CodecArg | Partial<CallOverrides>)[];
-export type ContractFunction<T = any> = (
-  ...args: TransactionParams
-) => Promise<T>;
-
-export type ContractAbi = AnyJson | Abi;
-
-export interface PopulatedTransaction extends Partial<SignerOptions> {
-  signer: AccountSigner;
-  callParams?: CallParams;
-  extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
-}
-
 export interface CallOverrides extends SignerOptions {
   dest?: any;
   value?: BigNumber;
@@ -63,6 +41,27 @@ export interface CallParams {
   value: BigNumber;
   gasLimit: BigNumber;
   inputData: Uint8Array;
+}
+
+export function formatData(
+  registry: Registry,
+  data: Raw,
+  { type }: TypeDef
+): Codec {
+  return createTypeUnsafe(registry, type, [data], true);
+}
+
+export type TransactionParams = (CodecArg | Partial<CallOverrides>)[];
+export type ContractFunction<T = any> = (
+  ...args: TransactionParams
+) => Promise<T>;
+
+export type ContractAbi = AnyJson | Abi;
+
+export interface PopulatedTransaction extends Partial<SignerOptions> {
+  signer: AccountSigner;
+  callParams?: CallParams;
+  extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
 }
 
 export interface DecodedEvent {
@@ -174,12 +173,14 @@ function buildCall(
       origin
     };
     log.log('');
+
     if (!isEstimateGas) {
       log.log(chalk.magenta(`===== Read ${messageName} =====`));
     } else {
       log.log(chalk.magenta(`===== Estimate gas ${messageName} =====`));
     }
-    Object.keys(params).map((key) => {
+
+    Object.keys(params).forEach((key) => {
       try {
         let print: string;
         if (isU8a(callParams[key])) {
@@ -255,7 +256,7 @@ function buildSend(
 
     log.log('');
     log.log(chalk.magenta(`===== Exec ${messageName} =====`));
-    Object.keys(callParams).map((key) => {
+    Object.keys(callParams).forEach((key) => {
       try {
         let print: string;
         if (isU8a(callParams[key])) {
@@ -274,13 +275,12 @@ function buildSend(
     response.events = decodeEvents(response.result, contract.abi);
 
     let url: string;
-    let base = 'https://polkadot.js.org/apps/#/explorer/query/';
+    const base = 'https://polkadot.js.org/apps/#/explorer/query/';
 
     try {
-      // @ts-ignore
-      url = `${contract.api._rpcCore.provider.extra.explorerUrl || base}${
-        response.blockHash
-      }`;
+      url = `${
+        (contract.api as any)._rpcCore.provider.extra.explorerUrl || base
+      }${response.blockHash}`;
     } catch {
       url = `${base}${response.blockHash}`;
     }
@@ -304,6 +304,7 @@ function buildEstimate(
   return async function (...args: TransactionParams): Promise<BN> {
     const call = buildCall(contract, fragment, true);
     const callResult = await call(...args);
+
     if (callResult.result.isErr) {
       return new BN('0');
     } else {
@@ -354,7 +355,9 @@ export default class Contract {
   public readonly query: {
     [name: string]: ContractFunction<ContractCallOutcome>;
   };
+
   public readonly tx: { [name: string]: ContractFunction<TransactionResponse> };
+
   public readonly estimateGas: { [name: string]: ContractFunction<BN> };
 
   public readonly populateTransaction: {

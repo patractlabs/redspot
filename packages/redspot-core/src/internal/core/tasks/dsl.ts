@@ -134,7 +134,7 @@ export class TasksDSL {
     }
 
     if (descriptionOrAction !== undefined) {
-      taskDefinition.setDescription(descriptionOrAction);
+      taskDefinition.setDescription(descriptionOrAction as string);
     }
 
     if (action !== undefined) {
