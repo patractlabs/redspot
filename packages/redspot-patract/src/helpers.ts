@@ -5,15 +5,14 @@ import { cryptoWaitReady, mnemonicGenerate } from '@polkadot/util-crypto';
 import BN from 'bn.js';
 import chalk from 'chalk';
 import log from 'redspot/logger';
-import { readAbiSync, readWasmSync } from 'redspot/plugins';
-import type { RedspotRuntimeEnvironment } from 'redspot/types';
+import type { RuntimeEnvironment } from 'redspot/types';
 import { AccountSigner } from 'redspot/types';
 import { buildTx } from './buildTx';
 import Contract from './contract';
 import ContractFactory from './contractFactory';
 
 export async function getSigners(
-  env: RedspotRuntimeEnvironment
+  env: RuntimeEnvironment
 ): Promise<AccountSigner[]> {
   const keyringpairs = await env.network.provider.getKeyringPairs();
   return keyringpairs.map((pair) => {
@@ -22,7 +21,7 @@ export async function getSigners(
 }
 
 export async function getRandomSigner(
-  env: RedspotRuntimeEnvironment,
+  env: RuntimeEnvironment,
   from?: AccountSigner,
   amount?: BN | string | number
 ): Promise<AccountSigner> {
@@ -61,7 +60,7 @@ export async function getRandomSigner(
 }
 
 export async function getContractFactory(
-  env: RedspotRuntimeEnvironment,
+  env: RuntimeEnvironment,
   contractName: string,
   signer?: AccountSigner
 ) {
@@ -78,7 +77,7 @@ export async function getContractFactory(
 }
 
 export async function getContractAt(
-  env: RedspotRuntimeEnvironment,
+  env: RuntimeEnvironment,
   contractName: string,
   address: AccountId | string,
   signer?: AccountSigner
@@ -95,10 +94,9 @@ export async function getContractAt(
   return new Contract(address, abi, api, signer);
 }
 
-export function getAbi(env: RedspotRuntimeEnvironment, contractName: string) {
-  const paths = env.config.paths;
+export function getAbi(env: RuntimeEnvironment, contractName: string) {
   const registry = env.network.provider.registry;
-  const abiJSON = readAbiSync(paths.artifacts, contractName);
+  const abiJSON = env.artifacts.readAbiSync(contractName);
   const abi = new Abi(
     abiJSON as any,
     registry.createType('ChainProperties', {
@@ -111,9 +109,8 @@ export function getAbi(env: RedspotRuntimeEnvironment, contractName: string) {
   return abi;
 }
 
-export function getWasm(env: RedspotRuntimeEnvironment, contractName: string) {
-  const paths = env.config.paths;
-  const wasmCode = readWasmSync(paths.artifacts, contractName);
+export function getWasm(env: RuntimeEnvironment, contractName: string) {
+  const wasmCode = env.artifacts.readWasmSync(contractName);
 
   return wasmCode;
 }

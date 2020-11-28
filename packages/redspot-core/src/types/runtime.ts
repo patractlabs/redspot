@@ -183,6 +183,15 @@ export type RunTaskFunction = (
   taskArguments?: TaskArguments
 ) => Promise<any>;
 
+export interface RuntimeEnvironment {
+  readonly config: RedspotConfig;
+  readonly redspotArguments: RedspotArguments;
+  readonly tasks: TasksMap;
+  readonly run: RunTaskFunction;
+  readonly network: Network;
+  readonly artifacts: Artifacts;
+}
+
 export interface RedspotRuntimeEnvironment {
   readonly config: RedspotConfig;
   readonly redspotArguments: RedspotArguments;
@@ -202,4 +211,4 @@ export interface Network {
  * A function that receives a RedspotRuntimeEnvironment and
  * modify its properties or add new ones.
  */
-export type EnvironmentExtender = (env: RedspotRuntimeEnvironment) => void;
+export type EnvironmentExtender = (env: RuntimeEnvironment) => void;

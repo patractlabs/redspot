@@ -15,16 +15,15 @@ import {
   u8aToU8a
 } from '@polkadot/util';
 import { blake2AsU8a } from '@polkadot/util-crypto';
-import BN from 'bn.js';
 import chalk from 'chalk';
 import log from 'redspot/logger';
 import { RedspotPluginError } from 'redspot/plugins';
 import type { AccountSigner } from 'redspot/types';
 import { buildTx } from './buildTx';
 import Contract, {
+  BigNumber,
   CallOverrides,
-  TransactionParams,
-  BigNumber
+  TransactionParams
 } from './contract';
 
 export type ContractFunction<T = any> = (...args: Array<any>) => Promise<T>;
@@ -70,7 +69,6 @@ export default class ContractFactory {
       putCode: this._buildPutCode,
       instantiate: this._buildInstantiate
     };
-    this.abi;
   }
 
   _buildPutCode(wasmCode: Uint8Array | string | Buffer) {

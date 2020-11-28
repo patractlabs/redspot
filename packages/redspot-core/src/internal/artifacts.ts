@@ -9,10 +9,10 @@ import { glob, globSync } from './util/glob';
 export class Artifacts implements IArtifacts {
   constructor(private _artifactsPath: string) {}
 
-  public async readArtifact(
+  public async getArtifactPath(
     name: string,
     type: 'abi' | 'wasm' | 'json'
-  ): Promise<Artifact> {
+  ): Promise<string> {
     const { trueCasePath } = await import('true-case-path');
     const artifactPath = await this._getArtifactPath(name, type);
 
@@ -29,7 +29,7 @@ export class Artifacts implements IArtifacts {
         });
       }
 
-      return fsExtra.readJson(trueCaseArtifactPath);
+      return artifactPath;
     } catch (error) {
       if (
         typeof error.message === 'string' &&
@@ -46,10 +46,10 @@ export class Artifacts implements IArtifacts {
     }
   }
 
-  public readArtifactSync(
+  public getArtifactPathSync(
     name: string,
     type: 'abi' | 'wasm' | 'json'
-  ): Artifact {
+  ): string {
     const { trueCasePathSync } = require('true-case-path');
     const artifactPath = this._getArtifactPathSync(name, type);
 
@@ -66,7 +66,7 @@ export class Artifacts implements IArtifacts {
         });
       }
 
-      return fsExtra.readJsonSync(trueCaseArtifactPath);
+      return trueCaseArtifactPath;
     } catch (error) {
       if (
         typeof error.message === 'string' &&
@@ -82,12 +82,36 @@ export class Artifacts implements IArtifacts {
     }
   }
 
+  public async readAbi(name: string): Promise<Artifact> {
+    const artifactPath = await this.getArtifactPath(name, 'abi');
+
+    return fsExtra.readJson(artifactPath);
+  }
+
+  public readAbiSync(name: string): Artifact {
+    const artifactPath = this.getArtifactPathSync(name, 'abi');
+
+    return fsExtra.readJsonSync(artifactPath);
+  }
+
+  public async readWasm(name: string): Promise<string> {
+    const artifactPath = await this.getArtifactPath(name, 'wasm');
+    const wasm = await fsExtra.readFile(artifactPath);
+    return `0x${wasm.toString('hex')}`;
+  }
+
+  public readWasmSync(name: string): string {
+    const artifactPath = this.getArtifactPathSync(name, 'wasm');
+    const wasm = fsExtra.readFileSync(artifactPath);
+    return `0x${wasm.toString('hex')}`;
+  }
+
   public async artifactExists(
     name: string,
     type: 'abi' | 'wasm' | 'json'
   ): Promise<boolean> {
     try {
-      await this.readArtifact(name, type);
+      await this.getArtifactPath(name, type);
 
       return true;
     } catch (e) {

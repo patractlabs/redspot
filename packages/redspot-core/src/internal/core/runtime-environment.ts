@@ -10,6 +10,7 @@ import {
   RedspotRuntimeEnvironment,
   RunSuperFunction,
   RunTaskFunction,
+  RuntimeEnvironment,
   TaskArguments,
   TaskDefinition,
   TasksMap
@@ -84,7 +85,9 @@ export class Environment implements RedspotRuntimeEnvironment {
 
     this._extenders = extenders;
 
-    extenders.forEach((extender) => extender(this));
+    extenders.forEach((extender) =>
+      extender((this as any) as RuntimeEnvironment)
+    );
   }
 
   /**
