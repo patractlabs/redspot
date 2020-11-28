@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "0.4.1",
+  "version": "0.4.0",
   "author": "Patract Labs",
   "private": true,
   "engines": {
@@ -11,7 +11,7 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@patract/dev": "^0.5.7",
+    "@patract/dev": "^0.5.",
     "@types/chai": "^4.2.0",
     "@types/ci-info": "^2.0.0",
     "@types/cross-spawn": "^6.0.2",
