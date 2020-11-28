@@ -11,7 +11,7 @@
     "packages/*"
   ],
   "devDependencies": {
-    "@patract/dev": "^0.5.8",
+    "@patract/dev": "^0.5.9",
     "@types/chai": "^4.2.0",
     "@types/ci-info": "^2.0.0",
     "@types/cross-spawn": "^6.0.2",

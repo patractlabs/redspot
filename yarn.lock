@@ -2799,9 +2799,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patract/dev@npm:^0.5.8":
-  version: 0.5.8
-  resolution: "@patract/dev@npm:0.5.8"
+"@patract/dev@npm:^0.5.9":
+  version: 0.5.9
+  resolution: "@patract/dev@npm:0.5.9"
   dependencies:
     "@babel/cli": ^7.12.1
     "@babel/core": ^7.12.3
@@ -2892,7 +2892,7 @@ __metadata:
     polkadot-exec-vuepress: scripts/polkadot-exec-vuepress.js
     polkadot-exec-webpack: scripts/polkadot-exec-webpack.js
     redspot-dev-build-tsc: scripts/redspot-dev-build-tsc.js
-  checksum: 690d98ece435449bba76e8511a01bf895b65b998e2e747da8364dbb14ba5c4daaa35f8fcfb43770ae4d31dcb5e57ac37b983532b3dd28735355b1d700a044abd
+  checksum: b990db06091fe9a9a7609b806eff522e55754a020ae1e044b8d0a0bbf45e9af9358ca04b7f7cf7ac9bd3c30976483a3cea4544d50dde046086a44ea626042866
   languageName: node
   linkType: hard
 
@@ -17362,7 +17362,7 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "root@workspace:."
   dependencies:
-    "@patract/dev": ^0.5.8
+    "@patract/dev": ^0.5.9
     "@types/chai": ^4.2.0
     "@types/ci-info": ^2.0.0
     "@types/cross-spawn": ^6.0.2
