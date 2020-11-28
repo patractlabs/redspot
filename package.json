@@ -45,6 +45,7 @@
   },
   "scripts": {
     "build": "node ./scripts/build.js",
+    "test": "",
     "build:release": "polkadot-ci-ghact-build",
     "lint": "polkadot-dev-run-lint",
     "clean": "polkadot-dev-clean-build"
