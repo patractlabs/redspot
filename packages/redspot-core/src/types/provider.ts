@@ -2,12 +2,14 @@ import type { Signer } from '@polkadot/api/types';
 import type { Keyring } from '@polkadot/keyring';
 import type { KeyringPair, SignOptions } from '@polkadot/keyring/types';
 import type { TypeRegistry } from '@polkadot/types';
+import type { Registry } from '@polkadot/types/types';
 import type BN from 'bn.js';
 import type { RedspotNetworkAccountsUserConfig } from './config';
 
 export interface AccountSigner extends Signer {
   readonly gasLimit?: BN;
   readonly pair: KeyringPair;
+  readonly registry: Registry;
   readonly address: string;
   readonly addressRaw: Uint8Array;
   readonly publicKey: Uint8Array;
