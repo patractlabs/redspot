@@ -1,18 +1,12 @@
 import { ApiPromise, SubmittableResult } from '@polkadot/api';
 import { Abi } from '@polkadot/api-contract';
 import type {
-  AbiEvent,
   AbiMessage,
   ContractCallOutcome
 } from '@polkadot/api-contract/types';
-import type { SignerOptions, SubmittableExtrinsic } from '@polkadot/api/types';
 import { createTypeUnsafe, Raw } from '@polkadot/types';
 import type { AccountId, ContractExecResult } from '@polkadot/types/interfaces';
-import type {
-  AnyJson,
-  CodecArg,
-  ISubmittableResult
-} from '@polkadot/types/types';
+import type { AnyJson, CodecArg } from '@polkadot/types/types';
 import { Codec, Registry, TypeDef } from '@polkadot/types/types';
 import {
   assert,
@@ -26,22 +20,17 @@ import BN from 'bn.js';
 import chalk from 'chalk';
 import log from 'redspot/logger';
 import type { AccountSigner } from 'redspot/types';
-import { buildTx, TransactionResponse } from './buildTx';
-
-export type BigNumber = BN | number | string | BigInt;
-export interface CallOverrides extends SignerOptions {
-  dest?: any;
-  value?: BigNumber;
-  gasLimit?: BigNumber;
-  signer: AccountSigner;
-}
-
-export interface CallParams {
-  dest: any;
-  value: BigNumber;
-  gasLimit: BigNumber;
-  inputData: Uint8Array;
-}
+import { buildTx } from './buildTx';
+import {
+  CallOverrides,
+  CallParams,
+  ContractAbi,
+  ContractFunction,
+  DecodedEvent,
+  PopulatedTransaction,
+  TransactionParams,
+  TransactionResponse
+} from './types';
 
 export function formatData(
   registry: Registry,
@@ -49,25 +38,6 @@ export function formatData(
   { type }: TypeDef
 ): Codec {
   return createTypeUnsafe(registry, type, [data], true);
-}
-
-export type TransactionParams = (CodecArg | Partial<CallOverrides>)[];
-export type ContractFunction<T = any> = (
-  ...args: TransactionParams
-) => Promise<T>;
-
-export type ContractAbi = AnyJson | Abi;
-
-export interface PopulatedTransaction extends Partial<SignerOptions> {
-  signer: AccountSigner;
-  callParams?: CallParams;
-  extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
-}
-
-export interface DecodedEvent {
-  args: Codec[];
-  name: string;
-  event: AbiEvent;
 }
 
 async function populateTransaction(

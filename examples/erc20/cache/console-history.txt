@@ -1,5 +1,0 @@
-await artifacts.getArtifactPaths()
-artifacts.getArtifactPaths()
-artifacts.getArtifactPaths
-artifacts.get
-artifacts

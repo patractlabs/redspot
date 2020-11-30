@@ -20,12 +20,8 @@ import log from 'redspot/logger';
 import { RedspotPluginError } from 'redspot/plugins';
 import type { AccountSigner } from 'redspot/types';
 import { buildTx } from './buildTx';
-import Contract, {
-  BigNumber,
-  CallOverrides,
-  TransactionParams
-} from './contract';
-
+import Contract from './contract';
+import { BigNumber, CallOverrides, TransactionParams } from './types';
 export type ContractFunction<T = any> = (...args: Array<any>) => Promise<T>;
 
 type ContractAbi = AnyJson | Abi;
