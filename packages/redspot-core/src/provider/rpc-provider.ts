@@ -1,6 +1,7 @@
 import { Keyring } from '@polkadot/keyring';
 import type { KeyringPair } from '@polkadot/keyring/types';
 import { TypeRegistry } from '@polkadot/types';
+import { bnToBn } from '@polkadot/util';
 import { cryptoWaitReady } from '@polkadot/util-crypto';
 import BN from 'bn.js';
 import { RedspotError } from '../internal/core/errors';
@@ -33,14 +34,14 @@ export class RpcProvider extends WsProvider implements IRpcProvider {
       '//Eve',
       '//Ferdie'
     ],
-    gasLimit?: BN | number | string,
+    gasLimit?: BN | number | string | BigInt,
     extra?: {
       explorerUrl?: string;
     }
   ) {
     super(endpoint, httpHeaders);
     this.networkName = networkName;
-    this.gasLimit = gasLimit && new BN(gasLimit);
+    this.gasLimit = gasLimit !== undefined ? bnToBn(gasLimit) : undefined;
     this.extra = extra;
     this.registry = new TypeRegistry();
 
