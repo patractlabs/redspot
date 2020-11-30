@@ -2083,7 +2083,7 @@ __metadata:
   dependencies:
     "@polkadot/api": ^2.8.1
     "@polkadot/api-contract": ^2.8.1
-    redspot: ^0.4.2-6
+    redspot: ^0.4.2-7
   languageName: unknown
   linkType: soft
 
@@ -2093,7 +2093,7 @@ __metadata:
   dependencies:
     "@polkadot/api": ^2.8.1
     "@polkadot/api-contract": ^2.8.1
-    redspot: ^0.4.2-6
+    redspot: ^0.4.2-7
   languageName: unknown
   linkType: soft
 
@@ -10272,7 +10272,7 @@ fsevents@^1.2.7:
   languageName: unknown
   linkType: soft
 
-"redspot@^0.4.2-6, redspot@workspace:packages/redspot-core":
+"redspot@^0.4.2-7, redspot@workspace:packages/redspot-core":
   version: 0.0.0-use.local
   resolution: "redspot@workspace:packages/redspot-core"
   dependencies:
