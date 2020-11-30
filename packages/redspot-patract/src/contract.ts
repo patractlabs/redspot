@@ -28,7 +28,7 @@ import log from 'redspot/logger';
 import type { AccountSigner } from 'redspot/types';
 import { buildTx, TransactionResponse } from './buildTx';
 
-export type BigNumber = BN | string | bigint;
+export type BigNumber = BN | number | string | BigInt;
 export interface CallOverrides extends SignerOptions {
   dest?: any;
   value?: BigNumber;

@@ -74,7 +74,7 @@ declare module 'redspot/types/runtime' {
        */
       getRandomSigner(
         from?: AccountSigner,
-        amount?: BN | string | number
+        amount?: BN | number | string | BigInt
       ): Promise<AccountSigner>;
     };
   }

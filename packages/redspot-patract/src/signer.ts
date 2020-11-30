@@ -1,4 +1,5 @@
 import { ApiPromise } from '@polkadot/api';
+import { bnToBn } from '@polkadot/util';
 import BN from 'bn.js';
 import AccountSigner from 'redspot/provider/accountSigner';
 
@@ -6,20 +7,16 @@ import AccountSigner from 'redspot/provider/accountSigner';
  * Extends Account Signer, adding gaslimit and api attributes
  */
 export class Signer extends AccountSigner {
-  public readonly gasLimit?: BN;
-  public readonly api?: ApiPromise;
+  public gasLimit?: BN;
+  public api?: ApiPromise;
 
   /**
    * Set the default gaslimit.
    *
    * @param gasLimit the default gaslimit
    */
-  public setGasLimit(gasLimit: BN | string | bigint): void {
-    Object.defineProperty(this, 'gasLimit', {
-      enumerable: true,
-      value: gasLimit,
-      writable: false
-    });
+  public setGasLimit(gasLimit: BN | number | string | BigInt): void {
+    this.gasLimit = bnToBn(gasLimit);
   }
 
   /**
@@ -28,10 +25,6 @@ export class Signer extends AccountSigner {
    * @param api the api
    */
   public setApi(api: ApiPromise): void {
-    Object.defineProperty(this, 'gasLimit', {
-      enumerable: true,
-      value: api,
-      writable: false
-    });
+    this.api = api;
   }
 }

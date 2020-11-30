@@ -25,7 +25,7 @@ export async function getSigners(env: RuntimeEnvironment): Promise<Signer[]> {
 export async function getRandomSigner(
   env: RuntimeEnvironment,
   from?: AccountSigner,
-  amount?: BN | string | number
+  amount?: BN | number | string | BigInt
 ): Promise<AccountSigner> {
   const api: ApiPromise = await env.patract.connect();
   await cryptoWaitReady();
