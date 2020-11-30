@@ -24,14 +24,17 @@ export async function getSigners(env: RuntimeEnvironment): Promise<Signer[]> {
 
 export async function getRandomSigner(
   env: RuntimeEnvironment,
-  from?: AccountSigner,
+  from?: Signer,
   amount?: BN | number | string | BigInt
-): Promise<AccountSigner> {
+): Promise<Signer> {
   const api: ApiPromise = await env.patract.connect();
   await cryptoWaitReady();
   const mnemonic = mnemonicGenerate();
   const keyringPair = env.network.provider.keyring.addFromMnemonic(mnemonic);
-  const newAccount = env.network.provider.createSigner(keyringPair);
+  const newAccount = new Signer(env.network.provider.registry, keyringPair);
+  newAccount.setGasLimit(env.network.provider.gasLimit);
+  newAccount.setApi(api);
+
   log.info(`Generate random signer: ${chalk.cyan(keyringPair.address)}`);
   log.info(`Mnemonic: ${chalk.cyan(mnemonic)}`);
   if (from && amount) {

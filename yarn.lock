@@ -2077,6 +2077,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@redspot/chai@workspace:packages/redspot-chai":
+  version: 0.0.0-use.local
+  resolution: "@redspot/chai@workspace:packages/redspot-chai"
+  dependencies:
+    "@polkadot/api": ^2.8.1
+    "@polkadot/api-contract": ^2.8.1
+    redspot: ^0.4.2-8
+  languageName: unknown
+  linkType: soft
+
 "@redspot/patract@workspace:packages/redspot-patract":
   version: 0.0.0-use.local
   resolution: "@redspot/patract@workspace:packages/redspot-patract"
@@ -3010,6 +3020,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"assertion-error@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "assertion-error@npm:1.1.0"
+  checksum: 7bbc9fa2ff51618b0ea3c4ae13dbafe6dfb71b11c267aa93c749489355f55d0b844403bfc3dc8b9a98b0f21837fa2b59191c8a8f76e65303d06498fab4867f4c
+  languageName: node
+  linkType: hard
+
 "assign-symbols@npm:^1.0.0":
   version: 1.0.0
   resolution: "assign-symbols@npm:1.0.0"
@@ -3561,6 +3578,31 @@ __metadata:
   languageName: node
   linkType: hard
 
+"chai-as-promised@npm:^7.1.1":
+  version: 7.1.1
+  resolution: "chai-as-promised@npm:7.1.1"
+  dependencies:
+    check-error: ^1.0.2
+  peerDependencies:
+    chai: ">= 2.1.2 < 5"
+  checksum: 747b85b679f8decdbb83f249883519ea5d4de055f2502fb830db28175af1e4f02a6a8c505d6edce1f2cf28c5512d5e3666db92906b80e77fca30b37c3e5cd360
+  languageName: node
+  linkType: hard
+
+"chai@npm:^4.2.0":
+  version: 4.2.0
+  resolution: "chai@npm:4.2.0"
+  dependencies:
+    assertion-error: ^1.1.0
+    check-error: ^1.0.2
+    deep-eql: ^3.0.1
+    get-func-name: ^2.0.0
+    pathval: ^1.1.0
+    type-detect: ^4.0.5
+  checksum: 91d51bbe9b9f35b26249ff3a9700c175fb7d90bb33d4952aaae46fa921fc0eb94659c228e99f0b111494661c027ebb5b02f0ff469c8f65f3fcec741385c0a192
+  languageName: node
+  linkType: hard
+
 "chalk@npm:^2.0.0, chalk@npm:^2.3.0, chalk@npm:^2.4.2":
   version: 2.4.2
   resolution: "chalk@npm:2.4.2"
@@ -3615,6 +3657,13 @@ __metadata:
   version: 0.7.0
   resolution: "chardet@npm:0.7.0"
   checksum: b71a4ee4648489291af86418b96247824a8c1ee4f4f95d6268967fb40e9fbf70500e72fb737d5186a23cf98c8a02b91d68cb2f426d7428e92883af9d31a037ec
+  languageName: node
+  linkType: hard
+
+"check-error@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "check-error@npm:1.0.2"
+  checksum: 1460ad12da600b277575f53b7512d6e59005a34e3235ae62cfe12ff5d83b68a6ff568841907eb5f041c3f468d1385ea9fcfd22344df02175d28ea8a8b9330940
   languageName: node
   linkType: hard
 
@@ -4291,6 +4340,15 @@ __metadata:
   dependencies:
     mimic-response: ^3.1.0
   checksum: bb8b8c42be7767994764d27f91a3949e3dc9008da82f1aaeab1de40f1ebb50d7abf17b31b2e4000f8d267a1e75f76052efd58d4419124c04bf430e184c164fad
+  languageName: node
+  linkType: hard
+
+"deep-eql@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "deep-eql@npm:3.0.1"
+  dependencies:
+    type-detect: ^4.0.0
+  checksum: eff42bc2d4d889dec8fd925fa9c013fa4d641842b98b502f436b9f2865460c8330f79fb7dbdb924a1e844b97b40843ed952f3847fb1e388a35bd4ef6e3d64184
   languageName: node
   linkType: hard
 
@@ -6008,6 +6066,13 @@ fsevents@^1.2.7:
   version: 2.0.5
   resolution: "get-caller-file@npm:2.0.5"
   checksum: 9dd9e1e2591039ee4c38c897365b904f66f1e650a8c1cb7b7db8ce667fa63e88cc8b13282b74df9d93de481114b3304a0487880d31cd926dfda6efe71455855d
+  languageName: node
+  linkType: hard
+
+"get-func-name@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "get-func-name@npm:2.0.0"
+  checksum: c72d3857cd05338fc61e52c385da67d553e42c226e141da11684aecb3e017a753bf7120411731fbc30768edf68f9c359dc202757703b3a851da54b2b17a9828d
   languageName: node
   linkType: hard
 
@@ -9653,6 +9718,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"pathval@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "pathval@npm:1.1.0"
+  checksum: 31c3fb2b0763f357e2cf4bfd398b7423f2875184b2feebadf85854e860a06fb057a485add5450f6661c2282063e62e1eb22abb4e1241a461a3795dae18667fda
+  languageName: node
+  linkType: hard
+
 "performance-now@npm:^2.1.0":
   version: 2.1.0
   resolution: "performance-now@npm:2.1.0"
@@ -10747,6 +10819,8 @@ fsevents@^1.2.7:
     "@types/uuid": ^3.4.5
     "@types/ws": ^7.2.1
     "@types/yargs": ^15.0.5
+    chai: ^4.2.0
+    chai-as-promised: ^7.1.1
     gulp: ^4.0.2
     gulp-rename: ^2.0.0
     gulp-typescript: ^6.0.0-alpha.1
@@ -12033,7 +12107,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"type-detect@npm:4.0.8":
+"type-detect@npm:4.0.8, type-detect@npm:^4.0.0, type-detect@npm:^4.0.5":
   version: 4.0.8
   resolution: "type-detect@npm:4.0.8"
   checksum: e01dc6ac9098192a7859fb86c7b4073709a4e13a5cc02c54d54412378bb099563fda7a7a85640f33e3a7c2e8189182eb1511f263e67f402b2d63fe81afdde785

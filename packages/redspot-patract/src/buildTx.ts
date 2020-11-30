@@ -1,23 +1,9 @@
 import { SubmittableResult } from '@polkadot/api';
 import type { SignerOptions } from '@polkadot/api/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
-import { u64 } from '@polkadot/types/primitive';
 import type { Registry } from '@polkadot/types/types';
 import type { AccountSigner } from 'redspot/types';
-import type { DecodedEvent } from './contract';
-
-export interface TransactionResponse {
-  from: string;
-  txHash?: string;
-  blockHash?: string;
-  error?: {
-    message?: any;
-    data?: any;
-  };
-  result: SubmittableResult;
-  gasConsumed: u64;
-  events?: DecodedEvent[];
-}
+import type { TransactionResponse } from './types';
 
 export async function buildTx(
   registry: Registry,
