@@ -6,17 +6,19 @@ import BN from 'bn.js';
 import chalk from 'chalk';
 import log from 'redspot/logger';
 import type { RuntimeEnvironment } from 'redspot/types';
+import { Signer } from './signer';
 import { AccountSigner } from 'redspot/types';
 import { buildTx } from './buildTx';
 import Contract from './contract';
 import ContractFactory from './contractFactory';
 
-export async function getSigners(
-  env: RuntimeEnvironment
-): Promise<AccountSigner[]> {
+export async function getSigners(env: RuntimeEnvironment): Promise<Signer[]> {
   const keyringpairs = await env.network.provider.getKeyringPairs();
   return keyringpairs.map((pair) => {
-    return env.network.provider.createSigner(pair);
+    const signer = new Signer(env.network.provider.registry, pair);
+    signer.setGasLimit(env.network.provider.gasLimit);
+    signer.setApi(env.patract.api);
+    return signer;
   });
 }
 

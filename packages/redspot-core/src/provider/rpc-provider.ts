@@ -90,8 +90,6 @@ export class RpcProvider extends WsProvider implements IRpcProvider {
   }
 
   createSigner(keyringPair: KeyringPair): AccountSigner {
-    return new AccountSigner(this.registry, keyringPair, {
-      gasLimit: this.gasLimit
-    });
+    return new AccountSigner(this.registry, keyringPair);
   }
 }
