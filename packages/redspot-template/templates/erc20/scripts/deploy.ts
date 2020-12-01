@@ -1,6 +1,6 @@
 import { patract, network } from 'redspot';
 
-const { getContractFactory, disconnect } = patract;
+const { getContractFactory, disconnect, getSigner } = patract;
 
 const uri =
   'bottom drive obey lake curtain smoke basket hold race lonely fit walk//Alice';
@@ -10,10 +10,7 @@ const { connect, api } = patract!;
 async function run() {
   await connect();
 
-  const signer = network.provider.createSigner(
-    network.provider.keyring.createFromUri(uri)
-  );
-
+  const signer = getSigner(network.provider.keyring.createFromUri(uri));
   const contractFactory = await getContractFactory('erc20', signer);
 
   const balance = await api.query.system.account(signer.address);

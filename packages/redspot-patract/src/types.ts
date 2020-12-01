@@ -2,7 +2,6 @@ import { SubmittableResult } from '@polkadot/api';
 import { Abi } from '@polkadot/api-contract';
 import type { AbiEvent } from '@polkadot/api-contract/types';
 import type { SignerOptions, SubmittableExtrinsic } from '@polkadot/api/types';
-import type { u64 } from '@polkadot/types/primitive';
 import type {
   AnyJson,
   CodecArg,
@@ -10,7 +9,7 @@ import type {
 } from '@polkadot/types/types';
 import { Codec } from '@polkadot/types/types';
 import BN from 'bn.js';
-import type { AccountSigner } from 'redspot/types';
+import type { Signer } from './signer';
 
 export interface DecodedEvent {
   args: Codec[];
@@ -36,7 +35,7 @@ export interface CallOverrides extends SignerOptions {
   dest?: any;
   value?: BigNumber;
   gasLimit?: BigNumber;
-  signer: AccountSigner;
+  signer: Signer;
 }
 
 export interface CallParams {
@@ -54,7 +53,7 @@ export type ContractFunction<T = any> = (
 export type ContractAbi = AnyJson | Abi;
 
 export interface PopulatedTransaction extends Partial<SignerOptions> {
-  signer: AccountSigner;
+  signer: Signer;
   callParams?: CallParams;
   extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
 }

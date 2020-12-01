@@ -19,7 +19,7 @@ import {
 import BN from 'bn.js';
 import chalk from 'chalk';
 import log from 'redspot/logger';
-import type { AccountSigner } from 'redspot/types';
+import type { Signer } from './signer';
 import { buildTx } from './buildTx';
 import {
   CallOverrides,
@@ -319,7 +319,7 @@ function mapExecResult(registry: Registry, json: AnyJson): ContractExecResult {
 export default class Contract {
   public readonly address: AccountId;
   public readonly abi: Abi;
-  public readonly signer: AccountSigner;
+  public readonly signer: Signer;
   public readonly api: ApiPromise;
   public readonly functions: { [name: string]: ContractFunction };
   public readonly query: {
@@ -344,7 +344,7 @@ export default class Contract {
     address: string | AccountId,
     contractAbi: ContractAbi,
     apiProvider: ApiPromise,
-    signer: AccountSigner
+    signer: Signer
   ) {
     this.address = apiProvider.registry.createType('AccountId', address);
 
@@ -393,7 +393,7 @@ export default class Contract {
     }
   }
 
-  connect(signer: AccountSigner): Contract {
+  connect(signer: Signer): Contract {
     const contract = new (<{ new (...args: any[]): Contract }>this.constructor)(
       this.address,
       this.abi,

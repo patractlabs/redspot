@@ -6,6 +6,7 @@ import 'redspot/types/runtime';
 import type Contract from './contract';
 import type ContractFactory from './contractFactory';
 import type { Signer } from './signer';
+import type { KeyringPair } from '@polkadot/keyring/types';
 
 declare module 'redspot/types/runtime' {
   interface RuntimeEnvironment {
@@ -65,6 +66,13 @@ declare module 'redspot/types/runtime' {
        * @returns Signer of the array
        */
       getSigners: () => Promise<Signer[]>;
+      /**
+       * Generate the signer instance from KeyringPair
+       *
+       * @param pair KeyringPair
+       * @returns Signer
+       */
+      getSigner: (pair: KeyringPair) => Signer;
       /**
        *  Generate a random account and transfer token to it
        *
