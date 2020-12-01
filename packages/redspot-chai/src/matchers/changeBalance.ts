@@ -25,6 +25,7 @@ export function supportChangeBalance(Assertion: Chai.AssertionStatic) {
         actualChange
       );
     });
+
     this.then = derivedPromise.then.bind(derivedPromise);
     this.catch = derivedPromise.catch.bind(derivedPromise);
     this.promise = derivedPromise;
@@ -64,10 +65,18 @@ export async function getBalanceChange(
     options?.includeFee !== true &&
     (await getAddressOf(account)) === txResponse.from
   ) {
-    const txFee = txResponse.result.dispatchInfo.weight;
-    console.log(balanceAfter.add(txFee).sub(balanceBefore));
-
-    return balanceAfter.add(txFee).sub(balanceBefore);
+    const txFeeEvent = txResponse.result.findRecord('balances', 'Deposit');
+    if (txFeeEvent) {
+      if (txFeeEvent.event.data[0].toString() === txResponse.from) {
+        return balanceAfter.sub(balanceBefore);
+      } else {
+        return balanceAfter
+          .add(txFeeEvent.event.data[1] as any)
+          .sub(balanceBefore);
+      }
+    } else {
+      return balanceAfter.sub(balanceBefore);
+    }
   } else {
     return balanceAfter.sub(balanceBefore);
   }

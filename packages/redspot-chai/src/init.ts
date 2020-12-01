@@ -14,11 +14,8 @@ export function init(projectRoot: string) {
 
     const chai = require(chaiPath);
     const { patractChai } = require('./chai');
-    console.log('客家话看23和2');
-    console.log(patractChai);
     chai.use(patractChai);
   } catch (error) {
-    console.log(error);
     // If chai isn't installed we just don't initialize the matchers
   }
 }
