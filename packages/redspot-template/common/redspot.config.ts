@@ -1,5 +1,6 @@
 import { RedspotUserConfig } from 'redspot/types';
 import '@redspot/patract';
+import '@redspot/chai';
 
 export default {
   defaultNetwork: 'development',
