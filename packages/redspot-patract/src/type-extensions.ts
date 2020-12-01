@@ -2,10 +2,10 @@ import type { ApiPromise } from '@polkadot/api';
 import type { Abi } from '@polkadot/api-contract';
 import type { AccountId } from '@polkadot/types/interfaces/types';
 import type BN from 'bn.js';
-import { AccountSigner } from 'redspot/types/provider';
 import 'redspot/types/runtime';
 import type Contract from './contract';
 import type ContractFactory from './contractFactory';
+import type { Signer } from './signer';
 
 declare module 'redspot/types/runtime' {
   interface RuntimeEnvironment {
@@ -32,7 +32,7 @@ declare module 'redspot/types/runtime' {
       getContractAt(
         contractName: string,
         address: AccountId | string,
-        signer?: AccountSigner
+        signer?: Signer
       ): Promise<Contract>;
       /**
        * Return the contract factory
@@ -43,7 +43,7 @@ declare module 'redspot/types/runtime' {
        */
       getContractFactory(
         contractName: string,
-        signer?: AccountSigner
+        signer?: Signer
       ): Promise<ContractFactory>;
       /**
        * Returns the abi that matches the contract name
@@ -64,7 +64,7 @@ declare module 'redspot/types/runtime' {
        *
        * @returns Signer of the array
        */
-      getSigners: () => Promise<AccountSigner[]>;
+      getSigners: () => Promise<Signer[]>;
       /**
        *  Generate a random account and transfer token to it
        *
@@ -73,9 +73,9 @@ declare module 'redspot/types/runtime' {
        * @returns New Account
        */
       getRandomSigner(
-        from?: AccountSigner,
+        from?: Signer,
         amount?: BN | number | string | BigInt
-      ): Promise<AccountSigner>;
+      ): Promise<Signer>;
     };
   }
 }
