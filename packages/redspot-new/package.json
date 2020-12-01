@@ -1,6 +1,6 @@
 {
   "name": "redspot-new",
-  "version": "0.4.2-12",
+  "version": "0.4.2-13",
   "author": "Patract Labs",
   "main": "./index.js",
   "dependencies": {
