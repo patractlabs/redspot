@@ -2,19 +2,20 @@ import { ApiPromise } from '@polkadot/api';
 import { Abi } from '@polkadot/api-contract';
 import type { AbiConstructor } from '@polkadot/api-contract/types';
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
-import type { Bytes } from '@polkadot/types';
+import { Bytes } from '@polkadot/types';
 import type { CodeHash } from '@polkadot/types/interfaces/contracts';
 import type { AccountId } from '@polkadot/types/interfaces/types';
 import type { AnyJson, ISubmittableResult } from '@polkadot/types/types';
 import { CodecArg } from '@polkadot/types/types';
 import {
+  compactAddLength,
   compactStripLength,
   isU8a,
   u8aConcat,
   u8aToHex,
   u8aToU8a
 } from '@polkadot/util';
-import { blake2AsU8a } from '@polkadot/util-crypto';
+import { blake2AsU8a, randomAsU8a } from '@polkadot/util-crypto';
 import chalk from 'chalk';
 import log from 'redspot/logger';
 import { RedspotPluginError } from 'redspot/plugins';
@@ -22,11 +23,22 @@ import { buildTx } from './buildTx';
 import Contract from './contract';
 import type { Signer } from './signer';
 import { BigNumber, CallOverrides, TransactionParams } from './types';
+
 export type ContractFunction<T = any> = (...args: Array<any>) => Promise<T>;
 
 type ContractAbi = AnyJson | Abi;
 type ConstructorOrId = AbiConstructor | string | number;
 const pluginName = 'redspot-patract';
+
+const EMPTY_SALT = new Uint8Array();
+
+function encodeSalt(salt: Uint8Array | string | null = randomAsU8a()) {
+  return salt instanceof Bytes
+    ? salt
+    : salt && salt.length
+    ? compactAddLength(u8aToU8a(salt))
+    : EMPTY_SALT;
+}
 
 export default class ContractFactory {
   readonly abi: Abi;
@@ -46,6 +58,12 @@ export default class ContractFactory {
     ) => SubmittableExtrinsic<'promise', ISubmittableResult>;
   };
 
+  /**
+   * @param wasm contract wasm
+   * @param contractAbi contract abi
+   * @param apiProvider api promise
+   * @param signer signer
+   */
   constructor(
     wasm: Uint8Array | string | Buffer,
     contractAbi: ContractAbi,
@@ -75,16 +93,31 @@ export default class ContractFactory {
     codeHash: string | Uint8Array | CodeHash,
     data: string | Uint8Array | Bytes,
     endowment: BigNumber,
-    gasLimit: BigNumber
+    gasLimit: BigNumber,
+    salt?: Uint8Array | string | null
   ) {
-    return this.api.tx.contracts.instantiate(
-      endowment,
-      gasLimit,
-      codeHash,
-      data
-    );
+    const withSalt = this.api.tx.contracts.instantiate.meta.args.length === 5;
+
+    const tx = withSalt
+      ? this.api.tx.contracts.instantiate(
+          endowment,
+          gasLimit,
+          codeHash,
+          u8aConcat(data, salt),
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-ignore new style with salt included
+          salt
+        )
+      : this.api.tx.contracts.instantiate(endowment, gasLimit, codeHash, data);
+
+    return tx;
   }
 
+  /**
+   * Uploading wasm . wasm will read from a local file
+   *
+   * @param overrides CallOverrides
+   */
   async putCode(overrides?: Partial<CallOverrides>): Promise<CodeHash> {
     const options = { ...overrides };
 
@@ -148,12 +181,20 @@ export default class ContractFactory {
     return codeHash;
   }
 
+  /**
+   * Instantiated Contracts
+   *
+   * @param codeHash wasm hash
+   * @param constructorOrId Constructor name or constructor id
+   * @param args Parameters of the constructor
+   * @returns Contract Address
+   */
   async instantiate(
     codeHash: string | Uint8Array | CodeHash,
     constructorOrId: ConstructorOrId,
     ...args: TransactionParams
   ): Promise<AccountId> {
-    const { params, overrides } = this.parseArgs(constructorOrId, ...args);
+    const { params, overrides } = this._parseArgs(constructorOrId, ...args);
 
     const contractName = this.abi.project.contract.name;
 
@@ -163,6 +204,7 @@ export default class ContractFactory {
       .add(this.api.consts.contracts.tombstoneDeposit)
       .muln(2);
     const endowment = overrides.value || mindeposit;
+    const salt = encodeSalt(overrides.salt);
     const gasLimit =
       overrides.gasLimit ||
       this.signer.gasLimit ||
@@ -171,8 +213,15 @@ export default class ContractFactory {
     delete overrides.value;
     delete overrides.gasLimit;
     delete overrides.dest;
+    delete overrides.salt;
 
-    const tx = this._buildInstantiate(codeHash, encoded, endowment, gasLimit);
+    const tx = this._buildInstantiate(
+      codeHash,
+      encoded,
+      endowment,
+      gasLimit,
+      salt
+    );
 
     log.log('');
     log.log(chalk.magenta(`===== Instantiate ${contractName} =====`));
@@ -183,6 +232,7 @@ export default class ContractFactory {
       isU8a(codeHash) ? u8aToHex(codeHash) : codeHash.toString()
     );
     log.log('InputData: ', u8aToHex(encoded));
+    log.log('Salt: ', salt.toString());
 
     const status = await buildTx(this.api.registry, tx, {
       signer: this.signer,
@@ -229,11 +279,18 @@ export default class ContractFactory {
     return address;
   }
 
+  /**
+   * Upload wasm and instantiate it.
+   *
+   * @param constructorOrId Constructor name or constructor id
+   * @param args Parameters of the constructor
+   * @returns Contract
+   */
   async deploy(
     constructorOrId: ConstructorOrId,
     ...args: TransactionParams
   ): Promise<Contract> {
-    const { params, overrides } = this.parseArgs(constructorOrId, ...args);
+    const { params, overrides } = this._parseArgs(constructorOrId, ...args);
 
     const codeHash = await this.putCode(overrides);
     const contractAddress = await this.instantiate(
@@ -253,17 +310,28 @@ export default class ContractFactory {
     return contract;
   }
 
+  /**
+   * Deploys a contract, and if the same contract address is detected, returns an instance of that contract.
+   *
+   * @param constructorOrId Constructor name or constructor id
+   * @param args Parameters of the constructor
+   */
   async deployed(constructorOrId: ConstructorOrId, ...args: TransactionParams) {
-    const { params, overrides } = this.parseArgs(constructorOrId, ...args);
+    const { params, overrides } = this._parseArgs(constructorOrId, ...args);
 
     const deployedAddress = await this.getContractAddress(
       constructorOrId,
-      params
+      params,
+      overrides.salt
     );
+
+    console.log('deployedAddress:', deployedAddress.toString());
 
     const contractInfo = await this.api.query.contracts.contractInfoOf(
       deployedAddress
     );
+
+    console.log('contractInfo', contractInfo.isNone);
 
     if (contractInfo.isNone) {
       return this.deploy(constructorOrId, ...params, overrides);
@@ -288,27 +356,62 @@ export default class ContractFactory {
     return contract;
   }
 
+  /**
+   * Calculate the contract address
+   *
+   * @param constructorOrId Constructor name or constructor id
+   * @param params Parameters of the constructor
+   *
+   * @returns Contract address
+   */
   async getContractAddress(
     constructorOrId: ConstructorOrId,
-    params: CodecArg[]
+    params: CodecArg[],
+    salt?: Uint8Array | string | null
   ) {
-    const codeHash = blake2AsU8a(this.wasm);
+    const withSalt = this.api.tx.contracts.instantiate.meta.args.length === 5;
 
-    const constructor = this.abi.findConstructor(constructorOrId);
-    const encoded = constructor.toU8a(params);
-    const [_, encodedStripLength] = compactStripLength(encoded);
+    if (withSalt) {
+      const encodedSalt = encodeSalt(salt);
+      const codeHash = blake2AsU8a(this.wasm);
 
-    const dataHash = blake2AsU8a(encodedStripLength);
-    const buf = u8aConcat(codeHash, dataHash, this.signer.pair.publicKey);
-    const address = blake2AsU8a(buf);
+      const [_, encodedStrip] = compactStripLength(encodedSalt);
 
-    return this.api.registry.createType('AccountId', address);
+      const buf = u8aConcat(this.signer.pair.publicKey, codeHash, encodedStrip);
+      const address = blake2AsU8a(buf);
+
+      return this.api.registry.createType('AccountId', address);
+    } else {
+      const codeHash = blake2AsU8a(this.wasm);
+
+      const constructor = this.abi.findConstructor(constructorOrId);
+      const encoded = constructor.toU8a(params);
+      const [_, encodedStrip] = compactStripLength(encoded);
+
+      const dataHash = blake2AsU8a(encodedStrip);
+      const buf = u8aConcat(codeHash, dataHash, this.signer.pair.publicKey);
+      const address = blake2AsU8a(buf);
+
+      return this.api.registry.createType('AccountId', address);
+    }
   }
 
+  /**
+   * Create Contract Instances by Contract Address
+   *
+   * @param address Contract address
+   * @returns Contract
+   */
   attach(address: string): Contract {
     return (<any>this.constructor).getContract(address, this.abi, this.api);
   }
 
+  /**
+   * Change contract signer
+   *
+   * @param signer Signer
+   * @returns Contract Factory
+   */
   connect(signer: Signer) {
     return new (<{ new (...args: any[]): ContractFactory }>this.constructor)(
       this.wasm,
@@ -318,7 +421,7 @@ export default class ContractFactory {
     );
   }
 
-  parseArgs(constructorOrId: ConstructorOrId, ...args: TransactionParams) {
+  _parseArgs(constructorOrId: ConstructorOrId, ...args: TransactionParams) {
     let overrides: Partial<CallOverrides> = {};
     let params: CodecArg[] = [];
 
@@ -345,6 +448,15 @@ export default class ContractFactory {
     };
   }
 
+  /**
+   * Create Contract Instances
+   *
+   * @param address Contract address
+   * @param contractAbi Contract abi
+   * @param apiProvider Api promise
+   * @param signer Signer
+   * @returns Contract
+   */
   static getContract(
     address: string,
     contractAbi: ContractAbi,

@@ -33,6 +33,7 @@ export type BigNumber = BN | number | string | BigInt;
 
 export interface CallOverrides extends SignerOptions {
   dest?: any;
+  salt?: any;
   value?: BigNumber;
   gasLimit?: BigNumber;
   signer: Signer;
