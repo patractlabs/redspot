@@ -1,6 +1,6 @@
 import { extendEnvironment } from 'redspot/config';
-import { lazyObject } from 'redspot/plugins';
 import { init } from './init';
+import './types';
 
 extendEnvironment((rse) => {
   init(rse.config.paths.root);
