@@ -6,16 +6,6 @@ import type { Registry } from '@polkadot/types/types';
 import type BN from 'bn.js';
 import type { RedspotNetworkAccountsUserConfig } from './config';
 
-export interface AccountSigner extends Signer {
-  readonly gasLimit?: BN;
-  readonly pair: KeyringPair;
-  readonly registry: Registry;
-  readonly address: string;
-  readonly addressRaw: Uint8Array;
-  readonly publicKey: Uint8Array;
-  getAddress(): Promise<string>;
-  sign: (data: Uint8Array, options?: SignOptions) => Uint8Array;
-}
 export interface JsonRpcObject {
   id: number;
   jsonrpc: '2.0';
@@ -88,6 +78,5 @@ export interface RpcProvider extends WsProvider {
   gasLimit?: BN;
   registry: TypeRegistry;
   networkName: string;
-  createSigner(keyringPair: KeyringPair): AccountSigner;
   getKeyringPairs(): Promise<KeyringPair[]>;
 }

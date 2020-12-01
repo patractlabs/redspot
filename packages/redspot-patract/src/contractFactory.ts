@@ -18,9 +18,9 @@ import { blake2AsU8a } from '@polkadot/util-crypto';
 import chalk from 'chalk';
 import log from 'redspot/logger';
 import { RedspotPluginError } from 'redspot/plugins';
-import type { AccountSigner } from 'redspot/types';
 import { buildTx } from './buildTx';
 import Contract from './contract';
+import type { Signer } from './signer';
 import { BigNumber, CallOverrides, TransactionParams } from './types';
 export type ContractFunction<T = any> = (...args: Array<any>) => Promise<T>;
 
@@ -32,7 +32,7 @@ export default class ContractFactory {
   readonly abi: Abi;
   readonly wasm: Uint8Array;
   readonly api: ApiPromise;
-  readonly signer: AccountSigner;
+  readonly signer: Signer;
 
   readonly populateTransaction: {
     putCode: (
@@ -50,7 +50,7 @@ export default class ContractFactory {
     wasm: Uint8Array | string | Buffer,
     contractAbi: ContractAbi,
     apiProvider: ApiPromise,
-    signer: AccountSigner
+    signer: Signer
   ) {
     this.abi =
       contractAbi instanceof Abi
@@ -309,7 +309,7 @@ export default class ContractFactory {
     return (<any>this.constructor).getContract(address, this.abi, this.api);
   }
 
-  connect(signer: AccountSigner) {
+  connect(signer: Signer) {
     return new (<{ new (...args: any[]): ContractFactory }>this.constructor)(
       this.wasm,
       this.abi,
@@ -349,7 +349,7 @@ export default class ContractFactory {
     address: string,
     contractAbi: ContractAbi,
     apiProvider: ApiPromise,
-    signer: AccountSigner
+    signer: Signer
   ): Contract {
     return new Contract(address, contractAbi, apiProvider, signer);
   }

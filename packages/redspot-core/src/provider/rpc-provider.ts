@@ -8,7 +8,6 @@ import { RedspotError } from '../internal/core/errors';
 import { ERRORS } from '../internal/core/errors-list';
 import type { RpcProvider as IRpcProvider } from '../types';
 import { RedspotNetworkAccountsUserConfig } from '../types';
-import AccountSigner from './accountSigner';
 import WsProvider from './ws-provider';
 
 export class RpcProvider extends WsProvider implements IRpcProvider {
@@ -88,9 +87,5 @@ export class RpcProvider extends WsProvider implements IRpcProvider {
         }
       }
     });
-  }
-
-  createSigner(keyringPair: KeyringPair): AccountSigner {
-    return new AccountSigner(this.registry, keyringPair);
   }
 }

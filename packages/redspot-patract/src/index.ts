@@ -1,5 +1,4 @@
 import { ApiPromise } from '@polkadot/api';
-import { Abi } from '@polkadot/api-contract';
 import { extendEnvironment } from 'redspot/config';
 import { lazyObject } from 'redspot/plugins';
 import Contract from './contract';
@@ -9,6 +8,7 @@ import {
   getContractAt,
   getContractFactory,
   getRandomSigner,
+  getSigner,
   getSigners,
   getWasm
 } from './helpers';
@@ -48,7 +48,8 @@ extendEnvironment((env) => {
       getAbi: getAbi.bind(null, env),
       getWasm: getWasm.bind(null, env),
       getRandomSigner: getRandomSigner.bind(null, env),
-      getSigners: async () => getSigners(env)
+      getSigners: getSigners.bind(null, env),
+      getSigner: getSigner.bind(null, env)
     };
   });
 });
