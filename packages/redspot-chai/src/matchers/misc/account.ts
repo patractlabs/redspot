@@ -1,5 +1,5 @@
-import { Signer } from '@redspot/patract/src/signer';
-import Contract from '@redspot/patract/src/contract';
+import { Signer } from '@redspot/patract/signer';
+import Contract from '@redspot/patract/contract';
 
 export type Account = Signer | Contract;
 
