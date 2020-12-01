@@ -52,7 +52,10 @@ export function loadTsNode() {
   }
 
   // If we are running tests we just want to transpile
-  if (isRunningRedspotCoreTests() || !process.env.TS_NODE_TRANSPILE_ONLY) {
+  if (
+    isRunningRedspotCoreTests() ||
+    process.env.TS_NODE_TRANSPILE_ONLY === undefined
+  ) {
     // tslint:disable-next-line no-implicit-dependencies
     require('ts-node/register/transpile-only');
 

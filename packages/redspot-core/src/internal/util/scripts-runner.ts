@@ -99,7 +99,10 @@ function getTsNodeArgsIfNeeded(scriptPath: string): string[] {
 
   // if we are running the tests we only want to transpile, or these tests
   // take forever
-  if (isRunningRedspotCoreTests()) {
+  if (
+    isRunningRedspotCoreTests() ||
+    process.env.TS_NODE_TRANSPILE_ONLY === undefined
+  ) {
     return ['--require', 'ts-node/register/transpile-only'];
   }
 
