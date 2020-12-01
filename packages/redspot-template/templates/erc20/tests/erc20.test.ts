@@ -1,6 +1,6 @@
 import BN from 'bn.js';
-import { patract } from 'redspot';
 import { expect } from 'chai';
+import { patract } from 'redspot';
 
 const {
   disconnect,
@@ -32,41 +32,36 @@ describe('ERC20', () => {
   it('Assigns initial balance', async () => {
     const { contract, sender } = await setup();
     const result = await contract.query.balanceOf(sender.address);
-    expect(result?.output?.toString()).to.equal('1000');
+    expect(result.output).to.equal(1000);
   });
 
   it('Transfer adds amount to destination account', async () => {
-    const { contract, sender, receiver } = await setup();
+    const { contract, receiver } = await setup();
 
-    await contract.tx.transfer(receiver.address, 7);
+    await expect(() =>
+      contract.tx.transfer(receiver.address, 7)
+    ).to.changeTokenBalance(contract, receiver, 7);
 
-    const result = await contract.query.balanceOf(receiver.address);
-
-    expect(result.output?.toString()).to.equal('7');
+    await expect(() =>
+      contract.tx.transfer(receiver.address, 7)
+    ).to.changeTokenBalances(contract, [contract.signer, receiver], [-7, 7]);
   });
 
   it('Transfer emits event', async () => {
     const { contract, sender, receiver } = await setup();
 
-    const result = await contract.tx.transfer(receiver.address, 7);
-
-    const event = result?.events?.find((e) => e.name === 'Transfer');
-
-    const [from, to, value] = event?.args as any;
-
-    expect(from.unwrap().toString()).to.equal(sender.address);
-    expect(to.unwrap().toString()).to.equal(receiver.address);
-    expect(value.toNumber()).to.equal(7);
+    expect(contract.tx.transfer(receiver.address, 7))
+      .to.emit(contract, 'Transfer')
+      .withArgs(sender.address, receiver.address, 7);
   });
 
   it('Can not transfer above the amount', async () => {
     const { contract, receiver } = await setup();
 
-    const result = await contract.tx.transfer(receiver.address, 1007);
-
-    const event = result?.events?.find((e) => e.name === 'Transfer');
-
-    expect(event).to.be.undefined;
+    await expect(contract.tx.transfer(receiver.address, 1007)).to.not.emit(
+      contract,
+      'Transfer'
+    );
   });
 
   it('Can not transfer from empty account', async () => {
@@ -74,12 +69,10 @@ describe('ERC20', () => {
 
     const emptyAccount = await getRandomSigner(Alice, one.muln(10));
 
-    const result = await contract.tx.transfer(sender.address, 7, {
-      signer: emptyAccount
-    });
-
-    const event = result?.events?.find((e) => e.name === 'Transfer');
-
-    expect(event).to.be.undefined;
+    await expect(
+      contract.tx.transfer(sender.address, 7, {
+        signer: emptyAccount
+      })
+    ).to.not.emit(contract, 'Transfer');
   });
 });
