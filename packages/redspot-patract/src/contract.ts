@@ -142,12 +142,12 @@ function buildCall(
       ...callParams,
       origin
     };
-    log.log('');
+    log.info('');
 
     if (!isEstimateGas) {
-      log.log(chalk.magenta(`===== Read ${messageName} =====`));
+      log.info(chalk.magenta(`===== Read ${messageName} =====`));
     } else {
-      log.log(chalk.magenta(`===== Estimate gas ${messageName} =====`));
+      log.info(chalk.magenta(`===== Estimate gas ${messageName} =====`));
     }
 
     Object.keys(params).forEach((key) => {
@@ -158,7 +158,7 @@ function buildCall(
         } else {
           print = callParams[key].toString();
         }
-        log.log(`${key}: `, print);
+        log.info(`${key}: `, print);
       } catch {}
     });
 
@@ -224,8 +224,8 @@ function buildSend(
     );
     const messageName = formatIdentifier(fragment.identifier);
 
-    log.log('');
-    log.log(chalk.magenta(`===== Exec ${messageName} =====`));
+    log.info('');
+    log.info(chalk.magenta(`===== Exec ${messageName} =====`));
     Object.keys(callParams).forEach((key) => {
       try {
         let print: string;
@@ -234,7 +234,7 @@ function buildSend(
         } else {
           print = callParams[key].toString();
         }
-        log.log(`${key}: `, print);
+        log.info(`${key}: `, print);
       } catch {}
     });
 

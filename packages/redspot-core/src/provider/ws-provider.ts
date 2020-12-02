@@ -366,13 +366,17 @@ export default class WsProvider implements IWsProvider {
   };
 
   _onSocketClose = (event: CloseEvent): void => {
-    log.error(
-      chalk.red(
-        `Disconnected from ${this._endpoints[this._endpointIndex]}: ${
-          event.code
-        }:: ${event.reason || getWSErrorString(event.code)}`
-      )
-    );
+    const ms = event.reason || getWSErrorString(event.code);
+
+    if (ms.trim() !== 'Normal connection closure') {
+      log.error(
+        chalk.red(
+          `Disconnected from ${this._endpoints[this._endpointIndex]}: ${
+            event.code
+          }:: ${event.reason || getWSErrorString(event.code)}`
+        )
+      );
+    }
 
     this._isConnected = false;
     this._emit('disconnected');

@@ -1,19 +1,11 @@
-import Mocha from 'mocha';
 import deasync from 'deasync';
+import Mocha from 'mocha';
 import util from 'util';
-import { GasTable } from './gasTable';
-import { Config } from './config';
+import { TransactionWatcher } from './transactionWatcher';
 
 const inherits = util.inherits;
 const Spec = Mocha.reporters.Spec;
-const color = Spec.color;
 const log = console.log;
-
-// const utils = require('./lib/utils');
-// const Config = require('./lib/config');
-// const TransactionWatcher = require('./lib/transactionWatcher');
-// const GasTable = require('./lib/gasTable');
-// const SyncRequest = require('./lib/syncRequest');
 
 export function GasReporter(runner, options) {
   // Spec reporter
@@ -26,10 +18,7 @@ export function GasReporter(runner, options) {
   // let failed = false;
   // let indent = () => Array(indents).join('  ');
 
-  // // Gas reporter setup
-  const config = new Config(options.reporterOptions);
-  // const watch = new TransactionWatcher(config);
-  const table = new GasTable(config);
+  const watch = new TransactionWatcher(options.reporterOptions);
 
   // // Expose internal methods to plugins
   // if (typeof options.attachments === 'object') {
@@ -40,10 +29,10 @@ export function GasReporter(runner, options) {
   // utils.setGasAndPriceRates(config);
 
   // // ------------------------------------  Runners -------------------------------------------------
-
-  // runner.on('start', () => {
-  //   watch.data.initialize(config);
-  // });
+  const data = [];
+  runner.on('start', () => {
+    watch.initialize();
+  });
 
   // runner.on('suite', (suite) => {
   //   ++indents;
@@ -75,12 +64,20 @@ export function GasReporter(runner, options) {
   //   }
   // });
 
-  runner.on('end', async () => {
+  runner.on('end', () => {
     let done = false;
 
-    setTimeout(() => {
-      table.generate();
-    }, 4000);
+    watch
+      .getTable()
+      .then((data) => {
+        log(data);
+      })
+      .then(() => {
+        return watch.stop();
+      })
+      .finally(() => {
+        done = true;
+      });
 
     deasync.loopWhile(function () {
       return !done;

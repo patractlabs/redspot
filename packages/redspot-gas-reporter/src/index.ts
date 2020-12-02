@@ -15,6 +15,8 @@ let mochaConfig;
  */
 function getDefaultOptions(rse: RedspotRuntimeEnvironment): GasReporterConfig {
   return {
+    abis: rse.artifacts.readAbisSync(),
+    provider: rse.network.provider,
     enabled: true
   };
 }
@@ -25,7 +27,10 @@ function getDefaultOptions(rse: RedspotRuntimeEnvironment): GasReporterConfig {
  * @return {any}
  */
 function getOptions(rse: RedspotRuntimeEnvironment): any {
-  return { ...getDefaultOptions(rse), ...(rse.config as any).gasReporter };
+  return {
+    ...getDefaultOptions(rse),
+    ...(rse.config as any).gasReporter
+  };
 }
 
 /**
@@ -41,7 +46,6 @@ subtask(TASK_TEST_RUN_MOCHA_TESTS).setAction(
       mochaConfig = rse.config.mocha || {};
       mochaConfig.reporter = GasReporter;
       mochaConfig.reporterOptions = options;
-
       rse.config.mocha = mochaConfig;
     }
 

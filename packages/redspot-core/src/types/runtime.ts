@@ -164,6 +164,7 @@ export interface RedspotArguments {
   help: boolean;
   config?: string;
   verbose: boolean;
+  logLevel: string;
   maxMemory?: number;
   tsconfig?: string;
 }

@@ -57,6 +57,15 @@ export const REDSPOT_PARAM_DEFINITIONS: RedspotParamDefinitions = {
     isOptional: true,
     isVariadic: false
   },
+  logLevel: {
+    name: 'logLevel',
+    defaultValue: '3',
+    description: 'Set log levels 1-5',
+    type: types.string,
+    isFlag: true,
+    isOptional: true,
+    isVariadic: false
+  },
   maxMemory: {
     name: 'maxMemory',
     defaultValue: undefined,

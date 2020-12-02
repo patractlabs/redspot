@@ -1,4 +1,5 @@
 import debug from 'debug';
+import logger from 'redspot/logger';
 import { createProvider } from '../../provider';
 import {
   Artifacts as IArtifacts,
@@ -82,6 +83,10 @@ export class Environment implements RedspotRuntimeEnvironment {
       config: config.networks[networkName],
       provider
     };
+
+    if (Number(redspotArguments.logLevel)) {
+      logger.level = Number(redspotArguments.logLevel);
+    }
 
     this._extenders = extenders;
 
