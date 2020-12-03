@@ -91,7 +91,7 @@ export class Artifacts implements IArtifacts {
   public readAbisSync(): Artifact[] {
     const artifactPaths = this._getArtifactPathsSync('abi');
 
-    return artifactPaths.map((path) => fsExtra.readJsonSync(path) as any);
+    return artifactPaths.map((path) => fsExtra.readJsonSync(path));
   }
 
   public async readAbi(name: string): Promise<Artifact> {
