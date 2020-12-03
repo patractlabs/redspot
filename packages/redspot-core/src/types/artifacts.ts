@@ -12,6 +12,8 @@ export interface Artifacts {
   ): string;
   readAbi(contractNameOrFullyQualifiedName: string): Promise<Artifact>;
   readAbiSync(contractNameOrFullyQualifiedName: string): Artifact;
+  readAbis(): Promise<Artifact[]>;
+  readAbisSync(): Artifact[];
   readWasm(contractNameOrFullyQualifiedName: string): Promise<string>;
   readWasmSync(contractNameOrFullyQualifiedName: string): string;
   artifactExists(

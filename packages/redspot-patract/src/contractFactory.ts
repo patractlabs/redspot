@@ -139,9 +139,9 @@ export default class ContractFactory {
 
     const contractName = this.abi.project.contract.name;
     const wasmCode = u8aToHex(this.wasm);
-    log.log('');
-    log.log(chalk.magenta(`===== PutCode ${contractName} =====`));
-    log.log(
+    log.info('');
+    log.info(chalk.magenta(`===== PutCode ${contractName} =====`));
+    log.info(
       'WasmCode: ',
       wasmCode.replace(/^(\w{32})(\w*)(\w{30})$/g, '$1......$3')
     );
@@ -223,16 +223,16 @@ export default class ContractFactory {
       salt
     );
 
-    log.log('');
-    log.log(chalk.magenta(`===== Instantiate ${contractName} =====`));
-    log.log('Endowment: ', endowment.toString());
-    log.log('GasLimit: ', gasLimit.toString());
-    log.log(
+    log.info('');
+    log.info(chalk.magenta(`===== Instantiate ${contractName} =====`));
+    log.info('Endowment: ', endowment.toString());
+    log.info('GasLimit: ', gasLimit.toString());
+    log.info(
       'CodeHash: ',
       isU8a(codeHash) ? u8aToHex(codeHash) : codeHash.toString()
     );
-    log.log('InputData: ', u8aToHex(encoded));
-    log.log('Salt: ', salt.toString());
+    log.info('InputData: ', u8aToHex(encoded));
+    log.info('Salt: ', salt.toString());
 
     const status = await buildTx(this.api.registry, tx, {
       signer: this.signer,

@@ -49,6 +49,12 @@
       ],
       "@redspot/chai/*": [
         "packages/redspot-chai/src/*"
+      ],
+      "@redspot/gas-reporter": [
+        "packages/redspot-gas-reporter/src"
+      ],
+      "@redspot/gas-reporter/*": [
+        "packages/redspot-gas-reporter/src/*"
       ]
     },
     "skipLibCheck": true,

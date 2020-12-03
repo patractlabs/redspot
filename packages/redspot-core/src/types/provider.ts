@@ -1,8 +1,6 @@
-import type { Signer } from '@polkadot/api/types';
 import type { Keyring } from '@polkadot/keyring';
-import type { KeyringPair, SignOptions } from '@polkadot/keyring/types';
+import type { KeyringPair } from '@polkadot/keyring/types';
 import type { TypeRegistry } from '@polkadot/types';
-import type { Registry } from '@polkadot/types/types';
 import type BN from 'bn.js';
 import type { RedspotNetworkAccountsUserConfig } from './config';
 
@@ -59,6 +57,7 @@ export interface WsProvider {
   disconnect(): Promise<void>;
   on(type: ProviderInterfaceEmitted, sub: ProviderInterfaceEmitCb): () => void;
   send(method: string, params: any[]): Promise<any>;
+  connectWithRetry(): Promise<void>;
   subscribe(
     type: string,
     method: string,
@@ -72,6 +71,7 @@ export interface WsProvider {
   ): Promise<boolean>;
 }
 
+export type Registry = TypeRegistry;
 export interface RpcProvider extends WsProvider {
   accounts: RedspotNetworkAccountsUserConfig;
   keyring: Keyring;
