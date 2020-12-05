@@ -202,7 +202,7 @@ export default class ContractFactory {
     const encoded = constructor.toU8a(params);
     const mindeposit = this.api.consts.balances.existentialDeposit
       .add(this.api.consts.contracts.tombstoneDeposit)
-      .muln(2);
+      .muln(10);
     const endowment = overrides.value || mindeposit;
     const salt = encodeSalt(overrides.salt);
     const gasLimit =
