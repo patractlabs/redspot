@@ -30,7 +30,7 @@ function overwriteBigNumberFunction(
         expected,
         actual
       );
-    } else if (typeof expected === 'object' && expected.eq) {
+    } else if (expected && typeof expected === 'object' && expected.eq) {
       this.assert(
         expected.eq(actual),
         `Expected "${expected}" to be equal ${actual}`,

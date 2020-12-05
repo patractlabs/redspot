@@ -25,7 +25,7 @@ export class TransactionWatcher {
 
   constructor(config: GasReporterConfig) {
     this.#abiMap = (config.abis || []).reduce((result, { contract, spec }) => {
-      spec.messages.foreach((messages) => {
+      spec.messages.forEach((messages) => {
         result[messages.selector] = {
           message: messages.name[0],
           contract: contract.name

@@ -193,7 +193,9 @@ function buildCall(
         log.success(`Output: ${outcome.gasConsumed.toString()}`);
       }
     } else {
-      log.error(outcome.debugMessage);
+      log.error(
+        `output: ${outcome.output?.toString()}; debugMessage: ${outcome.debugMessage.toString()}`
+      );
     }
 
     return outcome;
