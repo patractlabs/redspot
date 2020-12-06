@@ -1,7 +1,8 @@
-import { RpcProvider } from 'redspot/types';
+import { WsProvider, Registry } from 'redspot/types';
 
 export interface GasReporterConfig {
-  provider: RpcProvider;
+  provider: WsProvider;
+  registry: Registry;
   enabled?: boolean;
   abis: any;
 }

@@ -15,6 +15,7 @@
 
 import type BN from 'bn.js';
 import type { KeyringPair } from '@polkadot/keyring/types';
+import type { ApiOptions } from '@polkadot/api/types';
 
 // Networks config
 export type RedspotNetworkAccountsUserConfig = (string | KeyringPair)[];
@@ -24,7 +25,12 @@ export interface RedspotNetworkUserConfig {
   httpHeaders?: Record<string, string>;
   accounts?: RedspotNetworkAccountsUserConfig;
   gasLimit?: string | number | BN;
-  types?: Record<string, any>;
+  types?: ApiOptions['types'];
+  typesAlias?: ApiOptions['typesAlias'];
+  typesBundle?: ApiOptions['typesBundle'];
+  typesChain?: ApiOptions['typesChain'];
+  typesSpec?: ApiOptions['typesSpec'];
+  rpc?: ApiOptions['rpc'];
   from?: string;
   explorerUrl?: string;
 }

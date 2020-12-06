@@ -5,23 +5,14 @@ import type BN from 'bn.js';
 import 'redspot/types/runtime';
 import type Contract from './contract';
 import type ContractFactory from './contractFactory';
-import type { Signer } from './signer';
+import type { Signer } from 'redspot/types';
 import type { KeyringPair } from '@polkadot/keyring/types';
 
 declare module 'redspot/types/runtime' {
   interface RuntimeEnvironment {
     patract: {
-      api: ApiPromise;
       Contract: typeof Contract;
       ContractFactory: typeof ContractFactory;
-      /**
-       * Connect the node
-       */
-      connect: () => Promise<ApiPromise>;
-      /**
-       * Disconnect the node
-       */
-      disconnect: () => Promise<void>;
       /**
        * Generating Contract Instance from Contract Addresses
        *
@@ -46,33 +37,6 @@ declare module 'redspot/types/runtime' {
         contractName: string,
         signer?: Signer
       ): Promise<ContractFactory>;
-      /**
-       * Returns the abi that matches the contract name
-       *
-       * @param contractName Contract name
-       * @returns Abi
-       */
-      getAbi(contractName: string): Abi;
-      /**
-       * Returns the wasm that matches the contract name
-       *
-       * @param contractName
-       * @returns Wasm
-       */
-      getWasm(contractName: string): string;
-      /**
-       * Generate the signer instance from user config
-       *
-       * @returns Signer of the array
-       */
-      getSigners: () => Promise<Signer[]>;
-      /**
-       * Generate the signer instance from KeyringPair
-       *
-       * @param pair KeyringPair
-       * @returns Signer
-       */
-      getSigner: (pair: KeyringPair) => Signer;
       /**
        *  Generate a random account and transfer token to it
        *

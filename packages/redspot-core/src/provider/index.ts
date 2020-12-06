@@ -1,1 +1,1 @@
-export { createProvider } from './construction';
+export { createProvider, createApi, createNetwork } from './construction';

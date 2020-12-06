@@ -1,5 +1,5 @@
 import { expandMetadata, Metadata } from '@polkadot/metadata';
-import { GenericExtrinsic, StorageKey, Vec } from '@polkadot/types';
+import { GenericExtrinsic, StorageKey } from '@polkadot/types';
 import Table from 'cli-table3';
 import { Registry, WsProvider } from 'redspot/types';
 import { GasReporterConfig } from '../types';
@@ -35,7 +35,7 @@ export class TransactionWatcher {
       return result;
     }, {});
     this.#provider = config.provider.clone();
-    this.#registry = config.provider.registry;
+    this.#registry = config.registry;
     this.#extrinsics = [];
   }
 

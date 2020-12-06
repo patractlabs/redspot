@@ -17,6 +17,7 @@ function getDefaultOptions(rse: RedspotRuntimeEnvironment): GasReporterConfig {
   return {
     abis: rse.artifacts.readAbisSync(),
     provider: rse.network.provider,
+    registry: rse.network.registry,
     enabled: true
   };
 }

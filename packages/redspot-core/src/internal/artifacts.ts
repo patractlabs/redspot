@@ -1,7 +1,7 @@
 import fsExtra from 'fs-extra';
 import * as os from 'os';
 import * as path from 'path';
-import { Artifact, Artifacts as IArtifacts } from '../types';
+import { Abi, Artifacts as IArtifacts } from '../types';
 import { RedspotError } from './core/errors';
 import { ERRORS } from './core/errors-list';
 import { glob, globSync } from './util/glob';
@@ -82,25 +82,25 @@ export class Artifacts implements IArtifacts {
     }
   }
 
-  public async readAbis(): Promise<Artifact[]> {
+  public async readAbis(): Promise<Abi[]> {
     const artifactPaths = await this.getArtifactPaths('abi');
 
     return artifactPaths.map((path) => fsExtra.readJson(path) as any);
   }
 
-  public readAbisSync(): Artifact[] {
+  public readAbisSync(): Abi[] {
     const artifactPaths = this._getArtifactPathsSync('abi');
 
     return artifactPaths.map((path) => fsExtra.readJsonSync(path));
   }
 
-  public async readAbi(name: string): Promise<Artifact> {
+  public async readAbi(name: string): Promise<Abi> {
     const artifactPath = await this.getArtifactPath(name, 'abi');
 
     return fsExtra.readJson(artifactPath);
   }
 
-  public readAbiSync(name: string): Artifact {
+  public readAbiSync(name: string): Abi {
     const artifactPath = this.getArtifactPathSync(name, 'abi');
 
     return fsExtra.readJsonSync(artifactPath);

@@ -2102,19 +2102,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@redspot/patract@workspace:packages/redspot-patract":
+"@redspot/jupiter@workspace:packages/redspot-jupiter":
   version: 0.0.0-use.local
-  resolution: "@redspot/patract@workspace:packages/redspot-patract"
+  resolution: "@redspot/jupiter@workspace:packages/redspot-jupiter"
   dependencies:
-    "@polkadot/api": ^2.8.1
-    "@polkadot/api-contract": ^2.8.1
     redspot: ^0.6.2-1
   languageName: unknown
   linkType: soft
 
-"@redspot/polkadot@workspace:packages/redspot-polkadot":
+"@redspot/patract@workspace:packages/redspot-patract":
   version: 0.0.0-use.local
-  resolution: "@redspot/polkadot@workspace:packages/redspot-polkadot"
+  resolution: "@redspot/patract@workspace:packages/redspot-patract"
   dependencies:
     "@polkadot/api": ^2.8.1
     "@polkadot/api-contract": ^2.8.1
