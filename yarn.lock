@@ -2107,6 +2107,8 @@ __metadata:
   resolution: "@redspot/jupiter@workspace:packages/redspot-jupiter"
   dependencies:
     redspot: ^0.6.2-2
+  peerDependencies:
+    "@polkadot/api": ^2.8.1
   languageName: unknown
   linkType: soft
 
