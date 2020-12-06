@@ -69,7 +69,7 @@ function shortParams(result: any, len: number) {
  *
  * @see [[HttpProvider]]
  */
-export default class WsProvider implements IWsProvider {
+export class WsProvider implements IWsProvider {
   readonly _coder: Coder;
 
   readonly _endpoints: string[];
@@ -140,7 +140,7 @@ export default class WsProvider implements IWsProvider {
    * @description Returns a clone of the object
    */
   public clone(): WsProvider {
-    return new WsProvider(this._endpoints);
+    return new WsProvider(this._endpoints, this._headers);
   }
 
   /**

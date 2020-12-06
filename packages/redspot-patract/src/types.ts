@@ -9,7 +9,7 @@ import type {
 } from '@polkadot/types/types';
 import { Codec } from '@polkadot/types/types';
 import BN from 'bn.js';
-import type { Signer } from './signer';
+import type { Signer } from 'redspot/types';
 
 export interface DecodedEvent {
   args: Codec[];

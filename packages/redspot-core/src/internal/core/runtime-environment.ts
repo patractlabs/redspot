@@ -1,6 +1,6 @@
 import debug from 'debug';
 import logger from 'redspot/logger';
-import { createProvider } from '../../provider';
+import { createNetwork } from '../../provider';
 import {
   Artifacts as IArtifacts,
   EnvironmentExtender,
@@ -72,17 +72,7 @@ export class Environment implements RedspotRuntimeEnvironment {
 
     this.artifacts = new Artifacts(config.paths.artifacts);
 
-    const provider = lazyObject(() => {
-      log(`Creating provider for network ${networkName}`);
-
-      return createProvider(networkName, networkConfig);
-    });
-
-    this.network = {
-      name: networkName,
-      config: config.networks[networkName],
-      provider
-    };
+    this.network = createNetwork(networkName, config.networks[networkName]);
 
     if (Number(redspotArguments.logLevel)) {
       logger.level = Number(redspotArguments.logLevel);

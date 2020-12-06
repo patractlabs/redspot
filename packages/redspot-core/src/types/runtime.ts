@@ -1,7 +1,15 @@
 /* eslint-disable no-use-before-define */
+import BN from 'bn.js';
 import { Artifacts } from './artifacts';
-import { RedspotConfig, NetworkConfig } from './config';
-import { RpcProvider } from './provider';
+import { NetworkConfig, RedspotConfig } from './config';
+import {
+  ApiPromise,
+  Keyring,
+  KeyringPair,
+  Registry,
+  Signer,
+  WsProvider
+} from './provider';
 
 /**
  * This class is used to dynamically validate task's argument types.
@@ -205,7 +213,14 @@ export interface RedspotRuntimeEnvironment {
 export interface Network {
   name: string;
   config: NetworkConfig;
-  provider: RpcProvider;
+  provider: WsProvider;
+  api: ApiPromise;
+  registry: Registry;
+  keyring: Keyring;
+  getSigners(): Promise<Signer[]>;
+  createSigner(pair: KeyringPair): Signer;
+  gasLimit?: BN;
+  explorerUrl?: string;
 }
 
 /**

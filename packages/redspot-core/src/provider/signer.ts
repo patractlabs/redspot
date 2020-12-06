@@ -1,27 +1,21 @@
-import { ApiPromise } from '@polkadot/api';
 import { SignerResult } from '@polkadot/api/types';
 import type { SignOptions } from '@polkadot/keyring/types';
 import { KeyringPair } from '@polkadot/keyring/types';
-import type { Registry } from '@polkadot/types/types';
 import { SignerPayloadJSON } from '@polkadot/types/types';
-import { bnToBn } from '@polkadot/util';
-import BN from 'bn.js';
+import { ApiPromise, Signer as ISigner } from '../types';
 
 let id = 0;
 
 /**
  * A wrapper for Keyringpair
  */
-export class Signer {
-  public gasLimit?: BN;
-  public api?: ApiPromise;
-
+export class Signer implements ISigner {
   /**
    *
-   * @param registry Registry in Polkadot.js
    * @param pair An instantiation of keyringpair
+   * @param api ApiPromise
    */
-  constructor(public readonly registry: Registry, public pair: KeyringPair) {}
+  constructor(public pair: KeyringPair, public readonly api: ApiPromise) {}
 
   /**
    * @description The Account address
@@ -60,7 +54,7 @@ export class Signer {
    */
   public async signPayload(payload: SignerPayloadJSON): Promise<SignerResult> {
     return new Promise((resolve): void => {
-      const signed = this.registry
+      const signed = this.api.registry
         .createType('ExtrinsicPayload', payload, { version: payload.version })
         .sign(this.pair);
 
@@ -76,24 +70,6 @@ export class Signer {
    */
   public async getAddress(): Promise<string> {
     return Promise.resolve(this.pair.address);
-  }
-
-  /**
-   * Set the default gaslimit.
-   *
-   * @param gasLimit the default gaslimit
-   */
-  public setGasLimit(gasLimit: BN | number | string | BigInt): void {
-    this.gasLimit = bnToBn(gasLimit);
-  }
-
-  /**
-   * Set the api, It should be an instance of an api promise
-   *
-   * @param api the api
-   */
-  public setApi(api: ApiPromise): void {
-    this.api = api;
   }
 
   /**

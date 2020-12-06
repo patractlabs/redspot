@@ -1,19 +1,14 @@
 import BN from 'bn.js';
 import { expect } from 'chai';
-import { patract } from 'redspot';
+import { patract, network, artifacts } from 'redspot';
 
-const {
-  disconnect,
-  getContractFactory,
-  getRandomSigner,
-  getSigners,
-  getAbi,
-  api
-} = patract;
+const { getContractFactory, getRandomSigner } = patract;
+
+const { api, getSigners } = network;
 
 describe('ERC20', () => {
   after(() => {
-    return disconnect();
+    return api.disconnect();
   });
 
   async function setup() {
@@ -23,7 +18,7 @@ describe('ERC20', () => {
     const sender = await getRandomSigner(Alice, one.muln(10));
     const contractFactory = await getContractFactory('erc20', sender);
     const contract = await contractFactory.deploy('new', '1000');
-    const abi = getAbi('erc20');
+    const abi = artifacts.readAbi('erc20');
     const receiver = await getRandomSigner();
 
     return { sender, contractFactory, contract, abi, receiver, Alice, one };

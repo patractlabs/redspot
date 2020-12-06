@@ -1,6 +1,26 @@
 import type { ContractProject } from '@polkadot/types/interfaces';
 
-export type Artifact = ContractProject;
+export type Abi = {
+  metadataVersion: string;
+  source: {
+    hash: string;
+    language: string;
+    compiler: string;
+  };
+  contract: {
+    name: string;
+    version: string;
+    authors: string[];
+  };
+  types: any[];
+  spec: {
+    constructors: any[];
+    docs: any[];
+    events: any[];
+    messages: any[];
+  };
+};
+
 export interface Artifacts {
   getArtifactPath(
     contractNameOrFullyQualifiedName: string,
@@ -10,10 +30,10 @@ export interface Artifacts {
     contractNameOrFullyQualifiedName: string,
     type: 'abi' | 'wasm' | 'json'
   ): string;
-  readAbi(contractNameOrFullyQualifiedName: string): Promise<Artifact>;
-  readAbiSync(contractNameOrFullyQualifiedName: string): Artifact;
-  readAbis(): Promise<Artifact[]>;
-  readAbisSync(): Artifact[];
+  readAbi(contractNameOrFullyQualifiedName: string): Promise<Abi>;
+  readAbiSync(contractNameOrFullyQualifiedName: string): Abi;
+  readAbis(): Promise<Abi[]>;
+  readAbisSync(): Abi[];
   readWasm(contractNameOrFullyQualifiedName: string): Promise<string>;
   readWasmSync(contractNameOrFullyQualifiedName: string): string;
   artifactExists(

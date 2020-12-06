@@ -19,9 +19,9 @@ import { blake2AsU8a, randomAsU8a } from '@polkadot/util-crypto';
 import chalk from 'chalk';
 import log from 'redspot/logger';
 import { RedspotPluginError } from 'redspot/plugins';
+import type { Signer } from 'redspot/types';
 import { buildTx } from './buildTx';
 import Contract from './contract';
-import type { Signer } from './signer';
 import { BigNumber, CallOverrides, TransactionParams } from './types';
 
 export type ContractFunction<T = any> = (...args: Array<any>) => Promise<T>;
@@ -45,6 +45,7 @@ export default class ContractFactory {
   readonly wasm: Uint8Array;
   readonly api: ApiPromise;
   readonly signer: Signer;
+  public gasLimit?: BigNumber;
 
   readonly populateTransaction: {
     putCode: (
@@ -207,7 +208,7 @@ export default class ContractFactory {
     const salt = encodeSalt(overrides.salt);
     const gasLimit =
       overrides.gasLimit ||
-      this.signer.gasLimit ||
+      this.gasLimit ||
       this.api.consts.system.maximumBlockWeight.muln(2).divn(10);
 
     delete overrides.value;
@@ -307,6 +308,8 @@ export default class ContractFactory {
       this.signer
     );
 
+    contract.gasLimit = this.gasLimit;
+
     return contract;
   }
 
@@ -352,6 +355,8 @@ export default class ContractFactory {
       this.api,
       this.signer
     );
+
+    contract.gasLimit = this.gasLimit;
 
     return contract;
   }

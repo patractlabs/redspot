@@ -1,8 +1,24 @@
-import type { Keyring } from '@polkadot/keyring';
-import type { KeyringPair } from '@polkadot/keyring/types';
-import type { TypeRegistry } from '@polkadot/types';
-import type BN from 'bn.js';
-import type { RedspotNetworkAccountsUserConfig } from './config';
+import { ApiPromise as PolkadotApiPromise } from '@polkadot/api';
+import type { Signer as PolkadotSigner } from '@polkadot/api/types';
+import type { Keyring as PolkadotKeyring } from '@polkadot/keyring';
+import type { KeyringPair as PolkadotKeyringPair } from '@polkadot/keyring/types';
+import type { ProviderInterface } from '@polkadot/rpc-provider/types';
+import type { Registry as PolkadotRegistry } from '@polkadot/types/types';
+
+// eslint-disable-next-line  @typescript-eslint/no-empty-interface
+export interface Keyring extends PolkadotKeyring {}
+
+// eslint-disable-next-line  @typescript-eslint/no-empty-interface
+export interface KeyringPair extends PolkadotKeyringPair {}
+
+// eslint-disable-next-line  @typescript-eslint/no-empty-interface
+export interface ApiPromise extends PolkadotApiPromise {}
+
+// eslint-disable-next-line  @typescript-eslint/no-empty-interface
+export interface Registry extends PolkadotRegistry {}
+
+// eslint-disable-next-line  @typescript-eslint/no-empty-interface
+export interface WsProvider extends ProviderInterface {}
 
 export interface JsonRpcObject {
   id: number;
@@ -48,35 +64,8 @@ export type ProviderInterfaceEmitted = 'connected' | 'disconnected' | 'error';
 
 export type ProviderInterfaceEmitCb = (value?: any) => any;
 
-export interface WsProvider {
-  readonly hasSubscriptions: boolean;
-  readonly isConnected: boolean;
-
-  clone(): WsProvider;
-  connect(): Promise<void>;
-  disconnect(): Promise<void>;
-  on(type: ProviderInterfaceEmitted, sub: ProviderInterfaceEmitCb): () => void;
-  send(method: string, params: any[]): Promise<any>;
-  connectWithRetry(): Promise<void>;
-  subscribe(
-    type: string,
-    method: string,
-    params: any[],
-    cb: ProviderInterfaceCallback
-  ): Promise<number | string>;
-  unsubscribe(
-    type: string,
-    method: string,
-    id: number | string
-  ): Promise<boolean>;
-}
-
-export type Registry = TypeRegistry;
-export interface RpcProvider extends WsProvider {
-  accounts: RedspotNetworkAccountsUserConfig;
-  keyring: Keyring;
-  gasLimit?: BN;
-  registry: TypeRegistry;
-  networkName: string;
-  getKeyringPairs(): Promise<KeyringPair[]>;
+export interface Signer extends PolkadotSigner {
+  address: string;
+  api: ApiPromise;
+  pair: KeyringPair;
 }

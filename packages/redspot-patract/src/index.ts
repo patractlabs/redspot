@@ -7,49 +7,21 @@ import {
   getAbi,
   getContractAt,
   getContractFactory,
-  getRandomSigner,
-  getSigner,
-  getSigners,
-  getWasm
+  getRandomSigner
 } from './helpers';
 import './type-extensions';
 
 extendEnvironment((env) => {
   env.patract = lazyObject(() => {
     const network = env.network;
-    const provider = network.provider;
-    const registry = network.provider.registry;
-
-    const api = new ApiPromise({
-      provider,
-      registry,
-      // hack
-      ...registry.knownTypes
-    });
+    const api = network.api;
 
     return {
-      api: api,
       Contract: Contract,
-      connect: async () => {
-        const isConnected = api.isConnected;
-
-        if (!isConnected) {
-          await api.connect();
-        }
-
-        return await api.isReady;
-      },
-      disconnect: async () => {
-        await api.disconnect();
-      },
       ContractFactory: ContractFactory,
       getContractFactory: getContractFactory.bind(null, env),
       getContractAt: getContractAt.bind(null, env),
-      getAbi: getAbi.bind(null, env),
-      getWasm: getWasm.bind(null, env),
-      getRandomSigner: getRandomSigner.bind(null, env),
-      getSigners: getSigners.bind(null, env),
-      getSigner: getSigner.bind(null, env)
+      getRandomSigner: getRandomSigner.bind(null, env)
     };
   });
 });

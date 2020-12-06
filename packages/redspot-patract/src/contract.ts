@@ -19,9 +19,10 @@ import {
 import BN from 'bn.js';
 import chalk from 'chalk';
 import log from 'redspot/logger';
-import type { Signer } from './signer';
+import type { Signer } from 'redspot/types';
 import { buildTx } from './buildTx';
 import {
+  BigNumber,
   CallOverrides,
   CallParams,
   ContractAbi,
@@ -62,7 +63,7 @@ async function populateTransaction(
     value: overrides.value || new BN('0'),
     gasLimit:
       overrides.gasLimit ||
-      contract.signer.gasLimit ||
+      contract.gasLimit ||
       contract.api.consts.system.maximumBlockWeight.muln(2).divn(10),
     inputData: data
   };
@@ -136,7 +137,7 @@ function buildCall(
     );
     const messageName = formatIdentifier(fragment.identifier);
 
-    const origin = await options.signer.getAddress();
+    const origin = options.signer.address;
 
     const params = {
       ...callParams,
@@ -330,6 +331,9 @@ export default class Contract {
 
   public readonly tx: { [name: string]: ContractFunction<TransactionResponse> };
 
+  /**
+   * Estimated gas
+   */
   public readonly estimateGas: { [name: string]: ContractFunction<BN> };
 
   public readonly populateTransaction: {
@@ -341,6 +345,8 @@ export default class Contract {
     | ContractFunction<ContractCallOutcome>
     | ContractFunction<TransactionResponse>
     | any;
+
+  public gasLimit?: BigNumber;
 
   constructor(
     address: string | AccountId,
@@ -395,6 +401,12 @@ export default class Contract {
     }
   }
 
+  /**
+   * Change contract signer
+   *
+   * @param signer Signer
+   * @returns Contract
+   */
   connect(signer: Signer): Contract {
     const contract = new (<{ new (...args: any[]): Contract }>this.constructor)(
       this.address,
@@ -406,6 +418,12 @@ export default class Contract {
     return contract;
   }
 
+  /**
+   * Create Contract Instances by Contract Address
+   *
+   * @param address Contract address
+   * @returns Contract
+   */
   attach(address: string): Contract {
     return new (<{ new (...args: any[]): Contract }>this.constructor)(
       address,

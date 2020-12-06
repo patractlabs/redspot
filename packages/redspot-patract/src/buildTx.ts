@@ -2,7 +2,7 @@ import { SubmittableResult } from '@polkadot/api';
 import type { SignerOptions } from '@polkadot/api/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import type { Registry } from '@polkadot/types/types';
-import type { Signer } from './signer';
+import type { Signer } from 'redspot/types';
 import type { TransactionResponse } from './types';
 
 export async function buildTx(
@@ -12,7 +12,7 @@ export async function buildTx(
     signer: Signer;
   }
 ): Promise<TransactionResponse> {
-  const signerAddress = await options.signer.getAddress();
+  const signerAddress = options.signer.address;
 
   return new Promise((resolve, reject) => {
     const actionStatus = {

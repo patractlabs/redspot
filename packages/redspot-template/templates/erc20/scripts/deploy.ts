@@ -1,16 +1,15 @@
 import { patract, network } from 'redspot';
 
-const { getContractFactory, disconnect, getSigner } = patract;
+const { getContractFactory } = patract;
+const { createSigner, keyring, api } = network;
 
 const uri =
   'bottom drive obey lake curtain smoke basket hold race lonely fit walk//Alice';
 
-const { connect, api } = patract!;
-
 async function run() {
-  await connect();
+  await api.isReady;
 
-  const signer = getSigner(network.provider.keyring.createFromUri(uri));
+  const signer = createSigner(keyring.createFromUri(uri));
   const contractFactory = await getContractFactory('erc20', signer);
 
   const balance = await api.query.system.account(signer.address);
@@ -19,7 +18,8 @@ async function run() {
 
   const contract = await contractFactory.deployed('new', '1000000', {
     gasLimit: '200000000000',
-    value: '10000000000000000'
+    value: '10000000000000000',
+    salt: '12312'
   });
 
   console.log('');
@@ -28,7 +28,7 @@ async function run() {
     contract.address.toString()
   );
 
-  disconnect();
+  api.disconnect();
 }
 
 run().catch((err) => {
