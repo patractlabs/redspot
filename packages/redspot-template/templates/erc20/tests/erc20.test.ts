@@ -45,7 +45,7 @@ describe('ERC20', () => {
   it('Transfer emits event', async () => {
     const { contract, sender, receiver } = await setup();
 
-    expect(contract.tx.transfer(receiver.address, 7))
+    await expect(contract.tx.transfer(receiver.address, 7))
       .to.emit(contract, 'Transfer')
       .withArgs(sender.address, receiver.address, 7);
   });

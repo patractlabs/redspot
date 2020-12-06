@@ -221,6 +221,12 @@ export interface Network {
   createSigner(pair: KeyringPair): Signer;
   gasLimit?: BN;
   explorerUrl?: string;
+  utils: {
+    encodeSalt(
+      salt?: Uint8Array | string | null,
+      signer?: Signer
+    ): Promise<Uint8Array>;
+  };
 }
 
 /**
