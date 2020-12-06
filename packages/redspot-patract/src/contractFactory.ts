@@ -325,8 +325,6 @@ export default class ContractFactory {
       deployedAddress
     );
 
-    console.log('contractInfo', contractInfo.isNone);
-
     if (contractInfo.isNone) {
       return this.deploy(constructorOrId, ...params, overrides);
     }
