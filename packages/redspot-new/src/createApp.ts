@@ -9,7 +9,11 @@ import yargs, { argv } from 'yargs';
 
 const packageToInstall = 'redspot';
 const templateToInstall = '@redspot/redspot-template';
-const defaultToInstall = ['@redspot/patract', '@redspot/chai'];
+const defaultToInstall = [
+  '@redspot/patract',
+  '@redspot/chai',
+  '@redspot/gas-reporter'
+];
 
 function init() {
   const currentNodeVersion = process.versions.node;
