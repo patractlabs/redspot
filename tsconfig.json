@@ -49,6 +49,12 @@
       ],
       "@redspot/gas-reporter/*": [
         "packages/redspot-gas-reporter/src/*"
+      ],
+      "@redspot/jupiter": [
+        "packages/redspot-jupiter/src"
+      ],
+      "@redspot/jupiter/*": [
+        "packages/redspot-jupiter/src/*"
       ]
     },
     "skipLibCheck": true,

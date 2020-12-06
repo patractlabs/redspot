@@ -30,16 +30,6 @@ type ContractAbi = AnyJson | Abi;
 type ConstructorOrId = AbiConstructor | string | number;
 const pluginName = 'redspot-patract';
 
-const EMPTY_SALT = new Uint8Array();
-
-function encodeSalt(salt: Uint8Array | string | null = randomAsU8a()) {
-  return salt instanceof Bytes
-    ? salt
-    : salt && salt.length
-    ? compactAddLength(u8aToU8a(salt))
-    : EMPTY_SALT;
-}
-
 export default class ContractFactory {
   readonly abi: Abi;
   readonly wasm: Uint8Array;
@@ -205,7 +195,8 @@ export default class ContractFactory {
       .add(this.api.consts.contracts.tombstoneDeposit)
       .muln(10);
     const endowment = overrides.value || mindeposit;
-    const salt = encodeSalt(overrides.salt);
+    const salt = await ContractFactory.encodeSalt(overrides.salt, this.signer);
+
     const gasLimit =
       overrides.gasLimit ||
       this.gasLimit ||
@@ -377,7 +368,7 @@ export default class ContractFactory {
     const withSalt = this.api.tx.contracts.instantiate.meta.args.length === 5;
 
     if (withSalt) {
-      const encodedSalt = encodeSalt(salt);
+      const encodedSalt = await ContractFactory.encodeSalt(salt, this.signer);
       const codeHash = blake2AsU8a(this.wasm);
 
       const [_, encodedStrip] = compactStripLength(encodedSalt);
@@ -451,6 +442,19 @@ export default class ContractFactory {
       overrides,
       params
     };
+  }
+
+  static async encodeSalt(
+    salt: Uint8Array | string | null = randomAsU8a(),
+    signer?: Signer
+  ): Promise<Uint8Array> {
+    const EMPTY_SALT = new Uint8Array();
+
+    return salt instanceof Bytes
+      ? salt
+      : salt && salt.length
+      ? compactAddLength(u8aToU8a(salt))
+      : EMPTY_SALT;
   }
 
   /**

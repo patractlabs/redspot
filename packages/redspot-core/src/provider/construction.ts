@@ -13,6 +13,7 @@ import {
 } from '../types';
 import { Signer } from './signer';
 import { WsProvider } from './ws-provider';
+import { encodeSalt } from './utils';
 
 export function createProvider(networkConfig: RedspotNetworkUserConfig) {
   return new WsProvider(networkConfig.endpoint, networkConfig.httpHeaders);
@@ -144,6 +145,9 @@ export function createNetwork(
     },
     createSigner: createSigner.bind(null, api),
     gasLimit,
-    explorerUrl
+    explorerUrl,
+    utils: {
+      encodeSalt
+    }
   };
 }
