@@ -26,12 +26,6 @@
       "redspot/*": [
         "packages/redspot-core/src/*"
       ],
-      "@redspot/polkadot": [
-        "packages/redspot-polkadot/src"
-      ],
-      "@redspot/polkadot/*": [
-        "packages/redspot-polkadot/src/*"
-      ],
       "@redspot/rpc-provider": [
         "packages/rpc-provider/src"
       ],
