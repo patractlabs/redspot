@@ -1,5 +1,5 @@
 import BN from 'bn.js';
-
+import { isU8a, u8aEq } from '@polkadot/util';
 export function supportEq(
   Assertion: Chai.AssertionStatic,
   utils: Chai.ChaiUtils
@@ -33,6 +33,14 @@ function overwriteBigNumberFunction(
     } else if (expected && typeof expected === 'object' && expected.eq) {
       this.assert(
         expected.eq(actual),
+        `Expected "${expected}" to be equal ${actual}`,
+        `Expected "${expected}" NOT to be equal ${actual}`,
+        expected,
+        actual
+      );
+    } else if (isU8a(expected) || isU8a(actual)) {
+      this.assert(
+        u8aEq(expected, actual),
         `Expected "${expected}" to be equal ${actual}`,
         `Expected "${expected}" NOT to be equal ${actual}`,
         expected,
