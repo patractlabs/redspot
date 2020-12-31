@@ -5,7 +5,11 @@ import type {
   ContractCallOutcome
 } from '@polkadot/api-contract/types';
 import { createTypeUnsafe, Raw } from '@polkadot/types';
-import type { AccountId, ContractExecResult } from '@polkadot/types/interfaces';
+import type {
+  AccountId,
+  ContractExecResult,
+  Weight
+} from '@polkadot/types/interfaces';
 import type { AnyJson, CodecArg } from '@polkadot/types/types';
 import { Codec, Registry, TypeDef } from '@polkadot/types/types';
 import {
@@ -38,7 +42,7 @@ export function formatData(
   data: Raw,
   { type }: TypeDef
 ): Codec {
-  return createTypeUnsafe(registry, type, [data], true);
+  return createTypeUnsafe(registry, type, [data]);
 }
 
 async function populateTransaction(
@@ -58,13 +62,17 @@ async function populateTransaction(
   // The ABI coded transaction
   const data = fragment.toU8a(args as CodecArg[]);
 
+  const maximumBlockWeight = contract.api.consts.system.blockWeights
+    ? contract.api.consts.system.blockWeights.maxBlock
+    : (contract.api.consts.system.maximumBlockWeight as Weight);
+
   const callParams: CallParams = {
     dest: overrides.dest || contract.address,
     value: overrides.value || new BN('0'),
     gasLimit:
       overrides.gasLimit ||
       contract.gasLimit ||
-      contract.api.consts.system.maximumBlockWeight.muln(2).divn(10),
+      maximumBlockWeight.muln(2).divn(10),
     inputData: data
   };
 

@@ -5,7 +5,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "peerDependencies": {
-    "@polkadot/api": "^2.8.1"
+    "@polkadot/api": "^3.2.3"
   },
   "dependencies": {
     "redspot": "^0.7.1"

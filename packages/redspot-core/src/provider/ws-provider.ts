@@ -5,7 +5,7 @@ import {
   isString,
   isUndefined
 } from '@polkadot/util';
-import WS from '@polkadot/x-ws';
+import { WebSocket as WS } from '@polkadot/x-ws';
 import assert from 'assert';
 import chalk from 'chalk';
 import EventEmitter from 'eventemitter3';

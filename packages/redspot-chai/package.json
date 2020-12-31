@@ -5,8 +5,8 @@
   "main": "index.js",
   "types": "index.d.ts",
   "dependencies": {
-    "@polkadot/api": "^2.8.1",
-    "@polkadot/api-contract": "^2.8.1",
+    "@polkadot/api": "^3.2.3",
+    "@polkadot/api-contract": "^3.2.3",
     "redspot": "^0.7.1"
   }
 }

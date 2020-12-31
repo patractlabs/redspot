@@ -3,6 +3,7 @@ import { Abi } from '@polkadot/api-contract';
 import type { AbiConstructor } from '@polkadot/api-contract/types';
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
 import { Bytes } from '@polkadot/types';
+import type { Weight } from '@polkadot/types/interfaces';
 import type { CodeHash } from '@polkadot/types/interfaces/contracts';
 import type { AccountId } from '@polkadot/types/interfaces/types';
 import type { AnyJson, ISubmittableResult } from '@polkadot/types/types';
@@ -95,11 +96,11 @@ export default class ContractFactory {
           gasLimit,
           codeHash,
           u8aConcat(data, salt),
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore new style with salt included
           salt
         )
-      : this.api.tx.contracts.instantiate(endowment, gasLimit, codeHash, data);
+      : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore new style with salt included
+        this.api.tx.contracts.instantiate(endowment, gasLimit, codeHash, data);
 
     return tx;
   }
@@ -196,11 +197,14 @@ export default class ContractFactory {
       .muln(10);
     const endowment = overrides.value || mindeposit;
     const salt = await ContractFactory.encodeSalt(overrides.salt, this.signer);
+    const maximumBlockWeight = this.api.consts.system.blockWeights
+      ? this.api.consts.system.blockWeights.maxBlock
+      : (this.api.consts.system.maximumBlockWeight as Weight);
 
     const gasLimit =
       overrides.gasLimit ||
       this.gasLimit ||
-      this.api.consts.system.maximumBlockWeight.muln(2).divn(10);
+      maximumBlockWeight.muln(2).divn(10);
 
     delete overrides.value;
     delete overrides.gasLimit;
@@ -443,16 +447,25 @@ export default class ContractFactory {
   }
 
   static async encodeSalt(
-    salt: Uint8Array | string | null = randomAsU8a(),
+    salt: Uint8Array | string | null = '',
     signer?: Signer
   ): Promise<Uint8Array> {
-    const EMPTY_SALT = new Uint8Array();
+    console.log('11');
+    // const EMPTY_SALT = new Uint8Array();
 
-    return salt instanceof Bytes
-      ? salt
-      : salt && salt.length
-      ? compactAddLength(u8aToU8a(salt))
-      : EMPTY_SALT;
+    // console.log(
+    //   salt instanceof Bytes
+    //     ? salt
+    //     : salt && salt.length
+    //       ? compactAddLength(u8aToU8a(salt))
+    //       : EMPTY_SALT
+    // )
+    // return salt instanceof Bytes
+    //   ? salt
+    //   : salt && salt.length
+    //     ? compactAddLength(u8aToU8a(salt))
+    //     : EMPTY_SALT;
+    return Uint8Array.from([0]);
   }
 
   /**
