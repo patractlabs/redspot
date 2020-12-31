@@ -139,7 +139,7 @@ export class TransactionWatcher {
     return this.#extrinsics
       .map((txdata) => {
         const extrinsic = new GenericExtrinsic(this.#registry, txdata.tx);
-        const { callIndex, args } = extrinsic.method.toJSON() as any;
+        const { callIndex, args } = extrinsic.method.toJSON();
 
         return {
           index: txdata.index,

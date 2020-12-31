@@ -20,7 +20,6 @@ export function GasReporter(runner, options) {
 
   runner.on('end', () => {
     let done = false;
-
     watch
       .getTable()
       .then((data) => {
