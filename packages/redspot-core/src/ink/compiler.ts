@@ -37,29 +37,33 @@ export class Compiler {
       console.log(chalk.red('ERROR: No `cargo-contract` found'));
       console.log(`Run the following command to install it:`);
       console.log(
-        chalk.cyan(
-          `$ cargo install cargo-contract --vers 0.7.1 --force --locked`
-        )
+        chalk.cyan(`$ cargo install cargo-contract --force --locked`)
       );
 
       return false;
     }
 
-    if (!semver.eq(version, '0.7.1')) {
+    if (semver.lt(version, '0.7.1')) {
       console.log(
-        chalk.red('ERROR: `cargo-contract` requires v0.7.0 or above')
+        chalk.red('ERROR: `cargo-contract` requires v0.7.1 or above')
       );
       console.log(`Run the following command to install it:`);
       console.log(
-        chalk.cyan(
-          `$ cargo install cargo-contract --vers 0.7.1 --force --locked`
-        )
+        chalk.cyan(`$ cargo install cargo-contract --force --locked`)
       );
 
       return false;
     }
 
     return true;
+  }
+
+  public needGenerateMetadata() {
+    const versionData = execSync('cargo contract -V');
+
+    const version = versionData.toString().split(' ')[1];
+
+    return !semver.gte(version, '0.8.0');
   }
 
   public async compileAll(): Promise<string[]> {
@@ -146,6 +150,21 @@ export class Compiler {
     return abis;
   }
 
+  public renameAbiPath(contractName: string) {
+    const metadataPath = path.resolve(
+      this._metadata.target_directory,
+      `metadata.json`
+    );
+    const renamePath = path.resolve(
+      this._metadata.target_directory,
+      `${contractName}.json`
+    );
+
+    fs.copyFileSync(metadataPath, renamePath);
+
+    return renamePath;
+  }
+
   public async generateMetadata(contractName: string): Promise<string> {
     const contract = this._metadata.packages.find(
       ({ name }) => name === contractName
@@ -155,27 +174,18 @@ export class Compiler {
       throw new Error(`No contract ${chalk.green(contractName)}`);
     }
 
-    console.log(
-      chalk.magenta(`===== Generate metadata ${contract.name} =====`)
-    );
-    console.log('');
+    if (this.needGenerateMetadata()) {
+      console.log(
+        chalk.magenta(`===== Generate metadata ${contract.name} =====`)
+      );
+      console.log('');
 
-    await this.runGenerateMetadata(contract);
+      await this.runGenerateMetadata(contract);
 
-    console.log('');
+      console.log('');
+    }
 
-    const metadataPath = path.resolve(
-      this._metadata.target_directory,
-      `metadata.json`
-    );
-    const renamePath = path.resolve(
-      this._metadata.target_directory,
-      `${contract.name}.json`
-    );
-
-    fs.copyFileSync(metadataPath, renamePath);
-
-    return renamePath;
+    return this.renameAbiPath(contract.name);
   }
 
   public async runGenerateMetadata(contract: CargoPackage) {
