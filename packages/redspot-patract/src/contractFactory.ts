@@ -450,22 +450,13 @@ export default class ContractFactory {
     salt: Uint8Array | string | null = '',
     signer?: Signer
   ): Promise<Uint8Array> {
-    console.log('11');
-    // const EMPTY_SALT = new Uint8Array();
+    const EMPTY_SALT = new Uint8Array();
 
-    // console.log(
-    //   salt instanceof Bytes
-    //     ? salt
-    //     : salt && salt.length
-    //       ? compactAddLength(u8aToU8a(salt))
-    //       : EMPTY_SALT
-    // )
-    // return salt instanceof Bytes
-    //   ? salt
-    //   : salt && salt.length
-    //     ? compactAddLength(u8aToU8a(salt))
-    //     : EMPTY_SALT;
-    return Uint8Array.from([0]);
+    return salt instanceof Bytes
+      ? salt
+      : salt && salt.length
+      ? compactAddLength(u8aToU8a(salt))
+      : EMPTY_SALT;
   }
 
   /**
