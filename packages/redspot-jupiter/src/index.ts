@@ -5,6 +5,8 @@ import { extendEnvironment } from 'redspot/config';
 import { Signer } from 'redspot/types';
 
 extendEnvironment((env) => {
+  const _encodedSalt = env.network.utils.encodeSalt;
+
   env.network.utils.encodeSalt = async function encodeSalt(
     salt?: string | Uint8Array | null,
     signer?: Signer
@@ -20,7 +22,7 @@ extendEnvironment((env) => {
       .toLowerCase()
       .includes('jupiter');
 
-    if (!isJupiter) return env.network.utils.encodeSalt(salt, signer);
+    if (!isJupiter) return _encodedSalt(salt, signer);
 
     const nonce = accountInfo.nonce.toNumber();
 
