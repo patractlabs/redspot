@@ -4,7 +4,9 @@ export const TASK_CLEAN = 'clean';
 export const TASK_CLEAN_GLOBAL = 'clean:global';
 
 export const TASK_COMPILE = 'compile';
-export const TASK_COMPILE_COMPILE = 'compile:compile';
+export const TASK_COMPILE_SOLANG = 'compile:solang';
+export const TASK_COMPILE_INK = 'compile:ink';
+export const TASK_COMPILE_INK_COMPILE = 'compile:ink:compile';
 export const TASK_COMPILE_INK_GET_RESOLVED_WORKSPACE =
   'compile:ink:get-resolved-workspace';
 export const TASK_COMPILE_INK_ARTIFACTS = 'compile:ink:build-artifacts';

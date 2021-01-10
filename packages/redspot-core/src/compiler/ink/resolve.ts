@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { execSync } from 'child_process';
 import fs from 'fs-extra';
 import path from 'path';
-import { RedspotConfig } from '../types';
+import { RedspotConfig, InkConfig } from '../../types';
 
 /* eslint-disable camelcase */
 export interface CargoPackage {
@@ -86,5 +86,5 @@ export function filterContractPackage(metadata: CargoMetadata): CargoMetadata {
 }
 
 export function getToolchain(config: RedspotConfig, toolchain?: string) {
-  return toolchain || config?.ink?.toolchain || 'nightly';
+  return toolchain || (config?.compiler as InkConfig)?.toolchain || 'nightly';
 }

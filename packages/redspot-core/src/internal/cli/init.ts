@@ -68,21 +68,21 @@ function init(
     JSON.stringify(appPackage, null, 2) + os.EOL
   );
 
-  // Copy the files for the user
-  const templateDir = path.join(templatePath, 'templates', templateName);
-  if (fs.existsSync(templateDir)) {
-    fs.copySync(templateDir, appPath);
-  } else {
-    console.error(`Could not locate template: ${chalk.green(templateDir)}`);
-    return;
-  }
-
   // Copy the common files
   const commonDir = path.join(templatePath, 'common');
   if (fs.existsSync(commonDir)) {
     fs.copySync(commonDir, appPath);
   } else {
     console.error(`Could not locate template: ${chalk.green(commonDir)}`);
+    return;
+  }
+
+  // Copy the files for the user
+  const templateDir = path.join(templatePath, 'templates', templateName);
+  if (fs.existsSync(templateDir)) {
+    fs.copySync(templateDir, appPath);
+  } else {
+    console.error(`Could not locate template: ${chalk.green(templateDir)}`);
     return;
   }
 
