@@ -74,8 +74,6 @@ function optional<TypeT, OutputT>(
 
 const HEX_STRING_REGEX = /^(0x)?([0-9a-f]{2})+$/gi;
 
-const HEX_PREFIX = '0x';
-
 function isHexString(v: unknown): v is string {
   if (typeof v !== 'string') {
     return false;
@@ -90,18 +88,6 @@ export const hexString = new t.Type<string>(
   (u, c) => (isHexString(u) ? t.success(u) : t.failure(u, c)),
   t.identity
 );
-
-const commonHDAccountsFields = {
-  initialIndex: optional(t.number),
-  count: optional(t.number),
-  path: optional(t.string)
-};
-
-const RedspotNetworkHDAccountsConfig = t.type({
-  mnemonic: optional(t.string),
-  accountsBalance: optional(t.string),
-  ...commonHDAccountsFields
-});
 
 const NetworkConfigAccounts = t.array(t.string);
 
@@ -121,10 +107,6 @@ const NetworkConfig = RedspotNetworkConfig;
 
 const Networks = t.record(t.string, NetworkConfig);
 
-const InkConfig = t.type({
-  toolchain: optional(t.string)
-});
-
 const ProjectPaths = t.type({
   root: optional(t.string),
   cache: optional(t.string),
@@ -136,7 +118,6 @@ const ProjectPaths = t.type({
 const RedspotConfig = t.type(
   {
     defaultNetwork: optional(t.string),
-    ink: optional(InkConfig),
     networks: optional(Networks),
     paths: optional(ProjectPaths)
   },

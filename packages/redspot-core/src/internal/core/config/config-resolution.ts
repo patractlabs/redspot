@@ -42,8 +42,7 @@ export function resolveConfig(
     defaultNetwork: userConfig.defaultNetwork ?? defaultDefaultNetwork,
     paths: resolveProjectPaths(userConfigPath, userConfig.paths),
     networks: resolveNetworksConfig(userConfig.networks),
-    mocha: resolveMochaConfig(userConfig),
-    ink: resolveRustConfig(userConfig)
+    mocha: resolveMochaConfig(userConfig)
   };
 }
 
@@ -95,13 +94,6 @@ function resolveMochaConfig(userConfig: RedspotUserConfig): Mocha.MochaOptions {
   return {
     ...cloneDeep(defaultMochaOptions),
     ...userConfig.mocha
-  };
-}
-
-function resolveRustConfig(userConfig: RedspotUserConfig): InkConfig {
-  return {
-    ...cloneDeep(defaultMochaOptions),
-    ...userConfig.ink
   };
 }
 

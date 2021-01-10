@@ -141,6 +141,17 @@ export interface SolidityConfig {
   overrides: Record<string, SolcConfig>;
 }
 
+export interface InkConfig {
+  compilerType: 'ink';
+  toolchain?: string;
+}
+
+export interface SolangConfig {
+  compilerType: 'solang';
+}
+
+export type CompilerConfig = InkConfig | SolangConfig;
+
 // Redspot config
 
 export interface RedspotUserConfig {
@@ -148,11 +159,7 @@ export interface RedspotUserConfig {
   paths?: ProjectPathsUserConfig;
   networks?: NetworksUserConfig;
   mocha?: Mocha.MochaOptions;
-  ink?: InkConfig;
-}
-
-export interface InkConfig {
-  toolchain?: string;
+  compiler?: CompilerConfig;
 }
 
 export interface RedspotConfig {
@@ -160,7 +167,7 @@ export interface RedspotConfig {
   paths: ProjectPathsConfig;
   networks: NetworksConfig;
   mocha: Mocha.MochaOptions;
-  ink?: InkConfig;
+  compiler?: CompilerConfig;
 }
 
 // Plugins config functionality
