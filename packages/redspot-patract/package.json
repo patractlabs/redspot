@@ -1,12 +1,12 @@
 {
   "name": "@redspot/patract",
-  "version": "0.8.1",
+  "version": "0.8.2-0",
   "author": "Patract Labs",
   "main": "index.js",
   "types": "index.d.ts",
   "dependencies": {
     "@polkadot/api": "^3.2.3",
     "@polkadot/api-contract": "^3.2.3",
-    "redspot": "^0.8.1"
+    "redspot": "^0.8.2-0"
   }
 }
