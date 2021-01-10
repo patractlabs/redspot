@@ -1,5 +1,5 @@
 [package]
-name = "erc20"
+name = "dns"
 version = "3.0.0-rc2"
 authors = ["Parity Technologies <admin@parity.io>"]
 edition = "2018"
@@ -14,9 +14,8 @@ ink_lang = { version = "3.0.0-rc2", git = "https://github.com/paritytech/ink", d
 scale = { package = "parity-scale-codec", version = "1.3", default-features = false, features = ["derive"] }
 scale-info = { version = "0.4", default-features = false, features = ["derive"], optional = true }
 
-
 [lib]
-name = "erc20"
+name = "dns"
 path = "lib.rs"
 crate-type = ["cdylib"]
 
