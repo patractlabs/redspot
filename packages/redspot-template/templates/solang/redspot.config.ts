@@ -5,8 +5,8 @@ import '@redspot/gas-reporter';
 
 export default {
   defaultNetwork: 'development',
-  ink: {
-    toolchain: 'nightly'
+  compiler: {
+    compilerType: 'solang'
   },
   networks: {
     development: {
