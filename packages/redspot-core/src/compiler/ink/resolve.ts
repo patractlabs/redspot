@@ -3,6 +3,7 @@ import { execSync } from 'child_process';
 import fs from 'fs-extra';
 import path from 'path';
 import { RedspotConfig, InkConfig } from '../../types';
+import semver from 'semver';
 
 /* eslint-disable camelcase */
 export interface CargoPackage {
@@ -65,7 +66,17 @@ export function getResolvedWorkspace(findDir?: string): CargoMetadata {
       cwd
     }).toString();
 
-    return JSON.parse(output);
+    const output_obj = JSON.parse(output);
+    const versionData = execSync('cargo contract -V');
+    const version = versionData.toString().split(' ')[1];
+
+    if (semver.gte(version, '0.8.0')) {
+      if (!output_obj.target_directory.endsWith('contracts/target/ink')) {
+        output_obj.target_directory += '/ink';
+      }
+    }
+
+    return output_obj;
   } catch (error) {
     throw new Error(chalk.red(`$ \`${execCommand}\` has failed`));
   }
