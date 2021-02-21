@@ -96,6 +96,21 @@ export function filterContractPackage(metadata: CargoMetadata): CargoMetadata {
   };
 }
 
-export function getToolchain(config: RedspotConfig, toolchain?: string) {
+export function getToolchain(
+  config: RedspotConfig,
+  toolchain?: string
+): string {
   return toolchain || (config?.compiler as InkConfig)?.toolchain || 'nightly';
+}
+
+export function getCargoContractVersion(): string | null {
+  try {
+    const versionData = execSync('cargo contract -V');
+
+    const version = versionData.toString().split(/\s/)[1]?.trim();
+
+    return semver.valid(version);
+  } catch (error) {
+    return null;
+  }
 }

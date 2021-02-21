@@ -4,7 +4,11 @@ import spawn from 'cross-spawn';
 import fs from 'fs-extra';
 import path from 'path';
 import semver from 'semver';
-import { CargoMetadata, CargoPackage } from './resolve';
+import {
+  CargoMetadata,
+  CargoPackage,
+  getCargoContractVersion
+} from './resolve';
 
 export interface CompilerOptions {
   toolchain: string;
@@ -27,13 +31,9 @@ export class Compiler {
   }
 
   public checkRustEnv() {
-    let version: string;
+    const version = getCargoContractVersion();
 
-    try {
-      const versionData = execSync('cargo contract -V');
-
-      version = versionData.toString().split(' ')[1];
-    } catch (error) {
+    if (!version) {
       console.log(chalk.red('ERROR: No `cargo-contract` found'));
       console.log(`Run the following command to install it:`);
       console.log(
@@ -131,7 +131,7 @@ export class Compiler {
           return;
         }
 
-        resolve();
+        resolve(undefined);
       });
     });
   }
@@ -219,7 +219,7 @@ export class Compiler {
           return;
         }
 
-        resolve();
+        resolve(undefined);
       });
     });
   }
