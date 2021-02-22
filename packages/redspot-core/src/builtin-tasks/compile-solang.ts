@@ -1,6 +1,4 @@
 import chalk from 'chalk';
-import fs from 'fs-extra';
-import path from 'path';
 import { checkEnv } from '../compiler/ink/checkEnv';
 import { compile, SolangOutput } from '../compiler/solang/compile';
 import {
@@ -35,6 +33,8 @@ subtask(TASK_COMPILE_SOLANG_INPUT, async (_, { config }) => {
 subtask(
   TASK_COMPILE_SOLANG_EXEC,
   async ({ input }: { input: SolangInput }, { config, redspotArguments }) => {
+    if (!input.sources.length) return;
+
     const output = await compile(input, config.paths.artifacts);
 
     return output;
@@ -43,20 +43,17 @@ subtask(
 
 subtask(
   TASK_COMPILE_SOLANG_OUTPUT,
-  async ({ output }: { output: SolangOutput[] }, { config, artifacts }) => {
-    // for (const target of output) {
-    //   const abiJSON = fs.readJSONSync(target.contract)
-    //   delete abiJSON.source.wasm;
-    //   fs.ensureDirSync(config.paths.artifacts)
-    //   fs.writeJSONSync(path.resolve(config.paths.artifacts, `${target.name}.json`), abiJSON, { spaces: 2 })
-    //   artifacts.copyToArtifactDir([target.wasm, target.contract])
-    // }
-    // console.log('')
-    // console.log(
-    //   `🎉  Compile successfully! You can find all artifacts at ${chalk.cyan(
-    //     config.paths.artifacts
-    //   )}`
-    // );
+  async (
+    { input, output }: { input: SolangInput; output: SolangOutput },
+    { config, artifacts }
+  ) => {
+    if (!input.sources.length) return;
+    console.log('');
+    console.log(
+      `🎉  Compile successfully! You can find all artifacts at ${chalk.cyan(
+        output.outputDirectory
+      )}`
+    );
   }
 );
 
@@ -65,5 +62,5 @@ subtask(TASK_COMPILE_SOLANG, async (_, { run }) => {
 
   const input = await run(TASK_COMPILE_SOLANG_INPUT);
   const output = await run(TASK_COMPILE_SOLANG_EXEC, { input });
-  await run(TASK_COMPILE_SOLANG_OUTPUT, { output });
+  await run(TASK_COMPILE_SOLANG_OUTPUT, { input, output });
 });

@@ -34,6 +34,8 @@ subtask(TASK_COMPILE_INK_INPUT, async (_, { config }) => {
 subtask(
   TASK_COMPILE_INK_EXEC,
   async ({ input }: { input: InkInput }, { redspotArguments }) => {
+    if (!input.sources.length) return;
+
     const output = await compile(input, redspotArguments.verbose);
 
     return output;
@@ -42,17 +44,22 @@ subtask(
 
 subtask(
   TASK_COMPILE_INK_OUTPUT,
-  async ({ output }: { output: InkOutput[] }, { config, artifacts }) => {
+  async (
+    { input, output }: { input: InkInput; output: InkOutput[] },
+    { config, artifacts }
+  ) => {
+    if (!input.sources.length) return;
+
+    fs.ensureDirSync(config.paths.artifacts);
+
     for (const target of output) {
       const abiJSON = fs.readJSONSync(target.contract);
-      delete abiJSON.source.wasm;
-      fs.ensureDirSync(config.paths.artifacts);
+
       fs.writeJSONSync(
-        path.resolve(config.paths.artifacts, `${target.name}.json`),
+        path.resolve(config.paths.artifacts, `${target.name}.contract`),
         abiJSON,
         { spaces: 2 }
       );
-      artifacts.copyToArtifactDir([target.wasm, target.contract]);
     }
     console.log('');
     console.log(
@@ -68,5 +75,5 @@ subtask(TASK_COMPILE_INK, async (_, { run }) => {
 
   const input = await run(TASK_COMPILE_INK_INPUT);
   const output = await run(TASK_COMPILE_INK_EXEC, { input });
-  await run(TASK_COMPILE_INK_OUTPUT, { output });
+  await run(TASK_COMPILE_INK_OUTPUT, { input, output });
 });
