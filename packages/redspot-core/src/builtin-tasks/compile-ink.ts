@@ -60,6 +60,14 @@ subtask(
         abiJSON,
         { spaces: 2 }
       );
+
+      delete abiJSON.source.wasm;
+
+      fs.writeJSONSync(
+        path.resolve(config.paths.artifacts, `${target.name}.json`),
+        abiJSON,
+        { spaces: 2 }
+      );
     }
     console.log('');
     console.log(

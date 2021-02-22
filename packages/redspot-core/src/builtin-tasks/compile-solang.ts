@@ -15,6 +15,8 @@ import {
   TASK_COMPILE_SOLANG_OUTPUT,
   TASK_COMPILE_SOLANG_PRE
 } from './task-names';
+import fs from 'fs-extra';
+import path from 'path';
 
 subtask(TASK_COMPILE_SOLANG_PRE, async (_, { config }) => {
   const isValidEnv = await checkEnv({ version: '0.8.0' });
@@ -48,6 +50,27 @@ subtask(
     { config, artifacts }
   ) => {
     if (!input.sources.length) return;
+
+    for (const filepath of output.outputFiles) {
+      const abiJSON = fs.readJSONSync(filepath);
+
+      const filename = filepath.split('.').slice(0, -1).join('.');
+
+      fs.writeJSONSync(
+        path.resolve(config.paths.artifacts, `${filename}.contract`),
+        abiJSON,
+        { spaces: 2 }
+      );
+
+      delete abiJSON.source.wasm;
+
+      fs.writeJSONSync(
+        path.resolve(config.paths.artifacts, `${filename}.json`),
+        abiJSON,
+        { spaces: 2 }
+      );
+    }
+
     console.log('');
     console.log(
       `🎉  Compile successfully! You can find all artifacts at ${chalk.cyan(
