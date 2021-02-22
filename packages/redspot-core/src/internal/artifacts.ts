@@ -1,7 +1,7 @@
 import fsExtra from 'fs-extra';
 import * as os from 'os';
 import * as path from 'path';
-import { Abi, Artifacts as IArtifacts } from '../types';
+import { AbiMetadata, Artifacts as IArtifacts } from '../types';
 import { RedspotError } from './core/errors';
 import { ERRORS } from './core/errors-list';
 import { glob, globSync } from './util/glob';
@@ -9,12 +9,9 @@ import { glob, globSync } from './util/glob';
 export class Artifacts implements IArtifacts {
   constructor(private _artifactsPath: string) {}
 
-  public async getArtifactPath(
-    name: string,
-    type: 'abi' | 'wasm' | 'json'
-  ): Promise<string> {
+  public async getArtifactPath(name: string): Promise<string> {
     const { trueCasePath } = await import('true-case-path');
-    const artifactPath = await this._getArtifactPath(name, type);
+    const artifactPath = await this._getArtifactPath(name);
 
     try {
       const trueCaseArtifactPath = await trueCasePath(
@@ -46,12 +43,9 @@ export class Artifacts implements IArtifacts {
     }
   }
 
-  public getArtifactPathSync(
-    name: string,
-    type: 'abi' | 'wasm' | 'json'
-  ): string {
+  public getArtifactPathSync(name: string): string {
     const { trueCasePathSync } = require('true-case-path');
-    const artifactPath = this._getArtifactPathSync(name, type);
+    const artifactPath = this._getArtifactPathSync(name);
 
     try {
       const trueCaseArtifactPath = trueCasePathSync(
@@ -82,48 +76,33 @@ export class Artifacts implements IArtifacts {
     }
   }
 
-  public async readAbis(): Promise<Abi[]> {
-    const artifactPaths = await this.getArtifactPaths('abi');
+  public async readAllArtifact(): Promise<AbiMetadata[]> {
+    const artifactPaths = await this.getArtifactPaths();
 
     return artifactPaths.map((path) => fsExtra.readJson(path) as any);
   }
 
-  public readAbisSync(): Abi[] {
-    const artifactPaths = this._getArtifactPathsSync('abi');
+  public readAllArtifactSync(): AbiMetadata[] {
+    const artifactPaths = this._getArtifactPathsSync();
 
     return artifactPaths.map((path) => fsExtra.readJsonSync(path));
   }
 
-  public async readAbi(name: string): Promise<Abi> {
-    const artifactPath = await this.getArtifactPath(name, 'abi');
+  public async readArtifact(name: string): Promise<AbiMetadata> {
+    const artifactPath = await this.getArtifactPath(name);
 
     return fsExtra.readJson(artifactPath);
   }
 
-  public readAbiSync(name: string): Abi {
-    const artifactPath = this.getArtifactPathSync(name, 'abi');
+  public readArtifactSync(name: string): AbiMetadata {
+    const artifactPath = this.getArtifactPathSync(name);
 
     return fsExtra.readJsonSync(artifactPath);
   }
 
-  public async readWasm(name: string): Promise<string> {
-    const artifactPath = await this.getArtifactPath(name, 'wasm');
-    const wasm = await fsExtra.readFile(artifactPath);
-    return `0x${wasm.toString('hex')}`;
-  }
-
-  public readWasmSync(name: string): string {
-    const artifactPath = this.getArtifactPathSync(name, 'wasm');
-    const wasm = fsExtra.readFileSync(artifactPath);
-    return `0x${wasm.toString('hex')}`;
-  }
-
-  public async artifactExists(
-    name: string,
-    type: 'abi' | 'wasm' | 'json'
-  ): Promise<boolean> {
+  public async artifactExists(name: string): Promise<boolean> {
     try {
-      await this.getArtifactPath(name, type);
+      await this.getArtifactPath(name);
 
       return true;
     } catch (e) {
@@ -131,19 +110,16 @@ export class Artifacts implements IArtifacts {
     }
   }
 
-  public async getArtifactPaths(
-    type: 'abi' | 'wasm' | 'json'
-  ): Promise<string[]> {
-    const extension = type === 'wasm' ? 'wasm' : 'json';
-    const paths = await glob(
-      path.join(this._artifactsPath, `**/*.${extension}`)
-    );
+  public async getArtifactPaths(): Promise<string[]> {
+    const paths = await glob(path.join(this._artifactsPath, `**/*.contract`));
 
     return paths.sort();
   }
 
-  public async saveArtifact(paths: string[]): Promise<void> {
-    for (const filepath of paths) {
+  public async copyToArtifactDir(originPath: string[] | string): Promise<void> {
+    const pathList = [].concat(originPath);
+
+    for (const filepath of pathList) {
       fsExtra.ensureDirSync(this._artifactsPath);
       fsExtra.copyFileSync(
         filepath,
@@ -152,39 +128,28 @@ export class Artifacts implements IArtifacts {
     }
   }
 
-  private async _getArtifactPath(
-    name: string,
-    type: 'abi' | 'wasm' | 'json'
-  ): Promise<string> {
-    const files = await this.getArtifactPaths(type);
+  private async _getArtifactPath(name: string): Promise<string> {
+    const files = await this.getArtifactPaths();
 
-    return this._getArtifactPathFromFiles(name, files, type);
+    return this._getArtifactPathFromFiles(name, files);
   }
 
-  private _getArtifactPathsSync(type: 'abi' | 'wasm' | 'json'): string[] {
-    const extension = type === 'wasm' ? 'wasm' : 'json';
-
-    return globSync(path.join(this._artifactsPath, `**/*.${extension}`));
+  private _getArtifactPathsSync(): string[] {
+    return globSync(path.join(this._artifactsPath, `**/*.contract`));
   }
 
-  private _getArtifactPathSync(
-    name: string,
-    type: 'abi' | 'wasm' | 'json'
-  ): string {
-    const files = this._getArtifactPathsSync(type);
+  private _getArtifactPathSync(name: string): string {
+    const files = this._getArtifactPathsSync();
 
-    return this._getArtifactPathFromFiles(name, files, type);
+    return this._getArtifactPathFromFiles(name, files);
   }
 
   private _getArtifactPathFromFiles(
     contractName: string,
-    files: string[],
-    type: 'abi' | 'wasm' | 'json'
+    files: string[]
   ): string {
-    const extension = type === 'wasm' ? 'wasm' : 'json';
-
     const matchingFiles = files.filter((file) => {
-      return path.basename(file) === `${contractName}.${extension}`;
+      return path.basename(file) === `${contractName}.contract`;
     });
 
     if (matchingFiles.length === 0) {

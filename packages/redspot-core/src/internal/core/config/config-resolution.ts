@@ -19,7 +19,9 @@ import {
   defaultDefaultNetwork,
   defaultEuropaNetworkParams,
   defaultLocalhostNetworkParams,
-  defaultMochaOptions
+  defaultMochaOptions,
+  defaultInkConfig,
+  defaultSolangConfig
 } from './default-config';
 
 /**
@@ -42,7 +44,8 @@ export function resolveConfig(
     defaultNetwork: userConfig.defaultNetwork ?? defaultDefaultNetwork,
     paths: resolveProjectPaths(userConfigPath, userConfig.paths),
     networks: resolveNetworksConfig(userConfig.networks),
-    mocha: resolveMochaConfig(userConfig)
+    mocha: resolveMochaConfig(userConfig),
+    contract: resolveContractConfig(userConfig)
   };
 }
 
@@ -97,6 +100,23 @@ function resolveMochaConfig(userConfig: RedspotUserConfig): Mocha.MochaOptions {
   };
 }
 
+function resolveContractConfig(userConfig: RedspotUserConfig) {
+  const _defaultInkConfig = cloneDeep(defaultInkConfig);
+  const _defaultSolangConfig = cloneDeep(defaultSolangConfig);
+
+  return {
+    ...userConfig.contract,
+    ink: {
+      ..._defaultInkConfig,
+      ...userConfig.contract?.ink
+    },
+    solang: {
+      ..._defaultSolangConfig,
+      ...userConfig.contract?.solang
+    }
+  };
+}
+
 /**
  * This function resolves the ProjectPathsConfig object from the user-provided config
  * and its path. The logic of this is not obvious and should well be document.
@@ -122,7 +142,6 @@ export function resolveProjectPaths(
     ...userPaths,
     root,
     configFile,
-    sources: resolvePathFrom(root, 'contracts', userPaths.sources),
     cache: resolvePathFrom(root, 'cache', userPaths.cache),
     artifacts: resolvePathFrom(root, 'artifacts', userPaths.artifacts),
     tests: resolvePathFrom(root, 'tests', userPaths.tests)

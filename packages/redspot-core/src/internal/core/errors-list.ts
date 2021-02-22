@@ -801,6 +801,31 @@ To start the JSON-RPC server, retry the command without the --network parameter.
       description: `You passed a block number to fork from, but not URL. Redspot cannot fork
 if the URL of the JSON-RPC weren't set.`,
       shouldBeReported: false
+    },
+    INK_ENV_ERROR: {
+      number: 608,
+      message: `The cargo contract should be installed correctly and the version should be at least %version%.`,
+      title: 'Ink env error',
+      description: `Run the following command to install cargo-contract:
+\`$ cargo install cargo-contract --force --locked\`,
+or go to [cargo-contract](https://github.com/paritytech/cargo-contract) to learn more.`,
+      shouldBeReported: false
+    },
+    SOLANG_ENV_ERROR: {
+      number: 609,
+      message: `The solang should be installed correctly.`,
+      title: 'Ink env error',
+      description: `Run the following command to install cargo-contract:
+\`$ cargo install solang  --force --locked\`,
+or go to [solang](https://solang.readthedocs.io/en/latest/installing.html) to learn more.`,
+      shouldBeReported: false
+    },
+    INK_NOT_FOUND_ARTIFACT: {
+      number: 610,
+      message: `Ink compiles successfully, but Redspot cannot find the compiled artifact.`,
+      title: 'Ink not found arifacts',
+      description: `If you think this is a bug in Redspot, please report it here: https://github.com/patractlabs/redspot/issues/new`,
+      shouldBeReported: false
     }
   },
   ARTIFACTS: {

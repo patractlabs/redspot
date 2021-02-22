@@ -26,3 +26,13 @@ export const defaultLocalhostNetworkParams = {
 export const defaultMochaOptions: Mocha.MochaOptions = {
   timeout: 20000
 };
+
+export const defaultInkConfig = {
+  version: 'v0.8.0',
+  toolchain: 'nightly',
+  sources: ['**/*']
+};
+
+export const defaultSolangConfig = {
+  sources: ['**/*.sol']
+};

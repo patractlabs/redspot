@@ -24,7 +24,7 @@ import {
 import { getPackageJson, PackageJson } from '../util/packageInfo';
 import { Analytics } from './analytics';
 import { ArgumentsParser } from './ArgumentsParser';
-
+import logger from '../../logger';
 const log = debug('redspot:core:cli');
 
 const ANALYTICS_SLOW_TASK_THRESHOLD = 300;
@@ -201,22 +201,23 @@ async function main() {
     } else {
       if (!isRedspotError) {
         console.error(
-          `If you think this is a bug in Redspot, please report it here: https://github.com/patractlabs/redspot-0.2/issues/new`
+          `If you think this is a bug in Redspot, please report it here: https://github.com/patractlabs/redspot/issues/new`
         );
       }
 
       if (RedspotError.isRedspotError(error)) {
-        const link = `https://redspot.org/${getErrorCode(
-          error.errorDescriptor
-        )}`;
+        logger.log(error.errorDescriptor.description + '\n');
+        // const link = `https://redspot.org/${getErrorCode(
+        //   error.errorDescriptor
+        // )}`;
 
-        console.error(
-          `For more info go to ${link} or run ${REDSPOT_NAME} with --show-stack-traces`
-        );
+        // console.error(
+        //   `For more info go to ${link} or run ${REDSPOT_NAME} with --show-stack-traces`
+        // );
       } else {
-        console.error(
-          `For more info run ${REDSPOT_NAME} with --show-stack-traces`
-        );
+        // console.error(
+        //   `For more info run ${REDSPOT_NAME} with --show-stack-traces`
+        // );
       }
     }
 

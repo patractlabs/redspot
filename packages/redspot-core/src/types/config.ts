@@ -104,7 +104,6 @@ export interface ProjectPathsUserConfig {
   root?: string;
   cache?: string;
   artifacts?: string;
-  sources?: string;
   tests?: string;
 }
 
@@ -113,7 +112,6 @@ export interface ProjectPathsConfig {
   configFile: string;
   cache: string;
   artifacts: string;
-  sources: string;
   tests: string;
 }
 
@@ -141,17 +139,30 @@ export interface SolidityConfig {
   overrides: Record<string, SolcConfig>;
 }
 
+export type ContractType = 'ink' | 'solang';
+
 export interface InkConfig {
-  compilerType: 'ink';
-  toolchain?: string;
+  version?: string;
+  toolchain: string;
+  sources: string[];
 }
 
 export interface SolangConfig {
-  compilerType: 'solang';
+  version?: string;
+  sources: string[];
+}
+
+export interface ContractConfig {
+  ink: InkConfig;
+  solang: SolangConfig;
+}
+
+export interface ContractUserConfig {
+  ink?: InkConfig;
+  solang?: SolangConfig;
 }
 
 export type CompilerConfig = InkConfig | SolangConfig;
-
 // Redspot config
 
 export interface RedspotUserConfig {
@@ -159,7 +170,7 @@ export interface RedspotUserConfig {
   paths?: ProjectPathsUserConfig;
   networks?: NetworksUserConfig;
   mocha?: Mocha.MochaOptions;
-  compiler?: CompilerConfig;
+  contract?: ContractUserConfig;
 }
 
 export interface RedspotConfig {
@@ -167,7 +178,7 @@ export interface RedspotConfig {
   paths: ProjectPathsConfig;
   networks: NetworksConfig;
   mocha: Mocha.MochaOptions;
-  compiler?: CompilerConfig;
+  contract: ContractConfig;
 }
 
 // Plugins config functionality
