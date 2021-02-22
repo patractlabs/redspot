@@ -100,4 +100,4 @@ build/
 # This is the Yarn install state cache, it can be rebuilt anytime
 /.yarn/install-state.gz
 
-examples
+/examples/*/artifacts

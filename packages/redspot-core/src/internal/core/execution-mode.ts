@@ -18,8 +18,12 @@ export function isRedspotInstalledLocallyOrLinked(configPath?: string) {
 
     // We need to get the realpaths here, as redspot may be linked and
     // running with `node --preserve-symlinks`
+    //
     return (
-      fs.realpathSync(resolvedPackageJson) === fs.realpathSync(thisPackageJson)
+      fs.realpathSync(resolvedPackageJson) ===
+        fs.realpathSync(thisPackageJson) ||
+      // Required to run examples.
+      thisPackageJson.includes('redspot/packages/redspot-core/package.json')
     );
   } catch (_) {
     return false;

@@ -111,7 +111,6 @@ const ProjectPaths = t.type({
   root: optional(t.string),
   cache: optional(t.string),
   artifacts: optional(t.string),
-  sources: optional(t.string),
   tests: optional(t.string)
 });
 

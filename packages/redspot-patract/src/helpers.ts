@@ -55,7 +55,7 @@ export async function getContractFactory(
   signer?: Signer
 ) {
   const api = env.network.api;
-  const wasmCode = env.artifacts.readWasmSync(contractName);
+  const artifact = env.artifacts.readArtifactSync(contractName);
   const abi = getAbi(env, contractName);
 
   if (!signer) {
@@ -65,7 +65,7 @@ export async function getContractFactory(
 
   ContractFactory.encodeSalt = env.network.utils.encodeSalt;
 
-  const factory = new ContractFactory(wasmCode, abi, api, signer);
+  const factory = new ContractFactory(artifact.wasm, abi, api, signer);
 
   factory.gasLimit = env.network.gasLimit;
 
@@ -96,9 +96,9 @@ export async function getContractAt(
 
 export function getAbi(env: RuntimeEnvironment, contractName: string) {
   const registry = env.network.registry;
-  const abiJSON = env.artifacts.readAbiSync(contractName);
+  const artifact = env.artifacts.readArtifactSync(contractName);
   const abi = new Abi(
-    abiJSON as any,
+    artifact,
     registry.createType('ChainProperties', {
       tokenDecimals: env.network.registry.chainDecimals,
       ss58Format: env.network.registry.chainSS58,

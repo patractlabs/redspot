@@ -1,157 +1,87 @@
 import chalk from 'chalk';
+import fs from 'fs-extra';
 import path from 'path';
-import { Compiler } from '../compiler/ink/compiler';
-import {
-  CargoMetadata,
-  filterContractPackage,
-  getResolvedWorkspace,
-  getToolchain
-} from '../compiler/ink/resolve';
-import { subtask, task, types } from '../internal/core/config/config-env';
+import { checkEnv } from '../compiler/ink/checkEnv';
+import { compile, InkOutput } from '../compiler/ink/compile';
+import { getCompilerInput, InkInput } from '../compiler/ink/compilerInput';
+import { subtask } from '../internal/core/config/config-env';
+import { RedspotError } from '../internal/core/errors';
+import { ERRORS } from '../internal/core/errors-list';
 import {
   TASK_COMPILE_INK,
-  TASK_COMPILE_INK_COMPILE,
-  TASK_COMPILE_INK_ARTIFACTS,
-  TASK_COMPILE_INK_GET_COMPILER_INPUT,
-  TASK_COMPILE_INK_GET_RESOLVED_WORKSPACE,
-  TASK_COMPILE_INK_RUN_COMPILER,
-  TASK_COMPILE_INK_RUN_GENERATE_METADATA
+  TASK_COMPILE_INK_EXEC,
+  TASK_COMPILE_INK_INPUT,
+  TASK_COMPILE_INK_OUTPUT,
+  TASK_COMPILE_INK_PRE
 } from './task-names';
 
-subtask(TASK_COMPILE_INK_GET_RESOLVED_WORKSPACE, async (_, { config }) => {
-  return getResolvedWorkspace(config.paths.sources);
-});
+subtask(TASK_COMPILE_INK_PRE, async (_, { config }) => {
+  const isValidEnv = await checkEnv({ version: '0.8.0' });
 
-subtask(TASK_COMPILE_INK_GET_COMPILER_INPUT, async (_, { run }) => {
-  const manifest: CargoMetadata = await run(
-    TASK_COMPILE_INK_GET_RESOLVED_WORKSPACE
-  );
-  const metadata = filterContractPackage(manifest);
-
-  if (!metadata.packages.length) {
-    throw new Error(`No contract source file available.`);
+  if (!isValidEnv) {
+    throw new RedspotError(ERRORS.BUILTIN_TASKS.INK_ENV_ERROR, {
+      version: 'v0.8.0'
+    });
   }
-
-  console.log(
-    `✨  Detect contracts: ${chalk.yellow(
-      metadata.packages
-        .map((obj) => `${obj.name}${chalk.gray(`(${obj.manifest_path})`)}`)
-        .join(',')
-    )}`
-  );
-  console.log('');
-
-  return metadata;
 });
 
-subtask(TASK_COMPILE_INK_RUN_COMPILER)
-  .addParam('input', 'The compiler standard JSON input', undefined, types.json)
-  .addParam(
-    'toolchain',
-    'Specifies the tool chain to use to compile the contract',
-    undefined,
-    types.string,
-    true
-  )
-  .setAction(
-    async (
-      {
-        input,
-        toolchain
-      }: {
-        input: CargoMetadata;
-        toolchain: string;
-      },
-      { config }
-    ) => {
-      const compiler = new Compiler(input, {
-        toolchain: getToolchain(config, toolchain)
-      });
+subtask(TASK_COMPILE_INK_INPUT, async (_, { config }) => {
+  const input = await getCompilerInput(config.contract.ink);
 
-      return compiler.compileAll();
-    }
-  );
-
-subtask(TASK_COMPILE_INK_RUN_GENERATE_METADATA)
-  .addParam('input', 'The compiler standard JSON input', undefined, types.json)
-  .addParam(
-    'toolchain',
-    'Specifies the tool chain to use to compile the contract',
-    undefined,
-    types.string,
-    true
-  )
-  .setAction(
-    async (
-      {
-        input,
-        toolchain
-      }: {
-        input: CargoMetadata;
-        toolchain: string;
-      },
-      { config }
-    ) => {
-      const compiler = new Compiler(input, {
-        toolchain: getToolchain(config, toolchain)
-      });
-
-      return compiler.generateAllMetadata();
-    }
-  );
-
-subtask(TASK_COMPILE_INK_COMPILE, async ({ toolchain }, { config, run }) => {
-  const input = await run(TASK_COMPILE_INK_GET_COMPILER_INPUT);
-
-  const wasmPaths: string[] = await run(TASK_COMPILE_INK_RUN_COMPILER, {
-    input,
-    toolchain
-  });
-
-  const metadataPaths: string[] = await run(
-    TASK_COMPILE_INK_RUN_GENERATE_METADATA,
-    {
-      input,
-      toolchain
-    }
-  );
-
-  return {
-    wasmPaths,
-    metadataPaths
-  };
+  return input;
 });
 
 subtask(
-  TASK_COMPILE_INK_ARTIFACTS,
-  async ({ toolchain }, { artifacts, config, run }) => {
-    const output = await run(TASK_COMPILE_INK_COMPILE, { toolchain });
+  TASK_COMPILE_INK_EXEC,
+  async ({ input }: { input: InkInput }, { redspotArguments }) => {
+    if (!input.sources.length) return;
 
-    if (output.wasmPaths?.length) {
-      console.log(
-        `🚚  Copy wasm files: ${output.wasmPaths
-          .map((p) => path.basename(p))
-          .join(', ')}`
-      );
-      await artifacts.saveArtifact(output.wasmPaths);
-    }
+    const output = await compile(input, redspotArguments.verbose);
 
-    if (output.metadataPaths?.length) {
-      console.log(`🚚  Copy abi files: ${output.metadataPaths.join(', ')}`);
-      await artifacts.saveArtifact(output.metadataPaths);
-    }
-
-    console.log(
-      `🎉  Compile successfully! You can find them at ${chalk.cyan(
-        config.paths.artifacts
-      )}`
-    );
-    console.log('');
+    return output;
   }
 );
 
-subtask(TASK_COMPILE_INK, async (_, { config, run }) =>
-  run(TASK_COMPILE_INK_ARTIFACTS, {
-    toolchain: getToolchain(config)
-  })
+subtask(
+  TASK_COMPILE_INK_OUTPUT,
+  async (
+    { input, output }: { input: InkInput; output: InkOutput[] },
+    { config, artifacts }
+  ) => {
+    if (!input.sources.length) return;
+
+    fs.ensureDirSync(config.paths.artifacts);
+
+    for (const target of output) {
+      const abiJSON = fs.readJSONSync(target.contract);
+
+      fs.writeJSONSync(
+        path.resolve(config.paths.artifacts, `${target.name}.contract`),
+        abiJSON,
+        { spaces: 2 }
+      );
+
+      delete abiJSON.source.wasm;
+
+      fs.writeJSONSync(
+        path.resolve(config.paths.artifacts, `${target.name}.json`),
+        abiJSON,
+        { spaces: 2 }
+      );
+    }
+    console.log('');
+    console.log(
+      `🎉  Compile successfully! You can find all artifacts at ${chalk.cyan(
+        config.paths.artifacts
+      )}`
+    );
+  }
 );
+
+subtask(TASK_COMPILE_INK, async (_, { run }) => {
+  await run(TASK_COMPILE_INK_PRE);
+
+  const input = await run(TASK_COMPILE_INK_INPUT);
+  const output = await run(TASK_COMPILE_INK_EXEC, { input });
+  await run(TASK_COMPILE_INK_OUTPUT, { input, output });
+});

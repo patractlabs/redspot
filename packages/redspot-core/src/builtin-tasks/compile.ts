@@ -8,9 +8,7 @@ import {
 task(
   TASK_COMPILE,
   'Compiles the entire project, building all artifacts'
-).setAction(async ({ toolchain }: { toolchain?: string }, { config, run }) => {
-  if (config.compiler?.compilerType === 'solang') {
-    return run(TASK_COMPILE_SOLANG);
-  }
-  return run(TASK_COMPILE_INK);
+).setAction(async (_, { config, run }) => {
+  // await run(TASK_COMPILE_INK);
+  await run(TASK_COMPILE_SOLANG);
 });
