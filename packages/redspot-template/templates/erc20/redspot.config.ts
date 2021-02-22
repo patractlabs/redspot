@@ -5,10 +5,6 @@ import '@redspot/gas-reporter';
 
 export default {
   defaultNetwork: 'development',
-  compiler: {
-    compilerType: 'ink',
-    toolchain: 'nightly'
-  },
   networks: {
     development: {
       endpoint: 'ws://127.0.0.1:9944',
