@@ -1,6 +1,6 @@
 {
   "name": "redspot",
-  "version": "0.9.2-1",
+  "version": "0.9.2-2",
   "author": "Patract Labs",
   "main": "internal/lib/redspot-lib.js",
   "types": "internal/lib/redspot-lib.d.ts",
