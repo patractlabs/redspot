@@ -1,12 +1,12 @@
 {
   "name": "@redspot/chai",
-  "version": "0.9.2-2",
+  "version": "0.9.2-3",
   "author": "Patract Labs",
   "main": "index.js",
   "types": "index.d.ts",
   "dependencies": {
     "@polkadot/api": "^3.2.3",
     "@polkadot/api-contract": "^3.2.3",
-    "redspot": "^0.9.2-2"
+    "redspot": "^0.9.2-3"
   }
 }
