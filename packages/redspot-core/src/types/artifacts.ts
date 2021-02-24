@@ -1,10 +1,10 @@
 export type AbiMetadata = {
   metadataVersion: string;
-  wasm: string;
   source: {
     hash: string;
     language: string;
     compiler: string;
+    wasm: string;
   };
   contract: {
     name: string;

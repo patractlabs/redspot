@@ -65,7 +65,7 @@ export async function getContractFactory(
 
   ContractFactory.encodeSalt = env.network.utils.encodeSalt;
 
-  const factory = new ContractFactory(artifact.wasm, abi, api, signer);
+  const factory = new ContractFactory(artifact.source.wasm, abi, api, signer);
 
   factory.gasLimit = env.network.gasLimit;
 
