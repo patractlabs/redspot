@@ -36,6 +36,12 @@ import {
   TransactionParams,
   TransactionResponse
 } from './types';
+import type {
+  DispatchError,
+  DispatchInfo,
+  EventRecord,
+  ExtrinsicStatus
+} from '@polkadot/types/interfaces';
 
 export function formatData(
   registry: Registry,
@@ -114,10 +120,15 @@ function decodeEvents(
   records: SubmittableResult,
   abi: Abi
 ): DecodedEvent[] | undefined {
-  const events = records.filterRecords('contracts', 'ContractExecution');
+  let events: EventRecord[];
+
+  events = records.filterRecords('contracts', 'ContractExecution');
 
   if (!events.length) {
-    return undefined;
+    events = records.filterRecords('contracts', 'ContractEmitted');
+    if (!events.length) {
+      return undefined;
+    }
   }
 
   return events.map((event) => {
