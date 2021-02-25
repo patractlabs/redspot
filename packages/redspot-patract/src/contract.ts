@@ -8,6 +8,7 @@ import { createTypeUnsafe, Raw } from '@polkadot/types';
 import type {
   AccountId,
   ContractExecResult,
+  EventRecord,
   Weight
 } from '@polkadot/types/interfaces';
 import type { AnyJson, CodecArg } from '@polkadot/types/types';
@@ -36,12 +37,6 @@ import {
   TransactionParams,
   TransactionResponse
 } from './types';
-import type {
-  DispatchError,
-  DispatchInfo,
-  EventRecord,
-  ExtrinsicStatus
-} from '@polkadot/types/interfaces';
 
 export function formatData(
   registry: Registry,
