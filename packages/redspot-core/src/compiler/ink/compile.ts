@@ -75,6 +75,39 @@ export async function compile(input: InkInput, verbose?: boolean) {
           `${source.name}.contract`
         )
       };
+    } else if (
+      fs.existsSync(
+        path.resolve(
+          source.targetDirectory,
+          'ink',
+          source.name,
+          `${source.name}.wasm`
+        )
+      ) &&
+      fs.existsSync(
+        path.resolve(
+          source.targetDirectory,
+          'ink',
+          source.name,
+          `${source.name}.contract`
+        )
+      )
+    ) {
+      result = {
+        name: source.name,
+        wasm: path.resolve(
+          source.targetDirectory,
+          'ink',
+          source.name,
+          `${source.name}.wasm`
+        ),
+        contract: path.resolve(
+          source.targetDirectory,
+          'ink',
+          source.name,
+          `${source.name}.contract`
+        )
+      };
     }
 
     if (!result) {

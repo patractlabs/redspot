@@ -19,7 +19,7 @@ import fs from 'fs-extra';
 import path from 'path';
 
 subtask(TASK_COMPILE_SOLANG_PRE, async (_, { config }) => {
-  const isValidEnv = await checkEnv({ version: '0.8.0' });
+  const isValidEnv = await checkEnv({ version: '0.9.1' });
 
   if (!isValidEnv) {
     throw new RedspotError(ERRORS.BUILTIN_TASKS.SOLANG_ENV_ERROR);
