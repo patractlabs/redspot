@@ -5,10 +5,25 @@ import {
   TASK_COMPILE_SOLANG
 } from './task-names';
 
-task(
-  TASK_COMPILE,
-  'Compiles the entire project, building all artifacts'
-).setAction(async (_, { config, run }) => {
-  await run(TASK_COMPILE_INK);
-  await run(TASK_COMPILE_SOLANG);
-});
+task(TASK_COMPILE, 'Compiles the entire project, building all artifacts')
+  .addOptionalVariadicPositionalParam(
+    'testPathPattern',
+    'A glob string that is matched against',
+    []
+  )
+
+  .setAction(
+    async (
+      {
+        testPathPattern
+      }: {
+        testPathPattern: string[];
+      },
+      { config, run }
+    ) => {
+      await run(TASK_COMPILE_INK, { testPathPattern });
+      if (config.contract.solang) {
+        await run(TASK_COMPILE_SOLANG, { testPathPattern });
+      }
+    }
+  );

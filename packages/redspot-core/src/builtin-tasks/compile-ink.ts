@@ -25,11 +25,29 @@ subtask(TASK_COMPILE_INK_PRE, async (_, { config }) => {
   }
 });
 
-subtask(TASK_COMPILE_INK_INPUT, async (_, { config }) => {
-  const input = await getCompilerInput(config.contract.ink);
+subtask(TASK_COMPILE_INK_INPUT)
+  .addOptionalVariadicPositionalParam(
+    'testPathPattern',
+    'A glob string that is matched against',
+    []
+  )
+  .setAction(
+    async (
+      {
+        testPathPattern
+      }: {
+        testPathPattern: string[];
+      },
+      { config }
+    ) => {
+      const input = await getCompilerInput(
+        config.contract.ink,
+        testPathPattern
+      );
 
-  return input;
-});
+      return input;
+    }
+  );
 
 subtask(
   TASK_COMPILE_INK_EXEC,
@@ -78,10 +96,25 @@ subtask(
   }
 );
 
-subtask(TASK_COMPILE_INK, async (_, { run }) => {
-  await run(TASK_COMPILE_INK_PRE);
+subtask(TASK_COMPILE_INK)
+  .addOptionalVariadicPositionalParam(
+    'testPathPattern',
+    'A glob string that is matched against',
+    []
+  )
+  .setAction(
+    async (
+      {
+        testPathPattern
+      }: {
+        testPathPattern: string[];
+      },
+      { run }
+    ) => {
+      await run(TASK_COMPILE_INK_PRE);
 
-  const input = await run(TASK_COMPILE_INK_INPUT);
-  const output = await run(TASK_COMPILE_INK_EXEC, { input });
-  await run(TASK_COMPILE_INK_OUTPUT, { input, output });
-});
+      const input = await run(TASK_COMPILE_INK_INPUT, { testPathPattern });
+      const output = await run(TASK_COMPILE_INK_EXEC, { input });
+      await run(TASK_COMPILE_INK_OUTPUT, { input, output });
+    }
+  );

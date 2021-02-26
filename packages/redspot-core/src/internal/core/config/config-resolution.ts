@@ -104,17 +104,22 @@ function resolveContractConfig(userConfig: RedspotUserConfig) {
   const _defaultInkConfig = cloneDeep(defaultInkConfig);
   const _defaultSolangConfig = cloneDeep(defaultSolangConfig);
 
-  return {
+  const result = {
     ...userConfig.contract,
     ink: {
       ..._defaultInkConfig,
       ...userConfig.contract?.ink
-    },
-    solang: {
-      ..._defaultSolangConfig,
-      ...userConfig.contract?.solang
     }
   };
+
+  if (userConfig.contract.solang) {
+    result.solang = {
+      ..._defaultSolangConfig,
+      ...userConfig.contract.solang
+    };
+  }
+
+  return result;
 }
 
 /**
