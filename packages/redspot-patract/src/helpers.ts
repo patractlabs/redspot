@@ -102,7 +102,7 @@ export function getAbi(env: RuntimeEnvironment, contractName: string) {
     registry.createType('ChainProperties', {
       tokenDecimals: env.network.registry.chainDecimals,
       ss58Format: env.network.registry.chainSS58,
-      tokenSymbol: env.network.registry.chainToken
+      tokenSymbol: env.network.registry.chainTokens
     })
   );
 

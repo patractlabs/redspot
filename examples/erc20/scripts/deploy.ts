@@ -16,18 +16,11 @@ async function run() {
 
   console.log('Balance: ', balance.toHuman());
 
-  const contract = await contractFactory.deployed(
-    'erc20,new',
-    '1000000',
-    'Jupiter Token',
-    'JPT',
-    '10',
-    {
-      gasLimit: '200000000000',
-      value: '10000000000000000',
-      salt: '12312'
-    }
-  );
+  const contract = await contractFactory.deployed('new', '1000000', {
+    gasLimit: '200000000000',
+    value: '10000000000000000',
+    salt: '12312'
+  });
 
   console.log('');
   console.log(

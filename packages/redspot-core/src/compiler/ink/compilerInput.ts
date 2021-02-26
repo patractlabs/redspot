@@ -2,6 +2,7 @@ import { execSync } from 'child_process';
 import globby from 'globby';
 import minimatch from 'minimatch';
 import { dirname } from 'path';
+import log from '../../logger';
 import { InkConfig } from '../../types';
 
 /* eslint-disable camelcase */
@@ -73,15 +74,20 @@ export function getCargoMetadata(cwd: string): CargoMetadata {
   return outputObj;
 }
 
-export async function getCompilerInput(config: InkConfig) {
-  const files = await globby(config.sources, {
-    onlyFiles: true,
-    gitignore: true
-  });
+export async function getCompilerInput(config: InkConfig, patterns?: string[]) {
+  const files = await globby(
+    patterns?.length ? patterns : config.sources || config.sources,
+    {
+      onlyFiles: true,
+      gitignore: true
+    }
+  );
 
   const manifestPaths = files.filter((file) =>
     minimatch(file, 'Cargo.toml', { matchBase: true })
   );
+
+  log.log(`Ink: ${manifestPaths.length} matches`);
 
   const manifests = manifestPaths.map((path) => {
     return getCargoMetadata(dirname(path));

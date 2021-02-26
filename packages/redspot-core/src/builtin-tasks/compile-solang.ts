@@ -26,11 +26,29 @@ subtask(TASK_COMPILE_SOLANG_PRE, async (_, { config }) => {
   }
 });
 
-subtask(TASK_COMPILE_SOLANG_INPUT, async (_, { config }) => {
-  const input = await getCompilerInput(config.contract.ink);
+subtask(TASK_COMPILE_SOLANG_INPUT)
+  .addOptionalVariadicPositionalParam(
+    'testPathPattern',
+    'A glob string that is matched against',
+    []
+  )
+  .setAction(
+    async (
+      {
+        testPathPattern
+      }: {
+        testPathPattern: string[];
+      },
+      { config }
+    ) => {
+      const input = await getCompilerInput(
+        config.contract.solang,
+        testPathPattern
+      );
 
-  return input;
-});
+      return input;
+    }
+  );
 
 subtask(
   TASK_COMPILE_SOLANG_EXEC,
@@ -80,10 +98,25 @@ subtask(
   }
 );
 
-subtask(TASK_COMPILE_SOLANG, async (_, { run }) => {
-  await run(TASK_COMPILE_SOLANG_PRE);
+subtask(TASK_COMPILE_SOLANG)
+  .addOptionalVariadicPositionalParam(
+    'testPathPattern',
+    'A glob string that is matched against',
+    []
+  )
+  .setAction(
+    async (
+      {
+        testPathPattern
+      }: {
+        testPathPattern: string[];
+      },
+      { run }
+    ) => {
+      await run(TASK_COMPILE_SOLANG_PRE);
 
-  const input = await run(TASK_COMPILE_SOLANG_INPUT);
-  const output = await run(TASK_COMPILE_SOLANG_EXEC, { input });
-  await run(TASK_COMPILE_SOLANG_OUTPUT, { input, output });
-});
+      const input = await run(TASK_COMPILE_SOLANG_INPUT, { testPathPattern });
+      const output = await run(TASK_COMPILE_SOLANG_EXEC, { input });
+      await run(TASK_COMPILE_SOLANG_OUTPUT, { input, output });
+    }
+  );

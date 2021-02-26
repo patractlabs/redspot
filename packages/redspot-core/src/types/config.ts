@@ -154,7 +154,7 @@ export interface SolangConfig {
 
 export interface ContractConfig {
   ink: InkConfig;
-  solang: SolangConfig;
+  solang?: SolangConfig;
 }
 
 export interface ContractUserConfig {

@@ -12,13 +12,13 @@ describe('ERC20', () => {
   });
 
   async function setup() {
-    const one = new BN(10).pow(new BN(api.registry.chainDecimals));
+    const one = new BN(10).pow(new BN(api.registry.chainDecimals[0]));
     const signers = await getSigners();
     const Alice = signers[0];
-    const sender = await getRandomSigner(Alice, one.muln(100));
+    const sender = await getRandomSigner(Alice, one.muln(10000));
     const contractFactory = await getContractFactory('erc20', sender);
     const contract = await contractFactory.deploy('new', '1000');
-    const abi = artifacts.readAbi('erc20');
+    const abi = artifacts.readArtifact('erc20');
     const receiver = await getRandomSigner();
 
     return { sender, contractFactory, contract, abi, receiver, Alice, one };
@@ -30,9 +30,8 @@ describe('ERC20', () => {
     expect(result.output).to.equal(1000);
   });
 
-  it.only('Transfer adds amount to destination account', async () => {
+  it('Transfer adds amount to destination account', async () => {
     const { contract, receiver } = await setup();
-    console.log(receiver.address);
     await expect(() =>
       contract.tx.transfer(receiver.address, 7)
     ).to.changeTokenBalance(contract, receiver, 7);
@@ -62,7 +61,7 @@ describe('ERC20', () => {
   it('Can not transfer from empty account', async () => {
     const { contract, Alice, one, sender } = await setup();
 
-    const emptyAccount = await getRandomSigner(Alice, one.muln(10));
+    const emptyAccount = await getRandomSigner(Alice, one.muln(10000));
 
     await expect(
       contract.tx.transfer(sender.address, 7, {

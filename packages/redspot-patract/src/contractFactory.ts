@@ -11,12 +11,13 @@ import { CodecArg } from '@polkadot/types/types';
 import {
   compactAddLength,
   compactStripLength,
+  isFunction,
   isU8a,
   u8aConcat,
   u8aToHex,
   u8aToU8a
 } from '@polkadot/util';
-import { blake2AsU8a, randomAsU8a } from '@polkadot/util-crypto';
+import { blake2AsU8a } from '@polkadot/util-crypto';
 import chalk from 'chalk';
 import log from 'redspot/logger';
 import { RedspotPluginError } from 'redspot/plugins';
@@ -72,22 +73,38 @@ export default class ContractFactory {
     this.signer = signer;
 
     this.populateTransaction = {
-      putCode: this._buildPutCode,
-      instantiate: this._buildInstantiate
+      putCode: this.#buildPutCode,
+      instantiate: this.#buildInstantiate
     };
   }
 
-  _buildPutCode(wasmCode: Uint8Array | string | Buffer) {
+  #buildPutCode = (wasmCode: Uint8Array | string | Buffer) => {
     return this.api.tx.contracts.putCode(wasmCode);
-  }
+  };
 
-  _buildInstantiate(
+  #buildInstantiateWithCode = (
+    wasmCode: Uint8Array | string | Buffer,
+    data: string | Uint8Array | Bytes,
+    endowment: BigNumber,
+    gasLimit: BigNumber,
+    salt?: Uint8Array | string | null
+  ) => {
+    return this.api.tx.contracts.instantiateWithCode(
+      endowment,
+      gasLimit,
+      wasmCode,
+      u8aConcat(data, salt),
+      salt
+    );
+  };
+
+  #buildInstantiate = (
     codeHash: string | Uint8Array | CodeHash,
     data: string | Uint8Array | Bytes,
     endowment: BigNumber,
     gasLimit: BigNumber,
     salt?: Uint8Array | string | null
-  ) {
+  ) => {
     const withSalt = this.api.tx.contracts.instantiate.meta.args.length === 5;
 
     const tx = withSalt
@@ -103,21 +120,19 @@ export default class ContractFactory {
         this.api.tx.contracts.instantiate(endowment, gasLimit, codeHash, data);
 
     return tx;
-  }
+  };
 
   /**
    * Uploading wasm . wasm will read from a local file
    *
    * @param overrides CallOverrides
    */
-  async putCode(overrides?: Partial<CallOverrides>): Promise<CodeHash> {
+  #putCode = async (overrides?: Partial<CallOverrides>): Promise<CodeHash> => {
     const options = { ...overrides };
 
-    const wasmHash = blake2AsU8a(this.wasm);
+    const wasmHash = this.abi.project.source.hash.toString();
 
-    const codeStorage = await this.api.query.contracts.codeStorage(
-      blake2AsU8a(this.wasm)
-    );
+    const codeStorage = await this.api.query.contracts.codeStorage(wasmHash);
 
     if (!codeStorage.isNone) {
       const hash = this.api.registry.createType('CodeHash', wasmHash);
@@ -138,7 +153,7 @@ export default class ContractFactory {
       wasmCode.replace(/^(\w{32})(\w*)(\w{30})$/g, '$1......$3')
     );
 
-    const tx = this._buildPutCode(wasmCode);
+    const tx = this.#buildPutCode(wasmCode);
 
     const status = await buildTx(this.api.registry, tx, {
       signer: this.signer,
@@ -171,7 +186,7 @@ export default class ContractFactory {
     log.success(`${contractName} codeHash: ${chalk.blue(codeHash.toHex())}`);
 
     return codeHash;
-  }
+  };
 
   /**
    * Instantiated Contracts
@@ -181,11 +196,11 @@ export default class ContractFactory {
    * @param args Parameters of the constructor
    * @returns Contract Address
    */
-  async instantiate(
+  #instantiate = async (
     codeHash: string | Uint8Array | CodeHash,
     constructorOrId: ConstructorOrId,
     ...args: TransactionParams
-  ): Promise<AccountId> {
+  ): Promise<AccountId> => {
     const { params, overrides } = this._parseArgs(constructorOrId, ...args);
 
     const contractName = this.abi.project.contract.name;
@@ -211,7 +226,7 @@ export default class ContractFactory {
     delete overrides.dest;
     delete overrides.salt;
 
-    const tx = this._buildInstantiate(
+    const tx = this.#buildInstantiate(
       codeHash,
       encoded,
       endowment,
@@ -273,7 +288,105 @@ export default class ContractFactory {
     log.success(`${contractName} address: ${chalk.blue(address.toString())}`);
 
     return address;
-  }
+  };
+
+  /**
+   * instantiateWithCode
+   *
+   * @param constructorOrId Constructor name or constructor id
+   * @param args Parameters of the constructor
+   * @returns Contract Address
+   */
+  #instantiateWithCode = async (
+    constructorOrId: ConstructorOrId,
+    ...args: TransactionParams
+  ): Promise<AccountId> => {
+    const { params, overrides } = this._parseArgs(constructorOrId, ...args);
+
+    const contractName = this.abi.project.contract.name;
+    const wasmCode = u8aToHex(this.wasm);
+
+    const constructor = this.abi.findConstructor(constructorOrId);
+    const encoded = constructor.toU8a(params);
+    const mindeposit = this.api.consts.balances.existentialDeposit
+      .add(this.api.consts.contracts.tombstoneDeposit)
+      .muln(10);
+    const endowment = overrides.value || mindeposit;
+    const salt = await ContractFactory.encodeSalt(overrides.salt, this.signer);
+    const maximumBlockWeight = this.api.consts.system.blockWeights
+      ? this.api.consts.system.blockWeights.maxBlock
+      : (this.api.consts.system.maximumBlockWeight as Weight);
+
+    const gasLimit =
+      overrides.gasLimit ||
+      this.gasLimit ||
+      maximumBlockWeight.muln(2).divn(10);
+
+    delete overrides.value;
+    delete overrides.gasLimit;
+    delete overrides.dest;
+    delete overrides.salt;
+
+    const tx = this.#buildInstantiateWithCode(
+      wasmCode,
+      encoded,
+      endowment,
+      gasLimit,
+      salt
+    );
+
+    log.info('');
+    log.info(chalk.magenta(`===== InstantiateWithCode ${contractName} =====`));
+    log.info('Endowment: ', endowment.toString());
+    log.info('GasLimit: ', gasLimit.toString());
+    log.info('CodeHash: ', this.abi.project.source.hash.toString());
+    log.info('InputData: ', u8aToHex(encoded));
+    log.info('Salt: ', salt.toString());
+
+    const status = await buildTx(this.api.registry, tx, {
+      signer: this.signer,
+      ...overrides
+    }).catch((error) => {
+      log.error(error.error || error);
+      throw new RedspotPluginError(pluginName, 'Instantiation failed');
+    });
+
+    const record = status.result.findRecord('contracts', 'Instantiated');
+    const depositRecord = status.result.findRecord('balances', 'Deposit');
+    const successRecord = status.result.findRecord(
+      'system',
+      'ExtrinsicSuccess'
+    );
+
+    const address = record.event.data[1] as AccountId;
+
+    if (!address) {
+      throw new RedspotPluginError(
+        pluginName,
+        `The instantiation contract failed`
+      );
+    }
+
+    if (depositRecord && depositRecord?.event?.data?.[1]) {
+      log.success(
+        `Transaction fees: ${chalk.yellow(
+          depositRecord.event.data[1]?.toString()
+        )}`
+      );
+    }
+
+    if (successRecord && (successRecord?.event?.data?.[0] as any).weight) {
+      log.success(
+        `The gas consumption of ${contractName} instantiate: ${chalk.yellow(
+          (successRecord?.event?.data?.[0] as any).weight.toString()
+        )}`
+      );
+    }
+
+    log.success(`${contractName} address: ${chalk.blue(address.toString())}`);
+
+    return address;
+  };
 
   /**
    * Upload wasm and instantiate it.
@@ -288,13 +401,22 @@ export default class ContractFactory {
   ): Promise<Contract> {
     const { params, overrides } = this._parseArgs(constructorOrId, ...args);
 
-    const codeHash = await this.putCode(overrides);
-    const contractAddress = await this.instantiate(
-      codeHash,
-      constructorOrId,
-      ...params,
-      overrides
-    );
+    let contractAddress: AccountId;
+    if (!isFunction(this.api.tx.contracts.instantiateWithCode)) {
+      const codeHash = await this.#putCode(overrides);
+      contractAddress = await this.#instantiate(
+        codeHash,
+        constructorOrId,
+        ...params,
+        overrides
+      );
+    } else {
+      contractAddress = await this.#instantiateWithCode(
+        constructorOrId,
+        ...params,
+        overrides
+      );
+    }
 
     const contract = new Contract(
       contractAddress,
