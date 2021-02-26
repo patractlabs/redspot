@@ -27,22 +27,22 @@ subtask(TASK_COMPILE_INK_PRE, async (_, { config }) => {
 
 subtask(TASK_COMPILE_INK_INPUT)
   .addOptionalVariadicPositionalParam(
-    'testPathPattern',
+    'compilePathPattern',
     'A glob string that is matched against',
     []
   )
   .setAction(
     async (
       {
-        testPathPattern
+        compilePathPattern
       }: {
-        testPathPattern: string[];
+        compilePathPattern: string[];
       },
       { config }
     ) => {
       const input = await getCompilerInput(
         config.contract.ink,
-        testPathPattern
+        compilePathPattern
       );
 
       return input;
@@ -98,22 +98,22 @@ subtask(
 
 subtask(TASK_COMPILE_INK)
   .addOptionalVariadicPositionalParam(
-    'testPathPattern',
+    'compilePathPattern',
     'A glob string that is matched against',
     []
   )
   .setAction(
     async (
       {
-        testPathPattern
+        compilePathPattern
       }: {
-        testPathPattern: string[];
+        compilePathPattern: string[];
       },
       { run }
     ) => {
       await run(TASK_COMPILE_INK_PRE);
 
-      const input = await run(TASK_COMPILE_INK_INPUT, { testPathPattern });
+      const input = await run(TASK_COMPILE_INK_INPUT, { compilePathPattern });
       const output = await run(TASK_COMPILE_INK_EXEC, { input });
       await run(TASK_COMPILE_INK_OUTPUT, { input, output });
     }

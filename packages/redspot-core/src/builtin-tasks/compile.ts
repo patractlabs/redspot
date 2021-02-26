@@ -7,7 +7,7 @@ import {
 
 task(TASK_COMPILE, 'Compiles the entire project, building all artifacts')
   .addOptionalVariadicPositionalParam(
-    'testPathPattern',
+    'compilePathPattern',
     'A glob string that is matched against',
     []
   )
@@ -15,15 +15,15 @@ task(TASK_COMPILE, 'Compiles the entire project, building all artifacts')
   .setAction(
     async (
       {
-        testPathPattern
+        compilePathPattern
       }: {
-        testPathPattern: string[];
+        compilePathPattern: string[];
       },
       { config, run }
     ) => {
-      await run(TASK_COMPILE_INK, { testPathPattern });
+      await run(TASK_COMPILE_INK, { compilePathPattern });
       if (config.contract.solang) {
-        await run(TASK_COMPILE_SOLANG, { testPathPattern });
+        await run(TASK_COMPILE_SOLANG, { compilePathPattern });
       }
     }
   );
