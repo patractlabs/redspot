@@ -1839,7 +1839,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/api-contract@npm:^3.9.3":
+"@polkadot/api-contract@npm:^3.10.2":
   version: 3.10.2
   resolution: "@polkadot/api-contract@npm:3.10.2"
   dependencies:
@@ -1869,7 +1869,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/api@npm:3.10.2, @polkadot/api@npm:^3.9.3":
+"@polkadot/api@npm:3.10.2, @polkadot/api@npm:^3.10.2":
   version: 3.10.2
   resolution: "@polkadot/api@npm:3.10.2"
   dependencies:
@@ -2137,8 +2137,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@redspot/chai@workspace:packages/redspot-chai"
   dependencies:
-    "@polkadot/api": ^3.9.3
-    "@polkadot/api-contract": ^3.9.3
+    "@polkadot/api": ^3.10.2
+    "@polkadot/api-contract": ^3.10.2
     redspot: ^0.10.1
   languageName: unknown
   linkType: soft
@@ -2164,7 +2164,7 @@ __metadata:
   dependencies:
     redspot: ^0.10.1
   peerDependencies:
-    "@polkadot/api": ^3.9.3
+    "@polkadot/api": ^3.10.2
   languageName: unknown
   linkType: soft
 
@@ -2172,8 +2172,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@redspot/patract@workspace:packages/redspot-patract"
   dependencies:
-    "@polkadot/api": ^3.9.3
-    "@polkadot/api-contract": ^3.9.3
+    "@polkadot/api": ^3.10.2
+    "@polkadot/api-contract": ^3.10.2
     redspot: ^0.10.1
   languageName: unknown
   linkType: soft
@@ -10564,7 +10564,7 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "redspot@workspace:packages/redspot-core"
   dependencies:
-    "@polkadot/api": ^3.9.3
+    "@polkadot/api": ^3.10.2
     "@types/mocha": ^5.2.6
     abort-controller: ^3.0.0
     bn.js: ^5.1.3

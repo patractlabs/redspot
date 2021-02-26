@@ -2,10 +2,14 @@
   "name": "erc20",
   "version": "0.1.0",
   "private": true,
+  "resolutions": {
+    "@polkadot/api": "^3.10.2",
+    "@polkadot/api-contract": "^3.10.2"
+  },
   "dependencies": {
-    "@redspot/chai": "^0.9.1",
-    "@redspot/gas-reporter": "^0.9.1",
-    "@redspot/patract": "^0.9.1",
+    "@redspot/chai": "^0.10.1",
+    "@redspot/gas-reporter": "^0.10.1",
+    "@redspot/patract": "^0.10.1",
     "@types/chai": "^4.2.14",
     "@types/mocha": "^8.0.3",
     "chai": "^4.2.0",
