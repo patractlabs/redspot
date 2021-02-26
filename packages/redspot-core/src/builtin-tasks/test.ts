@@ -59,20 +59,32 @@ task(TASK_TEST, 'Runs mocha tests')
     'An optional list of files to test',
     []
   )
+  .addParam(
+    'sourcePattern',
+    'A glob string that is matched against',
+    undefined,
+    undefined,
+    true
+  )
   .addFlag('noCompile', "Don't compile before running this task")
   .setAction(
     async (
       {
         noCompile,
-        testFiles
+        testFiles,
+        sourcePattern
       }: {
         testFiles: string[];
         noCompile: boolean;
+        sourcePattern: string;
       },
       { network, run }
     ) => {
       if (!noCompile) {
-        await run(TASK_COMPILE, { quiet: true });
+        await run(TASK_COMPILE, {
+          quiet: true,
+          sourcePattern: [].concat(sourcePattern)
+        });
       }
 
       const files = await run(TASK_TEST_GET_TEST_FILES, { testFiles });
