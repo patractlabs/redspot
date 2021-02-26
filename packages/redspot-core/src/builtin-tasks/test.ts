@@ -83,7 +83,7 @@ task(TASK_TEST, 'Runs mocha tests')
       if (!noCompile) {
         await run(TASK_COMPILE, {
           quiet: true,
-          sourcePattern: [].concat(sourcePattern)
+          sourcePattern: sourcePattern ? [].concat(sourcePattern) : []
         });
       }
 
