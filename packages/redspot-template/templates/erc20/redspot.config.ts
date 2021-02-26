@@ -5,6 +5,12 @@ import '@redspot/gas-reporter';
 
 export default {
   defaultNetwork: 'development',
+  contract: {
+    ink: {
+      toolchain: 'nightly',
+      sources: ['contracts/**/*']
+    }
+  },
   networks: {
     development: {
       endpoint: 'ws://127.0.0.1:9944',
