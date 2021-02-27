@@ -191,20 +191,18 @@ export default class ContractFactory {
   /**
    * Instantiated Contracts
    *
-   * @param codeHash wasm hash
    * @param constructorOrId Constructor name or constructor id
    * @param args Parameters of the constructor
    * @returns Contract Address
    */
-  #instantiate = async (
-    codeHash: string | Uint8Array | CodeHash,
+  public instantiate = async (
     constructorOrId: ConstructorOrId,
     ...args: TransactionParams
   ): Promise<AccountId> => {
     const { params, overrides } = this._parseArgs(constructorOrId, ...args);
 
     const contractName = this.abi.project.contract.name;
-
+    const codeHash = this.abi.project.source.hash.toHex();
     const constructor = this.abi.findConstructor(constructorOrId);
     const encoded = constructor.toU8a(params);
     const mindeposit = this.api.consts.balances.existentialDeposit
@@ -238,10 +236,7 @@ export default class ContractFactory {
     log.info(chalk.magenta(`===== Instantiate ${contractName} =====`));
     log.info('Endowment: ', endowment.toString());
     log.info('GasLimit: ', gasLimit.toString());
-    log.info(
-      'CodeHash: ',
-      isU8a(codeHash) ? u8aToHex(codeHash) : codeHash.toString()
-    );
+    log.info('CodeHash: ', codeHash.toString());
     log.info('InputData: ', u8aToHex(encoded));
     log.info('Salt: ', salt.toString());
 
@@ -297,7 +292,7 @@ export default class ContractFactory {
    * @param args Parameters of the constructor
    * @returns Contract Address
    */
-  #instantiateWithCode = async (
+  public instantiateWithCode = async (
     constructorOrId: ConstructorOrId,
     ...args: TransactionParams
   ): Promise<AccountId> => {
@@ -403,15 +398,14 @@ export default class ContractFactory {
 
     let contractAddress: AccountId;
     if (!isFunction(this.api.tx.contracts.instantiateWithCode)) {
-      const codeHash = await this.#putCode(overrides);
-      contractAddress = await this.#instantiate(
-        codeHash,
+      await this.#putCode(overrides);
+      contractAddress = await this.instantiate(
         constructorOrId,
         ...params,
         overrides
       );
     } else {
-      contractAddress = await this.#instantiateWithCode(
+      contractAddress = await this.instantiateWithCode(
         constructorOrId,
         ...params,
         overrides
