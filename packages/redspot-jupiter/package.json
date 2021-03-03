@@ -1,6 +1,6 @@
 {
   "name": "@redspot/jupiter",
-  "version": "0.10.2-1",
+  "version": "0.10.2-2",
   "author": "Patract Labs",
   "main": "index.js",
   "types": "index.d.ts",
@@ -8,6 +8,6 @@
     "@polkadot/api": "^3.10.2"
   },
   "dependencies": {
-    "redspot": "^0.10.2-1"
+    "redspot": "^0.10.2-2"
   }
 }
