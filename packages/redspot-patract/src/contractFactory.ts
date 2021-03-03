@@ -130,7 +130,7 @@ export default class ContractFactory {
   #putCode = async (overrides?: Partial<CallOverrides>): Promise<CodeHash> => {
     const options = { ...overrides };
 
-    const wasmHash = this.abi.project.source.hash.toString();
+    const wasmHash = (this.abi.json as any).source.hash;
 
     const codeStorage = await this.api.query.contracts.codeStorage(wasmHash);
 
@@ -202,7 +202,7 @@ export default class ContractFactory {
     const { params, overrides } = this._parseArgs(constructorOrId, ...args);
 
     const contractName = this.abi.project.contract.name;
-    const codeHash = this.abi.project.source.hash.toHex();
+    const codeHash = (this.abi.json as any).source.hash;
     const constructor = this.abi.findConstructor(constructorOrId);
     const encoded = constructor.toU8a(params);
     const mindeposit = this.api.consts.balances.existentialDeposit
@@ -334,7 +334,7 @@ export default class ContractFactory {
     log.info(chalk.magenta(`===== InstantiateWithCode ${contractName} =====`));
     log.info('Endowment: ', endowment.toString());
     log.info('GasLimit: ', gasLimit.toString());
-    log.info('CodeHash: ', this.abi.project.source.hash.toString());
+    log.info('CodeHash: ', (this.abi.json as any).source.hash);
     log.info('InputData: ', u8aToHex(encoded));
     log.info('Salt: ', salt.toString());
 
