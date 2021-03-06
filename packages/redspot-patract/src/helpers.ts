@@ -49,6 +49,55 @@ export async function getRandomSigner(
   return newAccount;
 }
 
+export async function getRandomSignerWithMnemonic(
+  env: RuntimeEnvironment,
+  from?: Signer,
+  amount?: BN | number | string | BigInt
+): Promise<{
+  signer: Signer;
+  mnemonic: string;
+}> {
+  await env.network.api.isReady;
+  const api = env.network.api;
+  const mnemonic = mnemonicGenerate();
+  const keyringPair = env.network.keyring.addFromMnemonic(mnemonic);
+  const newAccount = env.network.createSigner(keyringPair);
+
+  log.info(`Generate random signer: ${chalk.cyan(keyringPair.address)}`);
+  log.info(`Mnemonic: ${chalk.cyan(mnemonic)}`);
+  if (from && amount) {
+    try {
+      const result = await buildTx(
+        api.registry,
+        api.tx.balances.transfer(keyringPair.address, amount),
+        {
+          signer: from
+        }
+      );
+    } catch (error) {
+      log.error(`Transfer failed`);
+      log.error(error.error);
+      throw error;
+    }
+
+    log.info(
+      `Transfer ${chalk.yellow(amount.toString())} from ${chalk.cyan(
+        from.address.toString()
+      )} to ${chalk.cyan(keyringPair.address)}`
+    );
+
+    return {
+      signer: newAccount,
+      mnemonic: mnemonic
+    };
+  }
+
+  return {
+    signer: newAccount,
+    mnemonic: mnemonic
+  };
+}
+
 export async function getContractFactory(
   env: RuntimeEnvironment,
   contractName: string,

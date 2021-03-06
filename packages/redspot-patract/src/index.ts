@@ -7,7 +7,8 @@ import {
   getAbi,
   getContractAt,
   getContractFactory,
-  getRandomSigner
+  getRandomSigner,
+  getRandomSignerWithMnemonic
 } from './helpers';
 import './type-extensions';
 
@@ -21,7 +22,8 @@ extendEnvironment((env) => {
       ContractFactory: ContractFactory,
       getContractFactory: getContractFactory.bind(null, env),
       getContractAt: getContractAt.bind(null, env),
-      getRandomSigner: getRandomSigner.bind(null, env)
+      getRandomSigner: getRandomSigner.bind(null, env),
+      getRandomSignerWithMnemonic: getRandomSignerWithMnemonic.bind(null, env)
     };
   });
 });
