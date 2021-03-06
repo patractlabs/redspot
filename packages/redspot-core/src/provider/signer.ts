@@ -71,7 +71,7 @@ export class Signer implements ISigner {
     return Promise.resolve(this.pair.address);
   }
 
-  public setKeyPair(pair: KeyringPair) {
+  public setKeyPair(pair: LocalKeyringPair) {
     this.pair = pair;
   }
 }

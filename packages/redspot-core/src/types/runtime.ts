@@ -5,7 +5,7 @@ import { NetworkConfig, RedspotConfig } from './config';
 import {
   ApiPromise,
   Keyring,
-  KeyringPair,
+  LocalKeyringPair,
   Registry,
   Signer,
   WsProvider
@@ -218,7 +218,7 @@ export interface Network {
   registry: Registry;
   keyring: Keyring;
   getSigners(): Promise<Signer[]>;
-  createSigner(pair: KeyringPair): Signer;
+  createSigner(pair: LocalKeyringPair): Signer;
   gasLimit?: BN;
   explorerUrl?: string;
   utils: {

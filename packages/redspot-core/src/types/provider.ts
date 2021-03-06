@@ -69,5 +69,5 @@ export type ProviderInterfaceEmitCb = (value?: any) => any;
 export interface Signer extends PolkadotSigner {
   address: string;
   api: ApiPromise;
-  pair: LocalKeyringPair | PolkadotKeyringPair;
+  pair: LocalKeyringPair;
 }
