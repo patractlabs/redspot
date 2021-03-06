@@ -1,6 +1,5 @@
 import { ApiPromise } from './api-promise';
 import { Keyring } from '@polkadot/keyring';
-import type { KeyringPair } from '@polkadot/keyring/types';
 import { bnToBn } from '@polkadot/util';
 import { RedspotError } from '../internal/core/errors';
 import { ERRORS } from '../internal/core/errors-list';
@@ -14,6 +13,9 @@ import {
 import { Signer } from './signer';
 import { WsProvider } from './ws-provider';
 import { encodeSalt } from './utils';
+import log from '../logger';
+import type { LocalKeyringPair } from '../types';
+import type { KeyringPair } from '@polkadot/keyring/types';
 
 export function createProvider(networkConfig: RedspotNetworkUserConfig) {
   return new WsProvider(networkConfig.endpoint, networkConfig.httpHeaders);
@@ -34,37 +36,6 @@ export function createApi(
   });
 
   return api;
-}
-
-export async function getSigners(api: ApiPromise) {
-  return this.accounts.map((account: any) => {
-    let pair: KeyringPair;
-    if (typeof account === 'object') {
-      try {
-        pair = this.keyring.addPair(account);
-
-        pair.lock = (): void => {};
-      } catch (error) {
-        console.log(error.message);
-        throw new RedspotError(ERRORS.GENERAL.BAD_KEYPAIR);
-      }
-    } else {
-      try {
-        const meta = {
-          name: account.replace('//', '_').toLowerCase()
-        };
-
-        pair = this.keyring.addFromUri(account, meta);
-
-        pair.lock = (): void => {};
-      } catch (error) {
-        console.log(error.message);
-        throw new RedspotError(ERRORS.GENERAL.BAD_SURI, { uri: account });
-      }
-    }
-
-    return new Signer(pair, api);
-  });
 }
 
 export function createSigner(api: ApiPromise, pair: KeyringPair) {
@@ -115,14 +86,14 @@ export function createNetwork(
       await api.isReady;
 
       return (networkConfig.accounts || defaultAccounts).map((account: any) => {
-        let pair: KeyringPair;
+        let pair: KeyringPair | LocalKeyringPair;
         if (typeof account === 'object') {
           try {
             pair = keyring.addPair(account);
 
             pair.lock = (): void => {};
           } catch (error) {
-            console.log(error.message);
+            log.error(error.message);
             throw new RedspotError(ERRORS.GENERAL.BAD_KEYPAIR);
           }
         } else {
@@ -132,10 +103,11 @@ export function createNetwork(
             };
 
             pair = keyring.addFromUri(account, meta);
+            (pair as LocalKeyringPair).suri = account;
 
             pair.lock = (): void => {};
           } catch (error) {
-            console.log(error.message);
+            log.error(error.message);
             throw new RedspotError(ERRORS.GENERAL.BAD_SURI, { uri: account });
           }
         }

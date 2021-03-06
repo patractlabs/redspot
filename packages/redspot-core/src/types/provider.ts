@@ -9,7 +9,9 @@ import type { Registry as PolkadotRegistry } from '@polkadot/types/types';
 export interface Keyring extends PolkadotKeyring {}
 
 // eslint-disable-next-line  @typescript-eslint/no-empty-interface
-export interface KeyringPair extends PolkadotKeyringPair {}
+export interface LocalKeyringPair extends PolkadotKeyringPair {
+  suri?: string;
+}
 
 // eslint-disable-next-line  @typescript-eslint/no-empty-interface
 export interface ApiPromise extends PolkadotApiPromise {}
@@ -67,5 +69,5 @@ export type ProviderInterfaceEmitCb = (value?: any) => any;
 export interface Signer extends PolkadotSigner {
   address: string;
   api: ApiPromise;
-  pair: KeyringPair;
+  pair: LocalKeyringPair | PolkadotKeyringPair;
 }
