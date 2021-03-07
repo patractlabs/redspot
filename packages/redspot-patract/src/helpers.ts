@@ -4,7 +4,11 @@ import { mnemonicGenerate } from '@polkadot/util-crypto';
 import BN from 'bn.js';
 import chalk from 'chalk';
 import log from 'redspot/logger';
-import type { RuntimeEnvironment, Signer } from 'redspot/types';
+import type {
+  RuntimeEnvironment,
+  Signer,
+  LocalKeyringPair
+} from 'redspot/types';
 import { buildTx } from './buildTx';
 import Contract from './contract';
 import ContractFactory from './contractFactory';
@@ -17,7 +21,9 @@ export async function getRandomSigner(
   await env.network.api.isReady;
   const api = env.network.api;
   const mnemonic = mnemonicGenerate();
-  const keyringPair = env.network.keyring.addFromMnemonic(mnemonic);
+  const keyringPair = env.network.keyring.addFromUri(mnemonic);
+  (keyringPair as LocalKeyringPair).suri = mnemonic;
+
   const newAccount = env.network.createSigner(keyringPair);
 
   log.info(`Generate random signer: ${chalk.cyan(keyringPair.address)}`);

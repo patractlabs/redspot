@@ -1,8 +1,7 @@
 import { SignerResult } from '@polkadot/api/types';
 import type { SignOptions } from '@polkadot/keyring/types';
-import { KeyringPair } from '@polkadot/keyring/types';
 import { SignerPayloadJSON } from '@polkadot/types/types';
-import { ApiPromise, Signer as ISigner } from '../types';
+import type { LocalKeyringPair, ApiPromise, Signer as ISigner } from '../types';
 
 let id = 0;
 
@@ -15,7 +14,7 @@ export class Signer implements ISigner {
    * @param pair An instantiation of keyringpair
    * @param api ApiPromise
    */
-  constructor(public pair: KeyringPair, public readonly api: ApiPromise) {}
+  constructor(public pair: LocalKeyringPair, public readonly api: ApiPromise) {}
 
   /**
    * @description The Account address
@@ -72,7 +71,7 @@ export class Signer implements ISigner {
     return Promise.resolve(this.pair.address);
   }
 
-  public setKeyPair(pair: KeyringPair) {
+  public setKeyPair(pair: LocalKeyringPair) {
     this.pair = pair;
   }
 }
