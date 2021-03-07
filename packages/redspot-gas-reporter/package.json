@@ -1,6 +1,6 @@
 {
   "name": "@redspot/gas-reporter",
-  "version": "0.10.2-2",
+  "version": "0.10.2-3",
   "author": "Patract Labs",
   "main": "index.js",
   "types": "index.d.ts",
@@ -12,7 +12,7 @@
     "colors": "^1.4.0",
     "deasync": "^0.1.21",
     "lodash": "^4.17.20",
-    "redspot": "^0.10.2-2",
+    "redspot": "^0.10.2-3",
     "sync-request": "^6.1.0"
   }
 }
