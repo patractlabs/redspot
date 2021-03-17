@@ -62,7 +62,7 @@ export const REDSPOT_PARAM_DEFINITIONS: RedspotParamDefinitions = {
     defaultValue: '2',
     description: 'Set log levels 1-5',
     type: types.string,
-    isFlag: true,
+    isFlag: false,
     isOptional: true,
     isVariadic: false
   },
