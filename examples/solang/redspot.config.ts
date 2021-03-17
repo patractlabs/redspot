@@ -8,10 +8,7 @@ export default {
   networks: {
     development: {
       endpoint: 'ws://127.0.0.1:9944',
-      types: {
-        Address: 'AccountId',
-        LookupSource: 'AccountId'
-      },
+      types: {},
       gasLimit: '400000000000',
       explorerUrl: 'https://polkadot.js.org/apps/#/explorer/query/'
     },
