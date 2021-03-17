@@ -1,21 +1,20 @@
-import { ApiPromise } from './api-promise';
-import { Keyring } from '@polkadot/keyring';
+import type { KeyringPair } from '@polkadot/keyring/types';
 import { bnToBn } from '@polkadot/util';
 import { RedspotError } from '../internal/core/errors';
 import { ERRORS } from '../internal/core/errors-list';
 import { lazyObject } from '../internal/util/lazy';
+import log from '../logger';
+import type { LocalKeyringPair } from '../types';
 import {
   ApiPromise as IApiPromise,
   Network,
   NetworkConfig,
   RedspotNetworkUserConfig
 } from '../types';
+import { ApiPromise, keyring } from './api-promise';
 import { Signer } from './signer';
-import { WsProvider } from './ws-provider';
 import { encodeSalt } from './utils';
-import log from '../logger';
-import type { LocalKeyringPair } from '../types';
-import type { KeyringPair } from '@polkadot/keyring/types';
+import { WsProvider } from './ws-provider';
 
 export function createProvider(networkConfig: RedspotNetworkUserConfig) {
   return new WsProvider(networkConfig.endpoint, networkConfig.httpHeaders);
@@ -62,10 +61,6 @@ export function createNetwork(
 
   const explorerUrl = networkConfig.explorerUrl;
 
-  const keyring = new Keyring({
-    type: 'sr25519'
-  });
-
   return {
     name: networkName,
     config: networkConfig,
@@ -87,7 +82,7 @@ export function createNetwork(
 
       return (networkConfig.accounts || defaultAccounts).map((account: any) => {
         let pair: KeyringPair | LocalKeyringPair;
-        if (typeof account === 'object') {
+        if (typeof account === 'object' && account.sign) {
           try {
             pair = keyring.addPair(account);
 
