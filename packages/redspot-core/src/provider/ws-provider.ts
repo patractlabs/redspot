@@ -161,7 +161,14 @@ export class WsProvider implements IWsProvider {
               this._endpoints[this._endpointIndex],
               undefined,
               undefined,
-              this._headers
+              this._headers,
+              undefined,
+              {
+                // default: true
+                fragmentOutgoingMessages: true,
+                // default: 16K
+                fragmentationThreshold: 256 * 1024
+              }
             );
 
       this._websocket.onclose = this._onSocketClose;
