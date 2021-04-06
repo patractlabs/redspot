@@ -167,7 +167,10 @@ export class TransactionWatcher {
           const result = await this.#provider.send('contracts_call', [
             {
               origin: tx.signer,
-              dest: tx.args.dest,
+              dest:
+                typeof tx.args.dest === 'string'
+                  ? tx.args.dest
+                  : tx.args.dest.id,
               value: tx.args.value,
               gasLimit: tx.args.gas_limit,
               inputData: tx.args.data
