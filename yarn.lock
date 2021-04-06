@@ -2153,8 +2153,6 @@ __metadata:
     lodash: ^4.17.20
     redspot: ^0.10.2-7
     sync-request: ^6.1.0
-  peerDependencies:
-    "@polkadot/api": "*"
   languageName: unknown
   linkType: soft
 
@@ -2163,8 +2161,6 @@ __metadata:
   resolution: "@redspot/jupiter@workspace:packages/redspot-jupiter"
   dependencies:
     redspot: ^0.10.2-7
-  peerDependencies:
-    "@polkadot/api": ^3.10.2
   languageName: unknown
   linkType: soft
 
