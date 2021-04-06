@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "resolutions": {
-    "@polkadot/api": "^3.10.2",
-    "@polkadot/api-contract": "^3.10.2"
+    "@polkadot/api": "^4.4.1",
+    "@polkadot/api-contract": "^4.4.1"
   },
   "dependencies": {
     "@redspot/chai": "^0.10.1",
