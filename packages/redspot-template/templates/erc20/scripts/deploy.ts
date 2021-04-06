@@ -18,8 +18,7 @@ async function run() {
 
   const contract = await contractFactory.deployed('new', '1000000', {
     gasLimit: '200000000000',
-    value: '10000000000000000',
-    salt: '12312'
+    value: '100000000000'
   });
 
   console.log('');
