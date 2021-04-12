@@ -5,11 +5,8 @@ export function getCargoContractVersion(): string | null {
   try {
     const versionData = execSync('cargo contract -V');
 
-    const [version]: string[] = versionData
-      .toString()
-      .split(/\s/)[1]
-      ?.trim()
-      .split('-');
+    const [version]: string[] =
+      versionData.toString().split(/\s/)[1]?.trim().split('-') || [];
 
     return semver.valid(version);
   } catch (error) {
