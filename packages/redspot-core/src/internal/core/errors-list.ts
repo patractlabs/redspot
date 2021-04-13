@@ -826,6 +826,13 @@ or go to [solang](https://solang.readthedocs.io/en/latest/installing.html) to le
       title: 'Ink not found arifacts',
       description: `If you think this is a bug in Redspot, please report it here: https://github.com/patractlabs/redspot/issues/new`,
       shouldBeReported: false
+    },
+    INK_DUPLICATE_NAME: {
+      number: 611,
+      message: `The contract names of %path1% and %path2% conflict.`,
+      title: 'Ink duplicate contract name',
+      description: `Rename contract name in Cargo.toml to fix this.`,
+      shouldBeReported: false
     }
   },
   ARTIFACTS: {

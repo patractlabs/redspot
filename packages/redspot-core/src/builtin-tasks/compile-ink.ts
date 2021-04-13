@@ -67,7 +67,16 @@ subtask(
 
     fs.ensureDirSync(config.paths.artifacts);
 
+    const names: string[] = [];
+    const paths: string[] = [];
     for (const target of output) {
+      if (names.includes(target.name)) {
+        throw new RedspotError(ERRORS.BUILTIN_TASKS.INK_DUPLICATE_NAME, {
+          path1: paths[names.indexOf(target.name)],
+          path2: target.contract
+        });
+      }
+
       const abiJSON = fs.readJSONSync(target.contract);
 
       fs.writeJSONSync(
@@ -83,6 +92,9 @@ subtask(
         abiJSON,
         { spaces: 2 }
       );
+
+      names.push(target.name);
+      paths.push(target.contract);
     }
     console.log('');
     console.log(
