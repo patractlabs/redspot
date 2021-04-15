@@ -1742,9 +1742,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@patract/dev@npm:^0.5.9":
-  version: 0.5.9
-  resolution: "@patract/dev@npm:0.5.9"
+"@patract/dev@npm:^0.5.19":
+  version: 0.5.19
+  resolution: "@patract/dev@npm:0.5.19"
   dependencies:
     "@babel/cli": ^7.12.1
     "@babel/core": ^7.12.3
@@ -1809,7 +1809,7 @@ __metadata:
     typedoc: ^0.19.2
     typedoc-plugin-markdown: ^3.0.11
     typedoc-plugin-no-inherit: ^1.2.0
-    typescript: ^4.0.5
+    typescript: ^4.2.4
     yargs: ^16.1.0
   bin:
     polkadot-ci-ghact-build: scripts/polkadot-ci-ghact-build.js
@@ -1835,7 +1835,7 @@ __metadata:
     polkadot-exec-vuepress: scripts/polkadot-exec-vuepress.js
     polkadot-exec-webpack: scripts/polkadot-exec-webpack.js
     redspot-dev-build-tsc: scripts/redspot-dev-build-tsc.js
-  checksum: b990db06091fe9a9a7609b806eff522e55754a020ae1e044b8d0a0bbf45e9af9358ca04b7f7cf7ac9bd3c30976483a3cea4544d50dde046086a44ea626042866
+  checksum: afe8340180ff35ea14e34048d2881175ab6275ec129cdf8602d22e2bbc56ebca069b619d2fc78044fee29410b852c49cf511d65ced7b71f596835fe972546fc7
   languageName: node
   linkType: hard
 
@@ -2140,7 +2140,7 @@ __metadata:
   dependencies:
     "@polkadot/api": ^4.4.1
     "@polkadot/api-contract": ^4.4.1
-    redspot: ^0.11.2-1
+    redspot: ^0.11.3
   languageName: unknown
   linkType: soft
 
@@ -2152,7 +2152,7 @@ __metadata:
     colors: ^1.4.0
     deasync: ^0.1.21
     lodash: ^4.17.20
-    redspot: ^0.11.2-1
+    redspot: ^0.11.3
     sync-request: ^6.1.0
   languageName: unknown
   linkType: soft
@@ -2161,7 +2161,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@redspot/jupiter@workspace:packages/redspot-jupiter"
   dependencies:
-    redspot: ^0.11.2-1
+    redspot: ^0.11.3
   languageName: unknown
   linkType: soft
 
@@ -2171,7 +2171,7 @@ __metadata:
   dependencies:
     "@polkadot/api": ^4.4.1
     "@polkadot/api-contract": ^4.4.1
-    redspot: ^0.11.2-1
+    redspot: ^0.11.3
   languageName: unknown
   linkType: soft
 
@@ -10564,7 +10564,7 @@ fsevents@^1.2.7:
   languageName: unknown
   linkType: soft
 
-"redspot@^0.11.2-1, redspot@workspace:packages/redspot-core":
+"redspot@^0.11.3, redspot@workspace:packages/redspot-core":
   version: 0.0.0-use.local
   resolution: "redspot@workspace:packages/redspot-core"
   dependencies:
@@ -11024,7 +11024,7 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "root@workspace:."
   dependencies:
-    "@patract/dev": ^0.5.9
+    "@patract/dev": ^0.5.19
     "@types/chai": ^4.2.0
     "@types/ci-info": ^2.0.0
     "@types/cross-spawn": ^6.0.2
@@ -12491,7 +12491,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"typescript@^4.0.3, typescript@^4.0.5":
+typescript@^4.0.3:
   version: 4.0.5
   resolution: "typescript@npm:4.0.5"
   bin:
@@ -12521,7 +12521,7 @@ typescript@^4.2.4:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@^4.0.3#builtin<compat/typescript>, typescript@patch:typescript@^4.0.5#builtin<compat/typescript>":
+"typescript@patch:typescript@^4.0.3#builtin<compat/typescript>":
   version: 4.0.5
   resolution: "typescript@patch:typescript@npm%3A4.0.5#builtin<compat/typescript>::version=4.0.5&hash=a45b0e"
   bin:
