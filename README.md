@@ -20,7 +20,7 @@ _NOTICE!_
 
 ## Documentation
 
-https://patractlabs.github.io/redspot
+https://patractlabs.github.io/substrate-contracts-book/en/redspot/introduction/
 
 ## License
 
