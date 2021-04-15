@@ -222,7 +222,7 @@ function install(
         });
         return;
       }
-      resolve();
+      resolve(undefined);
     });
   });
 }
@@ -308,7 +308,7 @@ function executeNodeScript(
         });
         return;
       }
-      resolve();
+      resolve(undefined);
     });
   });
 }

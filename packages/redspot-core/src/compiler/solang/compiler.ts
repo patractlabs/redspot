@@ -76,7 +76,7 @@ export class Compiler {
         );
         console.log('');
 
-        resolve();
+        resolve(undefined);
       });
     });
   }
