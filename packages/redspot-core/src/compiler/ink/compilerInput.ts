@@ -65,7 +65,7 @@ export function getCargoMetadata(
   config: InkConfig,
   cwd: string
 ): CargoMetadata {
-  let execCommand = 'cargo metadata --no-deps --format-version 1';
+  const execCommand = 'cargo metadata --no-deps --format-version 1';
 
   const output = execSync(execCommand, {
     maxBuffer: 1024 * 2048,
