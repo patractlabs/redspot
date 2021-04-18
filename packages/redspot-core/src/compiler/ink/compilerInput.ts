@@ -2,7 +2,6 @@ import { execSync } from 'child_process';
 import globby from 'globby';
 import minimatch from 'minimatch';
 import { dirname } from 'path';
-import log from '../../logger';
 import { InkConfig } from '../../types';
 
 /* eslint-disable camelcase */
@@ -62,8 +61,12 @@ export interface InkInput {
   toolchain: string;
 }
 
-export function getCargoMetadata(cwd: string): CargoMetadata {
+export function getCargoMetadata(
+  config: InkConfig,
+  cwd: string
+): CargoMetadata {
   const execCommand = 'cargo metadata --no-deps --format-version 1';
+
   const output = execSync(execCommand, {
     maxBuffer: 1024 * 2048,
     cwd
@@ -87,10 +90,10 @@ export async function getCompilerInput(config: InkConfig, patterns?: string[]) {
     minimatch(file, 'Cargo.toml', { matchBase: true })
   );
 
-  log.log(`Ink: ${manifestPaths.length} matches`);
+  console.log(`ink: ${manifestPaths.length} matches`);
 
   const manifests = manifestPaths.map((path) => {
-    return getCargoMetadata(dirname(path));
+    return getCargoMetadata(config, dirname(path));
   });
 
   const targetDirs = new Set();

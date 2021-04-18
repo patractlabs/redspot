@@ -8,6 +8,7 @@ export default {
   contract: {
     ink: {
       toolchain: 'nightly',
+      docker: false,
       sources: ['contracts/**/*']
     }
   },

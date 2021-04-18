@@ -13,3 +13,7 @@ node_modules
 
 # macOS
 .DS_Store
+
+# cache
+.cache
+.ink

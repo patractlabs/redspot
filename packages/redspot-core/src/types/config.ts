@@ -144,6 +144,7 @@ export type ContractType = 'ink' | 'solang';
 export interface InkConfig {
   version?: string;
   toolchain: string;
+  docker?: boolean;
   sources: string[];
 }
 
