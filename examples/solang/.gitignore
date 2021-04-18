@@ -15,3 +15,7 @@ node_modules
 .DS_Store
 
 .yarn
+
+# cache
+.cache
+.ink

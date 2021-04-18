@@ -5,9 +5,12 @@ import '@redspot/gas-reporter';
 
 export default {
   defaultNetwork: 'development',
-  compiler: {
-    compilerType: 'ink',
-    toolchain: 'nightly'
+  contract: {
+    ink: {
+      toolchain: 'nightly',
+      docker: false,
+      sources: ['contracts/**/*']
+    }
   },
   networks: {
     development: {

@@ -3,10 +3,15 @@ import fs from 'fs-extra';
 import path from 'path';
 import { checkEnv } from '../compiler/ink/checkEnv';
 import { compile, InkOutput } from '../compiler/ink/compile';
+import {
+  compileDocker,
+  DOCKER_IMAGE_NAME
+} from '../compiler/ink/compileDocker';
 import { getCompilerInput, InkInput } from '../compiler/ink/compilerInput';
 import { subtask } from '../internal/core/config/config-env';
 import { RedspotError } from '../internal/core/errors';
 import { ERRORS } from '../internal/core/errors-list';
+import { boolean } from '../internal/core/params/argumentTypes';
 import {
   TASK_COMPILE_INK,
   TASK_COMPILE_INK_EXEC,
@@ -23,6 +28,9 @@ subtask(TASK_COMPILE_INK_PRE, async (_, { config }) => {
       version: 'v0.8.0'
     });
   }
+
+  console.log(`compiler version: ${isValidEnv}`);
+  console.log(`toolchain: ${config.contract.ink.toolchain}`);
 });
 
 subtask(TASK_COMPILE_INK_INPUT)
@@ -99,13 +107,14 @@ subtask(
     console.log('');
     console.log(
       `🎉  Compile successfully! You can find all artifacts at ${chalk.cyan(
-        config.paths.artifacts
+        path.relative(config.paths.root, config.paths.artifacts)
       )}`
     );
   }
 );
 
 subtask(TASK_COMPILE_INK)
+  .addOptionalParam('docker', 'Compiling with docker', undefined, boolean)
   .addOptionalVariadicPositionalParam(
     'sourcePattern',
     'A glob string that is matched against',
@@ -114,16 +123,27 @@ subtask(TASK_COMPILE_INK)
   .setAction(
     async (
       {
+        docker,
         sourcePattern
       }: {
+        docker?: boolean;
         sourcePattern: string[];
       },
-      { run }
+      { config, run }
     ) => {
-      await run(TASK_COMPILE_INK_PRE);
+      const useDocker =
+        docker !== undefined ? docker : config.contract.ink.docker;
 
-      const input = await run(TASK_COMPILE_INK_INPUT, { sourcePattern });
-      const output = await run(TASK_COMPILE_INK_EXEC, { input });
-      await run(TASK_COMPILE_INK_OUTPUT, { input, output });
+      if (useDocker) {
+        console.log(`use docker image: ${DOCKER_IMAGE_NAME}`);
+
+        compileDocker(config, sourcePattern);
+      } else {
+        await run(TASK_COMPILE_INK_PRE);
+
+        const input = await run(TASK_COMPILE_INK_INPUT, { sourcePattern });
+        const output = await run(TASK_COMPILE_INK_EXEC, { input });
+        await run(TASK_COMPILE_INK_OUTPUT, { input, output });
+      }
     }
   );

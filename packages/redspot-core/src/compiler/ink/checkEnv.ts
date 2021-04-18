@@ -23,5 +23,5 @@ export async function checkEnv({ version }: { version: string }) {
     return false;
   }
 
-  return true;
+  return currentVersion;
 }

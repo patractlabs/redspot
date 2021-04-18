@@ -8,10 +8,8 @@ export default {
   contract: {
     ink: {
       toolchain: 'nightly',
+      docker: true,
       sources: ['contracts/**/*']
-    },
-    solang: {
-      sources: ['contracts/**/*.sol']
     }
   },
   networks: {

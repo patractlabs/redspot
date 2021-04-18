@@ -147,7 +147,7 @@ export function resolveProjectPaths(
     ...userPaths,
     root,
     configFile,
-    cache: resolvePathFrom(root, 'cache', userPaths.cache),
+    cache: resolvePathFrom(root, '.cache', userPaths.cache),
     artifacts: resolvePathFrom(root, 'artifacts', userPaths.artifacts),
     tests: resolvePathFrom(root, 'tests', userPaths.tests)
   };

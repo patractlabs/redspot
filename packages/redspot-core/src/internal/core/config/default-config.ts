@@ -30,6 +30,7 @@ export const defaultMochaOptions: Mocha.MochaOptions = {
 export const defaultInkConfig = {
   version: 'v0.8.0',
   toolchain: 'nightly',
+  docker: false,
   sources: ['**/*']
 };
 
