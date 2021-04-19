@@ -55,6 +55,12 @@
       ],
       "@redspot/jupiter/*": [
         "packages/redspot-jupiter/src/*"
+      ],
+      "@redspot/known-types": [
+        "packages/redspot-known-types/src"
+      ],
+      "@redspot/known-types/*": [
+        "packages/redspot-known-types/src/*"
       ]
     },
     "skipLibCheck": true,
