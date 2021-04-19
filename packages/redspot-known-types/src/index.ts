@@ -3,8 +3,6 @@ import { extendEnvironment } from 'redspot/config';
 import { getSpecAlias } from '@polkadot/types-known';
 
 extendEnvironment((env) => {
-  console.log(env.network.api.registry.knownTypes);
-
   env.network.api.registry.setKnownTypes({
     types: env.network.config.types,
     typesAlias: env.network.config.typesAlias,
@@ -24,11 +22,10 @@ extendEnvironment((env) => {
     }
   });
 
-  // console.log(typesBundle)
-
   if (env.network.api.registry.knownTypes.typesBundle) {
     env.network.api.once('ready', () => {
       env.network.api.registry.knownTypes.typesAlias = getSpecAlias(
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         env.network.api.registry,
         env.network.api.runtimeChain,
