@@ -2,18 +2,12 @@ import chalk from 'chalk';
 import { execSync } from 'child_process';
 import spawn from 'cross-spawn';
 import fs from 'fs-extra';
-import os from 'os';
 import path from 'path';
 import semver from 'semver';
 import yargs, { argv } from 'yargs';
+import { cloneRepo, mkCacheDir, rmCacheDir } from './utils';
 
 const packageToInstall = 'redspot';
-const templateToInstall = '@redspot/redspot-template';
-const defaultToInstall = [
-  '@redspot/patract',
-  '@redspot/chai',
-  '@redspot/gas-reporter'
-];
 
 function init() {
   const currentNodeVersion = process.versions.node;
@@ -37,11 +31,6 @@ function init() {
       type: 'string',
       default: 'erc20',
       description: 'Specify a template for the created project'
-    })
-    .option('vers', {
-      type: 'string',
-      default: '',
-      description: 'Specify a version to install'
     })
     .demandCommand(
       1,
@@ -75,63 +64,43 @@ function createApp(name: string, verbose: boolean): void {
   console.log();
   console.log(`✨  Creating a new Project in ${chalk.green(root)}.`);
 
-  const packageJson = {
-    name: appName,
-    version: '0.1.0',
-    private: true
-  };
+  const cacheDir = mkCacheDir(root);
 
-  fs.writeFileSync(
-    path.join(root, 'package.json'),
-    JSON.stringify(packageJson, null, 2) + os.EOL
-  );
+  const repo = 'https://github.com/patractlabs/redspot-template.git';
+  console.log(`Clone template from ${repo}`);
+  const gitDir = path.join(cacheDir, 'redspot-template');
+  cloneRepo(repo, gitDir);
 
-  const originalDirectory = process.cwd();
+  const templateName = argv.template;
+  fs.copySync(path.join(gitDir, `packages/${templateName}`), root);
+
   process.chdir(root);
 
   const useYarn = shouldUseYarn();
 
-  run(root, appName, originalDirectory, useYarn, verbose);
+  run(root, appName, useYarn, verbose);
 }
 
 function run(
   root: string,
   appName: string,
-  originalDirectory: string,
   useYarn: boolean,
   verbose: boolean
 ) {
-  const templateName = argv.template;
-  const intallVersion = argv.vers as string;
-
-  const allDependencies = [packageToInstall, templateToInstall].concat(
-    defaultToInstall
-  );
+  // rename package.json name field
+  const packageJson = require(path.join(root, 'package.json'));
+  packageJson.name = appName;
+  fs.writeJSONSync(path.join(root, 'package.json'), packageJson);
 
   console.log('Installing packages. This might take a while.');
 
-  install(root, allDependencies, useYarn, intallVersion, verbose)
+  install(root, useYarn, verbose)
     .then(async () => {
       checkNodeVersion(packageToInstall);
 
-      await executeNodeScript(
-        {
-          cwd: process.cwd(),
-          args: []
-        },
-        [
-          root,
-          appName,
-          verbose,
-          originalDirectory,
-          templateToInstall,
-          templateName
-        ],
-        `
-    var { init } = require('${packageToInstall}/internal/cli/init.js');
-    init.apply(null, JSON.parse(process.argv[1]));
-  `
-      );
+      // clean cache
+      console.log('Clean cache.');
+      rmCacheDir(root);
     })
     .catch((reason) => {
       console.log();
@@ -142,70 +111,27 @@ function run(
         console.log(chalk.red('Unexpected error. Please report it as a bug:'));
         console.log(reason);
       }
-      console.log();
 
-      const knownGeneratedFiles = [
-        'package.json',
-        'yarn.lock',
-        'package-lock.json',
-        'node_modules'
-      ];
-      const currentFiles = fs.readdirSync(path.join(root));
-      currentFiles.forEach((file) => {
-        knownGeneratedFiles.forEach((fileToMatch) => {
-          if (file === fileToMatch) {
-            console.log(`Deleting generated file... ${chalk.cyan(file)}`);
-            fs.removeSync(path.join(root, file));
-          }
-        });
-      });
-      const remainingFiles = fs.readdirSync(path.join(root));
-      if (!remainingFiles.length) {
-        console.log(
-          `Deleting ${chalk.cyan(`${appName}/`)} from ${chalk.cyan(
-            path.resolve(root, '..')
-          )}`
-        );
-        process.chdir(path.resolve(root, '..'));
-        fs.removeSync(path.join(root));
-      }
+      console.log();
       console.log('Done.');
       process.exit(1);
     });
 }
 
-function install(
-  root: string,
-  dependencies: string[],
-  useYarn: boolean,
-  intallVersion: string,
-  verbose: boolean
-) {
+function install(root: string, useYarn: boolean, verbose: boolean) {
   return new Promise((resolve, reject) => {
     let command: string;
     let args: string[];
 
-    const dependenciesWithVersion = !intallVersion
-      ? dependencies
-      : dependencies.map((d) => `${d}@${intallVersion}`);
-
     if (useYarn) {
       command = 'yarnpkg';
-      args = ['add'];
-
-      [].push.apply(args, dependenciesWithVersion as any);
+      args = ['install'];
 
       args.push('--cwd');
       args.push(root);
     } else {
       command = 'npm';
-      args = [
-        'install',
-        '--save',
-        '--save-exact',
-        '--loglevel',
-        'error'
-      ].concat(dependenciesWithVersion);
+      args = ['install', '--loglevel', 'error'];
     }
 
     if (verbose) {
