@@ -2430,7 +2430,7 @@ __metadata:
   dependencies:
     "@polkadot/api": ^4.4.1
     "@polkadot/api-contract": ^4.4.1
-    redspot: ^0.11.4-1
+    redspot: ^0.11.4-2
   languageName: unknown
   linkType: soft
 
@@ -2442,7 +2442,7 @@ __metadata:
     colors: ^1.4.0
     deasync: ^0.1.21
     lodash: ^4.17.20
-    redspot: ^0.11.4-1
+    redspot: ^0.11.4-2
     sync-request: ^6.1.0
   languageName: unknown
   linkType: soft
@@ -2451,7 +2451,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@redspot/jupiter@workspace:packages/redspot-jupiter"
   dependencies:
-    redspot: ^0.11.4-1
+    redspot: ^0.11.4-2
   languageName: unknown
   linkType: soft
 
@@ -2461,7 +2461,7 @@ __metadata:
   dependencies:
     "@polkadot/apps-config": 0.87.2-20
     "@polkadot/types-known": ^4.4.1
-    redspot: ^0.11.4-0
+    redspot: ^0.11.4-2
   languageName: unknown
   linkType: soft
 
@@ -2471,7 +2471,7 @@ __metadata:
   dependencies:
     "@polkadot/api": ^4.4.1
     "@polkadot/api-contract": ^4.4.1
-    redspot: ^0.11.4-1
+    redspot: ^0.11.4-2
   languageName: unknown
   linkType: soft
 
@@ -11312,7 +11312,7 @@ fsevents@^1.2.7:
   languageName: unknown
   linkType: soft
 
-"redspot@^0.11.4-0, redspot@^0.11.4-1, redspot@workspace:packages/redspot-core":
+"redspot@^0.11.4-2, redspot@workspace:packages/redspot-core":
   version: 0.0.0-use.local
   resolution: "redspot@workspace:packages/redspot-core"
   dependencies:
