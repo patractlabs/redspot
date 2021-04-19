@@ -7,13 +7,14 @@
     "@polkadot/api-contract": "^4.4.1"
   },
   "dependencies": {
+    "@polkadot/apps-config": "^0.87.1",
     "@redspot/chai": "^0.11.4-0",
     "@redspot/gas-reporter": "^0.11.4-0",
     "@redspot/patract": "^0.11.4-0",
     "@types/chai": "^4.2.14",
     "@types/mocha": "^8.0.3",
     "chai": "^4.2.0",
-    "redspot": "^0.11.4-0",
+    "redspot": "^0.11.3",
     "typescript": "^4.0.2"
   },
   "scripts": {

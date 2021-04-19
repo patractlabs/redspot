@@ -2,6 +2,7 @@ import { RedspotUserConfig } from 'redspot/types';
 import '@redspot/patract';
 import '@redspot/chai';
 import '@redspot/gas-reporter';
+import '@redspot/known-types';
 
 export default {
   defaultNetwork: 'development',
