@@ -517,7 +517,12 @@ export default class ContractFactory {
    * @returns Contract
    */
   attach(address: string): Contract {
-    return (<any>this.constructor).getContract(address, this.abi, this.api);
+    return (<any>this.constructor).getContract(
+      address,
+      this.abi,
+      this.api,
+      this.signer
+    );
   }
 
   /**
