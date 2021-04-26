@@ -7,7 +7,7 @@ const EMPTY_SALT = new Uint8Array();
 
 export async function encodeSalt(
   salt: Uint8Array | string | null = randomAsU8a(),
-  signer?: Signer
+  signerAddress?: string
 ): Promise<Uint8Array> {
   return salt instanceof Bytes
     ? salt

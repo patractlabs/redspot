@@ -209,7 +209,10 @@ export default class ContractFactory {
       .add(this.api.consts.contracts.tombstoneDeposit)
       .muln(10);
     const endowment = overrides.value || mindeposit;
-    const salt = await ContractFactory.encodeSalt(overrides.salt, this.signer);
+    const salt = await ContractFactory.encodeSalt(
+      overrides.salt,
+      this.signer.address
+    );
     const maximumBlockWeight = this.api.consts.system.blockWeights
       ? this.api.consts.system.blockWeights.maxBlock
       : (this.api.consts.system.maximumBlockWeight as Weight);
@@ -307,7 +310,10 @@ export default class ContractFactory {
       .add(this.api.consts.contracts.tombstoneDeposit)
       .muln(10);
     const endowment = overrides.value || mindeposit;
-    const salt = await ContractFactory.encodeSalt(overrides.salt, this.signer);
+    const salt = await ContractFactory.encodeSalt(
+      overrides.salt,
+      this.signer.address
+    );
     const maximumBlockWeight = this.api.consts.system.blockWeights
       ? this.api.consts.system.blockWeights.maxBlock
       : (this.api.consts.system.maximumBlockWeight as Weight);
@@ -486,7 +492,10 @@ export default class ContractFactory {
     const withSalt = this.api.tx.contracts.instantiate.meta.args.length === 5;
 
     if (withSalt) {
-      const encodedSalt = await ContractFactory.encodeSalt(salt, this.signer);
+      const encodedSalt = await ContractFactory.encodeSalt(
+        salt,
+        this.signer.address
+      );
       const codeHash = blake2AsU8a(this.wasm);
 
       const [_, encodedStrip] = compactStripLength(encodedSalt);
@@ -569,7 +578,7 @@ export default class ContractFactory {
 
   static async encodeSalt(
     salt: Uint8Array | string | null = '',
-    signer?: Signer
+    signerAddress?: string
   ): Promise<Uint8Array> {
     const EMPTY_SALT = new Uint8Array();
 

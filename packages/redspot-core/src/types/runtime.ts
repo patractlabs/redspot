@@ -223,7 +223,7 @@ export interface Network {
   utils: {
     encodeSalt(
       salt?: Uint8Array | string | null,
-      signer?: Signer
+      signerAddress?: string
     ): Promise<Uint8Array>;
   };
 }

@@ -9,20 +9,22 @@ extendEnvironment((env) => {
 
   env.network.utils.encodeSalt = async function encodeSalt(
     salt?: string | Uint8Array | null,
-    signer?: Signer
+    signerAddress?: string
   ): Promise<Uint8Array> {
-    if (!signer) throw new Error('Need Signer');
+    if (!signerAddress) throw new Error('Need Signer');
 
-    const accountInfo = await signer.api.query.system.account(signer.address);
+    const accountInfo = await env.network.api.query.system.account(
+      signerAddress
+    );
 
-    const runtimeVersion = signer.api.runtimeVersion;
+    const runtimeVersion = env.network.api.runtimeVersion;
 
     const isJupiter = runtimeVersion.specName
       .toString()
       .toLowerCase()
       .includes('jupiter');
 
-    if (!isJupiter) return _encodedSalt(salt, signer);
+    if (!isJupiter) return _encodedSalt(salt, signerAddress);
 
     const nonce = accountInfo.nonce.toNumber();
 
