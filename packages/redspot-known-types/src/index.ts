@@ -33,6 +33,4 @@ extendEnvironment((env) => {
       );
     });
   }
-
-  console.log(env.network.api.registry.knownTypes);
 });

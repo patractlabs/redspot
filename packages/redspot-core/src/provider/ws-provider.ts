@@ -129,6 +129,13 @@ export class WsProvider implements IWsProvider {
   }
 
   /**
+   * get default endpoint
+   */
+  public get endpoint(): string {
+    return this._endpoints[0];
+  }
+
+  /**
    * @summary Whether the node is connected or not.
    * @return {boolean} true if connected
    */

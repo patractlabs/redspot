@@ -21,7 +21,7 @@ import type { ApiOptions } from '@polkadot/api/types';
 export type RedspotNetworkAccountsUserConfig = (string | KeyringPair)[];
 
 export interface RedspotNetworkUserConfig {
-  endpoint?: string | string[];
+  endpoint?: string;
   httpHeaders?: Record<string, string>;
   accounts?: RedspotNetworkAccountsUserConfig;
   gasLimit?: string | number | BN;
@@ -32,7 +32,6 @@ export interface RedspotNetworkUserConfig {
   typesSpec?: ApiOptions['typesSpec'];
   rpc?: ApiOptions['rpc'];
   from?: string;
-  explorerUrl?: string;
 }
 export interface NetworksUserConfig {
   europa?: RedspotNetworkUserConfig;
