@@ -10,8 +10,7 @@ export const defaultEuropaNetworkParams = {
   accounts: ['//Alice', '//Bob', '//Charlie', '//Dave', '//Eve', '//Ferdie'],
   endpoint: ['ws://127.0.0.1:9944'],
   types: {},
-  httpHeaders: {},
-  explorerUrl: 'https://polkadot.js.org/apps/#/explorer/query/'
+  httpHeaders: {}
 };
 
 export const defaultLocalhostNetworkParams = {
@@ -19,8 +18,7 @@ export const defaultLocalhostNetworkParams = {
   accounts: ['//Alice', '//Bob', '//Charlie', '//Dave', '//Eve', '//Ferdie'],
   endpoint: ['ws://127.0.0.1:9944'],
   types: {},
-  httpHeaders: {},
-  explorerUrl: 'https://polkadot.js.org/apps/#/explorer/query/'
+  httpHeaders: {}
 };
 
 export const defaultMochaOptions: Mocha.MochaOptions = {
