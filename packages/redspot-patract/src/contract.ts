@@ -26,6 +26,7 @@ import chalk from 'chalk';
 import log from 'redspot/logger';
 import type { Signer } from 'redspot/types';
 import { buildTx } from './buildTx';
+import { converSignerToAddress } from './helpers';
 import {
   BigNumber,
   CallOverrides,
@@ -77,17 +78,13 @@ async function populateTransaction(
     inputData: data
   };
 
-  const signer = overrides.signer || contract.signer;
-
   // Remove the overrides
   delete overrides.dest;
   delete overrides.value;
   delete overrides.gasLimit;
-  delete overrides.signer;
 
   return {
     ...overrides,
-    signer,
     callParams,
     extrinsic: contract.api.tx.contracts.call(
       callParams.dest,
@@ -144,14 +141,14 @@ function buildCall(
   return async function (
     ...args: TransactionParams
   ): Promise<ContractCallOutcome> {
-    const { extrinsic, callParams, ...options } = await populateTransaction(
+    const { extrinsic, callParams } = await populateTransaction(
       contract,
       fragment,
       args
     );
     const messageName = formatIdentifier(fragment.identifier);
 
-    const origin = options.signer.address;
+    const origin = contract.signer;
 
     const params = {
       ...callParams,
@@ -255,9 +252,14 @@ function buildSend(
       } catch {}
     });
 
-    const response = await buildTx(contract.api.registry, extrinsic, {
-      ...options
-    });
+    const response = await buildTx(
+      contract.api.registry,
+      extrinsic,
+      contract.signer,
+      {
+        ...options
+      }
+    );
 
     response.events = decodeEvents(response.result, contract.abi);
 
@@ -323,7 +325,7 @@ function mapExecResult(registry: Registry, json: AnyJson): ContractExecResult {
 export default class Contract {
   public readonly address: AccountId;
   public readonly abi: Abi;
-  public readonly signer: Signer;
+  public readonly signer: string;
   public readonly api: ApiPromise;
   public readonly functions: { [name: string]: ContractFunction };
   public readonly query: {
@@ -353,7 +355,7 @@ export default class Contract {
     address: string | AccountId,
     contractAbi: ContractAbi,
     apiProvider: ApiPromise,
-    signer: Signer
+    signer: Signer | string
   ) {
     this.address = apiProvider.registry.createType('AccountId', address);
 
@@ -363,7 +365,7 @@ export default class Contract {
         : new Abi(contractAbi, apiProvider.registry.getChainProperties());
 
     this.api = apiProvider;
-    this.signer = signer;
+    this.signer = converSignerToAddress(signer);
 
     this.query = {};
     this.tx = {};
@@ -408,7 +410,7 @@ export default class Contract {
    * @param signer Signer
    * @returns Contract
    */
-  connect(signer: Signer): Contract {
+  connect(signer: Signer | string): Contract {
     const contract = new (<{ new (...args: any[]): Contract }>this.constructor)(
       this.address,
       this.abi,

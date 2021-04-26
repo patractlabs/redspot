@@ -36,7 +36,6 @@ export interface CallOverrides extends SignerOptions {
   salt?: any;
   value?: BigNumber;
   gasLimit?: BigNumber;
-  signer: Signer;
 }
 
 export interface CallParams {
@@ -54,7 +53,6 @@ export type ContractFunction<T = any> = (
 export type ContractAbi = AnyJson | Abi;
 
 export interface PopulatedTransaction extends Partial<SignerOptions> {
-  signer: Signer;
   callParams?: CallParams;
   extrinsic: SubmittableExtrinsic<'promise', ISubmittableResult>;
 }

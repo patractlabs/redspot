@@ -8,11 +8,10 @@ import type { TransactionResponse } from './types';
 export async function buildTx(
   registry: Registry,
   extrinsic: SubmittableExtrinsic<'promise'>,
-  options: Partial<SignerOptions> & {
-    signer: Signer;
-  }
+  signer: string,
+  options?: Partial<SignerOptions>
 ): Promise<TransactionResponse> {
-  const signerAddress = options.signer.address;
+  const signerAddress = signer;
 
   return new Promise((resolve, reject) => {
     const actionStatus = {

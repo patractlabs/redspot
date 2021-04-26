@@ -2,8 +2,7 @@ import { SignerResult } from '@polkadot/api/types';
 import type { SignOptions } from '@polkadot/keyring/types';
 import { SignerPayloadJSON } from '@polkadot/types/types';
 import type { LocalKeyringPair, ApiPromise, Signer as ISigner } from '../types';
-
-let id = 0;
+import { Signer as AccountSigner } from './account-signer';
 
 /**
  * A wrapper for Keyringpair
@@ -14,7 +13,10 @@ export class Signer implements ISigner {
    * @param pair An instantiation of keyringpair
    * @param api ApiPromise
    */
-  constructor(public pair: LocalKeyringPair, public readonly api: ApiPromise) {}
+  constructor(
+    public pair: LocalKeyringPair,
+    public readonly accountSigner: AccountSigner
+  ) {}
 
   /**
    * @description The Account address
@@ -52,13 +54,7 @@ export class Signer implements ISigner {
    *
    */
   public async signPayload(payload: SignerPayloadJSON): Promise<SignerResult> {
-    return new Promise((resolve): void => {
-      const signed = this.api.registry
-        .createType('ExtrinsicPayload', payload, { version: payload.version })
-        .sign(this.pair);
-
-      resolve({ id: ++id, ...signed });
-    });
+    return this.accountSigner.signPayload(payload);
   }
 
   /**

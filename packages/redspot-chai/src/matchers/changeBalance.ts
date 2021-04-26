@@ -1,8 +1,9 @@
-import BN from 'bn.js';
 import { bnToBn } from '@polkadot/util';
+import { TransactionResponse } from '@redspot/patract/types';
+import BN from 'bn.js';
 import { Account, getAddressOf } from './misc/account';
 import { BalanceChangeOptions, getBalance } from './misc/balance';
-import { TransactionResponse } from '@redspot/patract/types';
+const { network } = require('redspot');
 
 export function supportChangeBalance(Assertion: Chai.AssertionStatic) {
   Assertion.addMethod('changeBalance', function (
@@ -40,7 +41,7 @@ export async function getBalanceChange(
   account: Account,
   options?: BalanceChangeOptions
 ) {
-  if (!account.api) {
+  if (!network.api) {
     throw new TypeError('Api not found');
   }
 
@@ -54,7 +55,7 @@ export async function getBalanceChange(
 
   const txBlockHash = txResponse.blockHash;
 
-  const header = await account.api.rpc.chain.getHeader(txBlockHash);
+  const header = await network.api.rpc.chain.getHeader(txBlockHash);
 
   const txBlockNumber = header.number.toBn();
 
