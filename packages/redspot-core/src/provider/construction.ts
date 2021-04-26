@@ -59,8 +59,6 @@ export function createNetwork(
       ? bnToBn(networkConfig.gasLimit)
       : undefined;
 
-  const explorerUrl = networkConfig.explorerUrl;
-
   return {
     name: networkName,
     config: networkConfig,
@@ -112,7 +110,6 @@ export function createNetwork(
     },
     createSigner: createSigner.bind(null, api),
     gasLimit,
-    explorerUrl,
     utils: {
       encodeSalt
     }
