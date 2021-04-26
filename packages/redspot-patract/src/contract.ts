@@ -261,23 +261,10 @@ function buildSend(
 
     response.events = decodeEvents(response.result, contract.abi);
 
-    let url: string;
-    const base = 'https://polkadot.js.org/apps/#/explorer/query/';
-
-    try {
-      url = `${
-        (contract.api as any)._rpcCore.provider.extra.explorerUrl || base
-      }${response.blockHash}`;
-    } catch {
-      url = `${base}${response.blockHash}`;
-    }
-
     if (!response.error) {
       log.success(`Execute successfully`);
-      log.success(`${chalk.cyanBright(url)}`);
     } else {
       log.error(`Execute failed. ${chalk.red(response.error?.message || '')}`);
-      response.blockHash && log.info(`${chalk.cyanBright(url)}`);
     }
 
     return response;

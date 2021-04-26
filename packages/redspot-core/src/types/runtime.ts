@@ -220,7 +220,6 @@ export interface Network {
   getSigners(): Promise<Signer[]>;
   createSigner(pair: LocalKeyringPair): Signer;
   gasLimit?: BN;
-  explorerUrl?: string;
   utils: {
     encodeSalt(
       salt?: Uint8Array | string | null,

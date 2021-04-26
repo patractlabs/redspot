@@ -98,9 +98,8 @@ const RedspotNetworkConfig = t.type({
   gasLimit: optional(t.union([t.string, t.number])),
   from: optional(t.string),
   types: optional(t.record(t.string, t.unknown)),
-  endpoint: optional(t.union([t.string, t.array(t.string)])),
-  httpHeaders: optional(HttpHeaders),
-  explorerUrl: optional(t.string)
+  endpoint: optional(t.string),
+  httpHeaders: optional(HttpHeaders)
 });
 
 const NetworkConfig = RedspotNetworkConfig;

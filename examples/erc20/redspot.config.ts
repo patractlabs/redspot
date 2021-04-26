@@ -17,9 +17,7 @@ export default {
     development: {
       endpoint: 'ws://127.0.0.1:9944',
       types: {},
-      gasLimit: '400000000000',
-      explorerUrl:
-        'https://polkadot.js.org/apps/#/explorer/query/?rpc=ws://127.0.0.1:9944/'
+      gasLimit: '400000000000'
     },
     substrate: {
       endpoint: 'ws://127.0.0.1:9944',
