@@ -2434,6 +2434,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@redspot/decimals@workspace:packages/redspot-decimals":
+  version: 0.0.0-use.local
+  resolution: "@redspot/decimals@workspace:packages/redspot-decimals"
+  dependencies:
+    "@polkadot/api": ^4.4.1
+    "@polkadot/api-contract": ^4.4.1
+    redspot: ^0.11.4-4
+  languageName: unknown
+  linkType: soft
+
 "@redspot/gas-reporter@workspace:packages/redspot-gas-reporter":
   version: 0.0.0-use.local
   resolution: "@redspot/gas-reporter@workspace:packages/redspot-gas-reporter"
