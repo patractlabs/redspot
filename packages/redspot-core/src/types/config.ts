@@ -13,12 +13,11 @@
 // fields), we don't use `extends` as that can interfere with plugin authors
 // trying to augment the config types.
 
-import type BN from 'bn.js';
-import type { KeyringPair } from '@polkadot/keyring/types';
 import type { ApiOptions } from '@polkadot/api/types';
+import type BN from 'bn.js';
 
 // Networks config
-export type RedspotNetworkAccountsUserConfig = (string | KeyringPair)[];
+export type RedspotNetworkAccountsUserConfig = string[];
 
 export interface RedspotNetworkUserConfig {
   endpoint?: string;

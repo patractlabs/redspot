@@ -73,14 +73,7 @@ export class Signer implements PolkadotSigner {
       let pair: KeyringPair | LocalKeyringPair;
 
       if (typeof account === 'object' && account.sign) {
-        try {
-          pair = this.keyring.addPair(account);
-
-          pair.lock = (): void => {};
-        } catch (error) {
-          log.error(error.message);
-          throw new RedspotError(ERRORS.GENERAL.BAD_KEYPAIR);
-        }
+        throw new Error('Account only supports suri format ')
       } else if (typeof account === 'string') {
         try {
           const meta = {
