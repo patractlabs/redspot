@@ -12,18 +12,18 @@ import {
   compactAddLength,
   compactStripLength,
   isFunction,
-  isU8a,
   u8aConcat,
   u8aToHex,
   u8aToU8a
 } from '@polkadot/util';
-import { blake2AsU8a } from '@polkadot/util-crypto';
+import { blake2AsU8a, decodeAddress } from '@polkadot/util-crypto';
 import chalk from 'chalk';
 import log from 'redspot/logger';
 import { RedspotPluginError } from 'redspot/plugins';
 import type { Signer } from 'redspot/types';
 import { buildTx } from './buildTx';
 import Contract from './contract';
+import { converSignerToAddress } from './helpers';
 import { BigNumber, CallOverrides, TransactionParams } from './types';
 
 export type ContractFunction<T = any> = (...args: Array<any>) => Promise<T>;
@@ -36,7 +36,7 @@ export default class ContractFactory {
   readonly abi: Abi;
   readonly wasm: Uint8Array;
   readonly api: ApiPromise;
-  readonly signer: Signer;
+  readonly signer: string;
   public gasLimit?: BigNumber;
 
   readonly populateTransaction: {
@@ -61,7 +61,7 @@ export default class ContractFactory {
     wasm: Uint8Array | string | Buffer,
     contractAbi: ContractAbi,
     apiProvider: ApiPromise,
-    signer: Signer
+    signer: Signer | string
   ) {
     this.abi =
       contractAbi instanceof Abi
@@ -70,7 +70,7 @@ export default class ContractFactory {
 
     this.wasm = u8aToU8a(wasm);
     this.api = apiProvider;
-    this.signer = signer;
+    this.signer = converSignerToAddress(signer);
 
     this.populateTransaction = {
       putCode: this.#buildPutCode,
@@ -155,8 +155,7 @@ export default class ContractFactory {
 
     const tx = this.#buildPutCode(wasmCode);
 
-    const status = await buildTx(this.api.registry, tx, {
-      signer: this.signer,
+    const status = await buildTx(this.api.registry, tx, this.signer, {
       ...options
     }).catch((error) => {
       log.error(error.error || error);
@@ -209,10 +208,7 @@ export default class ContractFactory {
       .add(this.api.consts.contracts.tombstoneDeposit)
       .muln(10);
     const endowment = overrides.value || mindeposit;
-    const salt = await ContractFactory.encodeSalt(
-      overrides.salt,
-      this.signer.address
-    );
+    const salt = await ContractFactory.encodeSalt(overrides.salt, this.signer);
     const maximumBlockWeight = this.api.consts.system.blockWeights
       ? this.api.consts.system.blockWeights.maxBlock
       : (this.api.consts.system.maximumBlockWeight as Weight);
@@ -243,8 +239,7 @@ export default class ContractFactory {
     log.info('InputData: ', u8aToHex(encoded));
     log.info('Salt: ', salt.toString());
 
-    const status = await buildTx(this.api.registry, tx, {
-      signer: this.signer,
+    const status = await buildTx(this.api.registry, tx, this.signer, {
       ...overrides
     }).catch((error) => {
       log.error(error.error || error);
@@ -310,10 +305,7 @@ export default class ContractFactory {
       .add(this.api.consts.contracts.tombstoneDeposit)
       .muln(10);
     const endowment = overrides.value || mindeposit;
-    const salt = await ContractFactory.encodeSalt(
-      overrides.salt,
-      this.signer.address
-    );
+    const salt = await ContractFactory.encodeSalt(overrides.salt, this.signer);
     const maximumBlockWeight = this.api.consts.system.blockWeights
       ? this.api.consts.system.blockWeights.maxBlock
       : (this.api.consts.system.maximumBlockWeight as Weight);
@@ -344,8 +336,7 @@ export default class ContractFactory {
     log.info('InputData: ', u8aToHex(encoded));
     log.info('Salt: ', salt.toString());
 
-    const status = await buildTx(this.api.registry, tx, {
-      signer: this.signer,
+    const status = await buildTx(this.api.registry, tx, this.signer, {
       ...overrides
     }).catch((error) => {
       log.error(error.error || error);
@@ -492,15 +483,12 @@ export default class ContractFactory {
     const withSalt = this.api.tx.contracts.instantiate.meta.args.length === 5;
 
     if (withSalt) {
-      const encodedSalt = await ContractFactory.encodeSalt(
-        salt,
-        this.signer.address
-      );
+      const encodedSalt = await ContractFactory.encodeSalt(salt, this.signer);
       const codeHash = blake2AsU8a(this.wasm);
 
       const [_, encodedStrip] = compactStripLength(encodedSalt);
 
-      const buf = u8aConcat(this.signer.pair.publicKey, codeHash, encodedStrip);
+      const buf = u8aConcat(decodeAddress(this.signer), codeHash, encodedStrip);
       const address = blake2AsU8a(buf);
 
       return this.api.registry.createType('AccountId', address);
@@ -512,7 +500,7 @@ export default class ContractFactory {
       const [_, encodedStrip] = compactStripLength(encoded);
 
       const dataHash = blake2AsU8a(encodedStrip);
-      const buf = u8aConcat(codeHash, dataHash, this.signer.pair.publicKey);
+      const buf = u8aConcat(codeHash, dataHash, decodeAddress(this.signer));
       const address = blake2AsU8a(buf);
 
       return this.api.registry.createType('AccountId', address);
@@ -540,7 +528,7 @@ export default class ContractFactory {
    * @param signer Signer
    * @returns Contract Factory
    */
-  connect(signer: Signer) {
+  connect(signer: Signer | string) {
     return new (<{ new (...args: any[]): ContractFactory }>this.constructor)(
       this.wasm,
       this.abi,
@@ -602,7 +590,7 @@ export default class ContractFactory {
     address: string,
     contractAbi: ContractAbi,
     apiProvider: ApiPromise,
-    signer: Signer
+    signer: Signer | string
   ): Contract {
     return new Contract(address, contractAbi, apiProvider, signer);
   }

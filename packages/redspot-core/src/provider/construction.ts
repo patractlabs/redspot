@@ -13,6 +13,7 @@ import {
 } from '../types';
 import { ApiPromise, keyring } from './api-promise';
 import { Signer } from './signer';
+import { Signer as AccountSigner } from './account-signer';
 import { encodeSalt } from './utils';
 import { WsProvider } from './ws-provider';
 
@@ -22,7 +23,8 @@ export function createProvider(networkConfig: RedspotNetworkUserConfig) {
 
 export function createApi(
   provider: WsProvider,
-  config: NetworkConfig
+  config: NetworkConfig,
+  signer?: AccountSigner
 ): IApiPromise {
   const api = new ApiPromise({
     provider,
@@ -31,14 +33,19 @@ export function createApi(
     typesBundle: config.typesBundle,
     typesChain: config.typesChain,
     typesSpec: config.typesSpec,
-    rpc: config.rpc
+    rpc: config.rpc,
+    signer: signer
   });
 
   return api;
 }
 
-export function createSigner(api: ApiPromise, pair: KeyringPair) {
-  return new Signer(pair, api);
+export function createSigner(signer: AccountSigner, pair: KeyringPair) {
+  return new Signer(pair, signer);
+}
+
+export function addPair(signer: AccountSigner, pair: KeyringPair): KeyringPair {
+  return signer.addPair(pair);
 }
 
 export function createNetwork(
@@ -49,11 +56,16 @@ export function createNetwork(
     return createProvider(networkConfig);
   });
 
+  const signer = new AccountSigner();
+
   const api = lazyObject(() => {
-    return createApi(provider, networkConfig);
+    return createApi(provider, networkConfig, signer);
   });
 
   const registry = api.registry;
+
+  signer.init(registry, networkConfig.accounts);
+
   const gasLimit =
     networkConfig.gasLimit !== undefined
       ? bnToBn(networkConfig.gasLimit)
@@ -66,49 +78,27 @@ export function createNetwork(
     api,
     registry,
     keyring,
+    signer,
     getSigners: async () => {
-      const defaultAccounts = [
-        '//Alice',
-        '//Bob',
-        '//Charlie',
-        '//Dave',
-        '//Eve',
-        '//Ferdie'
-      ];
-
       await api.isReady;
 
-      return (networkConfig.accounts || defaultAccounts).map((account: any) => {
-        let pair: KeyringPair | LocalKeyringPair;
-        if (typeof account === 'object' && account.sign) {
-          try {
-            pair = keyring.addPair(account);
+      const pairs = signer.getPairs();
 
-            pair.lock = (): void => {};
-          } catch (error) {
-            log.error(error.message);
-            throw new RedspotError(ERRORS.GENERAL.BAD_KEYPAIR);
-          }
-        } else {
-          try {
-            const meta = {
-              name: account.replace('//', '_').toLowerCase()
-            };
-
-            pair = keyring.addFromUri(account, meta);
-            (pair as LocalKeyringPair).suri = account;
-
-            pair.lock = (): void => {};
-          } catch (error) {
-            log.error(error.message);
-            throw new RedspotError(ERRORS.GENERAL.BAD_SURI, { uri: account });
-          }
-        }
-
-        return new Signer(pair, api);
+      return pairs.map((pair) => {
+        return new Signer(pair, signer);
       });
     },
-    createSigner: createSigner.bind(null, api),
+    getAddresses: async () => {
+      await api.isReady;
+
+      const pairs = signer.getPairs();
+
+      return pairs.map((pair) => {
+        return pair.address;
+      });
+    },
+    createSigner: createSigner.bind(null, signer),
+    addPair: addPair.bind(null, signer),
     gasLimit,
     utils: {
       encodeSalt

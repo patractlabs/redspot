@@ -3,6 +3,7 @@ import BN from 'bn.js';
 import { Artifacts } from './artifacts';
 import { NetworkConfig, RedspotConfig } from './config';
 import {
+  AccountSigner,
   ApiPromise,
   Keyring,
   LocalKeyringPair,
@@ -218,7 +219,10 @@ export interface Network {
   registry: Registry;
   keyring: Keyring;
   getSigners(): Promise<Signer[]>;
+  getAddresses(): Promise<string[]>;
+  signer: AccountSigner;
   createSigner(pair: LocalKeyringPair): Signer;
+  addPair(pair: LocalKeyringPair): LocalKeyringPair;
   gasLimit?: BN;
   utils: {
     encodeSalt(

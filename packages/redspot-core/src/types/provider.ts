@@ -4,6 +4,7 @@ import type { Keyring as PolkadotKeyring } from '@polkadot/keyring';
 import type { KeyringPair as PolkadotKeyringPair } from '@polkadot/keyring/types';
 import type { ProviderInterface } from '@polkadot/rpc-provider/types';
 import type { Registry as PolkadotRegistry } from '@polkadot/types/types';
+import type { Signer as _AccountSigner } from '../provider/account-signer';
 
 // eslint-disable-next-line  @typescript-eslint/no-empty-interface
 export interface Keyring extends PolkadotKeyring {}
@@ -66,8 +67,9 @@ export type ProviderInterfaceEmitted = 'connected' | 'disconnected' | 'error';
 
 export type ProviderInterfaceEmitCb = (value?: any) => any;
 
+export type AccountSigner = _AccountSigner;
 export interface Signer extends PolkadotSigner {
   address: string;
-  api: ApiPromise;
+  accountSigner: AccountSigner;
   pair: LocalKeyringPair;
 }

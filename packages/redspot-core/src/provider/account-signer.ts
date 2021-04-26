@@ -103,9 +103,7 @@ export class Signer implements PolkadotSigner {
     return this.keyring.getPairs();
   };
 
-  public addPair = (pair: KeyringPair): string => {
-    this.keyring.addPair(pair);
-
-    return pair.address;
+  public addPair = (pair: KeyringPair): KeyringPair => {
+    return this.keyring.addPair(pair);
   };
 }

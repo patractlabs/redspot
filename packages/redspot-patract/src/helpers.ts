@@ -13,9 +13,13 @@ import { buildTx } from './buildTx';
 import Contract from './contract';
 import ContractFactory from './contractFactory';
 
+export function converSignerToAddress(signer?: Signer | string): string {
+  return typeof signer !== 'string' ? signer.address : signer;
+}
+
 export async function getRandomSigner(
   env: RuntimeEnvironment,
-  from?: Signer,
+  from?: Signer | string,
   amount?: BN | number | string | BigInt
 ): Promise<Signer> {
   await env.network.api.isReady;
@@ -28,14 +32,15 @@ export async function getRandomSigner(
 
   log.info(`Generate random signer: ${chalk.cyan(keyringPair.address)}`);
   log.info(`Mnemonic: ${chalk.cyan(mnemonic)}`);
+
+  const fromAddress = converSignerToAddress(from);
+
   if (from && amount) {
     try {
       const result = await buildTx(
         api.registry,
         api.tx.balances.transfer(keyringPair.address, amount),
-        {
-          signer: from
-        }
+        fromAddress
       );
     } catch (error) {
       log.error(`Transfer failed`);
@@ -45,7 +50,7 @@ export async function getRandomSigner(
 
     log.info(
       `Transfer ${chalk.yellow(amount.toString())} from ${chalk.cyan(
-        from.address.toString()
+        fromAddress
       )} to ${chalk.cyan(keyringPair.address)}`
     );
 
@@ -58,7 +63,7 @@ export async function getRandomSigner(
 export async function getContractFactory(
   env: RuntimeEnvironment,
   contractName: string,
-  signer?: Signer
+  signer?: Signer | string
 ) {
   const api = env.network.api;
   const artifact = env.artifacts.readArtifactSync(contractName);
@@ -66,7 +71,7 @@ export async function getContractFactory(
 
   if (!signer) {
     const signers = await env.network.getSigners();
-    signer = signers[0];
+    signer = signers[0].address;
   }
 
   ContractFactory.encodeSalt = env.network.utils.encodeSalt;
@@ -82,7 +87,7 @@ export async function getContractAt(
   env: RuntimeEnvironment,
   contractName: string,
   address: AccountId | string,
-  signer?: Signer
+  signer?: Signer | string
 ) {
   const api = env.network.api;
 

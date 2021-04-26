@@ -1,5 +1,6 @@
-import { Account, getAddressOf } from './account';
 import type BN from 'bn.js';
+import { Account, getAddressOf } from './account';
+const { network } = require('redspot');
 
 export interface BalanceChangeOptions {
   includeFee?: boolean;
@@ -22,17 +23,17 @@ export async function getBalance(
   account: Account,
   blockNumber?: string | number | BigInt | BN
 ) {
-  if (!account.api) {
+  if (!network.api) {
     throw new TypeError('Api not found');
   }
   const address = await getAddressOf(account);
 
   if (blockNumber === undefined) {
-    const accountInfo = await account.api.query.system.account(address);
+    const accountInfo = await network.api.query.system.account(address);
     return accountInfo.data.free;
   } else {
-    const hash = await account.api.rpc.chain.getBlockHash(blockNumber);
-    const accountInfo = await account.api.query.system.account.at(
+    const hash = await network.api.rpc.chain.getBlockHash(blockNumber);
+    const accountInfo = await network.api.query.system.account.at(
       hash,
       address
     );
