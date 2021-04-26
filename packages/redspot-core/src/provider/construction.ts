@@ -1,19 +1,15 @@
 import type { KeyringPair } from '@polkadot/keyring/types';
 import { bnToBn } from '@polkadot/util';
-import { RedspotError } from '../internal/core/errors';
-import { ERRORS } from '../internal/core/errors-list';
 import { lazyObject } from '../internal/util/lazy';
-import log from '../logger';
-import type { LocalKeyringPair } from '../types';
 import {
   ApiPromise as IApiPromise,
   Network,
   NetworkConfig,
   RedspotNetworkUserConfig
 } from '../types';
-import { ApiPromise, keyring } from './api-promise';
-import { Signer } from './signer';
 import { Signer as AccountSigner } from './account-signer';
+import { ApiPromise } from './api-promise';
+import { Signer } from './signer';
 import { encodeSalt } from './utils';
 import { WsProvider } from './ws-provider';
 
@@ -77,7 +73,7 @@ export function createNetwork(
     provider,
     api,
     registry,
-    keyring,
+    keyring: signer.keyring,
     signer,
     getSigners: async () => {
       await api.isReady;

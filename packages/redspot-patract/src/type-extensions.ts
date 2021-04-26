@@ -6,7 +6,6 @@ import 'redspot/types/runtime';
 import type Contract from './contract';
 import type ContractFactory from './contractFactory';
 import type { Signer } from 'redspot/types';
-import type { KeyringPair } from '@polkadot/keyring/types';
 
 declare module 'redspot/types/runtime' {
   interface RuntimeEnvironment {
@@ -24,7 +23,7 @@ declare module 'redspot/types/runtime' {
       getContractAt(
         contractName: string,
         address: AccountId | string,
-        signer?: Signer
+        signer?: Signer | string
       ): Promise<Contract>;
       /**
        * Return the contract factory
@@ -35,7 +34,7 @@ declare module 'redspot/types/runtime' {
        */
       getContractFactory(
         contractName: string,
-        signer?: Signer
+        signer?: Signer | string
       ): Promise<ContractFactory>;
       /**
        *  Generate a random account and transfer token to it
@@ -45,7 +44,7 @@ declare module 'redspot/types/runtime' {
        * @returns New Account
        */
       getRandomSigner(
-        from?: Signer,
+        from?: Signer | string,
         amount?: BN | number | string | BigInt
       ): Promise<Signer>;
     };

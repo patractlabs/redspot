@@ -68,7 +68,13 @@ function resolveNetworksConfig(
         ([name, config]) =>
           name !== 'localhost' && name !== 'europa' && config !== undefined
       )
-      .map(([name, config]) => [name, config])
+      .map(([name, config]) => [
+        name,
+        {
+          ...cloneDeep(defaultLocalhostNetworkParams),
+          ...config
+        }
+      ])
   );
 
   return {

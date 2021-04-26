@@ -3,7 +3,6 @@ import { TransactionResponse } from '@redspot/patract/types';
 import BN from 'bn.js';
 import { Account, getAddressOf } from './misc/account';
 import { BalanceChangeOptions, getBalance } from './misc/balance';
-const { network } = require('redspot');
 
 export function supportChangeBalance(Assertion: Chai.AssertionStatic) {
   Assertion.addMethod('changeBalance', function (
@@ -41,6 +40,7 @@ export async function getBalanceChange(
   account: Account,
   options?: BalanceChangeOptions
 ) {
+  const { network } = require('redspot');
   if (!network.api) {
     throw new TypeError('Api not found');
   }

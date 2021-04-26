@@ -1,11 +1,6 @@
 import { ApiPromise as PolkadotApiPromise } from '@polkadot/api';
 import { ApiPromise as IApiPromise } from '../types';
-import { Keyring } from '@polkadot/keyring';
 import { Signer as AccountSigner } from './account-signer';
-
-export const keyring = new Keyring({
-  type: 'sr25519'
-});
 
 export class ApiPromise extends PolkadotApiPromise implements IApiPromise {
   get isReady(): Promise<ApiPromise> {

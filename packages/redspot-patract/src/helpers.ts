@@ -14,6 +14,7 @@ import Contract from './contract';
 import ContractFactory from './contractFactory';
 
 export function converSignerToAddress(signer?: Signer | string): string {
+  if (!signer) return '';
   return typeof signer !== 'string' ? signer.address : signer;
 }
 
@@ -35,9 +36,9 @@ export async function getRandomSigner(
 
   const fromAddress = converSignerToAddress(from);
 
-  if (from && amount) {
+  if (fromAddress && amount) {
     try {
-      const result = await buildTx(
+      await buildTx(
         api.registry,
         api.tx.balances.transfer(keyringPair.address, amount),
         fromAddress

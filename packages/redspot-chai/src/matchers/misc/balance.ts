@@ -1,6 +1,5 @@
 import type BN from 'bn.js';
 import { Account, getAddressOf } from './account';
-const { network } = require('redspot');
 
 export interface BalanceChangeOptions {
   includeFee?: boolean;
@@ -23,6 +22,8 @@ export async function getBalance(
   account: Account,
   blockNumber?: string | number | BigInt | BN
 ) {
+  const { network } = require('redspot');
+
   if (!network.api) {
     throw new TypeError('Api not found');
   }
