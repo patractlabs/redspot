@@ -11322,7 +11322,7 @@ fsevents@^1.2.7:
   languageName: unknown
   linkType: soft
 
-"redspot@^0.11.4-11, redspot@workspace:packages/redspot-core":
+"redspot@^0.11.4-11, redspot@^0.11.4-4, redspot@workspace:packages/redspot-core":
   version: 0.0.0-use.local
   resolution: "redspot@workspace:packages/redspot-core"
   dependencies:
