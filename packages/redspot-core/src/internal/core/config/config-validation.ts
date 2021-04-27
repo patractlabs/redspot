@@ -1,7 +1,6 @@
 import * as t from 'io-ts';
 import { Context, getFunctionName, ValidationError } from 'io-ts/lib';
 import { Reporter } from 'io-ts/lib/Reporter';
-import { REDSPOT_NETWORK_NAME } from '../../constants';
 import { RedspotError } from '../errors';
 import { ERRORS } from '../errors-list';
 
@@ -142,23 +141,6 @@ export function validateConfig(config: any) {
 
 export function getValidationErrors(config: any): string[] {
   const errors = [];
-
-  // These can't be validated with io-ts
-  if (config !== undefined && typeof config.networks === 'object') {
-    const redspotNetwork = config.networks[REDSPOT_NETWORK_NAME];
-
-    if (redspotNetwork !== undefined) {
-      if (typeof redspotNetwork.endpoint !== 'string') {
-        errors.push(
-          getErrorMessage(
-            `RedspotConfig.networks.${redspotNetwork}.endpoint`,
-            redspotNetwork.endpoint,
-            'string'
-          )
-        );
-      }
-    }
-  }
 
   // io-ts can get confused if there are errors that it can't understand.
   // Especially around Redspot Network's config. It will treat it as an HTTPConfig,

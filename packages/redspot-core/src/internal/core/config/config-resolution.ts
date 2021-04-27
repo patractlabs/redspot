@@ -2,8 +2,6 @@ import * as fs from 'fs';
 import cloneDeep from 'lodash/cloneDeep';
 import path from 'path';
 import {
-  HttpNetworkConfig,
-  InkConfig,
   NetworksConfig,
   NetworksUserConfig,
   ProjectPathsConfig,
@@ -13,7 +11,6 @@ import {
   RedspotNetworkUserConfig,
   RedspotUserConfig
 } from '../../../types';
-import { REDSPOT_NETWORK_NAME } from '../../constants';
 import { fromEntries } from '../../util/lang';
 import {
   defaultDefaultNetwork,
@@ -52,22 +49,9 @@ export function resolveConfig(
 function resolveNetworksConfig(
   networksConfig: NetworksUserConfig = {}
 ): NetworksConfig {
-  const redspotNetworkConfig = networksConfig[REDSPOT_NETWORK_NAME];
-
-  const localhostNetworkConfig = networksConfig.localhost ?? undefined;
-
-  const europa = resolveEuropaNetworkConfig(redspotNetworkConfig);
-  const localhost = {
-    ...cloneDeep(defaultLocalhostNetworkParams),
-    ...localhostNetworkConfig
-  };
-
-  const otherNetworks: { [name: string]: HttpNetworkConfig } = fromEntries(
+  const otherNetworks: { [name: string]: RedspotNetworkConfig } = fromEntries(
     Object.entries(networksConfig)
-      .filter(
-        ([name, config]) =>
-          name !== 'localhost' && name !== 'europa' && config !== undefined
-      )
+      .filter(([_, config]) => config !== undefined)
       .map(([name, config]) => [
         name,
         {
@@ -78,8 +62,6 @@ function resolveNetworksConfig(
   );
 
   return {
-    europa,
-    localhost,
     ...otherNetworks
   };
 }

@@ -1,9 +1,7 @@
-import { REDSPOT_NETWORK_NAME } from '../../constants';
-
 export const REDSPOT_NETWORK_DEFAULT_GAS_PRICE = '400000000000';
 export const DEFAULT_REDSPOT_NETWORK_BALANCE = '10000000000000000000000';
 
-export const defaultDefaultNetwork = REDSPOT_NETWORK_NAME;
+export const defaultDefaultNetwork = 'development';
 
 export const defaultEuropaNetworkParams = {
   gasLimit: REDSPOT_NETWORK_DEFAULT_GAS_PRICE,
