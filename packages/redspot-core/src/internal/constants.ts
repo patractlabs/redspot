@@ -1,7 +1,6 @@
 export const REDSPOT_NAME = 'Redspot';
 
 export const REDSPOT_EXECUTABLE_NAME = 'redspot';
-export const REDSPOT_NETWORK_NAME = 'europa';
 
 export const SOLIDITY_FILES_CACHE_FILENAME = 'solidity-files-cache.json';
 

@@ -33,7 +33,6 @@ export interface RedspotNetworkUserConfig {
   from?: string;
 }
 export interface NetworksUserConfig {
-  europa?: RedspotNetworkUserConfig;
   [networkName: string]: NetworkUserConfig | undefined;
 }
 
@@ -44,8 +43,6 @@ export type RedspotNetworkConfig = RedspotNetworkUserConfig;
 export type NetworkConfig = RedspotNetworkConfig;
 
 export interface NetworksConfig {
-  europa: RedspotNetworkConfig;
-  localhost: RedspotNetworkConfig;
   [networkName: string]: RedspotNetworkConfig;
 }
 
