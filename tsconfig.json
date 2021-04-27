@@ -61,6 +61,12 @@
       ],
       "@redspot/known-types/*": [
         "packages/redspot-known-types/src/*"
+      ],
+      "@redspot/decimals": [
+        "packages/redspot-decimals/src"
+      ],
+      "@redspot/decimals/*": [
+        "packages/redspot-decimals/src/*"
       ]
     },
     "skipLibCheck": true,
