@@ -9,7 +9,7 @@ export class CustomWeight extends AbstractInt {
   ): Constructor<CustomWeight> {
     return class extends CustomWeight {
       constructor(registry: Registry, value?: AnyNumber) {
-        super(registry, formatDecimals(value, decimals), 32);
+        super(registry, formatDecimals(value, decimals), 64);
       }
 
       public toRawType(): string {

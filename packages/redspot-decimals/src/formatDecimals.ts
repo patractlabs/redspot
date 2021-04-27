@@ -2,19 +2,29 @@ import { AnyNumber } from '@polkadot/types/types';
 import { isString, BN_TEN } from '@polkadot/util';
 import BN from 'bn.js';
 const units: string[] = [
-  'DOT', // 1 -> 1**decimals
-  'UNIT' // 1 -> 1
+  'DOT', // 1 -> 10**10
+  'KSM', // 1 -> 10**12
+  'UNIT' // 1 -> 10**tokenDecimal
 ];
 
 // eslint-disable-next-line prefer-regex-literals
 const regexp = new RegExp(`^(\\d+(\\.\\d+)*)\\s(${units.join('|')})$`, 'i');
 
-export function formatDecimals(value: AnyNumber, decimals: number): AnyNumber {
+export function formatDecimals(value: AnyNumber, decimals?: number): AnyNumber {
   if (isString(value) && regexp.test(value)) {
     const [, num, , unit] = value.match(regexp);
 
-    if (unit.toUpperCase() === 'UNIT') {
-      decimals = 0;
+    switch (unit.toUpperCase()) {
+      case 'DOT':
+        decimals = 10;
+        break;
+
+      case 'KSM':
+        decimals = 12;
+        break;
+
+      default:
+        break;
     }
 
     const [pre, suf] = num.split('.');
