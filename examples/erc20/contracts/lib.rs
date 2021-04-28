@@ -335,6 +335,7 @@ mod erc20 {
                 Some(AccountId::from([0x01; 32])),
                 100,
             );
+            
             let accounts =
                 ink_env::test::default_accounts::<ink_env::DefaultEnvironment>()
                     .expect("Cannot get accounts");
