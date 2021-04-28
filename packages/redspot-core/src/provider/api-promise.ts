@@ -18,6 +18,21 @@ export class ApiPromise extends PolkadotApiPromise implements IApiPromise {
       });
   }
 
+  get isReadyOrError(): Promise<ApiPromise> {
+    return this.connect()
+      .then(() => {
+        return super.isReadyOrError;
+      })
+      .then((api) => {
+        const signer = this._rx.signer as AccountSigner;
+
+        signer.keyring && signer.keyring.setSS58Format(api.registry.chainSS58);
+        signer.setUp && signer.setUp();
+
+        return api;
+      });
+  }
+
   async connect(): Promise<void> {
     const isConnected = this.isConnected;
 
