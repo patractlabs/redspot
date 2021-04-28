@@ -47,6 +47,7 @@ task('explorer', 'Start redspot explorer').setAction(async (_, env) => {
 
     socket.on('explorer', () => {
       console.log(`Client ${socket.id} join explorer`);
+      // eslint-disable-next-line @typescript-eslint/no-misused-promises @typescript-eslint/no-floating-promises
       socket.join('explorer');
     });
 
