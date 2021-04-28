@@ -2492,6 +2492,16 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@redspot/watcher@workspace:packages/redspot-watcher":
+  version: 0.0.0-use.local
+  resolution: "@redspot/watcher@workspace:packages/redspot-watcher"
+  dependencies:
+    "@types/folder-hash": ^4.0.0
+    folder-hash: ^4.0.1
+    fs-extra: ^9.1.0
+  languageName: unknown
+  linkType: soft
+
 "@rushstack/eslint-patch@npm:^1.0.6":
   version: 1.0.6
   resolution: "@rushstack/eslint-patch@npm:1.0.6"
@@ -2711,6 +2721,13 @@ __metadata:
   version: 2.1.1
   resolution: "@types/find-up@npm:2.1.1"
   checksum: fd4293f907357ddb7d50559a5d1c1893a18ed66fea4033a31955c36cc8a00fc970d4f1cf03e13908f511680b7dffd22b583c95e4b31fce38eb0b6142040704a4
+  languageName: node
+  linkType: hard
+
+"@types/folder-hash@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@types/folder-hash@npm:4.0.0"
+  checksum: 73699eb5ca78eef667e5c87693f7d50ba4a36ee3a9a114eea461713bc9cd8deff8e5b14537abb207f4905c60301eba0c450d434a7ceed3b0157359f9c1ec08a3
   languageName: node
   linkType: hard
 
@@ -6858,6 +6875,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"folder-hash@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "folder-hash@npm:4.0.1"
+  dependencies:
+    debug: ^4.1.1
+    graceful-fs: ~4.2.0
+    minimatch: ~3.0.4
+  bin:
+    folder-hash: bin/folder-hash
+  checksum: a48b73df550e2e6392806ca894de43bd7c191c4e90807300abe627ca80952f1045037934378a7d0ac3398e51d51cf167e12c362559eff184e443308fd025f256
+  languageName: node
+  linkType: hard
+
 "for-in@npm:^1.0.1, for-in@npm:^1.0.2":
   version: 1.0.2
   resolution: "for-in@npm:1.0.2"
@@ -6975,6 +7005,18 @@ __metadata:
     jsonfile: ^6.0.1
     universalify: ^1.0.0
   checksum: b7374cb05819bd95fa15bf74a30fbec3d2b64a0c00d2df67d6e1d6a901a9a7582a1243fe652d27a6cd042b38a2c1cd9ae3b3d100bc98dd041cc2f3e29964884f
+  languageName: node
+  linkType: hard
+
+"fs-extra@npm:^9.1.0":
+  version: 9.1.0
+  resolution: "fs-extra@npm:9.1.0"
+  dependencies:
+    at-least-node: ^1.0.0
+    graceful-fs: ^4.2.0
+    jsonfile: ^6.0.1
+    universalify: ^2.0.0
+  checksum: e667d8df54113b527bf5830dd9db8f142618db488894b329fe07724c7020dfacf8a372b144a74e683ae44e66f56117adca9cac165950dda7d83537c46c10dc4b
   languageName: node
   linkType: hard
 
@@ -7480,6 +7522,13 @@ fsevents@^1.2.7:
   version: 4.2.4
   resolution: "graceful-fs@npm:4.2.4"
   checksum: d095ee4dc6eacc76814cd52d5d185b860119378a6fd4888e7d4e94983095c54d4f6369942a5e3d759cdbdd4e3ee7eaeb27a39ff938c6ee4610894fd9de46b6cb
+  languageName: node
+  linkType: hard
+
+"graceful-fs@npm:~4.2.0":
+  version: 4.2.6
+  resolution: "graceful-fs@npm:4.2.6"
+  checksum: 84d39c7756892553da990a9db7e45f844b3309b37b5a00174cbb4748476f2250c54f24594d4d252f64f085c65c2fdac7c809419bf6d55f0e6e42eb07ac0f5bf2
   languageName: node
   linkType: hard
 
@@ -10023,7 +10072,7 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
-"minimatch@npm:3.0.4, minimatch@npm:^3.0.0, minimatch@npm:^3.0.4":
+"minimatch@npm:3.0.4, minimatch@npm:^3.0.0, minimatch@npm:^3.0.4, minimatch@npm:~3.0.4":
   version: 3.0.4
   resolution: "minimatch@npm:3.0.4"
   dependencies:
