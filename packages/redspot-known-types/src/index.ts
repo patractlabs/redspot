@@ -1,36 +1,58 @@
-import { typesBundle, typesChain } from '@polkadot/apps-config/api';
+import { getSpecTypes } from '@polkadot/types-known';
 import { extendEnvironment } from 'redspot/config';
-import { getSpecAlias } from '@polkadot/types-known';
+import { canvas } from './canvas';
+import { jupiterRococo } from './jupiter-rococo';
+
+import europaDef from './europa';
+import jupiterDef from './jupiter';
 
 extendEnvironment((env) => {
-  env.network.api.registry.setKnownTypes({
-    types: env.network.config.types,
-    typesAlias: env.network.config.typesAlias,
-    typesBundle: {
-      chain: {
-        ...env.network.config.typesBundle?.chain,
-        ...typesBundle.chain
-      },
-      spec: {
-        ...env.network.config.typesBundle?.spec,
-        ...typesBundle.spec
-      }
-    },
-    typesChain: {
-      ...env.network.config.typesChain,
-      ...typesChain
-    }
-  });
+  const api = env.network.api;
+  const registry = api.registry;
+  const network = env.network;
 
-  if (env.network.api.registry.knownTypes.typesBundle) {
-    env.network.api.once('ready', () => {
-      env.network.api.registry.knownTypes.typesAlias = getSpecAlias(
+  const knownTypes = {
+    typesBundle: {
+      spec: {
+        canvas: canvas,
+        jupiter: jupiterDef,
+        'jupiter-prep': jupiterDef,
+        'jupiter-dev': jupiterDef,
+        'jupiter-rococo': jupiterRococo,
+        europa: europaDef
+      }
+    }
+  };
+
+  api.once('ready', () => {
+    const types = getSpecTypes(
+      {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        env.network.api.registry,
-        env.network.api.runtimeChain,
-        env.network.api.runtimeVersion.specName
-      );
-    });
-  }
+        knownTypes
+      },
+      api.runtimeChain,
+      api.runtimeVersion.specName,
+      api.runtimeVersion.specVersion
+    );
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    registry.register(types);
+
+    const customTypes = getSpecTypes(
+      {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        knownTypes: network.config
+      },
+      api.runtimeChain,
+      api.runtimeVersion.specName,
+      api.runtimeVersion.specVersion
+    );
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    registry.register(customTypes);
+  });
 });
