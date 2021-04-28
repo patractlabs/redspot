@@ -86,8 +86,6 @@ extendEnvironment((env) => {
   const signPayload = env.network.signer.signPayload;
 
   env.network.signer.signPayload = async (payload) => {
-    const client = io('http://127.0.0.1:8011');
-
     const originSignPayload = () => signPayload(payload);
 
     const addresses = await env.network.getAddresses();
@@ -101,6 +99,8 @@ extendEnvironment((env) => {
     }
 
     return new Promise((resolve) => {
+      const client = io('http://127.0.0.1:8011');
+
       client.on('connect_error', () => {
         console.log('explorer connection error');
         resolve(originSignPayload());
