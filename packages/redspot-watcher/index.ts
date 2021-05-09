@@ -1,4 +1,5 @@
 import { task } from 'redspot/config';
+import chalk from 'chalk';
 import { TASK_COMPILE } from 'redspot/builtin-tasks/task-names';
 import { boolean } from 'redspot/internal/core/params/argumentTypes';
 import { hashElement } from 'folder-hash';
@@ -37,21 +38,24 @@ task(TASK_COMPILE)
       );
       let hash = {};
 
+      let result = false;
+
+      try {
+        fs.ensureFileSync(cacheFile);
+
+        hash = await hashElement('./', options);
+      } catch {}
+
       if (quiet) {
-        let result = false;
+        const json = fs.readJSONSync(cacheFile);
 
-        try {
-          hash = await hashElement('./', options);
-
-          fs.ensureFileSync(cacheFile);
-          const json = fs.readJSONSync(cacheFile);
-
-          result =
-            JSON.stringify(hash, null, 0) === JSON.stringify(json, null, 0);
-        } catch {}
+        result =
+          JSON.stringify(hash, null, 0) === JSON.stringify(json, null, 0);
 
         if (result) {
-          console.log('No file changes checked, skip compilation');
+          console.log(
+            chalk.cyan('✔️ No file changes checked, skip compilation')
+          );
         } else {
           await runSuper();
         }
