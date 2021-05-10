@@ -6,6 +6,7 @@ const { decodeAddress } = require('@polkadot/util-crypto');
 const { u8aEq } = require('@polkadot/util');
 const { io } = require('socket.io-client');
 const express = require('express');
+const execa = require('execa');
 
 function createRouter(app, { config, artifacts }) {
   app.use('/artifacts', express.static(config.paths.artifacts));
@@ -25,7 +26,7 @@ function createRouter(app, { config, artifacts }) {
 function createSocketIO(server) {
   return new Server(server, {
     cors: {
-      origin: 'http://localhost:3000',
+      origin: 'http://127.0.0.1:3000',
       methods: ['GET', 'POST']
     }
   });
@@ -45,9 +46,53 @@ task('explorer', 'Start redspot explorer').setAction(async (_, env) => {
   io.on('connection', (socket) => {
     console.log(`Client ${socket.id} connected`);
 
+    socket.on('execute', (payload, cb) => {
+      console.log(`Client ${socket.id} execute`);
+
+      if (payload?.network && payload?.code) {
+        const subprocess = execa(
+          'node',
+          [path.resolve(__dirname, './runScript.js')],
+          {
+            env: {
+              ...process.env,
+              REDSPOT_NETWORK: payload.network,
+              SOURCE: payload.code
+            }
+          }
+        );
+
+        const pid = subprocess.pid;
+
+        cb({
+          pid
+        });
+
+        subprocess.stdout.on('data', (data) => {
+          socket.emit('execute-result', {
+            pid,
+            messages: data.toString()
+          });
+        });
+
+        subprocess.stderr.on('data', (data) => {
+          socket.emit('execute-result', {
+            pid,
+            messages: data.toString()
+          });
+        });
+
+        subprocess.on('close', (code) => {
+          socket.emit('execute-result', {
+            pid,
+            messages: `child process exited with code ${code}`
+          });
+        });
+      }
+    });
+
     socket.on('explorer', () => {
       console.log(`Client ${socket.id} join explorer`);
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       socket.join('explorer');
     });
 
@@ -87,6 +132,8 @@ extendEnvironment((env) => {
   const signPayload = env.network.signer.signPayload;
 
   env.network.signer.signPayload = async (payload) => {
+    const client = io('http://127.0.0.1:8011');
+
     const originSignPayload = () => signPayload(payload);
 
     const addresses = await env.network.getAddresses();
@@ -100,8 +147,6 @@ extendEnvironment((env) => {
     }
 
     return new Promise((resolve) => {
-      const client = io('http://127.0.0.1:8011');
-
       client.on('connect_error', () => {
         console.log('explorer connection error');
         resolve(originSignPayload());
