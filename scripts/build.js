@@ -23,6 +23,19 @@ function copyTemplate() {
   });
 }
 
+function copyExplorer() {
+  return new Promise((resolve, reject) => {
+    console.log('Copy explorer');
+    return gulp
+      .src('packages/redspot-explorer/**/*', {
+        ignore: ['**/node_modules/**/*']
+      })
+      .pipe(gulp.dest(`${dist}/redspot-explorer`))
+      .on('end', resolve)
+      .on('error', reject);
+  });
+}
+
 function copyFiles() {
   return new Promise((resolve, reject) => {
     console.log('Copy files');
@@ -72,6 +85,7 @@ async function run() {
 
   await buildTs();
   await copyTemplate();
+  await copyExplorer();
   await copyFiles();
 
   console.log('Build complete');
