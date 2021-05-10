@@ -7,6 +7,7 @@ const { u8aEq } = require('@polkadot/util');
 const { io } = require('socket.io-client');
 const express = require('express');
 const execa = require('execa');
+const chalk = require('chalk');
 
 function createRouter(app, { config, artifacts }) {
   app.use('/artifacts', express.static(config.paths.artifacts));
@@ -45,6 +46,17 @@ task('explorer', 'Start redspot explorer').setAction(async (_, env) => {
 
   io.on('connection', (socket) => {
     console.log(`Client ${socket.id} connected`);
+
+    socket.on('compile', async (cb) => {
+      console.log(`Client ${socket.id} compile`);
+
+      try {
+        await env.run('compile', { quiet: true });
+        cb();
+      } catch (error) {
+        cb(error);
+      }
+    });
 
     socket.on('execute', (payload, cb) => {
       console.log(`Client ${socket.id} execute`);
@@ -147,14 +159,16 @@ extendEnvironment((env) => {
     }
 
     return new Promise((resolve) => {
+      console.log(chalk.cyan('trying to sign using explorer...'));
+
       client.on('connect_error', () => {
-        console.log('explorer connection error');
+        console.log(chalk.red('explorer connection error'));
         resolve(originSignPayload());
         client.close();
       });
 
       client.emit('signPayload', payload, (error, result) => {
-        console.log('Signing with explorer...');
+        console.log(chalk.cyan('signing with explorer...'));
         if (error || !result) {
           resolve(originSignPayload());
         } else {
