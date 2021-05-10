@@ -20283,18 +20283,16 @@
                     className: `${n}${r ? ' isInline' : ''}`,
                     children: [
                       a || '',
-                      s
-                        .split(' ')
-                        .map((e, t) =>
-                          (0, Fo.jsx)(
-                            'span',
-                            {
-                              className: t % 2 ? 'timeUnits' : void 0,
-                              children: e
-                            },
-                            t
-                          )
-                        ),
+                      s.split(' ').map((e, t) =>
+                        (0, Fo.jsx)(
+                          'span',
+                          {
+                            className: t % 2 ? 'timeUnits' : void 0,
+                            children: e
+                          },
+                          t
+                        )
+                      ),
                       t
                     ]
                   });
@@ -29992,12 +29990,10 @@
           Proposal: qr.memo(Cae)
         };
         function jae({ meta: e }) {
-          return kre.i
-            .filterOrigin(e)
-            .map((e) => ({
-              name: e.name.toString(),
-              type: (0, jte.s)(e.type.toString())
-            }));
+          return kre.i.filterOrigin(e).map((e) => ({
+            name: e.name.toString(),
+            type: (0, jte.s)(e.type.toString())
+          }));
         }
         function Aae({
           defaultValue: e,
