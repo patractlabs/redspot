@@ -1,10 +1,10 @@
 {
   "name": "@redspot/jupiter",
-  "version": "0.11.4-17",
+  "version": "0.11.4-18",
   "author": "Patract Labs",
   "main": "index.js",
   "types": "index.d.ts",
   "dependencies": {
-    "redspot": "^0.11.4-17"
+    "redspot": "^0.11.4-18"
   }
 }
