@@ -53,10 +53,5 @@
     "test": "polkadot-dev-run-test --coverage --runInBand",
     "test:one": "polkadot-dev-run-test",
     "test:watch": "polkadot-dev-run-test --watch"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --pattern \"**/*.*(js|jsx|ts|tsx)\" --staged"
-    }
   }
 }
