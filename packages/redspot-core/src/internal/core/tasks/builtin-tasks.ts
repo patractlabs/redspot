@@ -1,4 +1,5 @@
 import '../../../builtin-tasks/check';
+import '../../../builtin-tasks/testnet';
 import '../../../builtin-tasks/clean';
 import '../../../builtin-tasks/compile';
 import '../../../builtin-tasks/compile-ink';

@@ -158,6 +158,11 @@ export interface ContractUserConfig {
   solang?: SolangConfig;
 }
 
+export interface DockerConfig {
+  sudo: boolean;
+  runTestnet?: string;
+}
+
 export type CompilerConfig = InkConfig | SolangConfig;
 // Redspot config
 
@@ -166,6 +171,7 @@ export interface RedspotUserConfig {
   paths?: ProjectPathsUserConfig;
   networks?: NetworksUserConfig;
   mocha?: Mocha.MochaOptions;
+  docker: DockerConfig;
   contract?: ContractUserConfig;
 }
 
@@ -174,6 +180,7 @@ export interface RedspotConfig {
   paths: ProjectPathsConfig;
   networks: NetworksConfig;
   mocha: Mocha.MochaOptions;
+  docker: DockerConfig;
   contract: ContractConfig;
 }
 

@@ -2,22 +2,22 @@ import * as fs from 'fs';
 import cloneDeep from 'lodash/cloneDeep';
 import path from 'path';
 import {
+  DockerConfig,
   NetworksConfig,
   NetworksUserConfig,
   ProjectPathsConfig,
   ProjectPathsUserConfig,
   RedspotConfig,
   RedspotNetworkConfig,
-  RedspotNetworkUserConfig,
   RedspotUserConfig
 } from '../../../types';
 import { fromEntries } from '../../util/lang';
 import {
   defaultDefaultNetwork,
-  defaultEuropaNetworkParams,
+  defaultDockerOptions,
+  defaultInkConfig,
   defaultLocalhostNetworkParams,
   defaultMochaOptions,
-  defaultInkConfig,
   defaultSolangConfig
 } from './default-config';
 
@@ -42,7 +42,8 @@ export function resolveConfig(
     paths: resolveProjectPaths(userConfigPath, userConfig.paths),
     networks: resolveNetworksConfig(userConfig.networks),
     mocha: resolveMochaConfig(userConfig),
-    contract: resolveContractConfig(userConfig)
+    contract: resolveContractConfig(userConfig),
+    docker: resolveDockerOptions(userConfig)
   };
 }
 
@@ -66,25 +67,17 @@ function resolveNetworksConfig(
   };
 }
 
-function resolveEuropaNetworkConfig(
-  redspotNetworkConfig: RedspotNetworkUserConfig = {}
-): RedspotNetworkConfig {
-  const clonedDefaultRedspotNetworkParams = cloneDeep(
-    defaultEuropaNetworkParams
-  );
-
-  const config = {
-    ...clonedDefaultRedspotNetworkParams,
-    ...redspotNetworkConfig
-  };
-
-  return config;
-}
-
 function resolveMochaConfig(userConfig: RedspotUserConfig): Mocha.MochaOptions {
   return {
     ...cloneDeep(defaultMochaOptions),
     ...userConfig.mocha
+  };
+}
+
+function resolveDockerOptions(userConfig: RedspotUserConfig): DockerConfig {
+  return {
+    ...cloneDeep(defaultDockerOptions),
+    ...userConfig.docker
   };
 }
 
