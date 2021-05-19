@@ -4,7 +4,7 @@ import { string } from '../internal/core/params/argumentTypes';
 import { TASK_TESTNET } from './task-names';
 
 const defaultCommand =
-  ' docker  run -p 9944:9944 --rm redspot/contract /bin/bash -c "canvas --tmp --dev --ws-port=9944 --ws-external';
+  'docker run -p 9944:9944 --rm redspot/contract /bin/bash -c "canvas --tmp --dev --ws-port=9944 --ws-external';
 
 export const runTestnet = (command: string) => {
   console.log(`$ ${command}`);
@@ -27,7 +27,10 @@ task(TASK_TESTNET, 'Running the test network')
       },
       { config }
     ) => {
-      const runCommand = command || config.docker.runTestnet || defaultCommand;
+      const runCommand =
+        command || config.docker.runTestnet || config.docker.sudo
+          ? `sudo ${defaultCommand}`
+          : defaultCommand;
 
       return runTestnet(runCommand);
     }

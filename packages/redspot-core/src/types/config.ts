@@ -171,7 +171,7 @@ export interface RedspotUserConfig {
   paths?: ProjectPathsUserConfig;
   networks?: NetworksUserConfig;
   mocha?: Mocha.MochaOptions;
-  docker: DockerConfig;
+  docker?: DockerConfig;
   contract?: ContractUserConfig;
 }
 
