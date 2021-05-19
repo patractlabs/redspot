@@ -27,9 +27,7 @@ task(TASK_TESTNET, 'Running the test network')
       },
       { config }
     ) => {
-      const runCommand = command
-        ? command
-        : config.docker.runTestnet || defaultCommand;
+      const runCommand = command || config.docker.runTestnet || defaultCommand;
 
       return runTestnet(runCommand);
     }
