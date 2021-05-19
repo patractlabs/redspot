@@ -336,39 +336,39 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@redspot/chai@npm:^0.11.4-0":
-  version: 0.11.4-0
-  resolution: "@redspot/chai@npm:0.11.4-0"
+"@redspot/chai@npm:^0.11.4-19":
+  version: 0.11.4-19
+  resolution: "@redspot/chai@npm:0.11.4-19"
   dependencies:
     "@polkadot/api": ^4.4.1
     "@polkadot/api-contract": ^4.4.1
-    redspot: ^0.11.4-0
-  checksum: 71ef0a28e8c82fa9c8fc34fa364a1686f97f271fc8abd855150ee41ad08b6deea1b2b9d74a84b0af503e955d91308bce31b498a2a58aa8a2ba0555c2d554d88a
+    redspot: ^0.11.4-19
+  checksum: f72030bb3f7a81e470c5bf8753583e785e7f773be568dfeb214cb5ad81492d70cdd9abaa2e2aba050ffbc19a3952f1c2246174c30064541f3738d03721b3677e
   languageName: node
   linkType: hard
 
-"@redspot/gas-reporter@npm:^0.11.4-0":
-  version: 0.11.4-0
-  resolution: "@redspot/gas-reporter@npm:0.11.4-0"
+"@redspot/gas-reporter@npm:^0.11.4-19":
+  version: 0.11.4-19
+  resolution: "@redspot/gas-reporter@npm:0.11.4-19"
   dependencies:
     cli-table3: ^0.6.0
     colors: ^1.4.0
     deasync: ^0.1.21
     lodash: ^4.17.20
-    redspot: ^0.11.4-0
+    redspot: ^0.11.4-19
     sync-request: ^6.1.0
-  checksum: f886f3e1e64821c14d0030906a0a0f32f92147268b3d8cb0080c1a880a0d6f7f000b533a160f1aaea1e63b2818e07f1dfe46008e6bb69de799cf1f27462a2a20
+  checksum: 3b5d7ebe76c0545d4809a63d2efcb6291b376ef720cb155457042dcca1765f2251b660b46956933c43f4306bf2cbc1da7a9a7c1025c605004d3f54bbe66032c6
   languageName: node
   linkType: hard
 
-"@redspot/patract@npm:^0.11.4-0":
-  version: 0.11.4-0
-  resolution: "@redspot/patract@npm:0.11.4-0"
+"@redspot/patract@npm:^0.11.4-19":
+  version: 0.11.4-19
+  resolution: "@redspot/patract@npm:0.11.4-19"
   dependencies:
     "@polkadot/api": ^4.4.1
     "@polkadot/api-contract": ^4.4.1
-    redspot: ^0.11.4-0
-  checksum: cc886d25223537c05fd4034300c4c30ae4428e3d2cf961b672acf8c337e68456aa7d61d3d51e691df5a2b67d97ab36029c8dc97383ab2eaf8ae22d7cc06a9eda
+    redspot: ^0.11.4-19
+  checksum: b54a8844487880b1e6136e010cbac90e6cc618f069bf23562546a7368f0ba57ce4645f54360f720c4ef03a21a49602d7392129d736f698205c0bf6cd51960d47
   languageName: node
   linkType: hard
 
@@ -1133,13 +1133,13 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "erc20@workspace:."
   dependencies:
-    "@redspot/chai": ^0.11.4-0
-    "@redspot/gas-reporter": ^0.11.4-0
-    "@redspot/patract": ^0.11.4-0
+    "@redspot/chai": ^0.11.4-19
+    "@redspot/gas-reporter": ^0.11.4-19
+    "@redspot/patract": ^0.11.4-19
     "@types/chai": ^4.2.14
     "@types/mocha": ^8.0.3
     chai: ^4.2.0
-    redspot: ^0.11.4-0
+    redspot: ^0.11.4-19
     typescript: ^4.0.2
   languageName: unknown
   linkType: soft
@@ -2405,9 +2405,9 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"redspot@npm:^0.11.4-0":
-  version: 0.11.4-0
-  resolution: "redspot@npm:0.11.4-0"
+"redspot@npm:^0.11.4-19":
+  version: 0.11.4-19
+  resolution: "redspot@npm:0.11.4-19"
   dependencies:
     "@polkadot/api": ^4.4.1
     abort-controller: ^3.0.0
@@ -2439,7 +2439,7 @@ fsevents@~2.3.1:
     uuid: 3.3.2
   bin:
     redspot: internal/cli/cli.js
-  checksum: 8a0183d2a7f91cac165c2321ad01c3b5ba1393927291091163edf73e887041bf1aa61eeae284a51c2123d0b1dc85f351b5f5b0cc3cb4120c49372fef2f468b72
+  checksum: e8e030e8259c22001983a98370118f0be4e682bf43e79c49fac92c167eee9933ca5c239b2d988bfa3f66719cf5df3a289a8db8ab1a4b62d4065a0a38f0db797e
   languageName: node
   linkType: hard
 
