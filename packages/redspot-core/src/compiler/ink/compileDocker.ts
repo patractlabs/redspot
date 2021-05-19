@@ -11,7 +11,9 @@ export const compileDocker = (
   const root = config.paths.root;
   const { stdout: id } = execa.commandSync('id -u');
   const { stdout: group } = execa.commandSync('id -g');
+
   const command = [
+    config.docker.sudo ? 'sudo' : '',
     'docker run --rm',
     `-v ${root}:/${WORK_DIR}`,
     `-w ${WORK_DIR}`,

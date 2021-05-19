@@ -23,6 +23,10 @@ export const defaultMochaOptions: Mocha.MochaOptions = {
   timeout: 20000
 };
 
+export const defaultDockerOptions = {
+  sudo: false
+};
+
 export const defaultInkConfig = {
   version: 'v0.8.0',
   toolchain: 'nightly',
