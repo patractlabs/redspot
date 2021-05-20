@@ -47,10 +47,13 @@ task(TASK_COMPILE)
       } catch {}
 
       if (quiet) {
-        const json = fs.readJSONSync(cacheFile);
-
-        result =
-          JSON.stringify(hash, null, 0) === JSON.stringify(json, null, 0);
+        try {
+          const json = fs.readJSONSync(cacheFile);
+          result =
+            JSON.stringify(hash, null, 0) === JSON.stringify(json, null, 0);
+        } catch {
+          result = false;
+        }
 
         if (result) {
           console.log(
