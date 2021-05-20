@@ -1,6 +1,13 @@
 import { getSpecTypes } from '@polkadot/types-known';
 import { extendEnvironment } from 'redspot/config';
-import { canvas } from './canvas';
+import {
+  canvas,
+  edgeware,
+  plasm,
+  plasmParachain,
+  clover,
+  cloverRococo
+} from './chain';
 import { jupiterRococo } from './jupiter-rococo';
 
 import europaDef from './europa';
@@ -19,7 +26,12 @@ extendEnvironment((env) => {
         'jupiter-prep': jupiterDef,
         'jupiter-dev': jupiterDef,
         'jupiter-rococo': jupiterRococo,
-        europa: europaDef
+        europa: europaDef,
+        edgeware,
+        plasm,
+        'plasm-parachain': plasmParachain,
+        clover,
+        'clover-rococo': cloverRococo
       }
     }
   };
