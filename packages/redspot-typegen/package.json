@@ -1,0 +1,10 @@
+{
+  "name": "@redspot/typegen",
+  "version": "0.11.4-25",
+  "author": "Patract Labs",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "redspot": "^0.11.4-25"
+  }
+}
