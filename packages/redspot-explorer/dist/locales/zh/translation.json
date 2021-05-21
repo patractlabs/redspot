@@ -359,6 +359,7 @@
   "Nonce": "Nonce值",
   "None": "没有一个",
   "Normal transfer without keep-alive checks": "没有保持活跃检查的正常转账",
+  "Not all related extrinsics included": "未记录所有相关交易",
   "Not updated in the last block": "在最后一个块中未更新",
   "Nothing queued for execution": "没有排队等待中的执行",
   "Of the beneficiary amount, at least {{bondPercentage}} would need to be put up as collateral. The maximum of this and the minimum bond will be used to secure the proposal, refundable if it passes.": "在受益人金额中，至少{{bondPercentage}} 需要作为抵押品。最高保证金和最低保证金将用于担保该提案，如果通过，可退还。",
