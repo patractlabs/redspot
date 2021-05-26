@@ -9,6 +9,6 @@
     "redspot": "^0.11.4-28"
   },
   "devDependencies": {
-    "@polkadot/types-known": "^4.4.1"
+    "@polkadot/types-known": "^4.11.2"
   }
 }

@@ -38,9 +38,9 @@ extendEnvironment((env) => {
 
   api.once('ready', () => {
     const types = getSpecTypes(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         knownTypes
       },
       api.runtimeChain,
@@ -53,9 +53,9 @@ extendEnvironment((env) => {
     registry.register(types);
 
     const customTypes = getSpecTypes(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
         knownTypes: network.config
       },
       api.runtimeChain,
