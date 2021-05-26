@@ -10,9 +10,5 @@
     "semver": "^7.3.2",
     "yargs": "^15.4.1"
   },
-  "files": [
-    "index.js",
-    "createApp.js"
-  ],
   "bin": "./index.js"
 }
