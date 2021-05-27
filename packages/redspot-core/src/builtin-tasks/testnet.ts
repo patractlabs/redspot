@@ -28,9 +28,9 @@ task(TASK_TESTNET, 'Running the test network')
       { config }
     ) => {
       const runCommand =
-        command || config.docker.runTestnet || config.docker.sudo
-          ? `sudo ${defaultCommand}`
-          : defaultCommand;
+        command || config.docker.runTestnet || !config.docker.sudo
+          ? defaultCommand
+          : `sudo ${defaultCommand}`;
 
       return runTestnet(runCommand);
     }

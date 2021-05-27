@@ -5,10 +5,8 @@
   "main": "index.js",
   "types": "index.d.ts",
   "dependencies": {
+    "@polkadot/api": "^4.11.2",
     "@polkadot/apps-config": "0.87.2-20",
     "redspot": "^0.11.4-30"
-  },
-  "devDependencies": {
-    "@polkadot/types-known": "^4.11.2"
   }
 }
