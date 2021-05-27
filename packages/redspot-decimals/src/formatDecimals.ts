@@ -7,24 +7,35 @@ const units: string[] = [
   'UNIT' // 1 -> 10**tokenDecimal
 ];
 
-// eslint-disable-next-line prefer-regex-literals
 const regexp = new RegExp(`^(\\d+(\\.\\d+)*)\\s(${units.join('|')})$`, 'i');
 
 export function formatDecimals(value: AnyNumber, decimals?: number): AnyNumber {
   if (isString(value) && regexp.test(value)) {
     const [, num, , unit] = value.match(regexp);
 
+    let _decimals: number | null = null;
+
     switch (unit.toUpperCase()) {
       case 'DOT':
-        decimals = 10;
+        _decimals = 10;
         break;
 
       case 'KSM':
-        decimals = 12;
+        _decimals = 12;
+        break;
+
+      case 'UNIT':
+        if (!decimals || decimals < 1) {
+          throw new Error(
+            "Can't use UNIT when has not decimals or decimals is zero"
+          );
+        } else {
+          _decimals = decimals;
+        }
         break;
 
       default:
-        break;
+        throw new Error(`Unknown unit ${unit}`);
     }
 
     const [pre, suf] = num.split('.');
@@ -32,13 +43,13 @@ export function formatDecimals(value: AnyNumber, decimals?: number): AnyNumber {
     let sufBn: BN;
     if (!suf) {
       sufBn = new BN(0);
-    } else if (suf.length > decimals) {
-      sufBn = new BN(suf.slice(0, decimals));
+    } else if (suf.length > _decimals) {
+      sufBn = new BN(suf.slice(0, _decimals));
     } else {
-      sufBn = new BN(suf).mul(BN_TEN.pow(new BN(decimals - suf.length)));
+      sufBn = new BN(suf).mul(BN_TEN.pow(new BN(_decimals - suf.length)));
     }
 
-    return preBn.mul(BN_TEN.pow(new BN(decimals))).add(sufBn);
+    return preBn.mul(BN_TEN.pow(new BN(_decimals))).add(sufBn);
   }
 
   return value;
