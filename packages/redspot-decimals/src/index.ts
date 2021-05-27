@@ -6,23 +6,22 @@ import { CustomWeight } from './weight';
 extendEnvironment((env) => {
   const api = env.network.api;
 
-  // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  api.isReadyOrError
-    .then(() => api.rpc.system.properties())
-    .then((properties) => {
-      const decimals = properties.tokenDecimals
-        .unwrapOr([api.registry.createType('u32', 12)])[0]
-        .toNumber();
+  api.once('ready', async () => {
+    const properties = await api.rpc.system.properties();
 
-      const Balance = api.registry.getDefinition('Balance');
-      const Weight = api.registry.getDefinition('Weight');
+    const decimals = properties.tokenDecimals
+      .unwrapOr([api.registry.createType('u32', 12)])[0]
+      .toNumber();
 
-      api.registerTypes({
-        Weight: CustomWeight.with(decimals, getTypeLength(Weight || 'u64')),
-        Balance: CustomBalance.with(
-          decimals,
-          getTypeLength(Balance || 'UInt<128, Balance>')
-        )
-      });
+    const Balance = api.registry.getDefinition('Balance');
+    const Weight = api.registry.getDefinition('Weight');
+
+    api.registerTypes({
+      Weight: CustomWeight.with(decimals, getTypeLength(Weight || 'u64')),
+      Balance: CustomBalance.with(
+        decimals,
+        getTypeLength(Balance || 'UInt<128, Balance>')
+      )
     });
+  });
 });
