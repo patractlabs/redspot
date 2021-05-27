@@ -539,6 +539,13 @@ export default class ContractFactory {
 
   _parseArgs(constructorOrId: ConstructorOrId, ...args: TransactionParams) {
     let overrides: Partial<CallOverrides> = {};
+
+    if (overrides.signer) {
+      throw new Error(
+        'Signer is not supported. Use connect instead, e.g. contractFactory.connect(signer)'
+      );
+    }
+
     let params: CodecArg[] = [];
 
     const constructor = this.abi.findConstructor(constructorOrId);

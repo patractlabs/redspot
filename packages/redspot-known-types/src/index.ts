@@ -1,17 +1,11 @@
 import { getSpecTypes } from '@polkadot/types-known';
 import { extendEnvironment } from 'redspot/config';
-import {
-  canvas,
-  edgeware,
-  plasm,
-  plasmParachain,
-  clover,
-  cloverRococo
-} from './chain';
+import { edgeware, plasm, plasmParachain, clover, cloverRococo } from './chain';
 import { jupiterRococo } from './jupiter-rococo';
 
 import europaDef from './europa';
 import jupiterDef from './jupiter';
+import canvasDef from './canvas';
 
 extendEnvironment((env) => {
   const api = env.network.api;
@@ -21,7 +15,7 @@ extendEnvironment((env) => {
   const knownTypes = {
     typesBundle: {
       spec: {
-        canvas: canvas,
+        canvas: canvasDef,
         jupiter: jupiterDef,
         'jupiter-prep': jupiterDef,
         'jupiter-dev': jupiterDef,

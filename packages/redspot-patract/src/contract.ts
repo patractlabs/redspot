@@ -54,6 +54,12 @@ async function populateTransaction(
 ): Promise<PopulatedTransaction> {
   let overrides: Partial<CallOverrides> = {};
 
+  if (overrides.signer) {
+    throw new Error(
+      'Signer is not supported. Use connect instead, e.g. contract.connect(signer)'
+    );
+  }
+
   if (
     args.length === fragment.args.length + 1 &&
     typeof args[args.length - 1] === 'object'
