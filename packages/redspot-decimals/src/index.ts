@@ -7,11 +7,7 @@ extendEnvironment((env) => {
   const api = env.network.api;
 
   api.once('ready', async () => {
-    const properties = await api.rpc.system.properties();
-
-    const decimals = properties.tokenDecimals
-      .unwrapOr([api.registry.createType('u32', 12)])[0]
-      .toNumber();
+    const decimals: number = api.registry.chainDecimals[0];
 
     const Balance = api.registry.getDefinition('Balance');
     const Weight = api.registry.getDefinition('Weight');
@@ -19,6 +15,10 @@ extendEnvironment((env) => {
     api.registerTypes({
       Weight: CustomWeight.with(decimals, getTypeLength(Weight || 'u64')),
       Balance: CustomBalance.with(
+        decimals,
+        getTypeLength(Balance || 'UInt<128, Balance>')
+      ),
+      BalanceOf: CustomBalance.with(
         decimals,
         getTypeLength(Balance || 'UInt<128, Balance>')
       )
