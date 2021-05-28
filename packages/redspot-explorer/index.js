@@ -155,6 +155,7 @@ extendEnvironment((env) => {
     );
 
     if (existingAddress) {
+      client.close();
       return originSignPayload();
     }
 

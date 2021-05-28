@@ -29,7 +29,8 @@ const definitions: OverrideBundleDefinition = {
     {
       minmax: [0, undefined],
       types: {
-        AccountInfo: 'AccountInfoWithProviders',
+        LookupSource: 'MultiAddress',
+        Address: 'MultiAddress',
         AliveContractInfo: {
           trieId: 'TrieId',
           storageSize: 'u32',

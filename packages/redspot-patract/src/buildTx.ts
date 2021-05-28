@@ -53,7 +53,11 @@ export async function buildTx(
                           mod.error.toNumber()
                         ])
                       );
-                      message = `${error.section}.${error.name}`;
+                      message = `${error.section}.${error.name}${
+                        Array.isArray(error.documentation)
+                          ? `(${error.documentation.join('')})`
+                          : error.documentation || ''
+                      }`;
                     } catch (error) {
                       // swallow
                     }
