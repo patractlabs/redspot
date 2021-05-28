@@ -1,12 +1,12 @@
 {
   "name": "@redspot/decimals",
-  "version": "0.11.4-32",
+  "version": "0.11.4-33",
   "author": "Patract Labs",
   "main": "index.js",
   "types": "index.d.ts",
   "dependencies": {
     "@polkadot/api": "^4.11.2",
     "@polkadot/api-contract": "^4.11.2",
-    "redspot": "^0.11.4-32"
+    "redspot": "^0.11.4-33"
   }
 }
