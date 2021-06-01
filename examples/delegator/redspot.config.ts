@@ -7,7 +7,7 @@ export default {
   defaultNetwork: 'development',
   contract: {
     ink: {
-      // docker: true,
+      docker: false,
       toolchain: 'nightly',
       sources: ['contracts/**/*']
     }
