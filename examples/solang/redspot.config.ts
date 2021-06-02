@@ -1,7 +1,10 @@
 import { RedspotUserConfig } from 'redspot/types';
-import '@redspot/patract';
-import '@redspot/chai';
-import '@redspot/gas-reporter';
+import "@redspot/patract";
+import "@redspot/chai";
+import "@redspot/gas-reporter";
+import "@redspot/known-types";
+import "@redspot/explorer";
+import "@redspot/decimals";
 
 export default {
   defaultNetwork: 'development',

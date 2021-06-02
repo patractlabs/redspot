@@ -1,5 +1,5 @@
 {
-  "name": "erc20",
+  "name": "redspot-solang",
   "version": "0.1.0",
   "private": true,
   "resolutions": {
@@ -8,13 +8,17 @@
     "typescript": "4.2.4"
   },
   "dependencies": {
-    "@redspot/chai": "latest",
-    "@redspot/gas-reporter": "latest",
-    "@redspot/patract": "latest",
+    "@redspot/chai": "../../build/redspot-chai",
+    "@redspot/decimals": "../../build/redspot-decimals",
+    "@redspot/explorer": "../../build/redspot-explorer",
+    "@redspot/gas-reporter": "../../build/redspot-gas-reporter",
+    "@redspot/known-types": "../../build/redspot-known-types",
+    "@redspot/patract": "../../build/redspot-patract",
+    "@redspot/watcher": "../../build/redspot-watcher",
     "@types/chai": "^4.2.14",
     "@types/mocha": "^8.0.3",
     "chai": "^4.2.0",
-    "redspot": "latest",
+    "redspot": "../../build/redspot-core",
     "typescript": "4.2.4"
   },
   "scripts": {

@@ -100,6 +100,25 @@ task('explorer', 'Start redspot explorer').setAction(async (_, env) => {
             messages: `child process exited with code ${code}`
           });
         });
+      } else {
+        const pid = Math.random();
+
+        cb({
+          pid
+        });
+
+        if (!payload?.network) {
+          socket.emit('execute-result', {
+            pid,
+            messages:
+              'Only the networks configured in the redspot config are allowed.'
+          });
+        } else {
+          socket.emit('execute-result', {
+            pid,
+            messages: 'Unknown error.'
+          });
+        }
       }
     });
 
