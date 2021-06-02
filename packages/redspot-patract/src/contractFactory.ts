@@ -14,7 +14,8 @@ import {
   isFunction,
   u8aConcat,
   u8aToHex,
-  u8aToU8a
+  u8aToU8a,
+  bnToBn
 } from '@polkadot/util';
 import { blake2AsU8a, decodeAddress } from '@polkadot/util-crypto';
 import chalk from 'chalk';
@@ -208,6 +209,19 @@ export default class ContractFactory {
       .add(this.api.consts.contracts.tombstoneDeposit)
       .muln(10);
     const endowment = overrides.value || mindeposit;
+
+    if (overrides.value) {
+      const endowmentConverted = this.api.createType(
+        'BalanceOf',
+        overrides.value
+      );
+      if (endowmentConverted.lt(mindeposit)) {
+        throw new Error(
+          `endowment should not be less than ${mindeposit.toString()}, but get ${endowmentConverted.toString()}`
+        );
+      }
+    }
+
     const salt = await ContractFactory.encodeSalt(overrides.salt, this.signer);
     const maximumBlockWeight = this.api.consts.system.blockWeights
       ? this.api.consts.system.blockWeights.maxBlock
@@ -305,6 +319,18 @@ export default class ContractFactory {
       .add(this.api.consts.contracts.tombstoneDeposit)
       .muln(10);
     const endowment = overrides.value || mindeposit;
+    
+    if (overrides.value) {
+      const endowmentConverted = this.api.createType(
+        'BalanceOf',
+        overrides.value
+      );
+      if (endowmentConverted.lt(mindeposit)) {
+        throw new Error(
+          `endowment should not be less than ${mindeposit.toString()}, but get ${endowmentConverted.toString()}`
+        );
+      }
+    }
     const salt = await ContractFactory.encodeSalt(overrides.salt, this.signer);
     const maximumBlockWeight = this.api.consts.system.blockWeights
       ? this.api.consts.system.blockWeights.maxBlock

@@ -1,17 +1,15 @@
-import type { ApiPromise } from '@polkadot/api';
-import type { Abi } from '@polkadot/api-contract';
 import type { AccountId } from '@polkadot/types/interfaces/types';
 import type BN from 'bn.js';
+import type { Signer } from 'redspot/types';
 import 'redspot/types/runtime';
 import type Contract from './contract';
 import type ContractFactory from './contractFactory';
-import type { Signer } from 'redspot/types';
 
 declare module 'redspot/types/runtime' {
   interface RuntimeEnvironment {
     patract: {
-      Contract: typeof Contract;
-      ContractFactory: typeof ContractFactory;
+      Contract: Contract;
+      ContractFactory: ContractFactory;
       /**
        * Generating Contract Instance from Contract Addresses
        *

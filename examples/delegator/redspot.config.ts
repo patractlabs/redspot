@@ -1,7 +1,11 @@
 import { RedspotUserConfig } from 'redspot/types';
-import '@redspot/patract';
-import '@redspot/chai';
-import '@redspot/gas-reporter';
+import "@redspot/patract";
+import "@redspot/chai";
+import "@redspot/gas-reporter";
+import "@redspot/known-types";
+import "@redspot/watcher";
+import "@redspot/explorer";
+import "@redspot/decimals";
 
 export default {
   defaultNetwork: 'development',
@@ -14,7 +18,7 @@ export default {
   },
   networks: {
     development: {
-      endpoint: 'ws://127.0.0.1:9944',
+      endpoint: 'ws://192.168.50.10:9944',
       types: {},
       gasLimit: '400000000000'
     },

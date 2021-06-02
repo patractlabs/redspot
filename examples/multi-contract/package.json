@@ -1,5 +1,5 @@
 {
-  "name": "redspot-multi-contract-example",
+  "name": "delegator",
   "version": "0.1.0",
   "private": true,
   "resolutions": {
@@ -9,8 +9,12 @@
   },
   "dependencies": {
     "@redspot/chai": "../../build/redspot-chai",
+    "@redspot/decimals": "../../build/redspot-decimals",
+    "@redspot/explorer": "../../build/redspot-explorer",
     "@redspot/gas-reporter": "../../build/redspot-gas-reporter",
+    "@redspot/known-types": "../../build/redspot-known-types",
     "@redspot/patract": "../../build/redspot-patract",
+    "@redspot/watcher": "../../build/redspot-watcher",
     "@types/chai": "^4.2.14",
     "@types/mocha": "^8.0.3",
     "chai": "^4.2.0",
