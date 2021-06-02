@@ -24,12 +24,12 @@ export default {
       types: {},
       gasLimit: '400000000000'
     },
-    substrate: {
-      endpoint: 'ws://127.0.0.1:9944',
-      gasLimit: '400000000000',
-      accounts: ['//Alice'],
-      types: {}
-    }
+    jupiter: {
+      endpoint: "wss://jupiter-poa.elara.patract.io",
+      gasLimit: "400000000000",
+      accounts: ["//Alice"],
+      types: {},
+    },
   },
   mocha: {
     timeout: 60000
