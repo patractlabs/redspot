@@ -14,8 +14,7 @@ import {
   isFunction,
   u8aConcat,
   u8aToHex,
-  u8aToU8a,
-  bnToBn
+  u8aToU8a
 } from '@polkadot/util';
 import { blake2AsU8a, decodeAddress } from '@polkadot/util-crypto';
 import chalk from 'chalk';
@@ -319,7 +318,7 @@ export default class ContractFactory {
       .add(this.api.consts.contracts.tombstoneDeposit)
       .muln(10);
     const endowment = overrides.value || mindeposit;
-    
+
     if (overrides.value) {
       const endowmentConverted = this.api.createType(
         'BalanceOf',
