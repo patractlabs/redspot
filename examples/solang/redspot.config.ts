@@ -1,10 +1,10 @@
 import { RedspotUserConfig } from 'redspot/types';
-import "@redspot/patract";
-import "@redspot/chai";
-import "@redspot/gas-reporter";
-import "@redspot/known-types";
-import "@redspot/explorer";
-import "@redspot/decimals";
+import '@redspot/patract';
+import '@redspot/chai';
+import '@redspot/gas-reporter';
+import '@redspot/known-types';
+import '@redspot/explorer';
+import '@redspot/decimals';
 
 export default {
   defaultNetwork: 'development',
@@ -23,8 +23,8 @@ export default {
       types: {},
       gasLimit: '400000000000'
     },
-    substrate: {
-      endpoint: 'ws://127.0.0.1:9944',
+    jupiter: {
+      endpoint: 'wss://jupiter-poa.elara.patract.io',
       gasLimit: '400000000000',
       accounts: ['//Alice'],
       types: {}
