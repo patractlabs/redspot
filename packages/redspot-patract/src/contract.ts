@@ -39,14 +39,6 @@ import {
   TransactionResponse
 } from './types';
 
-export function formatData(
-  registry: Registry,
-  data: Raw,
-  { type }: TypeDef
-): Codec {
-  return createTypeUnsafe(registry, type, [data]);
-}
-
 async function populateTransaction(
   contract: Contract,
   fragment: AbiMessage,
@@ -180,25 +172,23 @@ function buildCall(
       } catch {}
     });
 
-    const json = await contract.api.rpc.contracts.call.json({
+    const json = await contract.api.rpc.contracts.call({
       ...callParams,
       origin
     });
 
-    const { debugMessage, gasConsumed, result } = mapExecResult(
-      contract.api.registry,
-      json.toJSON()
-    );
+    const { debugMessage, gasConsumed, result } = json;
 
     const outcome = {
       debugMessage,
       gasConsumed,
       output:
         result.isOk && fragment.returnType
-          ? formatData(
+          ? createTypeUnsafe(
               contract.api.registry,
-              result.asOk.data,
-              fragment.returnType
+              fragment.returnType.type,
+              [result.asOk.data.toU8a(true)],
+              { isPedantic: true }
             )
           : null,
       result
@@ -295,38 +285,38 @@ function buildEstimate(
   };
 }
 
-function mapExecResult(registry: Registry, json: AnyJson): ContractExecResult {
-  assert(
-    isObject(json) && !Array.isArray(json),
-    'Invalid JSON result retrieved'
-  );
+// function mapExecResult(registry: Registry, json: AnyJson): ContractExecResult {
+//   assert(
+//     isObject(json) && !Array.isArray(json),
+//     'Invalid JSON result retrieved'
+//   );
 
-  if (!Object.keys(json).some((key) => ['error', 'success'].includes(key))) {
-    return registry.createType('ContractExecResult', json);
-  }
+//   if (!Object.keys(json).some((key) => ['error', 'success'].includes(key))) {
+//     return registry.createType('ContractExecResult', json);
+//   }
 
-  const from = registry.createType('ContractExecResultTo260', json);
+//   const from = registry.createType('ContractExecResultTo260', json);
 
-  if (from.isSuccess) {
-    const s = from.asSuccess;
+//   if (from.isSuccess) {
+//     const s = from.asSuccess;
 
-    return registry.createType('ContractExecResult', {
-      gasConsumed: s.gasConsumed,
-      result: {
-        ok: {
-          data: s.data,
-          flags: s.flags
-        }
-      }
-    });
-  }
+//     return registry.createType('ContractExecResult', {
+//       gasConsumed: s.gasConsumed,
+//       result: {
+//         ok: {
+//           data: s.data,
+//           flags: s.flags
+//         }
+//       }
+//     });
+//   }
 
-  // in the old format error has no additional information,
-  // map it as-is with an "unknown" error
-  return registry.createType('ContractExecResult', {
-    result: { err: { other: 'unknown' } }
-  });
-}
+//   // in the old format error has no additional information,
+//   // map it as-is with an "unknown" error
+//   return registry.createType('ContractExecResult', {
+//     result: { err: { other: 'unknown' } }
+//   });
+// }
 
 export default class Contract {
   public readonly address: AccountId;
