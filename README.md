@@ -28,7 +28,7 @@ https://patractlabs.github.io/substrate-contracts-book/en/redspot/introduction/
 2. Compile the code `yarn build`
 3. Go to the examples directory, e.g. `cd examples/erc20`
 4. Install the dependencies in the current directory `yarn`
-5. In the `examples/erc20` directory, you can invoke the redspot commands normally. For example: `npx redspot`
+5. In the `examples/erc20` directory, you can invoke the redspot commands normally. For example: `npx redspot compile`
 
 ## License
 
