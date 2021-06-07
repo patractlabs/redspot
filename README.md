@@ -22,6 +22,14 @@ _NOTICE!_
 
 https://patractlabs.github.io/substrate-contracts-book/en/redspot/introduction/
 
+## How to run examples
+
+1. First you need to install the dependencies in the redspot root directory `yarn`
+2. Compile the code `yarn build`
+3. Go to the examples directory, e.g. `cd examples/erc20`
+4. Install the dependencies in the current directory `yarn`
+5. In the `examples/erc20` directory, you can invoke the redspot commands normally. For example: `npx redspot`
+
 ## License
 
 This project is forked from [hardhat](https://github.com/nomiclabs/hardhat), and just base on the `hardhat-core` part then modify it under MIT license. (not include Hardhat Network, "sample-project/" and others which is under NOMIC LABS DEVELOPER LICENSE AGREEMENT and Unlicense, more details refer to [hardhat LICENSE](https://github.com/nomiclabs/hardhat/blob/master/packages/hardhat-core/LICENSE))
@@ -31,3 +39,4 @@ And Redspot would also be distributed under MIT license.
 ## Thanks
 
 [hardhat](https://github.com/nomiclabs/hardhat) - Hardhat is a development environment to compile, deploy, test, and debug your Ethereum software. Get Solidity stack traces & console.log.
+
