@@ -24,6 +24,7 @@ https://patractlabs.github.io/substrate-contracts-book/en/redspot/introduction/
 
 ## How to run examples
 
+0. The node version should be 14
 1. First you need to install the dependencies in the redspot root directory `yarn`
 2. Compile the code `yarn build`
 3. Go to the examples directory, e.g. `cd examples/erc20`

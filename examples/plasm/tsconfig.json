@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "outDir": "dist",
+    "noImplicitAny": false
+  },
+  "include": [
+    "**/*.ts",
+    "node_modules/@plasm/types"
+  ],
+  
+  "files": [
+    "./redspot.config.ts",
+  ]
+}
