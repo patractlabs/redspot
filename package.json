@@ -37,7 +37,7 @@
     "prettier": "2.0.5",
     "pretty-quick": "^3.0.2",
     "ts-jest": "^26.5.5",
-    "ts-node": "^9.0.0",
+    "ts-node": "^10.0.0",
     "tsconfig-paths": "^3.9.0",
     "tslint": "^5.16.0",
     "tslint-config-prettier": "^1.18.0",
