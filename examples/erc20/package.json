@@ -10,7 +10,7 @@
     "@polkadot/api-contract": "4.11.2",
     "@polkadot/types": "4.11.2",
     "@polkadot/util": "6.5.1",
-    "typescript": "4.2.4"
+    "typescript": "^4.3.2"
   },
   "dependencies": {
     "@redspot/chai": "../../build/redspot-chai",
@@ -24,7 +24,7 @@
     "@types/mocha": "^8.0.3",
     "chai": "^4.2.0",
     "redspot": "../../build/redspot-core",
-    "typescript": "4.2.4"
+    "typescript": "^4.3.2"
   },
   "module": "true",
   "scripts": {
