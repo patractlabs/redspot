@@ -34,6 +34,7 @@
     "gulp-rename": "^2.0.0",
     "gulp-typescript": "^6.0.0-alpha.1",
     "husky": "^4.3.0",
+    "node-gyp": "^8.1.0",
     "prettier": "2.0.5",
     "pretty-quick": "^3.0.2",
     "ts-jest": "^26.5.5",
