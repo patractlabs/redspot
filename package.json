@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "0.11.6-2",
+  "version": "0.11.6-3",
   "author": "Patract Labs",
   "private": true,
   "engines": {
@@ -54,5 +54,6 @@
     "test": "polkadot-dev-run-test --coverage --runInBand",
     "test:one": "polkadot-dev-run-test",
     "test:watch": "polkadot-dev-run-test --watch"
-  }
+  },
+  "stableVersion": "0.11.6-2"
 }
