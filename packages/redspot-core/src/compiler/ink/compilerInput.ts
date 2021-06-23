@@ -107,7 +107,7 @@ export async function getCompilerInput(config: InkConfig, patterns?: string[]) {
         ) {
           input.add({
             id: packageInfo.id,
-            name: packageInfo.name,
+            name: packageInfo?.targets?.[0]?.name || packageInfo.name,
             manifestPath: packageInfo.manifest_path,
             targetDirectory: manifest.target_directory
           });
