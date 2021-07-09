@@ -116,7 +116,7 @@ function decodeEvents(
   ]);
 
   events = events.filter((event) => {
-    var accountId = event.event.data[0] as AccountId;
+    const accountId = event.event.data[0] as AccountId;
     if (!addressEq(accountId, contractAddress)) {
       return false;
     } else {
