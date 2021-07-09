@@ -4,23 +4,20 @@ import type {
   AbiMessage,
   ContractCallOutcome
 } from '@polkadot/api-contract/types';
-import { createTypeUnsafe, Raw } from '@polkadot/types';
+import { createTypeUnsafe } from '@polkadot/types';
 import type {
   AccountId,
-  ContractExecResult,
   EventRecord,
   Weight
 } from '@polkadot/types/interfaces';
-import type { AnyJson, CodecArg } from '@polkadot/types/types';
-import { Codec, Registry, TypeDef } from '@polkadot/types/types';
+import type { CodecArg } from '@polkadot/types/types';
 import {
-  assert,
-  isObject,
   isU8a,
   stringCamelCase,
   stringUpperFirst,
   u8aToHex
 } from '@polkadot/util';
+import { addressEq } from '@polkadot/util-crypto';
 import BN from 'bn.js';
 import chalk from 'chalk';
 import log from 'redspot/logger';
@@ -107,18 +104,28 @@ function buildPopulate(
 }
 
 function decodeEvents(
+  contractAddress: any,
   records: SubmittableResult,
   abi: Abi
 ): DecodedEvent[] | undefined {
   let events: EventRecord[];
 
-  events = records.filterRecords('contracts', 'ContractExecution');
+  events = records.filterRecords('contracts', [
+    'ContractEmitted',
+    'ContractExecution'
+  ]);
+
+  events = events.filter((event) => {
+    var accountId = event.event.data[0] as AccountId;
+    if (!addressEq(accountId, contractAddress)) {
+      return false;
+    } else {
+      return true;
+    }
+  });
 
   if (!events.length) {
-    events = records.filterRecords('contracts', 'ContractEmitted');
-    if (!events.length) {
-      return undefined;
-    }
+    return undefined;
   }
 
   return events.map((event) => {
@@ -257,7 +264,11 @@ function buildSend(
       }
     );
 
-    response.events = decodeEvents(response.result, contract.abi);
+    response.events = decodeEvents(
+      callParams.dest,
+      response.result,
+      contract.abi
+    );
 
     if (!response.error) {
       log.success(`Execute successfully`);
