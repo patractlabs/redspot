@@ -1,3 +1,6 @@
+import type { AccountId } from '@polkadot/types/interfaces';
+import { stringCamelCase, stringUpperFirst } from '@polkadot/util';
+import { addressEq } from '@polkadot/util-crypto';
 import type Contract from '@redspot/patract/contract';
 import { TransactionResponse } from '@redspot/patract/types';
 
@@ -17,7 +20,7 @@ export function supportEmit(Assertion: Chai.AssertionStatic) {
         const isNegated = this.__flags.negate === true;
         this.assert(
           isNegated,
-          `Expected event "${eventName}" to be emitted, but it doesn't` +
+          `Event ${eventName} doesn't` +
             " exist in the contract. Please make sure you've compiled" +
             ' its latest version before running the test.',
           `WARNING: Expected event "${eventName}" NOT to be emitted.` +
@@ -30,9 +33,31 @@ export function supportEmit(Assertion: Chai.AssertionStatic) {
         return;
       }
 
-      this.logs = (response.events || []).filter(
-        ({ name }) => name.toLowerCase() === eventName.toLowerCase()
-      );
+      const contractEvents =
+        response?.result
+          ?.filterRecords('contracts', ['ContractEmitted', 'ContractExecution'])
+          ?.filter((event) => {
+            const accountId = event.event.data[0] as AccountId;
+            if (!addressEq(accountId, contract.address)) {
+              return false;
+            } else {
+              return true;
+            }
+          }) || [];
+
+      this.logs = contractEvents
+        .map((event) => {
+          const decoded = contract.abi.decodeEvent(
+            event.event.data[1] as any
+          ) as any;
+
+          decoded.name = stringUpperFirst(
+            stringCamelCase(decoded.event.identifier)
+          );
+
+          return decoded;
+        })
+        .filter(({ name }) => name.toLowerCase() === eventName.toLowerCase());
 
       this.assert(
         this.logs.length > 0,
