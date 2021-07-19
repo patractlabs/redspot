@@ -11,10 +11,7 @@ const definitions: OverrideBundleDefinition = {
         AccountInfo: 'AccountInfoWithDualRefCount',
         FullIdentification: 'AccountId',
         AuthorityState: {
-          _enum: [
-            'Working',
-            'Waiting'
-          ]
+          _enum: ['Working', 'Waiting']
         },
         EraIndex: 'u32',
         ActiveEraInfo: {
