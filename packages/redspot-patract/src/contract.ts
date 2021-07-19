@@ -184,11 +184,13 @@ function buildCall(
       origin
     });
 
-    const { debugMessage, gasConsumed, result } = json;
+    const { debugMessage, gasRequired, gasConsumed, result } = json;
 
     const outcome = {
       debugMessage,
       gasConsumed,
+      gasRequired:
+        gasRequired && !gasRequired.isZero() ? gasRequired : gasConsumed,
       output:
         result.isOk && fragment.returnType
           ? createTypeUnsafe(
