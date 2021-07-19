@@ -1,4 +1,4 @@
-import { expandMetadata, Metadata } from '@polkadot/metadata';
+import { expandMetadata, Metadata } from '@polkadot/types';
 import { GenericExtrinsic, StorageKey } from '@polkadot/types';
 import Table from 'cli-table3';
 import { Registry, WsProvider } from 'redspot/types';

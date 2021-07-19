@@ -7,6 +7,12 @@
     "node": ">=8.2.0",
     "yarn": "^1.10.1"
   },
+  "resolutions": {
+    "@polkadot/api": "^5.0.1",
+    "@polkadot/api-contract": "^5.0.1",
+    "@polkadot/types": "^5.0.1",
+    "@polkadot/util": "^7.0.1"
+  },
   "workspaces": [
     "packages/*"
   ],

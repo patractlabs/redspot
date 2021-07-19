@@ -8,7 +8,7 @@
     "redspot": "^0.11.8"
   },
   "dependencies": {
-    "@polkadot/api": "^4.17.1",
-    "@polkadot/api-contract": "^4.17.1"
+    "@polkadot/api": "^5.0.1",
+    "@polkadot/api-contract": "^5.0.1"
   }
 }
