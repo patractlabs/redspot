@@ -20,7 +20,9 @@ _NOTICE!_
 
 ## Documentation
 
-https://patractlabs.github.io/substrate-contracts-book/en/redspot/introduction/
+[https://docs.patract.io/en/redspot/introduction.html](https://docs.patract.io/en/redspot/introduction.html)
+
+> Chinese: [https://docs.patract.io/redspot/introduction.html](https://docs.patract.io/redspot/introduction.html)
 
 ## How to run examples
 
