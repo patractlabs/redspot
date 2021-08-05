@@ -162,7 +162,10 @@ export default class ContractFactory {
       throw new RedspotPluginError(pluginName, 'PutCode failed');
     });
 
-    const record = status.result.findRecord('contracts', 'CodeStored');
+    // const record = status.result.findRecord('contracts', 'CodeStored');
+    const records = status.result.filterRecords('contracts', 'CodeStored');
+    // There may be multiple Instantiated events
+    const record = records[records.length - 1];
     const depositRecord = status.result.findRecord('balances', 'Deposit');
 
     const codeHash = record?.event.data[0] as CodeHash;
@@ -259,7 +262,9 @@ export default class ContractFactory {
       throw new RedspotPluginError(pluginName, 'Instantiation failed');
     });
 
-    const record = status.result.findRecord('contracts', 'Instantiated');
+    const records = status.result.filterRecords('contracts', 'Instantiated');
+    // There may be multiple Instantiated events
+    const record = records[records.length - 1];
     const depositRecord = status.result.findRecord('balances', 'Deposit');
     const successRecord = status.result.findRecord(
       'system',
@@ -368,7 +373,9 @@ export default class ContractFactory {
       throw new RedspotPluginError(pluginName, 'Instantiation failed');
     });
 
-    const record = status.result.findRecord('contracts', 'Instantiated');
+    const records = status.result.filterRecords('contracts', 'Instantiated');
+    // There may be multiple Instantiated events
+    const record = records[records.length - 1];
     const depositRecord = status.result.findRecord('balances', 'Deposit');
     const successRecord = status.result.findRecord(
       'system',
