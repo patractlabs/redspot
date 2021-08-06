@@ -20,7 +20,7 @@ _NOTICE!_
 
 ## Documentation
 
-[https://docs.patract.io/en/redspot/introduction.html](https://docs.patract.io/en/redspot/introduction.html)
+[https://docs.patract.io/en/redspot/overview](https://docs.patract.io/en/redspot/overview)
 
 > Chinese: [https://docs.patract.io/redspot/introduction.html](https://docs.patract.io/redspot/introduction.html)
 
