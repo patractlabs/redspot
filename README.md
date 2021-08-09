@@ -20,7 +20,7 @@ _NOTICE!_
 
 ## Documentation
 
-[https://docs.patract.io/en/redspot/overview](https://docs.patract.io/en/redspot/overview)
+[https://docs.patract.io/en/redspot/introduction](https://docs.patract.io/en/redspot/introduction)
 
 > Chinese: [https://docs.patract.io/redspot/introduction.html](https://docs.patract.io/redspot/introduction.html)
 
@@ -42,4 +42,3 @@ And Redspot would also be distributed under MIT license.
 ## Thanks
 
 [hardhat](https://github.com/nomiclabs/hardhat) - Hardhat is a development environment to compile, deploy, test, and debug your Ethereum software. Get Solidity stack traces & console.log.
-
