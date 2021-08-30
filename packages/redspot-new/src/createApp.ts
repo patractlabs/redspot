@@ -90,7 +90,7 @@ function run(
   // rename package.json name field
   const packageJson = require(path.join(root, 'package.json'));
   packageJson.name = appName;
-  fs.writeJSONSync(path.join(root, 'package.json'), packageJson);
+  fs.writeJSONSync(path.join(root, 'package.json'), packageJson, { spaces: 2 });
 
   console.log('Installing packages. This might take a while.');
 
