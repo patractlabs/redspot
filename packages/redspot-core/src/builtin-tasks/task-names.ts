@@ -59,3 +59,5 @@ export const TASK_TEST_GET_TEST_FILES = 'test:get-test-files';
 export const TASK_TEST_SETUP_TEST_ENVIRONMENT = 'test:setup-test-environment';
 
 export const TASK_TESTNET = 'testnet';
+
+export const TASK_METADATA = 'metadata';
