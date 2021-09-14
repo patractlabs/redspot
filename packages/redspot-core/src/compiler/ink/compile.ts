@@ -12,7 +12,11 @@ export type InkOutput = {
   contract: string;
 };
 
-export async function compile(input: InkInput, verbose?: boolean, release? :boolean) {
+export async function compile(
+  input: InkInput,
+  verbose?: boolean,
+  release?: boolean
+) {
   const output: InkOutput[] = [];
 
   for (const source of input.sources) {
