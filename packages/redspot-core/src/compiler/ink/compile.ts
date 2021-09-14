@@ -12,7 +12,7 @@ export type InkOutput = {
   contract: string;
 };
 
-export async function compile(input: InkInput, verbose?: boolean) {
+export async function compile(input: InkInput, verbose?: boolean, release? :boolean) {
   const output: InkOutput[] = [];
 
   for (const source of input.sources) {
@@ -23,6 +23,10 @@ export async function compile(input: InkInput, verbose?: boolean) {
       '--manifest-path',
       source.manifestPath
     ];
+
+    if (release) {
+      args = args.concat('--release');
+    }
 
     if (verbose) {
       args = args.concat('--', 'verbose');

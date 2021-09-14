@@ -176,6 +176,7 @@ export interface RedspotArguments {
   logLevel: string;
   maxMemory?: number;
   tsconfig?: string;
+  release: boolean;
 }
 
 export type RedspotParamDefinitions = {
