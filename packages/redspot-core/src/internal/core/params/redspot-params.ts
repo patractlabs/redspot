@@ -57,6 +57,15 @@ export const REDSPOT_PARAM_DEFINITIONS: RedspotParamDefinitions = {
     isOptional: true,
     isVariadic: false
   },
+  release: {
+    name: 'release',
+    defaultValue: false,
+    description: 'Enables optimised wasm binary',
+    type: types.boolean,
+    isFlag: true,
+    isOptional: true,
+    isVariadic: false
+  },
   logLevel: {
     name: 'logLevel',
     defaultValue: '2',

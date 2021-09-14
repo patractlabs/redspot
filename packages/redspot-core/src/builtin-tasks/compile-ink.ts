@@ -59,7 +59,7 @@ subtask(
   async ({ input }: { input: InkInput }, { redspotArguments }) => {
     if (!input.sources.length) return;
 
-    const output = await compile(input, redspotArguments.verbose);
+    const output = await compile(input, redspotArguments.verbose, redspotArguments.release);
 
     return output;
   }
