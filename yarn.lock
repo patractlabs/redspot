@@ -2340,7 +2340,7 @@ __metadata:
     "@polkadot/api": ^5.0.1
     "@polkadot/api-contract": ^5.0.1
   peerDependencies:
-    redspot: ^0.11.9-3
+    redspot: ^0.11.9-4
   languageName: unknown
   linkType: soft
 
@@ -2351,7 +2351,7 @@ __metadata:
     "@polkadot/api": ^5.0.1
     "@polkadot/api-contract": ^5.0.1
   peerDependencies:
-    redspot: ^0.11.9-3
+    redspot: ^0.11.9-4
   languageName: unknown
   linkType: soft
 
@@ -2376,7 +2376,7 @@ __metadata:
     lodash: ^4.17.20
     sync-request: ^6.1.0
   peerDependencies:
-    redspot: ^0.11.9-3
+    redspot: ^0.11.9-4
   languageName: unknown
   linkType: soft
 
@@ -2384,7 +2384,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@redspot/jupiter@workspace:packages/redspot-jupiter"
   peerDependencies:
-    redspot: ^0.11.9-3
+    redspot: ^0.11.9-4
   languageName: unknown
   linkType: soft
 
@@ -2395,7 +2395,7 @@ __metadata:
     "@polkadot/api": ^5.0.1
     "@polkadot/apps-config": 0.94.2-77
   peerDependencies:
-    redspot: ^0.11.9-3
+    redspot: ^0.11.9-4
   languageName: unknown
   linkType: soft
 
@@ -2406,7 +2406,7 @@ __metadata:
     "@polkadot/api": ^5.0.1
     "@polkadot/api-contract": ^5.0.1
   peerDependencies:
-    redspot: ^0.11.9-3
+    redspot: ^0.11.9-4
   languageName: unknown
   linkType: soft
 
