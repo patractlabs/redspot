@@ -8,7 +8,7 @@ export function supportChangeTokenBalances(Assertion: Chai.AssertionStatic) {
     this: any,
     token: Contract,
     accounts: Account[],
-    balanceChanges: (BN | string | number | BigInt)[]
+    balanceChanges: (BN | string | number | bigint)[]
   ) {
     const subject = this._obj;
     const derivedPromise = Promise.all([

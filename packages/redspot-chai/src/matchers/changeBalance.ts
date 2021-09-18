@@ -8,7 +8,7 @@ export function supportChangeBalance(Assertion: Chai.AssertionStatic) {
   Assertion.addMethod('changeBalance', function (
     this: any,
     account: Account,
-    balanceChange: BN | string | number | BigInt,
+    balanceChange: BN | string | number | bigint,
     options: BalanceChangeOptions
   ) {
     const subject = this._obj;

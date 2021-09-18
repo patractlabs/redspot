@@ -114,7 +114,7 @@ export class TransactionWatcher {
         const d = events
           .filter(
             (event) =>
-              (event.phase.isNone ? null : event.phase.value.toNumber()) ===
+              (event.phase.isEmpty ? null : event.phase.value.toNumber()) ===
               tx.index
           )
           .filter((event) => {

@@ -11,7 +11,7 @@ export function getAddresses(accounts: Account[]) {
 
 export async function getBalances(
   accounts: Account[],
-  blockNumber?: string | number | BigInt | BN
+  blockNumber?: string | number | bigint | BN
 ) {
   return Promise.all(
     accounts.map((account) => getBalance(account, blockNumber))
@@ -20,7 +20,7 @@ export async function getBalances(
 
 export async function getBalance(
   account: Account,
-  blockNumber?: string | number | BigInt | BN
+  blockNumber?: string | number | bigint | BN
 ) {
   const { network } = require('redspot');
 

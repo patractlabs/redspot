@@ -2,7 +2,6 @@ import { SubmittableResult } from '@polkadot/api';
 import type { SignerOptions } from '@polkadot/api/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import type { Registry } from '@polkadot/types/types';
-import type { Signer } from 'redspot/types';
 import type { TransactionResponse } from './types';
 
 export async function buildTx(
@@ -54,9 +53,9 @@ export async function buildTx(
                         ])
                       );
                       message = `${error.section}.${error.name}${
-                        Array.isArray(error.documentation)
-                          ? `(${error.documentation.join('')})`
-                          : error.documentation || ''
+                        Array.isArray(error.docs)
+                          ? `(${error.docs.join('')})`
+                          : error.docs || ''
                       }`;
                     } catch (error) {
                       // swallow
