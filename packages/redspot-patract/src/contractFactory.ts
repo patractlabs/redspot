@@ -7,7 +7,6 @@ import type { Weight } from '@polkadot/types/interfaces';
 import type { CodeHash } from '@polkadot/types/interfaces/contracts';
 import type { AccountId } from '@polkadot/types/interfaces/types';
 import type { AnyJson, ISubmittableResult } from '@polkadot/types/types';
-import { CodecArg } from '@polkadot/types/types';
 import {
   compactAddLength,
   compactStripLength,
@@ -17,6 +16,7 @@ import {
   u8aToU8a
 } from '@polkadot/util';
 import { blake2AsU8a, decodeAddress } from '@polkadot/util-crypto';
+import BN from 'bn.js';
 import chalk from 'chalk';
 import log from 'redspot/logger';
 import { RedspotPluginError } from 'redspot/plugins';
@@ -134,7 +134,7 @@ export default class ContractFactory {
 
     const codeStorage = await this.api.query.contracts.codeStorage(wasmHash);
 
-    if (!codeStorage.isNone) {
+    if (!codeStorage.isEmpty) {
       const hash = this.api.registry.createType('CodeHash', wasmHash);
       log.info(`Use the uploaded codehash: ${hash.toString()}`);
       return hash;
@@ -207,10 +207,15 @@ export default class ContractFactory {
     const codeHash = (this.abi.json as any).source.hash;
     const constructor = this.abi.findConstructor(constructorOrId);
     const encoded = constructor.toU8a(params);
+    const tombstoneDeposit = (
+      (this.api.consts.contracts.tombstoneDeposit as any) || new BN(0)
+    ).muln(10);
+    const contractDeposit =
+      (this.api.consts.contracts.contractDeposit as any) || new BN(0);
     const mindeposit = this.api.consts.balances.existentialDeposit
-      .add(this.api.consts.contracts.tombstoneDeposit)
-      .muln(10);
-    const endowment = overrides.value || mindeposit;
+      .add(tombstoneDeposit)
+      .add(contractDeposit);
+    const endowment = overrides.value;
 
     if (overrides.value) {
       const endowmentConverted = this.api.createType(
@@ -319,9 +324,14 @@ export default class ContractFactory {
 
     const constructor = this.abi.findConstructor(constructorOrId);
     const encoded = constructor.toU8a(params);
+    const tombstoneDeposit = (
+      (this.api.consts.contracts.tombstoneDeposit as any) || new BN(0)
+    ).muln(10);
+    const contractDeposit =
+      (this.api.consts.contracts.contractDeposit as any) || new BN(0);
     const mindeposit = this.api.consts.balances.existentialDeposit
-      .add(this.api.consts.contracts.tombstoneDeposit)
-      .muln(10);
+      .add(tombstoneDeposit)
+      .add(contractDeposit);
     const endowment = overrides.value || mindeposit;
 
     if (overrides.value) {
@@ -474,7 +484,7 @@ export default class ContractFactory {
       deployedAddress
     );
 
-    if (contractInfo.isNone) {
+    if (contractInfo.isEmpty) {
       return this.deploy(constructorOrId, ...params, overrides);
     }
 
@@ -509,7 +519,7 @@ export default class ContractFactory {
    */
   async getContractAddress(
     constructorOrId: ConstructorOrId,
-    params: CodecArg[],
+    params: unknown[],
     salt?: Uint8Array | string | null
   ) {
     const withSalt = this.api.tx.contracts.instantiate.meta.args.length === 5;
@@ -578,7 +588,7 @@ export default class ContractFactory {
       );
     }
 
-    let params: CodecArg[] = [];
+    let params: unknown[] = [];
 
     const constructor = this.abi.findConstructor(constructorOrId);
 
@@ -587,14 +597,14 @@ export default class ContractFactory {
       typeof args[args.length - 1] === 'object'
     ) {
       overrides = { ...(args[args.length - 1] as Partial<CallOverrides>) };
-      params = [...(args.slice(0, -1) as CodecArg[])];
+      params = [...args.slice(0, -1)];
     } else if (args.length !== constructor.args.length) {
       throw new RedspotPluginError(
         pluginName,
         `Expected ${constructor.args.length} arguments to contract message '${constructor.identifier}', found ${args.length}`
       );
     } else {
-      params = [...(args as CodecArg[])];
+      params = [...(args as unknown[])];
     }
 
     return {

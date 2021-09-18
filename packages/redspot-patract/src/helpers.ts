@@ -21,7 +21,7 @@ export function converSignerToAddress(signer?: Signer | string): string {
 export async function getRandomSigner(
   env: RuntimeEnvironment,
   from?: Signer | string,
-  amount?: BN | number | string | BigInt
+  amount?: BN | number | string | bigint
 ): Promise<Signer> {
   await env.network.api.isReady;
   const api = env.network.api;

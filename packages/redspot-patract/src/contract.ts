@@ -10,7 +10,6 @@ import type {
   EventRecord,
   Weight
 } from '@polkadot/types/interfaces';
-import type { CodecArg } from '@polkadot/types/types';
 import {
   isU8a,
   stringCamelCase,
@@ -57,7 +56,7 @@ async function populateTransaction(
   }
 
   // The ABI coded transaction
-  const data = fragment.toU8a(args as CodecArg[]);
+  const data = fragment.toU8a(args as unknown[]);
 
   const maximumBlockWeight = contract.api.consts.system.blockWeights
     ? contract.api.consts.system.blockWeights.maxBlock
@@ -205,13 +204,13 @@ function buildCall(
 
     if (result.isOk) {
       if (!isEstimateGas) {
-        log.success(`Output: ${outcome.output?.toString()}`);
+        log.success(`Output: ${(outcome.output as any)?.toString()}`);
       } else {
         log.success(`Output: ${outcome.gasConsumed.toString()}`);
       }
     } else {
       log.error(
-        `output: ${outcome.output?.toString()}; debugMessage: ${outcome.debugMessage.toString()}`
+        `output: ${(outcome.output as any)?.toString()}; debugMessage: ${outcome.debugMessage.toString()}`
       );
     }
 

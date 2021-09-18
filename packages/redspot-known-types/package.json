@@ -8,7 +8,7 @@
     "redspot": "^0.11.9-4"
   },
   "dependencies": {
-    "@polkadot/api": "^5.0.1",
-    "@polkadot/apps-config": "0.94.2-77"
+    "@polkadot/api": "^6.0.1",
+    "@polkadot/apps-config": "^0.95.1"
   }
 }
