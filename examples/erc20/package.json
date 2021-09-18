@@ -28,8 +28,8 @@
   },
   "module": "true",
   "scripts": {
-    "build": "npx redspot compile",
-    "test": "npx redspot test",
-    "explorer": "npx redspot explorer"
+    "build": "yarn redspot compile",
+    "test": "yarn redspot test --no-compile",
+    "explorer": "yarn redspot explorer"
   }
 }

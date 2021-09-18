@@ -207,9 +207,14 @@ export default class ContractFactory {
     const codeHash = (this.abi.json as any).source.hash;
     const constructor = this.abi.findConstructor(constructorOrId);
     const encoded = constructor.toU8a(params);
-    const mindeposit = this.api.consts.balances.existentialDeposit.add(
+    const tombstoneDeposit = (
       (this.api.consts.contracts.tombstoneDeposit as any) || new BN(0)
-    );
+    ).muln(10);
+    const contractDeposit =
+      (this.api.consts.contracts.contractDeposit as any) || new BN(0);
+    const mindeposit = this.api.consts.balances.existentialDeposit
+      .add(tombstoneDeposit)
+      .add(contractDeposit);
     const endowment = overrides.value;
 
     if (overrides.value) {
@@ -319,9 +324,14 @@ export default class ContractFactory {
 
     const constructor = this.abi.findConstructor(constructorOrId);
     const encoded = constructor.toU8a(params);
-    const mindeposit = this.api.consts.balances.existentialDeposit.add(
+    const tombstoneDeposit = (
       (this.api.consts.contracts.tombstoneDeposit as any) || new BN(0)
-    );
+    ).muln(10);
+    const contractDeposit =
+      (this.api.consts.contracts.contractDeposit as any) || new BN(0);
+    const mindeposit = this.api.consts.balances.existentialDeposit
+      .add(tombstoneDeposit)
+      .add(contractDeposit);
     const endowment = overrides.value || mindeposit;
 
     if (overrides.value) {

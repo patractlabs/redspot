@@ -646,13 +646,13 @@ __metadata:
 
 "@redspot/patract@file:../../build/redspot-patract::locator=erc20%40workspace%3A.":
   version: 0.11.9-4
-  resolution: "@redspot/patract@file:../../build/redspot-patract#../../build/redspot-patract::hash=d6aaf7&locator=erc20%40workspace%3A."
+  resolution: "@redspot/patract@file:../../build/redspot-patract#../../build/redspot-patract::hash=e977b0&locator=erc20%40workspace%3A."
   dependencies:
     "@polkadot/api": ^6.0.1
     "@polkadot/api-contract": ^6.0.1
   peerDependencies:
     redspot: ^0.11.9-4
-  checksum: 5afde658a9b6f21f421ac84301d6030ff52ed217e1206d0ccb486f98ea69dacc70564295d6306958f2ad99abed86bb70fbdd0b5715395efd837771618f66fcf0
+  checksum: 1e7a099384de50cb7bdd8dd8303bacf93c6c9a7cdeaa4bff6665dc7882ef73afd36125191ba2f6125176c582bd68ca3f1974bb08693d4330704994b5f21e94f0
   languageName: node
   linkType: hard
 

@@ -22,7 +22,7 @@
     "typescript": "^4.3.2"
   },
   "scripts": {
-    "build": "npx redspot compile",
-    "test": "npx redspot test"
+    "build": "yarn redspot compile",
+    "test": "yarn redspot test"
   }
 }

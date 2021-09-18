@@ -32,7 +32,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.15.3, @babel/runtime@npm:^7.15.4":
+"@babel/runtime@npm:^7.14.8, @babel/runtime@npm:^7.15.3, @babel/runtime@npm:^7.15.4":
   version: 7.15.4
   resolution: "@babel/runtime@npm:7.15.4"
   dependencies:
@@ -47,6 +47,15 @@ __metadata:
   dependencies:
     regenerator-runtime: ^0.13.4
   checksum: 257dc2594355dd8798455f25b6f2f9a00f162b427391265752933e0e3337b3b14661d09283187d5039ae3764f723890ffe767e995c73d662f1d515bdf48e5ade
+  languageName: node
+  linkType: hard
+
+"@bifrost-finance/type-definitions@npm:1.2.3":
+  version: 1.2.3
+  resolution: "@bifrost-finance/type-definitions@npm:1.2.3"
+  dependencies:
+    "@open-web3/orml-type-definitions": ^0.9.4-7
+  checksum: 84ca65c8eb6a3a2ada06882e8c00bf4b882cd9515bb6f475c9cc7034efd182d180556d936128d6832743428cd86318c175a5f44e57b5e9dbf0cc82347d10c64e
   languageName: node
   linkType: hard
 
@@ -80,19 +89,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@digitalnative/type-definitions@npm:1.1.9":
-  version: 1.1.9
-  resolution: "@digitalnative/type-definitions@npm:1.1.9"
+"@digitalnative/type-definitions@npm:1.1.10":
+  version: 1.1.10
+  resolution: "@digitalnative/type-definitions@npm:1.1.10"
   dependencies:
+    "@polkadot/keyring": ^6.9.1
     "@polkadot/types": ^4.13.1
-  checksum: 7fd8c0a6c6704cc2358efb3949c7062b8a2e1cc18be8df9b64ba51203a0d7d210515c3a7c6978d517e07db1a2059cd034e2f234ab2c234cf7217d253931b030a
+  checksum: 9aab820a9f65694ddb6f725cc62e1e8d5df8d82eb497b4101acbc73a947d2c8e7b75f5ea93d0df8335a4fe14b980ac64996ceed646528505a2c829e23b71bb0f
   languageName: node
   linkType: hard
 
-"@docknetwork/node-types@npm:0.4.6":
-  version: 0.4.6
-  resolution: "@docknetwork/node-types@npm:0.4.6"
-  checksum: 8ed2649a3c11dd3ffb851dc0771a4c7bda673aec4332c86038d96f1c7c25d1a8b21d67b0133f7a15dc189e66b09e62fe4a0c6c0ef080ef8572b9e3a7dfe65217
+"@docknetwork/node-types@npm:0.4.7":
+  version: 0.4.7
+  resolution: "@docknetwork/node-types@npm:0.4.7"
+  checksum: 30441718faf9a1349301692f0693f0fb95039557711de792fa513a7195b000ace0c85f6fd7ef89101d34f9fe8c3cec3491ac455cf68290ea1678fdb15992b38f
   languageName: node
   linkType: hard
 
@@ -103,10 +113,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@equilab/definitions@npm:1.2.6":
-  version: 1.2.6
-  resolution: "@equilab/definitions@npm:1.2.6"
-  checksum: e58599e6611bfab6fe8d108f5afd5607cdbb7118351232144fad74874b964f0b595edee3e38f6f91309c53dc2eeb2803e860db4ece386d8a69a1b43389db81c3
+"@equilab/definitions@npm:1.2.10":
+  version: 1.2.10
+  resolution: "@equilab/definitions@npm:1.2.10"
+  checksum: 833d44ccd68927cfbfb574a9c41414f0a1ab570a6c4990f1a7abf7e82338565bf39be287c5bbe0d85339c7ff720a1c1b750e3743dea542b8591842ef0b572979
   languageName: node
   linkType: hard
 
@@ -117,10 +127,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kiltprotocol/type-definitions@npm:0.1.8":
-  version: 0.1.8
-  resolution: "@kiltprotocol/type-definitions@npm:0.1.8"
-  checksum: a37e63f0d5ad8c04c26e1e466ecf12b09fc1408d94768d1dc9c38ef34b893a551af61a2b15f89e7b0ce5fbeb5785793d72c1fb0fc35742ebfa70b056c0c96ecf
+"@kiltprotocol/type-definitions@npm:0.1.10":
+  version: 0.1.10
+  resolution: "@kiltprotocol/type-definitions@npm:0.1.10"
+  checksum: 94a1c2992a987fe79828420d91b00c3c936d43f569aa7fcc7aaf39c457db1a0896f7b5d6e0cdaca2d38e4a4632b9a28ddd6b13e99f1aac2aee5ecb5331a3ed62
   languageName: node
   linkType: hard
 
@@ -176,10 +186,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@phala/typedefs@npm:0.2.1":
-  version: 0.2.1
-  resolution: "@phala/typedefs@npm:0.2.1"
-  checksum: 3434c4b9fc5f8eeeb63e27d7a67b569a80b742e22aa417397eb098bc10f243cb8bf1398463e4e37c02de1e87d80630b3d5b70922028739ccab31b2b5eab58bc9
+"@phala/typedefs@npm:0.2.5":
+  version: 0.2.5
+  resolution: "@phala/typedefs@npm:0.2.5"
+  checksum: 587142639b9cdfb7f473925d08bbe99bb52698f32cda1335a2b505a2879bf88987df5d386e32f4887d606bfd89acd5b4a89503a833d71dff479adbeb5daf9be0
   languageName: node
   linkType: hard
 
@@ -230,35 +240,37 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/apps-config@npm:0.94.2-77":
-  version: 0.94.2-77
-  resolution: "@polkadot/apps-config@npm:0.94.2-77"
+"@polkadot/apps-config@npm:^0.95.1":
+  version: 0.95.1
+  resolution: "@polkadot/apps-config@npm:0.95.1"
   dependencies:
     "@acala-network/type-definitions": 1.0.2-2
-    "@babel/runtime": ^7.14.6
+    "@babel/runtime": ^7.14.8
+    "@bifrost-finance/type-definitions": 1.2.3
     "@crustio/type-definitions": 0.0.10
     "@darwinia/types": 1.1.5
-    "@digitalnative/type-definitions": 1.1.9
-    "@docknetwork/node-types": 0.4.6
+    "@digitalnative/type-definitions": 1.1.10
+    "@docknetwork/node-types": 0.4.7
     "@edgeware/node-types": 3.6.2-wako
-    "@equilab/definitions": 1.2.6
+    "@equilab/definitions": 1.2.10
     "@interlay/polkabtc-types": 0.7.4
-    "@kiltprotocol/type-definitions": 0.1.8
+    "@kiltprotocol/type-definitions": 0.1.10
     "@laminar/type-definitions": 0.3.1
-    "@phala/typedefs": 0.2.1
-    "@polkadot/networks": ^7.0.1
+    "@phala/typedefs": 0.2.5
+    "@polkadot/networks": ^7.1.1
     "@polymathnetwork/polymesh-types": 0.0.2
     "@snowfork/snowbridge-types": 0.2.3
-    "@sora-substrate/type-definitions": 1.3.34
+    "@sora-substrate/type-definitions": 1.4.1
     "@subsocial/types": 0.5.9-dev.2
-    "@zeitgeistpm/type-defs": 0.2.0
-    moonbeam-types-bundle: 1.1.25
+    "@zeitgeistpm/type-defs": 0.2.5
+    moonbeam-types-bundle: 1.1.27
     pontem-types-bundle: 1.0.5
-  checksum: 551b5c0767fdb33c0eea3d45aebff7c69cac5dd8c5afafecf9973f19cbb677cc62258e79b423b6f5f2d1f8c363aafd8c664e66a77a438977920ae51ba0daf3ac
+    rxjs: ^7.2.0
+  checksum: a9ca579c230474e2bcc24eb406afc14845f911b0b50098c6c02a18caa19a82b1ccb9025904098c344d6a0c8d4dee8b16a536643faa1ea52b360492fe63dd0cf2
   languageName: node
   linkType: hard
 
-"@polkadot/keyring@npm:^6.5.2-1, @polkadot/keyring@npm:^6.8.1":
+"@polkadot/keyring@npm:^6.5.2-1, @polkadot/keyring@npm:^6.9.1":
   version: 6.11.1
   resolution: "@polkadot/keyring@npm:6.11.1"
   dependencies:
@@ -272,7 +284,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/keyring@npm:^7.4.1":
+"@polkadot/keyring@npm:^7.0.3, @polkadot/keyring@npm:^7.4.1":
   version: 7.4.1
   resolution: "@polkadot/keyring@npm:7.4.1"
   dependencies:
@@ -295,21 +307,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/networks@npm:7.4.1, @polkadot/networks@npm:^7.4.1":
+"@polkadot/networks@npm:7.4.1, @polkadot/networks@npm:^7.1.1, @polkadot/networks@npm:^7.4.1":
   version: 7.4.1
   resolution: "@polkadot/networks@npm:7.4.1"
   dependencies:
     "@babel/runtime": ^7.15.4
   checksum: 08a565ed624131eaae2553d46fcaf10eb58ea405f9b8ca6ee40dc2a28a21e65eebe007b9c6815230d2e268b6d03486b20e8e4f19cdc9e59ed52193fa0f53a17e
-  languageName: node
-  linkType: hard
-
-"@polkadot/networks@npm:^7.0.1":
-  version: 7.0.1
-  resolution: "@polkadot/networks@npm:7.0.1"
-  dependencies:
-    "@babel/runtime": ^7.14.6
-  checksum: 85af50564e31ba181c4f1851c938fad148627df99651c966352359a95e85b8e0d7f41d9775ad4f056c81e7a455f011fb70b2e2130f45836851d5018b85bb8bd4
   languageName: node
   linkType: hard
 
@@ -588,44 +591,44 @@ __metadata:
   linkType: hard
 
 "@redspot/chai@file:../../build/redspot-chai::locator=erc20%40workspace%3A.":
-  version: 0.11.9-3
-  resolution: "@redspot/chai@file:../../build/redspot-chai#../../build/redspot-chai::hash=ed3572&locator=erc20%40workspace%3A."
+  version: 0.11.9-4
+  resolution: "@redspot/chai@file:../../build/redspot-chai#../../build/redspot-chai::hash=345d81&locator=erc20%40workspace%3A."
   dependencies:
-    "@polkadot/api": ^5.0.1
-    "@polkadot/api-contract": ^5.0.1
+    "@polkadot/api": ^6.0.1
+    "@polkadot/api-contract": ^6.0.1
   peerDependencies:
-    redspot: ^0.11.9-3
-  checksum: 534d33333867dc378e3219d7fb68d12e35f4667de29cff8aca7c09a9a239019f65ebc584742e3e1a25660b37d034eae235e1a289b49e0c429363b4a460b45096
+    redspot: ^0.11.9-4
+  checksum: 9e2e96d9c985a87c087a65c44b4490f869e4344a024fc74ccb57585dcf7a3a3d77a59d5f3747b90e5eab68707e1d8e43af70b190bc8e6db68ef0f0995858767f
   languageName: node
   linkType: hard
 
 "@redspot/decimals@file:../../build/redspot-decimals::locator=erc20%40workspace%3A.":
-  version: 0.11.9-3
-  resolution: "@redspot/decimals@file:../../build/redspot-decimals#../../build/redspot-decimals::hash=a02f56&locator=erc20%40workspace%3A."
+  version: 0.11.9-4
+  resolution: "@redspot/decimals@file:../../build/redspot-decimals#../../build/redspot-decimals::hash=83338f&locator=erc20%40workspace%3A."
   dependencies:
-    "@polkadot/api": ^5.0.1
-    "@polkadot/api-contract": ^5.0.1
+    "@polkadot/api": ^6.0.1
+    "@polkadot/api-contract": ^6.0.1
   peerDependencies:
-    redspot: ^0.11.9-3
-  checksum: a39d8429f59ea7903af0c39f5b982353a7faae737e25c447b79996730587466fe6cc77e5a7a38b5fd6caade9b4dc635591d6a523d609c4dea7d9488e006a88f5
+    redspot: ^0.11.9-4
+  checksum: ca9f5617d92ee46b55296e3b7cf72ed1e10fc696642779a5be387118dce8c2d30281a35da63544dcbb7b0a69550e80e516627db151df45a8c1bae45c40f92483
   languageName: node
   linkType: hard
 
 "@redspot/explorer@file:../../build/redspot-explorer::locator=erc20%40workspace%3A.":
-  version: 0.11.9-3
-  resolution: "@redspot/explorer@file:../../build/redspot-explorer#../../build/redspot-explorer::hash=c48c5c&locator=erc20%40workspace%3A."
+  version: 0.11.9-4
+  resolution: "@redspot/explorer@file:../../build/redspot-explorer#../../build/redspot-explorer::hash=960c04&locator=erc20%40workspace%3A."
   dependencies:
     cors: ^2.8.5
     express: ^4.17.1
     socket.io: ^4.0.1
     socket.io-client: ^4.0.1
-  checksum: fdad4b34fe80fc4cd652bb6b0fae2766b3cfa9119d73dfb5fb4c8b4091463c7387e4d288d6760d6ccd07640d8a6dc17803f3dbabec82aba485d70c71afcb6d60
+  checksum: 3fc97dcdae67f07d8f38d2c58edb45e5a1d4562a7c65b49fb7453a617156786ed5aea5dddab0183dd783b0e23946d8253f2b5175efc2aa0e67c71f078932d51e
   languageName: node
   linkType: hard
 
 "@redspot/gas-reporter@file:../../build/redspot-gas-reporter::locator=erc20%40workspace%3A.":
-  version: 0.11.9-3
-  resolution: "@redspot/gas-reporter@file:../../build/redspot-gas-reporter#../../build/redspot-gas-reporter::hash=f0b0ab&locator=erc20%40workspace%3A."
+  version: 0.11.9-4
+  resolution: "@redspot/gas-reporter@file:../../build/redspot-gas-reporter#../../build/redspot-gas-reporter::hash=77a457&locator=erc20%40workspace%3A."
   dependencies:
     cli-table3: ^0.6.0
     colors: ^1.4.0
@@ -633,42 +636,42 @@ __metadata:
     lodash: ^4.17.20
     sync-request: ^6.1.0
   peerDependencies:
-    redspot: ^0.11.9-3
-  checksum: a7289ddfdaa82b055b1a2b54a6b3d20764938be5d5d2ed2d5745288c9598003a2bf2a3f7f38f922d80a0772ed1fb722abe552d7b7503016eef447098221b4cb9
+    redspot: ^0.11.9-4
+  checksum: d02fd202b676d080274533e1daf04b2f4f5718d1c8e084517e716abfd2f0595ee89f4cdd86b847b85bf64e905dc08e8848cd0b81adac82351572925d04d79043
   languageName: node
   linkType: hard
 
 "@redspot/known-types@file:../../build/redspot-known-types::locator=erc20%40workspace%3A.":
-  version: 0.11.9-3
-  resolution: "@redspot/known-types@file:../../build/redspot-known-types#../../build/redspot-known-types::hash=2689c8&locator=erc20%40workspace%3A."
+  version: 0.11.9-4
+  resolution: "@redspot/known-types@file:../../build/redspot-known-types#../../build/redspot-known-types::hash=cfafa8&locator=erc20%40workspace%3A."
   dependencies:
-    "@polkadot/api": ^5.0.1
-    "@polkadot/apps-config": 0.94.2-77
+    "@polkadot/api": ^6.0.1
+    "@polkadot/apps-config": ^0.95.1
   peerDependencies:
-    redspot: ^0.11.9-3
-  checksum: 6a5ad0947494205198f14b854a52e857c003f865d3bde4ca45c361bfb8c616b92b07f0e6de9bfe69fe11598c3cdfa9e5cda00ee0172d1c0232151853d1c1418c
+    redspot: ^0.11.9-4
+  checksum: 77c0b6d54e514fd92632a5a3584f0884b39dc07bd7836c2e7104292b1879e04259571ef8af13f8f9f612de026f420870c305151e63c11db5cc6c93ef07115f64
   languageName: node
   linkType: hard
 
 "@redspot/patract@file:../../build/redspot-patract::locator=erc20%40workspace%3A.":
-  version: 0.11.9-3
-  resolution: "@redspot/patract@file:../../build/redspot-patract#../../build/redspot-patract::hash=901431&locator=erc20%40workspace%3A."
+  version: 0.11.9-4
+  resolution: "@redspot/patract@file:../../build/redspot-patract#../../build/redspot-patract::hash=e977b0&locator=erc20%40workspace%3A."
   dependencies:
-    "@polkadot/api": ^5.0.1
-    "@polkadot/api-contract": ^5.0.1
+    "@polkadot/api": ^6.0.1
+    "@polkadot/api-contract": ^6.0.1
   peerDependencies:
-    redspot: ^0.11.9-3
-  checksum: 7dd216c4a72559be5fbdbfe68f5f93eef21b6a2fbea25331d029a0183d13a5889308d545d8e796701acd53973a00a8788a95b3bbe62a94ab85f96c4fe053419d
+    redspot: ^0.11.9-4
+  checksum: 1e7a099384de50cb7bdd8dd8303bacf93c6c9a7cdeaa4bff6665dc7882ef73afd36125191ba2f6125176c582bd68ca3f1974bb08693d4330704994b5f21e94f0
   languageName: node
   linkType: hard
 
 "@redspot/watcher@file:../../build/redspot-watcher::locator=erc20%40workspace%3A.":
-  version: 0.11.9-3
-  resolution: "@redspot/watcher@file:../../build/redspot-watcher#../../build/redspot-watcher::hash=dac446&locator=erc20%40workspace%3A."
+  version: 0.11.9-4
+  resolution: "@redspot/watcher@file:../../build/redspot-watcher#../../build/redspot-watcher::hash=3d42d7&locator=erc20%40workspace%3A."
   dependencies:
     folder-hash: ^4.0.1
     fs-extra: ^9.1.0
-  checksum: fac342c4660e16038e25712c9392df624b87d6b4bd5771b39ddd7664f6789307a4d591528ccf248e5eedb915410c4cf23deec40bc810059870d54d506e1a8891
+  checksum: 0b07174ff46ded400ac56bf69c94be92c0fdd51a87a26b8ffc648984641946dfc9f9d5b39134ca64e94d23aaaa484a81e7667dc1acbc523d8543204599169304
   languageName: node
   linkType: hard
 
@@ -699,12 +702,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sora-substrate/type-definitions@npm:1.3.34":
-  version: 1.3.34
-  resolution: "@sora-substrate/type-definitions@npm:1.3.34"
+"@sora-substrate/type-definitions@npm:1.4.1":
+  version: 1.4.1
+  resolution: "@sora-substrate/type-definitions@npm:1.4.1"
   dependencies:
     "@open-web3/orml-type-definitions": ^0.8.2-9
-  checksum: a09cf54d1334d10d99b5dd47c452ff84882eed0571d89078ec39787c4b33557c3c27e9fa67382025409e3306f0649a2ad83962fce9fec4c577193d65616baedf
+  checksum: 474b5c02ae61a69b3afdf1daa8db627a062315349ef914462841383e87998f3d542518b4ead7e7bd66d5093a25aecfea12a0e37d7c6d457b76dcdf1c73a34ad1
   languageName: node
   linkType: hard
 
@@ -876,10 +879,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@zeitgeistpm/type-defs@npm:0.2.0":
-  version: 0.2.0
-  resolution: "@zeitgeistpm/type-defs@npm:0.2.0"
-  checksum: 2a5a33ef06195c474cd964df69646caab1427af1f14398b5d5bdae43582ec1a729f4327db8a8eba9eaa3d809d9741d911ab51b38bfea1caf80dc4dfe9f87291c
+"@zeitgeistpm/type-defs@npm:0.2.5":
+  version: 0.2.5
+  resolution: "@zeitgeistpm/type-defs@npm:0.2.5"
+  checksum: 559e7b5fd77697cffc08ae9484c60963e2061f76fbb27fe53a303020a66d72f5c75a3db7dbd9e67295fdbf7b2441d450e3aa6bda9e6e86f7ac1eddb1b8f5510e
   languageName: node
   linkType: hard
 
@@ -3124,14 +3127,14 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"moonbeam-types-bundle@npm:1.1.25":
-  version: 1.1.25
-  resolution: "moonbeam-types-bundle@npm:1.1.25"
+"moonbeam-types-bundle@npm:1.1.27":
+  version: 1.1.27
+  resolution: "moonbeam-types-bundle@npm:1.1.27"
   dependencies:
-    "@polkadot/keyring": ^6.8.1
-    "@polkadot/types": ^4.14.1
+    "@polkadot/keyring": ^7.0.3
+    "@polkadot/types": ^5.2.1
     typescript: ^4.1.3
-  checksum: 33d5a2f7dbdc77bb524574dc7784973e25bea487d6996c65198378be7f5fb840e389642dd5617f8e6164182f7a00409c28019b04a819420d092686eb84c32a87
+  checksum: ffd2b949bc7a1ae19bc8405b29c17366378306fdc2d6a60ee32bb4e8191f608b73d044f122fb77f23aee465ad3f302e6085b92f229d25e84a9b3895900a78b44
   languageName: node
   linkType: hard
 
@@ -3659,10 +3662,10 @@ fsevents@~2.3.1:
   linkType: hard
 
 "redspot@file:../../build/redspot-core::locator=erc20%40workspace%3A.":
-  version: 0.11.9-3
-  resolution: "redspot@file:../../build/redspot-core#../../build/redspot-core::hash=3eec6a&locator=erc20%40workspace%3A."
+  version: 0.11.9-4
+  resolution: "redspot@file:../../build/redspot-core#../../build/redspot-core::hash=de608f&locator=erc20%40workspace%3A."
   dependencies:
-    "@polkadot/api": ^5.0.1
+    "@polkadot/api": ^6.0.1
     abort-controller: ^3.0.0
     bn.js: ^5.1.3
     chalk: ^4.1.0
@@ -3692,7 +3695,7 @@ fsevents@~2.3.1:
     uuid: 3.3.2
   bin:
     redspot: internal/cli/cli.js
-  checksum: b03782eb75d99ac8db3dd98182c5bce6c8f4f6f49d60e2fbe74901791894f00b3bac114a15c0348d30b4cdb2be3ff4105088817873a5f0acdbe7a91e3f4a732b
+  checksum: 1456ac77aff08bc20242872e245149f9e7aff1602917b814e4f03ddc1f38d4f1bdef3e8ce3a1ca818211897017b1dabf15ca687eea774db7ac202bfa15ad42dd
   languageName: node
   linkType: hard
 
@@ -3811,7 +3814,7 @@ fsevents@~2.3.1:
   languageName: node
   linkType: hard
 
-"rxjs@npm:^7.3.0":
+"rxjs@npm:^7.2.0, rxjs@npm:^7.3.0":
   version: 7.3.0
   resolution: "rxjs@npm:7.3.0"
   dependencies:
