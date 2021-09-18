@@ -1,7 +1,7 @@
 {
   "name": "root",
   "version": "0.12.1-0",
-  "stableVersion": "0.12.0",
+  "stableVersion": "0.12.1",
   "author": "Patract Labs",
   "private": true,
   "engines": {
