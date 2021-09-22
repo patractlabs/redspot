@@ -1,6 +1,6 @@
 {
   "name": "@redspot/watcher",
-  "version": "0.12.2",
+  "version": "0.12.3-0",
   "author": "Patract Labs",
   "main": "index.js",
   "license": "MIT",
