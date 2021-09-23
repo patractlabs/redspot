@@ -70,7 +70,10 @@ describe('Delegator', () => {
       randomVersion,
       accumulator.abi.project.source.wasmHash,
       adder.abi.project.source.wasmHash,
-      subber.abi.project.source.wasmHash
+      subber.abi.project.source.wasmHash,
+      {
+        value: "10000 UNIT"
+      }
     );
 
     expect(delegator.address).to.exist;
