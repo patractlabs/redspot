@@ -21,11 +21,11 @@ import {
 } from './task-names';
 
 subtask(TASK_COMPILE_INK_PRE, async (_, { config }) => {
-  const isValidEnv = await checkEnv({ version: '0.8.0' });
+  const isValidEnv = await checkEnv({ version: '0.15.0' });
 
   if (!isValidEnv) {
     throw new RedspotError(ERRORS.BUILTIN_TASKS.INK_ENV_ERROR, {
-      version: 'v0.8.0'
+      version: 'v0.15.0'
     });
   }
 

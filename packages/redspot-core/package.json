@@ -1,6 +1,6 @@
 {
   "name": "redspot",
-  "version": "0.12.3-0",
+  "version": "0.13.1-0",
   "author": "Patract Labs",
   "main": "internal/lib/redspot-lib.js",
   "types": "internal/lib/redspot-lib.d.ts",
@@ -9,7 +9,7 @@
     "node": ">=8.2.0"
   },
   "dependencies": {
-    "@polkadot/api": "^6.0.1",
+    "@polkadot/api": "^6.5.2",
     "abort-controller": "^3.0.0",
     "bn.js": "^5.1.3",
     "chalk": "^4.1.0",

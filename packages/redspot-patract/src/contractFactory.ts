@@ -144,7 +144,7 @@ export default class ContractFactory {
     delete options.gasLimit;
     delete options.dest;
 
-    const contractName = this.abi.project.contract.name;
+    const contractName = this.abi.info.contract.name.toString();
     const wasmCode = u8aToHex(this.wasm);
     log.info('');
     log.info(chalk.magenta(`===== PutCode ${contractName} =====`));
@@ -203,7 +203,7 @@ export default class ContractFactory {
   ): Promise<AccountId> => {
     const { params, overrides } = this._parseArgs(constructorOrId, ...args);
 
-    const contractName = this.abi.project.contract.name;
+    const contractName = this.abi.info.contract.name.toString();
     const codeHash = (this.abi.json as any).source.hash;
     const constructor = this.abi.findConstructor(constructorOrId);
     const encoded = constructor.toU8a(params);
@@ -319,7 +319,7 @@ export default class ContractFactory {
   ): Promise<AccountId> => {
     const { params, overrides } = this._parseArgs(constructorOrId, ...args);
 
-    const contractName = this.abi.project.contract.name;
+    const contractName = this.abi.info.contract.name.toString();
     const wasmCode = u8aToHex(this.wasm);
 
     const constructor = this.abi.findConstructor(constructorOrId);

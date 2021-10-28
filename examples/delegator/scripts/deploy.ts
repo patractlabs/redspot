@@ -37,9 +37,9 @@ async function run() {
     'new',
     1000,
     randomVersion,
-    accumulator.abi.project.source.wasmHash,
-    adder.abi.project.source.wasmHash,
-    subber.abi.project.source.wasmHash,
+    accumulator.abi.info.source.wasmHash,
+    adder.abi.info.source.wasmHash,
+    subber.abi.info.source.wasmHash,
     {
       gasLimit: '400000000000',
       value: '10000 UNIT'
