@@ -2,7 +2,7 @@
 name = "erc20"
 version = "3.0.0-rc6"
 authors = ["Parity Technologies <admin@parity.io>"]
-edition = "2018"
+edition = "2021"
 
 [dependencies]
 ink_primitives = { version = "3.0.0-rc6", git = "https://github.com/paritytech/ink", rev="c90da116748be29fda28a23d52525a488b5ae973", default-features = false }
