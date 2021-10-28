@@ -1054,7 +1054,7 @@ __metadata:
 
 "@redspot/gas-reporter@file:../../build/redspot-gas-reporter::locator=delegator%40workspace%3A.":
   version: 0.12.3-0
-  resolution: "@redspot/gas-reporter@file:../../build/redspot-gas-reporter#../../build/redspot-gas-reporter::hash=2695fc&locator=delegator%40workspace%3A."
+  resolution: "@redspot/gas-reporter@file:../../build/redspot-gas-reporter#../../build/redspot-gas-reporter::hash=053bff&locator=delegator%40workspace%3A."
   dependencies:
     cli-table3: ^0.6.0
     colors: ^1.4.0
@@ -1063,7 +1063,7 @@ __metadata:
     sync-request: ^6.1.0
   peerDependencies:
     redspot: ^0.12.3-0
-  checksum: 367f3a20530431d3c6e514b96436a067be2b6d58cf53606d52d6e8bc2e6d618dada09df7cf632a4d0bcccab2f1b93b930dde7e5a071dbfcc5a375af3f15b2cc4
+  checksum: 42d6b54ecc3a0af67119b69882b92f4fa37872c57a191974415c8702708531fdbd6d9910d225f8243fadc8503d63c4f77c672190ae7e26a36d4dc89a34ae7470
   languageName: node
   linkType: hard
 

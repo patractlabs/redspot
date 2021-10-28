@@ -68,9 +68,9 @@ describe('Delegator', () => {
       'new',
       1000,
       randomVersion,
-      accumulator.abi.project.source.wasmHash,
-      adder.abi.project.source.wasmHash,
-      subber.abi.project.source.wasmHash,
+      accumulator.abi.info.source.wasmHash,
+      adder.abi.info.source.wasmHash,
+      subber.abi.info.source.wasmHash,
       {
         value: "10000 UNIT"
       }
