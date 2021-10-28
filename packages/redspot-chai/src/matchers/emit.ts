@@ -12,8 +12,8 @@ export function supportEmit(Assertion: Chai.AssertionStatic) {
   ) {
     const promise = this._obj;
     const derivedPromise = promise.then((response: TransactionResponse) => {
-      const abiEvent = contract.abi.project.spec.events.find(
-        (x) => x.name.toString().toLowerCase() === eventName.toLowerCase()
+      const abiEvent = contract.abi.events.find(
+        (x) => x.identifier.toString().toLowerCase() === eventName.toLowerCase()
       );
 
       if (abiEvent === undefined) {

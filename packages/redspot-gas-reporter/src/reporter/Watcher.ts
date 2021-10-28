@@ -5,7 +5,7 @@ import {
   StorageKey
 } from '@polkadot/types';
 import Table from 'cli-table3';
-import { Registry, WsProvider } from 'redspot/types';
+import { Registry, WsProvider, AbiMetadata } from 'redspot/types';
 import { GasReporterConfig } from '../types';
 
 function average(nums: number[]) {
@@ -28,13 +28,24 @@ export class TransactionWatcher {
   #abiMap: any;
 
   constructor(config: GasReporterConfig) {
-    this.#abiMap = (config.abis || []).reduce((result, { contract, spec }) => {
-      spec.messages.forEach((messages) => {
-        result[messages.selector] = {
-          message: messages.name[0],
-          contract: contract.name
-        };
-      });
+    this.#abiMap = (config.abis || []).reduce((result, data) => {
+      if (!data.V1) {
+        // Compatible with older version abi
+        // @ts-ignore
+        data.spec.messages.forEach((messages) => {
+          result[messages.selector] = {
+            message: messages.name[0],
+            contract: data.contract.name
+          };
+        });
+      } else {
+        data.V1.spec.messages.forEach((messages) => {
+          result[messages.selector] = {
+            message: messages.name[0],
+            contract: data.contract.name
+          };
+        });
+      }
 
       return result;
     }, {});

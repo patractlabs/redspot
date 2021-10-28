@@ -11,12 +11,14 @@ export type AbiMetadata = {
     version: string;
     authors: string[];
   };
-  types: any[];
-  spec: {
-    constructors: any[];
-    docs: any[];
-    events: any[];
-    messages: any[];
+  V1: {
+    types: any[];
+    spec: {
+      constructors: any[];
+      docs: any[];
+      events: any[];
+      messages: any[];
+    };
   };
 };
 
