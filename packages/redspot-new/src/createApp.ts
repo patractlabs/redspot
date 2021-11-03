@@ -42,9 +42,9 @@ function init() {
       '$0 erc20',
       'Initializes a new Substrate contract project in the specified directory'
     )
-    .epilog('Power by patract labs').argv;
+    .epilog('Powered by patract labs').argv;
 
-  const projectName = argv._[0];
+  const projectName = argv._[0].toString();
 
   createApp(projectName, argv.verbose);
 }
