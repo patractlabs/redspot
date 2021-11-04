@@ -4,6 +4,7 @@ import Contract from './contract';
 import ContractFactory from './contractFactory';
 import { getContractAt, getContractFactory, getRandomSigner } from './helpers';
 import './type-extensions';
+import { buildTx } from './buildTx';
 
 extendEnvironment((env) => {
   env.patract = lazyObject(() => {
@@ -12,7 +13,8 @@ extendEnvironment((env) => {
       ContractFactory: ContractFactory as any,
       getContractFactory: getContractFactory.bind(null, env),
       getContractAt: getContractAt.bind(null, env),
-      getRandomSigner: getRandomSigner.bind(null, env)
+      getRandomSigner: getRandomSigner.bind(null, env),
+      buildTx: buildTx as any
     };
   });
 });
