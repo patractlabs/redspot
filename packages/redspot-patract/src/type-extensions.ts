@@ -64,7 +64,6 @@ declare module 'redspot/types/runtime' {
         signer: string,
         options?: Partial<SignerOptions>
       ): Promise<TransactionResponse>;
-      
     };
   }
 }
