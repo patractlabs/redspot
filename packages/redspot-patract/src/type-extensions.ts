@@ -4,6 +4,10 @@ import type { Signer } from 'redspot/types';
 import 'redspot/types/runtime';
 import type Contract from './contract';
 import type ContractFactory from './contractFactory';
+import type { SignerOptions } from '@polkadot/api/types';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
+import type { Registry } from '@polkadot/types/types';
+import type { TransactionResponse } from './types';
 
 declare module 'redspot/types/runtime' {
   interface RuntimeEnvironment {
@@ -45,6 +49,21 @@ declare module 'redspot/types/runtime' {
         from?: Signer | string,
         amount?: BN | number | string | bigint
       ): Promise<Signer>;
+      /**
+       *  Build a transaction
+       *
+       * @param registry The registry of types in polkadot api
+       * @param extrinsic The extrinsic (tx) to be signed and sent
+       * @param signer The account used to sign
+       * @param options Signer options
+       * @returns Promise<TransactionResponse>
+       */
+      buildTx(
+        registry: Registry,
+        extrinsic: SubmittableExtrinsic<'promise'>,
+        signer: string,
+        options?: Partial<SignerOptions>
+      ): Promise<TransactionResponse>;
     };
   }
 }
