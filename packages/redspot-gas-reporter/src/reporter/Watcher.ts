@@ -31,6 +31,7 @@ export class TransactionWatcher {
     this.#abiMap = (config.abis || []).reduce((result, data) => {
       if (!data.V1) {
         // Compatible with older version abi
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         data.spec.messages.forEach((messages) => {
           result[messages.selector] = {
