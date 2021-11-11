@@ -87,33 +87,27 @@ export class Signer implements PolkadotSigner {
           throw new RedspotError(ERRORS.GENERAL.BAD_SURI, { uri: account });
         }
       }
-      else if (typeof (account) == 'object') {
+      else if (typeof account == 'object') {
         const _account = account as HDAccountsUserConfig
         try {
-          if (_account.path) {
-            const mnemonic = _account.mnemonic;
+          const mnemonic = _account.mnemonic;
 
-            pair = this.keyring.addFromUri(mnemonic);
-            (pair as LocalKeyringPair).suri = mnemonic;
-            let initialIndex = _account.initialIndex;
-            if (!initialIndex) {
-              initialIndex = 0;
-            }
-            let count = _account.count;
-            if (!count) {
-              count = 20;
-            }
+          pair = this.keyring.addFromUri(mnemonic);
+          (pair as LocalKeyringPair).suri = mnemonic;
+
+          if (_account.path) {
+            let initialIndex = _account.initialIndex || 0;
+            let count = _account.count || 20;
             pair.lock = (): void => {};
-            if (initialIndex == count) {
+            if (initialIndex >= count) {
               return;
-            } else {
-              for (let i = initialIndex; i < count; i++) {
-                const childPair = pair.derive(`${_account.path}${i}`)
-                this.keyring.addPair(childPair)
-              }
             }
-          } else {
-            pair = this.keyring.addFromUri(_account.mnemonic);
+            for (let i = initialIndex; i < count; i++) {
+              const derivedPath = `${_account.path}/${i}`;
+              const childPair = pair.derive(derivedPath);
+              (childPair as LocalKeyringPair).suri = mnemonic + derivedPath;
+              this.keyring.addPair(childPair)
+            }
           }
         } catch (error) {
           log.error(error.message)
