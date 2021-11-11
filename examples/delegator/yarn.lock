@@ -1017,44 +1017,44 @@ __metadata:
   linkType: hard
 
 "@redspot/chai@file:../../build/redspot-chai::locator=delegator%40workspace%3A.":
-  version: 0.13.1-1
-  resolution: "@redspot/chai@file:../../build/redspot-chai#../../build/redspot-chai::hash=b304a5&locator=delegator%40workspace%3A."
+  version: 0.13.2-1
+  resolution: "@redspot/chai@file:../../build/redspot-chai#../../build/redspot-chai::hash=f6821d&locator=delegator%40workspace%3A."
   dependencies:
     "@polkadot/api": ^6.5.2
     "@polkadot/api-contract": ^6.5.2
   peerDependencies:
-    redspot: ^0.13.1-1
-  checksum: 867a0284db85a3954be9c35cbed88d426550f36ab7fc8e1c23089438c6ffee0a8b29c7fbccb00d5fbcd312dae12830cdfd15509ba3c286f3e6914f7d3c4528fe
+    redspot: ^0.13.2-1
+  checksum: c8a93003eb528d8cac0857e35432f8593e614af915dfce8ca409cfcbd942c32e73318b2a777d53d029568c8f675fd1da71bd486907889286a6e121eb83d89c71
   languageName: node
   linkType: hard
 
 "@redspot/decimals@file:../../build/redspot-decimals::locator=delegator%40workspace%3A.":
-  version: 0.13.1-1
-  resolution: "@redspot/decimals@file:../../build/redspot-decimals#../../build/redspot-decimals::hash=12a6ed&locator=delegator%40workspace%3A."
+  version: 0.13.2-1
+  resolution: "@redspot/decimals@file:../../build/redspot-decimals#../../build/redspot-decimals::hash=948f7e&locator=delegator%40workspace%3A."
   dependencies:
     "@polkadot/api": ^6.5.2
     "@polkadot/api-contract": ^6.5.2
   peerDependencies:
-    redspot: ^0.13.1-1
-  checksum: 34d0a3db9a978da2b4b57f3491a78ec212e2d8b6b4117bea4dc7b5223b71c0303a087820f517c05c61f4436691c7cd18f385038ada53e1e4e598bc3f37357b4b
+    redspot: ^0.13.2-1
+  checksum: 58e1ea9d80dbf8aa9378a2fce5836307dac39f3086d902c7eb0949e301ba95e076d65ea5e2459efbf310382b8d313d8d2353cba6468a576172275490e9fa6da0
   languageName: node
   linkType: hard
 
 "@redspot/explorer@file:../../build/redspot-explorer::locator=delegator%40workspace%3A.":
-  version: 0.13.1-1
-  resolution: "@redspot/explorer@file:../../build/redspot-explorer#../../build/redspot-explorer::hash=2f7a65&locator=delegator%40workspace%3A."
+  version: 0.13.2-1
+  resolution: "@redspot/explorer@file:../../build/redspot-explorer#../../build/redspot-explorer::hash=69e0e8&locator=delegator%40workspace%3A."
   dependencies:
     cors: ^2.8.5
     express: ^4.17.1
     socket.io: ^4.0.1
     socket.io-client: ^4.0.1
-  checksum: 78e0b13fe315230bc4a5aea0c2594a50a246f7fc0accc1433819a83da5ef033a05f6e866ef877d5eeb0b44331c2498d787177f2f59dc68f5317b1df638554551
+  checksum: 9828cc71ab9fc54340aa14bde4aaf7300e275840a4f63bc83db314699de45b2531d8545c7e5889de352f22685452fc299578b8e27cb35df869e2042181ff5899
   languageName: node
   linkType: hard
 
 "@redspot/gas-reporter@file:../../build/redspot-gas-reporter::locator=delegator%40workspace%3A.":
-  version: 0.13.1-1
-  resolution: "@redspot/gas-reporter@file:../../build/redspot-gas-reporter#../../build/redspot-gas-reporter::hash=45ec1d&locator=delegator%40workspace%3A."
+  version: 0.13.2-1
+  resolution: "@redspot/gas-reporter@file:../../build/redspot-gas-reporter#../../build/redspot-gas-reporter::hash=c3c00c&locator=delegator%40workspace%3A."
   dependencies:
     cli-table3: ^0.6.0
     colors: ^1.4.0
@@ -1062,42 +1062,42 @@ __metadata:
     lodash: ^4.17.20
     sync-request: ^6.1.0
   peerDependencies:
-    redspot: ^0.13.1-1
-  checksum: 335b0a86ea98bb5182573924059641fce0b6c35866e30df0b1fb2a88ac041157ac5b93b89538b9306c0058be173ec9f74c34ec5f734a756da8c9c44478066acd
+    redspot: ^0.13.2-1
+  checksum: 66a248d3aeef18adeceb518fca4069562864576ba76df5c5e499fe8592ffc7274738c653ff2511c46d0f261e7bff2c27d965c474df3bbd17e54d050aa6ae6b85
   languageName: node
   linkType: hard
 
 "@redspot/known-types@file:../../build/redspot-known-types::locator=delegator%40workspace%3A.":
-  version: 0.13.1-1
-  resolution: "@redspot/known-types@file:../../build/redspot-known-types#../../build/redspot-known-types::hash=292566&locator=delegator%40workspace%3A."
+  version: 0.13.2-1
+  resolution: "@redspot/known-types@file:../../build/redspot-known-types#../../build/redspot-known-types::hash=290052&locator=delegator%40workspace%3A."
   dependencies:
     "@polkadot/api": ^6.5.2
     "@polkadot/apps-config": ^0.95.1
   peerDependencies:
-    redspot: ^0.13.1-1
-  checksum: 49960f1b0e915daf1c77f176603947d082b1ea7bf7477dbfd063ee706535dad0ad3b88bcfff6c891c907e2cde2e5dcb49edbacf7603beb36c744e86dbc0ccd22
+    redspot: ^0.13.2-1
+  checksum: c90ef1e922c311708c657fd1a2ee2aaaa4759ba0831d5c952d8905219a166a458032dd61247953b08ebd164be3c91166e4c8fcba107cc2ab0ee5bf22a70e227e
   languageName: node
   linkType: hard
 
 "@redspot/patract@file:../../build/redspot-patract::locator=delegator%40workspace%3A.":
-  version: 0.13.1-1
-  resolution: "@redspot/patract@file:../../build/redspot-patract#../../build/redspot-patract::hash=de56c0&locator=delegator%40workspace%3A."
+  version: 0.13.2-1
+  resolution: "@redspot/patract@file:../../build/redspot-patract#../../build/redspot-patract::hash=9ada14&locator=delegator%40workspace%3A."
   dependencies:
     "@polkadot/api": ^6.5.2
     "@polkadot/api-contract": ^6.5.2
   peerDependencies:
-    redspot: ^0.13.1-1
-  checksum: a7e121ce6c0a15c9f7b9ae09b0b4d61cc1402869052c3db90f937c5662fddc532c580158ecbb3755fb10c244ec3a52f85034914a273fb06ee722aeb5df4fc82e
+    redspot: ^0.13.2-1
+  checksum: 65ac0380dbb8d408282f9b4bb3880c6bdec45e3647488bfa25c9e27089e70814b069ed87704a6a64116fa6d418367d36751b23ffc6f6f5715d9d9ccbc894c5b3
   languageName: node
   linkType: hard
 
 "@redspot/watcher@file:../../build/redspot-watcher::locator=delegator%40workspace%3A.":
-  version: 0.13.1-1
-  resolution: "@redspot/watcher@file:../../build/redspot-watcher#../../build/redspot-watcher::hash=a09ef6&locator=delegator%40workspace%3A."
+  version: 0.13.2-1
+  resolution: "@redspot/watcher@file:../../build/redspot-watcher#../../build/redspot-watcher::hash=27f386&locator=delegator%40workspace%3A."
   dependencies:
     folder-hash: ^4.0.1
     fs-extra: ^9.1.0
-  checksum: a2d7c1186f0008086a5615fecc92b9c4ed31ebeb959deba27cb101dfa7ab219a5ce11dfd5dc9591670b0f0f3f0c55b0faa64faf8714c040b9f5e7be151de2dd4
+  checksum: 392ad545b5cfd4f99b9ee7c9ad187a8f9f626ebb3c4574a83a4f4011286081463b33322f709ef9c1f14157f44b335f70cc8025fb525cb8a3fa8154e4662be5a4
   languageName: node
   linkType: hard
 
@@ -4123,8 +4123,8 @@ fsevents@~2.3.1:
   linkType: hard
 
 "redspot@file:../../build/redspot-core::locator=delegator%40workspace%3A.":
-  version: 0.13.1-1
-  resolution: "redspot@file:../../build/redspot-core#../../build/redspot-core::hash=5925e3&locator=delegator%40workspace%3A."
+  version: 0.13.2-1
+  resolution: "redspot@file:../../build/redspot-core#../../build/redspot-core::hash=b4fe2f&locator=delegator%40workspace%3A."
   dependencies:
     "@polkadot/api": ^6.5.2
     abort-controller: ^3.0.0
@@ -4156,7 +4156,7 @@ fsevents@~2.3.1:
     uuid: 3.3.2
   bin:
     redspot: internal/cli/cli.js
-  checksum: 37da9906317d1b007a10d152cb3eafa99cb881690143238a42e09ee6e3d79a5930f5f2596315143158052f0409747cd489bf102cf34a8a52c36fd8298f61f492
+  checksum: f79cb18a88a0cffaa784d1594acd9780e42bba0b5150e5a0643dc11e69368b5846dd878451f76ca5b2626b81ea12a9047513148eedbc9123fd1bd15760a1f40a
   languageName: node
   linkType: hard
 

@@ -8,7 +8,7 @@ import { u8aToHex } from '@polkadot/util';
 import { RedspotError } from '../internal/core/errors';
 import { ERRORS } from '../internal/core/errors-list';
 import log from '../logger';
-import type { LocalKeyringPair } from '../types';
+import type {HDAccountsUserConfig, LocalKeyringPair} from '../types';
 import { RedspotNetworkAccountsUserConfig } from '../types';
 
 let id = 0;
@@ -72,9 +72,7 @@ export class Signer implements PolkadotSigner {
     for (const account of this.#config) {
       let pair: KeyringPair | LocalKeyringPair;
 
-      if (typeof account === 'object') {
-        throw new Error('Account only supports suri format ');
-      } else if (typeof account === 'string') {
+      if (typeof account === 'string') {
         try {
           const meta = {
             name: account.replace('//', '_').toLowerCase()
@@ -88,6 +86,40 @@ export class Signer implements PolkadotSigner {
           log.error(error.message);
           throw new RedspotError(ERRORS.GENERAL.BAD_SURI, { uri: account });
         }
+      }
+      else if (typeof (account) == 'object') {
+        const _account = account as HDAccountsUserConfig
+        try {
+          if (_account.path) {
+            const mnemonic = _account.mnemonic;
+
+            pair = this.keyring.addFromUri(mnemonic);
+            (pair as LocalKeyringPair).suri = mnemonic;
+            let initialIndex = _account.initialIndex;
+            if (!initialIndex) {
+              initialIndex = 0;
+            }
+            let count = _account.count;
+            if (!count) {
+              count = 20;
+            }
+            pair.lock = (): void => {};
+            if (initialIndex == count) {
+              return;
+            } else {
+              for (let i = initialIndex; i < count; i++) {
+                const childPair = pair.derive(`${_account.path}${i}`)
+                this.keyring.addPair(childPair)
+              }
+            }
+          } else {
+            pair = this.keyring.addFromUri(_account.mnemonic);
+          }
+        } catch (error) {
+          log.error(error.message)
+          throw new RedspotError(ERRORS.GENERAL.BAD_SURI, { uri: _account.mnemonic });
+        }
+
       }
     }
   };

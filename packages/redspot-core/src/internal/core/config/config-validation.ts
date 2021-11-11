@@ -88,7 +88,12 @@ export const hexString = new t.Type<string>(
   t.identity
 );
 
-const NetworkConfigAccounts = t.array(t.string);
+const NetworkConfigAccounts = t.union([t.array(t.string), t.array(t.type({
+  mnemonic: optional(t.string),
+  initialIndex: optional(t.number),
+  count: optional(t.number),
+  path: optional(t.string)
+}, 'HDAccountsUserConfig'))])
 
 const HttpHeaders = t.record(t.string, t.string, 'httpHeaders');
 
