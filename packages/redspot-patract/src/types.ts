@@ -46,7 +46,7 @@ export type ContractFunction<T = any> = (
   ...args: TransactionParams
 ) => Promise<T>;
 
-export type ContractAbi = AnyJson | Abi;
+export type ContractAbi = Record<string, unknown> | Abi;
 
 export interface PopulatedTransaction extends Partial<SignerOptions> {
   callParams?: CallParams;

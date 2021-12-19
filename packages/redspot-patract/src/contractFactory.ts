@@ -28,7 +28,7 @@ import { BigNumber, CallOverrides, TransactionParams } from './types';
 
 export type ContractFunction<T = any> = (...args: Array<any>) => Promise<T>;
 
-type ContractAbi = AnyJson | Abi;
+type ContractAbi = Record<string, unknown> | Abi;
 type ConstructorOrId = AbiConstructor | string | number;
 const pluginName = 'redspot-patract';
 
@@ -89,13 +89,30 @@ export default class ContractFactory {
     gasLimit: BigNumber,
     salt?: Uint8Array | string | null
   ) => {
-    return this.api.tx.contracts.instantiateWithCode(
-      endowment,
-      gasLimit,
-      wasmCode,
-      u8aConcat(data, salt),
-      salt
-    );
+    const hasStorageDeposit =
+      this.api.tx.contracts.instantiateWithCode.meta.args.length === 6;
+    const storageDepositLimit = null;
+
+    console.log('hasStorageDeposit', hasStorageDeposit)
+    return hasStorageDeposit
+      ? this.api.tx.contracts.instantiateWithCode(
+          endowment,
+          gasLimit,
+          10000000000,
+          wasmCode,
+          u8aConcat(data, salt),
+          // @ts-ignore
+          salt
+        )
+      : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore old style without storage deposit
+        this.api.tx.contracts.instantiateWithCode(
+          endowment,
+          gasLimit,
+          wasmCode,
+          u8aConcat(data, salt),
+          salt
+        );
   };
 
   #buildInstantiate = (
@@ -106,6 +123,9 @@ export default class ContractFactory {
     salt?: Uint8Array | string | null
   ) => {
     const withSalt = this.api.tx.contracts.instantiate.meta.args.length === 5;
+    const hasStorageDeposit =
+      this.api.tx.contracts.instantiateWithCode.meta.args.length === 6;
+    const storageDepositLimit = null;
 
     const tx = withSalt
       ? this.api.tx.contracts.instantiate(
@@ -113,6 +133,16 @@ export default class ContractFactory {
           gasLimit,
           codeHash,
           u8aConcat(data, salt),
+          salt
+        )
+      : hasStorageDeposit
+      ? this.api.tx.contracts.instantiate(
+          endowment,
+          gasLimit,
+          storageDepositLimit,
+          codeHash,
+          u8aConcat(data, salt),
+          //@ts-ignore
           salt
         )
       : // eslint-disable-next-line @typescript-eslint/ban-ts-comment

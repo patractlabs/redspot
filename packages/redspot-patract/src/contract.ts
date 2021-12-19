@@ -77,6 +77,26 @@ async function populateTransaction(
   delete overrides.value;
   delete overrides.gasLimit;
 
+  const hasStorageDeposit = contract.api.tx.contracts.call.meta.args.length === 5;
+  const storageDepositLimit = null;
+  const extrinsic = hasStorageDeposit
+    ? contract.api.tx.contracts.call(
+        callParams.dest,
+        callParams.value,
+        callParams.gasLimit,
+        storageDepositLimit,
+        //@ts-ignore
+        callParams.inputData
+      )
+    : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore old style without storage deposit
+      contract.api.tx.contracts.call(
+        callParams.dest,
+        callParams.value,
+        callParams.gasLimit,
+        callParams.inputData
+      );
+
   return {
     ...overrides,
     callParams,
@@ -178,10 +198,20 @@ function buildCall(
       } catch {}
     });
 
-    const json = await contract.api.rpc.contracts.call({
-      ...callParams,
-      origin
-    });
+    const hasStorageDeposit = contract.api.tx.contracts.call.meta.args.length === 5;
+    const storageDepositLimit = null;
+    const rpcParams = hasStorageDeposit
+      ? {
+          ...callParams,
+          storageDepositLimit,
+          origin
+        }
+      : {
+          ...callParams,
+          origin
+        };
+
+    const json = await contract.api.rpc.contracts.call(rpcParams);
 
     const { debugMessage, gasRequired, gasConsumed, result } = json;
 
