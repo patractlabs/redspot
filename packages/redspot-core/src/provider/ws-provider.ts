@@ -241,6 +241,37 @@ export class WsProvider implements ProviderInterface {
       this._websocket.onerror = this._onSocketError;
       this._websocket.onmessage = this._onSocketMessage;
       this._websocket.onopen = this._onSocketOpen;
+
+      return new Promise((resolve, reject) => {
+        let isConnected = false;
+        const eventemitter = this._eventemitter;
+
+        function removeAll(event?) {
+          eventemitter.removeListener('connected', onConnect);
+          eventemitter.removeListener('disconnected', onClose);
+          eventemitter.removeListener('error', onClose);
+
+          if (isConnected) {
+            resolve();
+          } else {
+            reject(event);
+          }
+        }
+
+        function onConnect() {
+          isConnected = true;
+          removeAll();
+        }
+
+        function onClose(event) {
+          isConnected = false;
+          removeAll(event);
+        }
+
+        this._eventemitter.once('connected', onConnect);
+        this._eventemitter.once('disconnected', onClose);
+        this._eventemitter.once('error', onClose);
+      });
     } catch (error) {
       log.error(chalk.red(error));
 
@@ -347,7 +378,6 @@ export class WsProvider implements ProviderInterface {
           'WebSocket is not connected'
         );
 
-        const obj = this._coder.encodeObject(method, params);
         const id = this._coder.getId();
 
         const callback = (error?: Error | null, result?: T): void => {
@@ -355,10 +385,10 @@ export class WsProvider implements ProviderInterface {
         };
 
         log.debug(
-          `${chalk.green(`⬆`)} Id: ${chalk.bold(`%d`)}, method: ${
-            obj.method
-          }, params: ${shortParams(obj.params, 1000)}`,
-          obj.id
+          `${chalk.green(`⬆`)} Id: ${chalk.bold(
+            `%d`
+          )}, method: ${method}, params: ${shortParams(params, 1000)}`,
+          id
         );
 
         this._handlers[id] = {

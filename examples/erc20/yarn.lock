@@ -3275,7 +3275,7 @@ fsevents@~2.3.1:
 
 "redspot@file:../../build/redspot-core::locator=erc20%40workspace%3A.":
   version: 0.13.2-1
-  resolution: "redspot@file:../../build/redspot-core#../../build/redspot-core::hash=1605e5&locator=erc20%40workspace%3A."
+  resolution: "redspot@file:../../build/redspot-core#../../build/redspot-core::hash=2a21b1&locator=erc20%40workspace%3A."
   dependencies:
     "@polkadot/api": ^6.12.1
     abort-controller: ^3.0.0
@@ -3307,7 +3307,7 @@ fsevents@~2.3.1:
     uuid: 3.3.2
   bin:
     redspot: internal/cli/cli.js
-  checksum: 72a52cb7093f90e03533ea1c00081e5187350bcce136b997017ed8aab9a459a006fc1241bc65f2ffdbaacbc56f3ff2b0cf0472d4f645c2a21d6062ee91deb4d3
+  checksum: 0af0d4f4fb51b69d3e01fcc3a9ce77060859d7a3f266c9ccc88aae78f2813f0b42363b14389d35322d232c1ac48f1bef2097ed8eb0f53f15a82fb89448561e0d
   languageName: node
   linkType: hard
 
