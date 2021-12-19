@@ -42,7 +42,7 @@ async function run() {
     subber.abi.info.source.wasmHash,
     {
       gasLimit: '400000000000',
-      value: '10000 UNIT'
+      value: '20000 UNIT'
     }
   );
 
