@@ -25,7 +25,7 @@ describe('ERC20', () => {
     return { sender, contractFactory, contract, abi, receiver, Alice };
   }
 
-  it.only('Assigns initial balance', async () => {
+  it('Assigns initial balance', async () => {
     const { contract, sender } = await setup();
     const result = await contract.query.balanceOf(sender.address);
     expect(result.output).to.equal(1000);
