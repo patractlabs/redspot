@@ -87,7 +87,7 @@ function shortParams(result: any, len: number) {
 }
 
 /**
- * # @polkadot/rpc-provider/ws
+ * _ @polkadot/rpc-provider/ws
  *
  * @name WsProvider
  *
@@ -107,31 +107,31 @@ function shortParams(result: any, len: number) {
  * @see [[HttpProvider]]
  */
 export class WsProvider implements ProviderInterface {
-  readonly #callCache = new LRUCache();
+  readonly _callCache = new LRUCache();
 
-  readonly #coder: RpcCoder;
+  readonly _coder: RpcCoder;
 
-  readonly #endpoints: string[];
+  readonly _endpoints: string[];
 
-  readonly #headers: Record<string, string>;
+  readonly _headers: Record<string, string>;
 
-  readonly #eventemitter: EventEmitter;
+  readonly _eventemitter: EventEmitter;
 
-  readonly #handlers: Record<string, WsStateAwaiting> = {};
+  readonly _handlers: Record<string, WsStateAwaiting> = {};
 
-  readonly #isReadyPromise: Promise<WsProvider>;
+  readonly _isReadyPromise: Promise<WsProvider>;
 
-  readonly #waitingForId: Record<string, JsonRpcResponse> = {};
+  readonly _waitingForId: Record<string, JsonRpcResponse> = {};
 
-  #autoConnectMs: number;
+  _autoConnectMs: number;
 
-  #endpointIndex: number;
+  _endpointIndex: number;
 
-  #isConnected = false;
+  _isConnected = false;
 
-  #subscriptions: Record<string, WsStateSubscription> = {};
+  _subscriptions: Record<string, WsStateSubscription> = {};
 
-  #websocket: WebSocket | null;
+  _websocket: WebSocket | null;
 
   /**
    * @param {string | string[]}  endpoint    The endpoint url. Usually `ws://ip:9944` or `wss://ip:9944`, may provide an array of endpoint strings.
@@ -153,13 +153,13 @@ export class WsProvider implements ProviderInterface {
       );
     });
 
-    this.#eventemitter = new EventEmitter();
-    // this.#autoConnectMs = autoConnectMs || 0;
-    this.#coder = new RpcCoder();
-    this.#endpointIndex = -1;
-    this.#endpoints = endpoints;
-    this.#headers = headers;
-    this.#websocket = null;
+    this._eventemitter = new EventEmitter();
+    // this._autoConnectMs = autoConnectMs || 0;
+    this._coder = new RpcCoder();
+    this._endpointIndex = -1;
+    this._endpoints = endpoints;
+    this._headers = headers;
+    this._websocket = null;
 
     // if (autoConnectMs > 0) {
     //   this.connectWithRetry().catch((): void => {
@@ -167,8 +167,8 @@ export class WsProvider implements ProviderInterface {
     //   });
     // }
 
-    this.#isReadyPromise = new Promise((resolve): void => {
-      this.#eventemitter.once('connected', (): void => {
+    this._isReadyPromise = new Promise((resolve): void => {
+      this._eventemitter.once('connected', (): void => {
         resolve(this);
       });
     });
@@ -186,21 +186,21 @@ export class WsProvider implements ProviderInterface {
    * @return {boolean} true if connected
    */
   public get isConnected(): boolean {
-    return this.#isConnected;
+    return this._isConnected;
   }
 
   /**
    * @description Promise that resolves the first time we are connected and loaded
    */
   public get isReady(): Promise<WsProvider> {
-    return this.#isReadyPromise;
+    return this._isReadyPromise;
   }
 
   /**
    * @description Returns a clone of the object
    */
   public clone(): WsProvider {
-    return new WsProvider(this.#endpoints);
+    return new WsProvider(this._endpoints);
   }
 
   /**
@@ -211,19 +211,19 @@ export class WsProvider implements ProviderInterface {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async connect(): Promise<void> {
     try {
-      this.#endpointIndex = (this.#endpointIndex + 1) % this.#endpoints.length;
-      this.#websocket =
+      this._endpointIndex = (this._endpointIndex + 1) % this._endpoints.length;
+      this._websocket =
         typeof xglobal.WebSocket !== 'undefined' &&
         isChildClass(xglobal.WebSocket, WebSocket)
-          ? new WebSocket(this.#endpoints[this.#endpointIndex])
+          ? new WebSocket(this._endpoints[this._endpointIndex])
           : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore - WS may be an instance of w3cwebsocket, which supports headers
             new WebSocket(
-              this.#endpoints[this.#endpointIndex],
+              this._endpoints[this._endpointIndex],
               undefined,
               // @ts-ignore - WS may be an instance of w3cwebsocket, which supports headers
               undefined,
-              this.#headers,
+              this._headers,
               undefined,
               {
                 // default: true
@@ -237,14 +237,14 @@ export class WsProvider implements ProviderInterface {
               }
             );
 
-      this.#websocket.onclose = this.#onSocketClose;
-      this.#websocket.onerror = this.#onSocketError;
-      this.#websocket.onmessage = this.#onSocketMessage;
-      this.#websocket.onopen = this.#onSocketOpen;
+      this._websocket.onclose = this._onSocketClose;
+      this._websocket.onerror = this._onSocketError;
+      this._websocket.onmessage = this._onSocketMessage;
+      this._websocket.onopen = this._onSocketOpen;
     } catch (error) {
       log.error(chalk.red(error));
 
-      this.#emit('error', error);
+      this._emit('error', error);
 
       throw error;
     }
@@ -254,7 +254,7 @@ export class WsProvider implements ProviderInterface {
    * @description Connect, never throwing an error, but rather forcing a retry
    */
   public async connectWithRetry(): Promise<void> {
-    // if (this.#autoConnectMs > 0) {
+    // if (this._autoConnectMs > 0) {
     try {
       await this.connect();
     } catch (error) {
@@ -262,7 +262,7 @@ export class WsProvider implements ProviderInterface {
         this.connectWithRetry().catch((): void => {
           // does not throw
         });
-      }, this.#autoConnectMs || RETRY_DELAY);
+      }, this._autoConnectMs || RETRY_DELAY);
     }
     // }
   }
@@ -273,17 +273,17 @@ export class WsProvider implements ProviderInterface {
   // eslint-disable-next-line @typescript-eslint/require-await
   public async disconnect(): Promise<void> {
     // switch off autoConnect, we are in manual mode now
-    this.#autoConnectMs = 0;
+    this._autoConnectMs = 0;
 
     try {
-      if (this.#websocket) {
+      if (this._websocket) {
         // 1000 - Normal closure; the connection successfully completed
-        this.#websocket.close(1000);
+        this._websocket.close(1000);
       }
     } catch (error) {
       log.error(chalk.red(error));
 
-      this.#emit('error', error);
+      this._emit('error', error);
 
       throw error;
     }
@@ -299,10 +299,10 @@ export class WsProvider implements ProviderInterface {
     type: ProviderInterfaceEmitted,
     sub: ProviderInterfaceEmitCb
   ): () => void {
-    this.#eventemitter.on(type, sub);
+    this._eventemitter.on(type, sub);
 
     return (): void => {
-      this.#eventemitter.removeListener(type, sub);
+      this._eventemitter.removeListener(type, sub);
     };
   }
 
@@ -318,23 +318,23 @@ export class WsProvider implements ProviderInterface {
     isCacheable?: boolean,
     subscription?: SubscriptionHandler
   ): Promise<T> {
-    const body = this.#coder.encodeJson(method, params);
+    const body = this._coder.encodeJson(method, params);
     let resultPromise: Promise<T> | null = isCacheable
-      ? (this.#callCache.get(body) as Promise<T>)
+      ? (this._callCache.get(body) as Promise<T>)
       : null;
 
     if (!resultPromise) {
-      resultPromise = this.#send(body, method, params, subscription);
+      resultPromise = this._send(body, method, params, subscription);
 
       if (isCacheable) {
-        this.#callCache.set(body, resultPromise);
+        this._callCache.set(body, resultPromise);
       }
     }
 
     return resultPromise;
   }
 
-  async #send<T>(
+  async _send<T>(
     json: string,
     method: string,
     params: unknown[],
@@ -343,12 +343,12 @@ export class WsProvider implements ProviderInterface {
     return new Promise<T>((resolve, reject): void => {
       try {
         assert(
-          this.isConnected && !isNull(this.#websocket),
+          this.isConnected && !isNull(this._websocket),
           'WebSocket is not connected'
         );
 
-        const obj = this.#coder.encodeObject(method, params);
-        const id = this.#coder.getId();
+        const obj = this._coder.encodeObject(method, params);
+        const id = this._coder.getId();
 
         const callback = (error?: Error | null, result?: T): void => {
           error ? reject(error) : resolve(result as T);
@@ -361,14 +361,14 @@ export class WsProvider implements ProviderInterface {
           obj.id
         );
 
-        this.#handlers[id] = {
+        this._handlers[id] = {
           callback,
           method,
           params,
           subscription
         };
 
-        this.#websocket.send(json);
+        this._websocket.send(json);
       } catch (error) {
         reject(error);
       }
@@ -419,16 +419,16 @@ export class WsProvider implements ProviderInterface {
     // the assigned id now does not match what the API user originally received. It has
     // a slight complication in solving - since we cannot rely on the send id, but rather
     // need to find the actual subscription id to map it
-    if (isUndefined(this.#subscriptions[subscription])) {
+    if (isUndefined(this._subscriptions[subscription])) {
       log.warn(`Unable to find active subscription=${subscription}`);
 
       return false;
     }
 
-    delete this.#subscriptions[subscription];
+    delete this._subscriptions[subscription];
 
     try {
-      return this.isConnected && !isNull(this.#websocket)
+      return this.isConnected && !isNull(this._websocket)
         ? this.send<boolean>(method, [id])
         : true;
     } catch (error) {
@@ -436,52 +436,52 @@ export class WsProvider implements ProviderInterface {
     }
   }
 
-  #emit = (type: ProviderInterfaceEmitted, ...args: unknown[]): void => {
-    this.#eventemitter.emit(type, ...args);
+  _emit = (type: ProviderInterfaceEmitted, ...args: unknown[]): void => {
+    this._eventemitter.emit(type, ...args);
   };
 
-  #onSocketClose = (event: CloseEvent): void => {
+  _onSocketClose = (event: CloseEvent): void => {
     const error = new Error(
-      `disconnected from ${this.#endpoints[this.#endpointIndex]}: ${
+      `disconnected from ${this._endpoints[this._endpointIndex]}: ${
         event.code
       }:: ${event.reason || getWSErrorString(event.code)}`
     );
 
-    if (this.#autoConnectMs > 0) {
+    if (this._autoConnectMs > 0) {
       log.error(chalk.red(error.message));
     }
 
-    this.#isConnected = false;
+    this._isConnected = false;
 
-    if (this.#websocket) {
-      this.#websocket.onclose = null;
-      this.#websocket.onerror = null;
-      this.#websocket.onmessage = null;
-      this.#websocket.onopen = null;
-      this.#websocket = null;
+    if (this._websocket) {
+      this._websocket.onclose = null;
+      this._websocket.onerror = null;
+      this._websocket.onmessage = null;
+      this._websocket.onopen = null;
+      this._websocket = null;
     }
 
-    this.#emit('disconnected');
+    this._emit('disconnected');
 
     // reject all hanging requests
-    eraseRecord(this.#handlers, (h) => h.callback(error, undefined));
-    eraseRecord(this.#waitingForId);
+    eraseRecord(this._handlers, (h) => h.callback(error, undefined));
+    eraseRecord(this._waitingForId);
 
-    if (this.#autoConnectMs > 0) {
+    if (this._autoConnectMs > 0) {
       setTimeout((): void => {
         this.connectWithRetry().catch(() => {
           // does not throw
         });
-      }, this.#autoConnectMs);
+      }, this._autoConnectMs);
     }
   };
 
-  #onSocketError = (error: Event): void => {
+  _onSocketError = (error: Event): void => {
     log.warn(`Socket event: ${error.type}`);
-    this.#emit('error', error);
+    this._emit('error', error);
   };
 
-  #onSocketMessage = (message: MessageEvent<string>): void => {
+  _onSocketMessage = (message: MessageEvent<string>): void => {
     const response = JSON.parse(message.data as string) as JsonRpcResponse;
     const isMsg = isUndefined(response.method);
 
@@ -494,19 +494,19 @@ export class WsProvider implements ProviderInterface {
         response.id
       );
 
-      return this.#onSocketMessageResult(response);
+      return this._onSocketMessageResult(response);
     } else {
       log.debug(
         `${chalk.red('⬇')} SubId: ${chalk.bold(
           response.params.subscription.toString()
         )}, result: ${shortParams(response.params.result, 60)}`
       );
-      this.#onSocketMessageSubscribe(response);
+      this._onSocketMessageSubscribe(response);
     }
   };
 
-  #onSocketMessageResult = (response: JsonRpcResponse): void => {
-    const handler = this.#handlers[response.id];
+  _onSocketMessageResult = (response: JsonRpcResponse): void => {
+    const handler = this._handlers[response.id];
 
     if (!handler) {
       return;
@@ -514,7 +514,7 @@ export class WsProvider implements ProviderInterface {
 
     try {
       const { method, params, subscription } = handler;
-      const result = this.#coder.decodeResponse(response) as string;
+      const result = this._coder.decodeResponse(response) as string;
 
       // first send the result - in case of subs, we may have an update
       // immediately if we have some queued results already
@@ -523,32 +523,32 @@ export class WsProvider implements ProviderInterface {
       if (subscription) {
         const subId = `${subscription.type}::${result}`;
 
-        this.#subscriptions[subId] = objectSpread({}, subscription, {
+        this._subscriptions[subId] = objectSpread({}, subscription, {
           method,
           params
         });
 
         // if we have a result waiting for this subscription already
-        if (this.#waitingForId[subId]) {
-          this.#onSocketMessageSubscribe(this.#waitingForId[subId]);
+        if (this._waitingForId[subId]) {
+          this._onSocketMessageSubscribe(this._waitingForId[subId]);
         }
       }
     } catch (error) {
       handler.callback(error as Error, undefined);
     }
 
-    delete this.#handlers[response.id];
+    delete this._handlers[response.id];
   };
 
-  #onSocketMessageSubscribe = (response: JsonRpcResponse): void => {
+  _onSocketMessageSubscribe = (response: JsonRpcResponse): void => {
     const method =
       ALIASES[response.method as string] || response.method || 'invalid';
     const subId = `${method}::${response.params.subscription}`;
-    const handler = this.#subscriptions[subId];
+    const handler = this._subscriptions[subId];
 
     if (!handler) {
       // store the JSON, we could have out-of-order subid coming in
-      this.#waitingForId[subId] = response;
+      this._waitingForId[subId] = response;
 
       log.warn(`Unable to find handler for subscription=${subId}`);
 
@@ -556,10 +556,10 @@ export class WsProvider implements ProviderInterface {
     }
 
     // housekeeping
-    delete this.#waitingForId[subId];
+    delete this._waitingForId[subId];
 
     try {
-      const result = this.#coder.decodeResponse(response);
+      const result = this._coder.decodeResponse(response);
 
       handler.callback(null, result);
     } catch (error) {
@@ -567,23 +567,23 @@ export class WsProvider implements ProviderInterface {
     }
   };
 
-  #onSocketOpen = (): boolean => {
-    assert(!isNull(this.#websocket), 'WebSocket cannot be null in onOpen');
+  _onSocketOpen = (): boolean => {
+    assert(!isNull(this._websocket), 'WebSocket cannot be null in onOpen');
 
-    log.info('Connected to', this.#endpoints[this.#endpointIndex]);
+    log.info('Connected to', this._endpoints[this._endpointIndex]);
 
-    this.#isConnected = true;
+    this._isConnected = true;
 
-    this.#emit('connected');
-    this.#resubscribe();
+    this._emit('connected');
+    this._resubscribe();
 
     return true;
   };
 
-  #resubscribe = (): void => {
-    const subscriptions = this.#subscriptions;
+  _resubscribe = (): void => {
+    const subscriptions = this._subscriptions;
 
-    this.#subscriptions = {};
+    this._subscriptions = {};
 
     Promise.all(
       Object.keys(subscriptions).map(
