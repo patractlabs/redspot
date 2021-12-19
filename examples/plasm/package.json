@@ -16,7 +16,6 @@
     "@redspot/chai": "../../build/redspot-chai",
     "@redspot/decimals": "../../build/redspot-decimals",
     "@redspot/explorer": "../../build/redspot-explorer",
-    "@redspot/gas-reporter": "../../build/redspot-gas-reporter",
     "@redspot/known-types": "../../build/redspot-known-types",
     "@redspot/patract": "../../build/redspot-patract",
     "@redspot/watcher": "../../build/redspot-watcher",
