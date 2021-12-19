@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "resolutions": {
-    "@polkadot/api": "^6.11.2-23",
-    "@polkadot/api-contract": "^6.11.2-23",
-    "typescript": "^4.3.2"
+    "@polkadot/api": "^6.12.1",
+    "@polkadot/api-contract": "^6.12.1",
+    "typescript": "^4.5.4"
   },
   "dependencies": {
     "@redspot/chai": "../../build/redspot-chai",
@@ -19,7 +19,7 @@
     "@types/mocha": "^8.0.3",
     "chai": "^4.2.0",
     "redspot": "../../build/redspot-core",
-    "typescript": "^4.3.2"
+    "typescript": "^4.5.4"
   },
   "scripts": {
     "build": "yarn redspot compile",
