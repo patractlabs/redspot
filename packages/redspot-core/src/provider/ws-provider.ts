@@ -146,7 +146,7 @@ export class WsProvider implements IWsProvider {
   /**
    * @description Returns a clone of the object
    */
-  public clone(): WsProvider {
+  public clone(): IWsProvider {
     return new WsProvider(this._endpoints, this._headers);
   }
 
