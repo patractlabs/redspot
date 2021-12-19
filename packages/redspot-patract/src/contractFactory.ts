@@ -28,7 +28,7 @@ import { BigNumber, CallOverrides, TransactionParams } from './types';
 
 export type ContractFunction<T = any> = (...args: Array<any>) => Promise<T>;
 
-type ContractAbi = AnyJson | Abi;
+type ContractAbi = Record<string, unknown> | Abi;
 type ConstructorOrId = AbiConstructor | string | number;
 const pluginName = 'redspot-patract';
 
