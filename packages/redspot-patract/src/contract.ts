@@ -77,7 +77,8 @@ async function populateTransaction(
   delete overrides.value;
   delete overrides.gasLimit;
 
-  const hasStorageDeposit = contract.api.tx.contracts.call.meta.args.length === 5;
+  const hasStorageDeposit =
+    contract.api.tx.contracts.call.meta.args.length === 5;
   const storageDepositLimit = null;
   const extrinsic = hasStorageDeposit
     ? contract.api.tx.contracts.call(
@@ -100,12 +101,7 @@ async function populateTransaction(
   return {
     ...overrides,
     callParams,
-    extrinsic: contract.api.tx.contracts.call(
-      callParams.dest,
-      callParams.value,
-      callParams.gasLimit,
-      callParams.inputData
-    )
+    extrinsic
   };
 }
 
@@ -198,7 +194,8 @@ function buildCall(
       } catch {}
     });
 
-    const hasStorageDeposit = contract.api.tx.contracts.call.meta.args.length === 5;
+    const hasStorageDeposit =
+      contract.api.tx.contracts.call.meta.args.length === 5;
     const storageDepositLimit = null;
     const rpcParams = hasStorageDeposit
       ? {

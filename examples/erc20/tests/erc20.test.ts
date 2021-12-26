@@ -15,10 +15,8 @@ describe('ERC20', () => {
     const signerAddresses = await getAddresses();
     const Alice = signerAddresses[0];
     const sender = await getRandomSigner(Alice, '20000 UNIT');
-    console.log('send1', sender.address);
     const contractFactory = await getContractFactory('erc20', sender.address);
     const contract = await contractFactory.deploy('new', '1000');
-    console.log('send2');
     const abi = artifacts.readArtifact('erc20');
     const receiver = await getRandomSigner();
 

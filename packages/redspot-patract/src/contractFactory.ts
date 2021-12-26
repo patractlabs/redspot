@@ -93,12 +93,11 @@ export default class ContractFactory {
       this.api.tx.contracts.instantiateWithCode.meta.args.length === 6;
     const storageDepositLimit = null;
 
-    console.log('hasStorageDeposit', hasStorageDeposit)
     return hasStorageDeposit
       ? this.api.tx.contracts.instantiateWithCode(
           endowment,
           gasLimit,
-          10000000000,
+          storageDepositLimit,
           wasmCode,
           u8aConcat(data, salt),
           // @ts-ignore
