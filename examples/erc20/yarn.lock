@@ -533,13 +533,13 @@ __metadata:
 
 "@redspot/decimals@file:../../build/redspot-decimals::locator=erc20%40workspace%3A.":
   version: 0.13.2-1
-  resolution: "@redspot/decimals@file:../../build/redspot-decimals#../../build/redspot-decimals::hash=17b688&locator=erc20%40workspace%3A."
+  resolution: "@redspot/decimals@file:../../build/redspot-decimals#../../build/redspot-decimals::hash=9126c4&locator=erc20%40workspace%3A."
   dependencies:
     "@polkadot/api": ^6.12.1
     "@polkadot/api-contract": ^6.12.1
   peerDependencies:
     redspot: ^0.13.2-1
-  checksum: 70133a2d520e9ffd8cdabb372f39919469964241e7dbba1165597108124dee2535fa86298105f1b62ce62c3d0166a6056f3aa9d073ff289d107e690c69f45cd0
+  checksum: c6bc719206c9603e4de2abaa5fa5b1c7a54fd33992e81113c8bd54b75c31f43365bfdd295623d0e9fb3d14894d0999eabdbebfb9c3d825a01977ea52aff1ab28
   languageName: node
   linkType: hard
 
@@ -569,13 +569,13 @@ __metadata:
 
 "@redspot/patract@file:../../build/redspot-patract::locator=erc20%40workspace%3A.":
   version: 0.13.2-1
-  resolution: "@redspot/patract@file:../../build/redspot-patract#../../build/redspot-patract::hash=78f30e&locator=erc20%40workspace%3A."
+  resolution: "@redspot/patract@file:../../build/redspot-patract#../../build/redspot-patract::hash=512010&locator=erc20%40workspace%3A."
   dependencies:
     "@polkadot/api": ^6.12.1
     "@polkadot/api-contract": ^6.12.1
   peerDependencies:
     redspot: ^0.13.2-1
-  checksum: 55859acef23d8eb79ba85fbec86b960d7f3732dc12ecb5774ce9866497e82e6f148b6d8d460519023484200b83a03b3e6e8f3d2709e55d350b8abbd9c7cd6b55
+  checksum: 9ee2b6335c8cf454df8be29a5552ab2e8ae2aea31bc1d74e8fd016a1c72adae8570d2aa1f64f1b1be951930e7b560f0bfe912639bbf2b62b50a829a015999c7e
   languageName: node
   linkType: hard
 
