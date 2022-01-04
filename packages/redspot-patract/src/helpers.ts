@@ -109,8 +109,10 @@ export async function getContractAt(
 export function getAbi(env: RuntimeEnvironment, contractName: string) {
   const registry = env.network.registry;
   const artifact = env.artifacts.readArtifactSync(contractName);
+
   const abi = new Abi(
     artifact,
+      // @ts-ignore
     registry.createType('ChainProperties', {
       tokenDecimals: env.network.registry.chainDecimals,
       ss58Format: env.network.registry.chainSS58,

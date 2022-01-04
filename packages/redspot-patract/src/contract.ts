@@ -59,7 +59,7 @@ async function populateTransaction(
   const data = fragment.toU8a(args as unknown[]);
 
   const maximumBlockWeight = contract.api.consts.system.blockWeights
-    ? contract.api.consts.system.blockWeights.maxBlock
+    ? (contract.api.consts.system.blockWeights as unknown as { maxBlock: Weight }).maxBlock
     : (contract.api.consts.system.maximumBlockWeight as Weight);
 
   const callParams: CallParams = {
@@ -210,7 +210,7 @@ function buildCall(
 
     const json = await contract.api.rpc.contracts.call(rpcParams);
 
-    const { debugMessage, gasRequired, gasConsumed, result } = json;
+    const { debugMessage, gasRequired, gasConsumed, result, storageDeposit } = json;
 
     const outcome = {
       debugMessage,
@@ -226,7 +226,8 @@ function buildCall(
               { isPedantic: true }
             )
           : null,
-      result
+      result,
+      storageDeposit: storageDeposit
     };
 
     if (result.isOk) {

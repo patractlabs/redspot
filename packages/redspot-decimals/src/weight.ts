@@ -1,5 +1,5 @@
 import { UIntBitLength } from '@polkadot/types/codec/types';
-import { AbstractInt } from '@polkadot/types/codec/AbstractInt';
+import { AbstractInt } from '@polkadot/types-codec';
 import { Registry, AnyNumber, Constructor } from '@polkadot/types/types';
 import { formatDecimals } from './formatDecimals';
 

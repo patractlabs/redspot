@@ -9,9 +9,9 @@
     "yarn": "^1.10.1"
   },
   "resolutions": {
-    "@polkadot/api": "^6.12.1",
-    "@polkadot/api-contract": "^6.12.1",
-    "@polkadot/types": "^6.12.1",
+    "@polkadot/api": "^7.2.1",
+    "@polkadot/api-contract": "^7.2.1",
+    "@polkadot/types": "^7.2.1",
     "@polkadot/util": "^8.2.2"
   },
   "workspaces": [
