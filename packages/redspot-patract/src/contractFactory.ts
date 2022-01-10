@@ -2,7 +2,7 @@ import { ApiPromise } from '@polkadot/api';
 import { Abi } from '@polkadot/api-contract';
 import type { AbiConstructor } from '@polkadot/api-contract/types';
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
-import { Bytes } from '@polkadot/types';
+import {Bytes, u128} from '@polkadot/types';
 import type { Weight } from '@polkadot/types/interfaces';
 import type { CodeHash } from '@polkadot/types/interfaces/contracts';
 import type { AccountId } from '@polkadot/types/interfaces/types';
@@ -164,7 +164,7 @@ export default class ContractFactory {
     const codeStorage = await this.api.query.contracts.codeStorage(wasmHash);
 
     if (!codeStorage.isEmpty) {
-      const hash = this.api.registry.createType('CodeHash', wasmHash);
+      const hash = this.api.registry.createType('CodeHash', wasmHash) as CodeHash;
       log.info(`Use the uploaded codehash: ${hash.toString()}`);
       return hash;
     }
@@ -241,7 +241,7 @@ export default class ContractFactory {
     ).muln(10);
     const contractDeposit =
       (this.api.consts.contracts.contractDeposit as any) || new BN(0);
-    const mindeposit = this.api.consts.balances.existentialDeposit
+    const mindeposit = (this.api.consts.balances.existentialDeposit as u128)
       .add(tombstoneDeposit)
       .add(contractDeposit);
     const endowment = overrides.value;
@@ -250,7 +250,7 @@ export default class ContractFactory {
       const endowmentConverted = this.api.createType(
         'BalanceOf',
         overrides.value
-      );
+      ) as u128;
       if (endowmentConverted.lt(mindeposit)) {
         throw new Error(
           `endowment should not be less than ${mindeposit.toString()}, but get ${endowmentConverted.toString()}`
@@ -260,7 +260,7 @@ export default class ContractFactory {
 
     const salt = await ContractFactory.encodeSalt(overrides.salt, this.signer);
     const maximumBlockWeight = this.api.consts.system.blockWeights
-      ? this.api.consts.system.blockWeights.maxBlock
+      ? (this.api.consts.system.blockWeights as unknown as { maxBlock: Weight }).maxBlock
       : (this.api.consts.system.maximumBlockWeight as Weight);
 
     const gasLimit =
@@ -358,7 +358,7 @@ export default class ContractFactory {
     ).muln(10);
     const contractDeposit =
       (this.api.consts.contracts.contractDeposit as any) || new BN(0);
-    const mindeposit = this.api.consts.balances.existentialDeposit
+    const mindeposit = (this.api.consts.balances.existentialDeposit as u128)
       .add(tombstoneDeposit)
       .add(contractDeposit);
     const endowment = overrides.value || mindeposit;
@@ -367,7 +367,7 @@ export default class ContractFactory {
       const endowmentConverted = this.api.createType(
         'BalanceOf',
         overrides.value
-      );
+      ) as u128;
       if (endowmentConverted.lt(mindeposit)) {
         throw new Error(
           `endowment should not be less than ${mindeposit.toString()}, but get ${endowmentConverted.toString()}`
@@ -376,6 +376,7 @@ export default class ContractFactory {
     }
     const salt = await ContractFactory.encodeSalt(overrides.salt, this.signer);
     const maximumBlockWeight = this.api.consts.system.blockWeights
+        // @ts-ignore
       ? this.api.consts.system.blockWeights.maxBlock
       : (this.api.consts.system.maximumBlockWeight as Weight);
 
@@ -527,7 +528,7 @@ export default class ContractFactory {
     );
 
     const contract = new Contract(
-      deployedAddress,
+      deployedAddress.toString(),
       this.abi,
       this.api,
       this.signer
