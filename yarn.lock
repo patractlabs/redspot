@@ -2645,8 +2645,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@redspot/chai@workspace:packages/redspot-chai"
   dependencies:
-    "@polkadot/api": ^6.12.1
-    "@polkadot/api-contract": ^6.12.1
+    "@polkadot/api": ^7.2.1
+    "@polkadot/api-contract": ^7.2.1
   peerDependencies:
     redspot: ^0.13.2-1
   languageName: unknown
@@ -2656,8 +2656,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@redspot/decimals@workspace:packages/redspot-decimals"
   dependencies:
-    "@polkadot/api": ^6.12.1
-    "@polkadot/api-contract": ^6.12.1
+    "@polkadot/api": ^7.2.1
+    "@polkadot/api-contract": ^7.2.1
   peerDependencies:
     redspot: ^0.13.2-1
   languageName: unknown
@@ -2700,7 +2700,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@redspot/known-types@workspace:packages/redspot-known-types"
   dependencies:
-    "@polkadot/api": ^6.12.1
+    "@polkadot/api": ^7.2.1
     "@polkadot/apps-config": ^0.95.1
   peerDependencies:
     redspot: ^0.13.2-1
@@ -2711,8 +2711,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@redspot/patract@workspace:packages/redspot-patract"
   dependencies:
-    "@polkadot/api": ^6.12.1
-    "@polkadot/api-contract": ^6.12.1
+    "@polkadot/api": ^7.2.1
+    "@polkadot/api-contract": ^7.2.1
   peerDependencies:
     redspot: ^0.13.2-1
   languageName: unknown
@@ -12501,7 +12501,7 @@ fsevents@^1.2.7:
   version: 0.0.0-use.local
   resolution: "redspot@workspace:packages/redspot-core"
   dependencies:
-    "@polkadot/api": ^6.12.1
+    "@polkadot/api": ^7.2.1
     "@types/mocha": ^5.2.6
     abort-controller: ^3.0.0
     bn.js: ^5.1.3
