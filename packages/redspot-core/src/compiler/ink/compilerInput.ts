@@ -96,29 +96,24 @@ export async function getCompilerInput(config: InkConfig, patterns?: string[]) {
     return getCargoMetadata(config, dirname(path));
   });
 
-  const targetDirs = new Set();
-  const input = new Set<InkSource>();
+  const input: Record<string, InkSource> = {};
 
   for (const manifest of manifests) {
-    if (!targetDirs.has(manifest.target_directory)) {
-      for (const packageInfo of manifest.packages) {
-        if (
-          packageInfo.dependencies.find(({ name }: any) => name === 'ink_lang')
-        ) {
-          input.add({
-            id: packageInfo.id,
-            name: packageInfo?.targets?.[0]?.name || packageInfo.name,
-            manifestPath: packageInfo.manifest_path,
-            targetDirectory: manifest.target_directory
-          });
-        }
+    for (const packageInfo of manifest.packages) {
+      if (
+        packageInfo.dependencies.find(({ name }: any) => name === 'ink_lang')
+      ) {
+        input[packageInfo.manifest_path] = {
+          id: packageInfo.id,
+          name: packageInfo?.targets?.[0]?.name || packageInfo.name,
+          manifestPath: packageInfo.manifest_path,
+          targetDirectory: manifest.target_directory
+        };
       }
-
-      targetDirs.add(manifest.target_directory);
     }
   }
 
-  const sources = Array.from(input);
+  const sources = Object.values(input);
 
   return {
     sources,
