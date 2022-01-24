@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "0.13.2-1",
+  "version": "0.13.3",
   "stableVersion": "0.13.1",
   "author": "Patract Labs",
   "private": true,
@@ -62,5 +62,8 @@
     "test": "polkadot-dev-run-test --coverage --runInBand",
     "test:one": "polkadot-dev-run-test",
     "test:watch": "polkadot-dev-run-test --watch"
+  },
+  "dependencies": {
+    "@redspot/chai": "workspace:packages/redspot-chai"
   }
 }
