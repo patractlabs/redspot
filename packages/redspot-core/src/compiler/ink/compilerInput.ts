@@ -100,7 +100,9 @@ export async function getCompilerInput(config: InkConfig, patterns?: string[]) {
 
   for (const manifest of manifests) {
     for (const packageInfo of manifest.packages) {
-      if (packageInfo.dependencies.find(({ name }: any) => name === 'ink_lang')) {
+      if (
+        packageInfo.dependencies.find(({ name }: any) => name === 'ink_lang')
+      ) {
         input.add({
           id: packageInfo.id,
           name: packageInfo?.targets?.[0]?.name || packageInfo.name,
