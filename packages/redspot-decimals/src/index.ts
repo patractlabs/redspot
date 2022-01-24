@@ -8,12 +8,15 @@ extendEnvironment((env) => {
 
   api.once('ready', async () => {
     const decimals: number = api.registry.chainDecimals[0];
-
     const Balance = api.registry.getDefinition('Balance');
     const Weight = api.registry.getDefinition('Weight');
 
     api.registerTypes({
       Weight: CustomWeight.with(decimals, getTypeLength(Weight || 'u64')),
+      u128: CustomBalance.with(
+        decimals,
+        getTypeLength(Balance || 'UInt<128, Balance>')
+      ),
       Balance: CustomBalance.with(
         decimals,
         getTypeLength(Balance || 'UInt<128, Balance>')

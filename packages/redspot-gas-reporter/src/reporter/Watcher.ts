@@ -29,24 +29,24 @@ export class TransactionWatcher {
 
   constructor(config: GasReporterConfig) {
     this.#abiMap = (config.abis || []).reduce((result, data) => {
-      if (!data.V1) {
-        // Compatible with older version abi
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        data.spec.messages.forEach((messages) => {
-          result[messages.selector] = {
-            message: messages.name[0],
-            contract: data.contract.name
-          };
-        });
-      } else {
-        data.V1.spec.messages.forEach((messages) => {
-          result[messages.selector] = {
-            message: messages.name[0],
-            contract: data.contract.name
-          };
-        });
+      // old style
+      let abiData = data;
+      // new styles
+      if (data.V1) {
+        abiData = data.V1 as unknown as AbiMetadata;
+      } else if (data.V2) {
+        abiData = data.V2 as unknown as AbiMetadata
       }
+      // Compatible with older version abi
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      abiData.spec.messages.forEach((messages) => {
+        result[messages.selector] = {
+          // name changed to label between V1 and V2
+          message: messages.name ? messages.name[0] : messages.label[0],
+          contract: data.contract.name
+        };
+      });
 
       return result;
     }, {});

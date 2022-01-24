@@ -13,10 +13,6 @@ extendEnvironment((env) => {
   ): Promise<Uint8Array> {
     if (!signerAddress) throw new Error('Need Signer');
 
-    const accountInfo = await env.network.api.query.system.account(
-      signerAddress
-    );
-
     const runtimeVersion = env.network.api.runtimeVersion;
 
     const isJupiter = runtimeVersion.specName
@@ -26,7 +22,9 @@ extendEnvironment((env) => {
 
     if (!isJupiter) return _encodedSalt(salt, signerAddress);
 
-    const nonce = accountInfo.nonce.toNumber();
+    const nonceCodec = await env.network.api.query.system.accountNonce(signerAddress);
+
+    const nonce = nonceCodec.toHuman()['nonce']
 
     return salt instanceof Bytes ? salt : compactAddLength(numberToU8a(nonce));
   };

@@ -2,7 +2,7 @@ import { ApiPromise } from '@polkadot/api';
 import { Abi } from '@polkadot/api-contract';
 import type { AbiConstructor } from '@polkadot/api-contract/types';
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
-import { Bytes } from '@polkadot/types';
+import {Bytes, u128} from '@polkadot/types';
 import type { Weight } from '@polkadot/types/interfaces';
 import type { CodeHash } from '@polkadot/types/interfaces/contracts';
 import type { AccountId } from '@polkadot/types/interfaces/types';
@@ -28,7 +28,7 @@ import { BigNumber, CallOverrides, TransactionParams } from './types';
 
 export type ContractFunction<T = any> = (...args: Array<any>) => Promise<T>;
 
-type ContractAbi = AnyJson | Abi;
+type ContractAbi = Record<string, unknown> | Abi;
 type ConstructorOrId = AbiConstructor | string | number;
 const pluginName = 'redspot-patract';
 
@@ -89,13 +89,29 @@ export default class ContractFactory {
     gasLimit: BigNumber,
     salt?: Uint8Array | string | null
   ) => {
-    return this.api.tx.contracts.instantiateWithCode(
-      endowment,
-      gasLimit,
-      wasmCode,
-      u8aConcat(data, salt),
-      salt
-    );
+    const hasStorageDeposit =
+      this.api.tx.contracts.instantiateWithCode.meta.args.length === 6;
+    const storageDepositLimit = null;
+
+    return hasStorageDeposit
+      ? this.api.tx.contracts.instantiateWithCode(
+          endowment,
+          gasLimit,
+          storageDepositLimit,
+          wasmCode,
+          u8aConcat(data, salt),
+          // @ts-ignore
+          salt
+        )
+      : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore old style without storage deposit
+        this.api.tx.contracts.instantiateWithCode(
+          endowment,
+          gasLimit,
+          wasmCode,
+          u8aConcat(data, salt),
+          salt
+        );
   };
 
   #buildInstantiate = (
@@ -106,6 +122,9 @@ export default class ContractFactory {
     salt?: Uint8Array | string | null
   ) => {
     const withSalt = this.api.tx.contracts.instantiate.meta.args.length === 5;
+    const hasStorageDeposit =
+      this.api.tx.contracts.instantiateWithCode.meta.args.length === 6;
+    const storageDepositLimit = null;
 
     const tx = withSalt
       ? this.api.tx.contracts.instantiate(
@@ -113,6 +132,16 @@ export default class ContractFactory {
           gasLimit,
           codeHash,
           u8aConcat(data, salt),
+          salt
+        )
+      : hasStorageDeposit
+      ? this.api.tx.contracts.instantiate(
+          endowment,
+          gasLimit,
+          storageDepositLimit,
+          codeHash,
+          u8aConcat(data, salt),
+          //@ts-ignore
           salt
         )
       : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -135,7 +164,7 @@ export default class ContractFactory {
     const codeStorage = await this.api.query.contracts.codeStorage(wasmHash);
 
     if (!codeStorage.isEmpty) {
-      const hash = this.api.registry.createType('CodeHash', wasmHash);
+      const hash = this.api.registry.createType('CodeHash', wasmHash) as CodeHash;
       log.info(`Use the uploaded codehash: ${hash.toString()}`);
       return hash;
     }
@@ -212,7 +241,7 @@ export default class ContractFactory {
     ).muln(10);
     const contractDeposit =
       (this.api.consts.contracts.contractDeposit as any) || new BN(0);
-    const mindeposit = this.api.consts.balances.existentialDeposit
+    const mindeposit = (this.api.consts.balances.existentialDeposit as u128)
       .add(tombstoneDeposit)
       .add(contractDeposit);
     const endowment = overrides.value;
@@ -221,7 +250,7 @@ export default class ContractFactory {
       const endowmentConverted = this.api.createType(
         'BalanceOf',
         overrides.value
-      );
+      ) as u128;
       if (endowmentConverted.lt(mindeposit)) {
         throw new Error(
           `endowment should not be less than ${mindeposit.toString()}, but get ${endowmentConverted.toString()}`
@@ -231,7 +260,7 @@ export default class ContractFactory {
 
     const salt = await ContractFactory.encodeSalt(overrides.salt, this.signer);
     const maximumBlockWeight = this.api.consts.system.blockWeights
-      ? this.api.consts.system.blockWeights.maxBlock
+      ? (this.api.consts.system.blockWeights as unknown as { maxBlock: Weight }).maxBlock
       : (this.api.consts.system.maximumBlockWeight as Weight);
 
     const gasLimit =
@@ -329,7 +358,7 @@ export default class ContractFactory {
     ).muln(10);
     const contractDeposit =
       (this.api.consts.contracts.contractDeposit as any) || new BN(0);
-    const mindeposit = this.api.consts.balances.existentialDeposit
+    const mindeposit = (this.api.consts.balances.existentialDeposit as u128)
       .add(tombstoneDeposit)
       .add(contractDeposit);
     const endowment = overrides.value || mindeposit;
@@ -338,7 +367,7 @@ export default class ContractFactory {
       const endowmentConverted = this.api.createType(
         'BalanceOf',
         overrides.value
-      );
+      ) as u128;
       if (endowmentConverted.lt(mindeposit)) {
         throw new Error(
           `endowment should not be less than ${mindeposit.toString()}, but get ${endowmentConverted.toString()}`
@@ -347,6 +376,7 @@ export default class ContractFactory {
     }
     const salt = await ContractFactory.encodeSalt(overrides.salt, this.signer);
     const maximumBlockWeight = this.api.consts.system.blockWeights
+        // @ts-ignore
       ? this.api.consts.system.blockWeights.maxBlock
       : (this.api.consts.system.maximumBlockWeight as Weight);
 
@@ -498,7 +528,7 @@ export default class ContractFactory {
     );
 
     const contract = new Contract(
-      deployedAddress,
+      deployedAddress.toString(),
       this.abi,
       this.api,
       this.signer
