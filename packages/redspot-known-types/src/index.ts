@@ -1,6 +1,6 @@
 import { getSpecTypes } from '@polkadot/types-known';
 import { extendEnvironment } from 'redspot/config';
-import { edgeware, plasm, plasmParachain, clover, cloverRococo } from './chain';
+import { edgeware, plasm, clover, cloverRococo } from './chain';
 import { jupiterRococo } from './jupiter-rococo';
 
 import europaDef from './europa';
@@ -23,7 +23,6 @@ extendEnvironment((env) => {
         europa: europaDef,
         edgeware,
         plasm,
-        'plasm-parachain': plasmParachain,
         clover,
         'clover-rococo': cloverRococo
       }
