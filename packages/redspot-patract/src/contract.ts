@@ -161,7 +161,8 @@ function decodeEvents(
 function buildCall(
   contract: Contract,
   fragment: AbiMessage,
-  isEstimateGas = false
+  isEstimateGas = false,
+  at?: string | Uint8Array
 ): ContractFunction<ContractCallOutcome> {
   return async function (
     ...args: TransactionParams
@@ -213,7 +214,9 @@ function buildCall(
           origin
         };
 
-    const json = await contract.api.rpc.contracts.call(rpcParams);
+    const _contractCallFn = contract.api.rpc.contracts.call;
+
+    const json = await (at ? _contractCallFn(rpcParams, at) : _contractCallFn(rpcParams));
 
     const {
       debugMessage,
@@ -451,6 +454,17 @@ export default class Contract {
         this.estimateGas[messageName] = buildEstimate(this, fragment);
       }
     }
+  }
+
+  /**
+   * Query at specific block
+   * 
+   * @param at string | Uint8Array
+   * @param abi AbiMessage
+   * @returns ContractFunction\<ContractCallOutcome\>
+   */
+  public queryAt(at: string | Uint8Array, abi: AbiMessage): ContractFunction<ContractCallOutcome> {
+    return buildCall(this, abi, false, at);
   }
 
   /**
