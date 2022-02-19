@@ -23,6 +23,7 @@ import log from 'redspot/logger';
 import type { Signer } from 'redspot/types';
 import { buildTx } from './buildTx';
 import { converSignerToAddress } from './helpers';
+import { RedspotPluginError } from 'redspot/plugins';
 import {
   BigNumber,
   CallOverrides,
@@ -34,6 +35,8 @@ import {
   TransactionParams,
   TransactionResponse
 } from './types';
+
+const pluginName = 'redspot-patract';
 
 async function populateTransaction(
   contract: Contract,
@@ -59,7 +62,9 @@ async function populateTransaction(
   const data = fragment.toU8a(args as unknown[]);
 
   const maximumBlockWeight = contract.api.consts.system.blockWeights
-    ? (contract.api.consts.system.blockWeights as unknown as { maxBlock: Weight }).maxBlock
+    ? ((contract.api.consts.system.blockWeights as unknown) as {
+        maxBlock: Weight;
+      }).maxBlock
     : (contract.api.consts.system.maximumBlockWeight as Weight);
 
   const callParams: CallParams = {
@@ -210,7 +215,13 @@ function buildCall(
 
     const json = await contract.api.rpc.contracts.call(rpcParams);
 
-    const { debugMessage, gasRequired, gasConsumed, result, storageDeposit } = json;
+    const {
+      debugMessage,
+      gasRequired,
+      gasConsumed,
+      result,
+      storageDeposit
+    } = json;
 
     const outcome = {
       debugMessage,
@@ -291,7 +302,9 @@ function buildSend(
       {
         ...options
       }
-    );
+    ).catch((error) => {
+      throw error.error || error;
+    });
 
     response.events = decodeEvents(
       callParams.dest,

@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { artifacts, network, patract } from 'redspot';
-
+import '@polkadot/api-augment/polkadot';
 const { getContractFactory, getRandomSigner } = patract;
 
 const { api, getAddresses, getSigners } = network;
@@ -14,7 +14,7 @@ describe('ERC20', () => {
     await api.isReady;
     const signerAddresses = await getAddresses();
     const Alice = signerAddresses[0];
-    const sender = await getRandomSigner(Alice, '20000 UNIT');
+    const sender = await getRandomSigner(Alice, '5000 UNIT');
     const contractFactory = await getContractFactory('erc20', sender.address);
     const contract = await contractFactory.deploy('new', '1000');
     const abi = artifacts.readArtifact('erc20');
@@ -52,9 +52,8 @@ describe('ERC20', () => {
   it('Can not transfer above the amount', async () => {
     const { contract, receiver } = await setup();
 
-    await expect(contract.tx.transfer(receiver.address, 1007)).to.not.emit(
-      contract,
-      'Transfer'
+    await expect(contract.tx.transfer(receiver.address, 1007)).rejectedWith(
+      'contracts.ContractReverted'
     );
   });
 
@@ -65,6 +64,6 @@ describe('ERC20', () => {
 
     await expect(
       contract.connect(emptyAccount).tx.transfer(sender.address, 7)
-    ).to.not.emit(contract, 'Transfer');
+    ).rejectedWith('contracts.ContractReverted');
   });
 });
