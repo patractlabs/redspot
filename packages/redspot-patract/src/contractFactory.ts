@@ -2,7 +2,7 @@ import { ApiPromise } from '@polkadot/api';
 import { Abi } from '@polkadot/api-contract';
 import type { AbiConstructor } from '@polkadot/api-contract/types';
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
-import {Bytes, u128} from '@polkadot/types';
+import { Bytes, u128 } from '@polkadot/types';
 import type { Weight } from '@polkadot/types/interfaces';
 import type { CodeHash } from '@polkadot/types/interfaces/contracts';
 import type { AccountId } from '@polkadot/types/interfaces/types';
@@ -24,6 +24,7 @@ import type { Signer } from 'redspot/types';
 import { buildTx } from './buildTx';
 import Contract from './contract';
 import { converSignerToAddress } from './helpers';
+
 import { BigNumber, CallOverrides, TransactionParams } from './types';
 
 export type ContractFunction<T = any> = (...args: Array<any>) => Promise<T>;
@@ -87,11 +88,11 @@ export default class ContractFactory {
     data: string | Uint8Array | Bytes,
     endowment: BigNumber,
     gasLimit: BigNumber,
+    storageDepositLimit?: BigNumber,
     salt?: Uint8Array | string | null
   ) => {
     const hasStorageDeposit =
       this.api.tx.contracts.instantiateWithCode.meta.args.length === 6;
-    const storageDepositLimit = null;
 
     return hasStorageDeposit
       ? this.api.tx.contracts.instantiateWithCode(
@@ -164,7 +165,10 @@ export default class ContractFactory {
     const codeStorage = await this.api.query.contracts.codeStorage(wasmHash);
 
     if (!codeStorage.isEmpty) {
-      const hash = this.api.registry.createType('CodeHash', wasmHash) as CodeHash;
+      const hash = this.api.registry.createType(
+        'CodeHash',
+        wasmHash
+      ) as CodeHash;
       log.info(`Use the uploaded codehash: ${hash.toString()}`);
       return hash;
     }
@@ -236,31 +240,33 @@ export default class ContractFactory {
     const codeHash = (this.abi.json as any).source.hash;
     const constructor = this.abi.findConstructor(constructorOrId);
     const encoded = constructor.toU8a(params);
-    const tombstoneDeposit = (
-      (this.api.consts.contracts.tombstoneDeposit as any) || new BN(0)
-    ).muln(10);
-    const contractDeposit =
-      (this.api.consts.contracts.contractDeposit as any) || new BN(0);
-    const mindeposit = (this.api.consts.balances.existentialDeposit as u128)
-      .add(tombstoneDeposit)
-      .add(contractDeposit);
-    const endowment = overrides.value;
+    // const tombstoneDeposit = (
+    //   (this.api.consts.contracts.tombstoneDeposit as any) || new BN(0)
+    // ).muln(10);
+    // const contractDeposit =
+    //   (this.api.consts.contracts.contractDeposit as any) || new BN(0);
+    // const mindeposit = (this.api.consts.balances.existentialDeposit as u128)
+    //   .add(tombstoneDeposit)
+    //   .add(contractDeposit);
+    const endowment = overrides.value || 0;
 
-    if (overrides.value) {
-      const endowmentConverted = this.api.createType(
-        'BalanceOf',
-        overrides.value
-      ) as u128;
-      if (endowmentConverted.lt(mindeposit)) {
-        throw new Error(
-          `endowment should not be less than ${mindeposit.toString()}, but get ${endowmentConverted.toString()}`
-        );
-      }
-    }
+    // if (overrides.value) {
+    //   const endowmentConverted = this.api.createType(
+    //     'BalanceOf',
+    //     overrides.value
+    //   ) as u128;
+    //   if (endowmentConverted.lt(mindeposit)) {
+    //     throw new Error(
+    //       `endowment should not be less than ${mindeposit.toString()}, but get ${endowmentConverted.toString()}`
+    //     );
+    //   }
+    // }
 
     const salt = await ContractFactory.encodeSalt(overrides.salt, this.signer);
     const maximumBlockWeight = this.api.consts.system.blockWeights
-      ? (this.api.consts.system.blockWeights as unknown as { maxBlock: Weight }).maxBlock
+      ? ((this.api.consts.system.blockWeights as unknown) as {
+          maxBlock: Weight;
+        }).maxBlock
       : (this.api.consts.system.maximumBlockWeight as Weight);
 
     const gasLimit =
@@ -353,31 +359,29 @@ export default class ContractFactory {
 
     const constructor = this.abi.findConstructor(constructorOrId);
     const encoded = constructor.toU8a(params);
-    const tombstoneDeposit = (
-      (this.api.consts.contracts.tombstoneDeposit as any) || new BN(0)
-    ).muln(10);
-    const contractDeposit =
-      (this.api.consts.contracts.contractDeposit as any) || new BN(0);
-    const mindeposit = (this.api.consts.balances.existentialDeposit as u128)
-      .add(tombstoneDeposit)
-      .add(contractDeposit);
-    const endowment = overrides.value || mindeposit;
+    // const tombstoneDeposit = (
+    //   (this.api.consts.contracts.tombstoneDeposit as any) || new BN(0)
+    // ).muln(10);
+    // const contractDeposit =
+    //   (this.api.consts.contracts.contractDeposit as any) || new BN(0);
+    const endowment = overrides.value || 0;
+    const storageDepositLimit = overrides.storageDepositLimit || undefined;
 
-    if (overrides.value) {
-      const endowmentConverted = this.api.createType(
-        'BalanceOf',
-        overrides.value
-      ) as u128;
-      if (endowmentConverted.lt(mindeposit)) {
-        throw new Error(
-          `endowment should not be less than ${mindeposit.toString()}, but get ${endowmentConverted.toString()}`
-        );
-      }
-    }
+    // if (overrides.value) {
+    //   const endowmentConverted = this.api.createType(
+    //     'BalanceOf',
+    //     overrides.value
+    //   ) as u128;
+    //   if (endowmentConverted.lt(mindeposit)) {
+    //     throw new Error(
+    //       `endowment should not be less than ${mindeposit.toString()}, but get ${endowmentConverted.toString()}`
+    //     );
+    //   }
+    // }
     const salt = await ContractFactory.encodeSalt(overrides.salt, this.signer);
     const maximumBlockWeight = this.api.consts.system.blockWeights
-        // @ts-ignore
-      ? this.api.consts.system.blockWeights.maxBlock
+      ? // @ts-ignore
+        this.api.consts.system.blockWeights.maxBlock
       : (this.api.consts.system.maximumBlockWeight as Weight);
 
     const gasLimit =
@@ -389,12 +393,14 @@ export default class ContractFactory {
     delete overrides.gasLimit;
     delete overrides.dest;
     delete overrides.salt;
+    delete overrides.storageDepositLimit;
 
     const tx = this.#buildInstantiateWithCode(
       wasmCode,
       encoded,
       endowment,
       gasLimit,
+      storageDepositLimit,
       salt
     );
 

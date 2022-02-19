@@ -1,4 +1,5 @@
 import path from 'path';
+import chaiAsPromised from 'chai-as-promised'
 
 export function init(projectRoot: string) {
   try {
@@ -15,6 +16,7 @@ export function init(projectRoot: string) {
     const chai = require(chaiPath);
     const { patractChai } = require('./chai');
     chai.use(patractChai);
+    chai.use(chaiAsPromised);
   } catch (error) {
     // If chai isn't installed we just don't initialize the matchers
   }

@@ -19,15 +19,15 @@ export default {
   networks: {
     development: {
       endpoint: "ws://127.0.0.1:9944",
-      gasLimit: "400000000000",
+      gasLimit: "200000000000",
       types: {},
     },
-    jupiter: {
-      endpoint: "wss://jupiter-poa.elara.patract.io",
-      gasLimit: "400000000000",
-      accounts: ["//Alice"],
-      types: {},
-    },
+    prod: {
+      endpoint: 'ws://127.0.0.1:9944',
+      gasLimit: '200000000000',
+      accounts: ['//Alice'],
+      types: {}
+    }
   },
   mocha: {
     timeout: 60000,

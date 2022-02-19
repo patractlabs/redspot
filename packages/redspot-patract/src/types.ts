@@ -31,6 +31,7 @@ export interface CallOverrides extends SignerOptions {
   salt?: any;
   value?: BigNumber;
   gasLimit?: BigNumber;
+  storageDepositLimit?: BigNumber;
   signer: never;
 }
 
