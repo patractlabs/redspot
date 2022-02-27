@@ -6,9 +6,9 @@
     "node": ">=14.x"
   },
   "resolutions": {
-    "@polkadot/api": "7.8.1",
-    "@polkadot/api-contract": "7.8.1",
-    "@polkadot/types": "7.8.1",
+    "@polkadot/api": "7.10.1",
+    "@polkadot/api-contract": "7.10.1",
+    "@polkadot/types": "7.10.1",
     "@polkadot/keyring": "8.4.1",
     "@polkadot/util": "8.4.1",
     "@polkadot/wasm-crypto": "4.5.1",

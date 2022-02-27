@@ -54,9 +54,11 @@ export function createNetwork(
 
   const signer = new AccountSigner();
 
-  const api = lazyObject(() => {
-    return createApi(provider, networkConfig, signer);
-  });
+  // @TODO proxy and private field https://github.com/tc39/proposal-class-fields/issues/106
+  // const api = lazyObject(() => {
+  //   return createApi(provider, networkConfig, signer);
+  // });
+  const api = createApi(provider, networkConfig, signer);
 
   const registry = api.registry;
 

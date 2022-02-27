@@ -1,6 +1,6 @@
 {
   "name": "root",
-  "version": "0.13.5",
+  "version": "0.13.6",
   "stableVersion": "0.13.1",
   "author": "Patract Labs",
   "private": true,
@@ -9,9 +9,9 @@
     "yarn": "^1.10.1"
   },
   "resolutions": {
-    "@polkadot/api": "^7.8.1",
-    "@polkadot/api-contract": "^7.8.1",
-    "@polkadot/types": "^7.8.1",
+    "@polkadot/api": "^7.10.1",
+    "@polkadot/api-contract": "^7.10.1",
+    "@polkadot/types": "^7.10.1",
     "@polkadot/util": "^8.4.1"
   },
   "workspaces": [
