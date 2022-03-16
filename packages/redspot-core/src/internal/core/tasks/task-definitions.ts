@@ -441,12 +441,12 @@ export class SimpleTaskDefinition implements TaskDefinition {
    * @throws RS202 if `name` is already used as a param by Redspot
    */
   private _validateNameNotUsed(name: string) {
-    if (this._hasParamDefined(name)) {
-      throw new RedspotError(ERRORS.TASK_DEFINITIONS.PARAM_ALREADY_DEFINED, {
-        paramName: name,
-        taskName: this.name
-      });
-    }
+    // if (this._hasParamDefined(name)) {
+    //   throw new RedspotError(ERRORS.TASK_DEFINITIONS.PARAM_ALREADY_DEFINED, {
+    //     paramName: name,
+    //     taskName: this.name
+    //   });
+    // }
 
     if (Object.keys(REDSPOT_PARAM_DEFINITIONS).includes(name)) {
       throw new RedspotError(

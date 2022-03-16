@@ -9,10 +9,20 @@
     "yarn": "^1.10.1"
   },
   "resolutions": {
-    "@polkadot/api": "^7.10.1",
-    "@polkadot/api-contract": "^7.10.1",
-    "@polkadot/types": "^7.10.1",
-    "@polkadot/util": "^8.4.1"
+    "@polkadot/api": "7.12.1",
+    "@polkadot/api-contract": "7.12.1",
+    "@polkadot/api-derive": "7.12.1",
+    "@polkadot/api-augment": "7.12.1",
+    "@polkadot/apps-config": "0.109.1",
+    "@polkadot/keyring": "8.5.1",
+    "@polkadot/types": "7.12.1",
+    "@polkadot/networks": "8.5.1",
+    "@polkadot/util": "8.5.1",
+    "@polkadot/x-fetch": "8.5.1",
+    "@polkadot/x-global": "8.5.1",
+    "@polkadot/x-ws": "8.5.1",
+    "@polkadot/util-crypto": "8.5.1",
+    "rxjs": "7.5.5"
   },
   "workspaces": [
     "packages/*"
@@ -64,6 +74,6 @@
     "test:watch": "polkadot-dev-run-test --watch"
   },
   "dependencies": {
-    "@redspot/chai": "workspace:packages/redspot-chai"
+    "@redspot/chai": "workspace:^"
   }
 }

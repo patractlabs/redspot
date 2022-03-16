@@ -34,7 +34,8 @@ task(TASK_RUN, 'Runs a user-defined script after compiling the project')
       );
 
       try {
-        process.exitCode = await runScriptWithRedspot(redspotArguments, script);
+        const scriptArgs = process.argv.slice(process.argv.indexOf(script) + 1)
+        process.exitCode = await runScriptWithRedspot(redspotArguments, script, scriptArgs);
       } catch (error) {
         throw new RedspotError(
           ERRORS.BUILTIN_TASKS.RUN_SCRIPT_ERROR,

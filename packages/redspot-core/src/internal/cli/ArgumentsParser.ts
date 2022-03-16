@@ -277,14 +277,14 @@ export class ArgumentsParser {
     const hasVariadicParam =
       lastDefinition !== undefined && lastDefinition.isVariadic;
 
-    if (
-      !hasVariadicParam &&
-      rawPositionalParamArgs.length > positionalParamDefinitions.length
-    ) {
-      throw new RedspotError(ERRORS.ARGUMENTS.UNRECOGNIZED_POSITIONAL_ARG, {
-        argument: rawPositionalParamArgs[positionalParamDefinitions.length]
-      });
-    }
+    // if (
+    //   !hasVariadicParam &&
+    //   rawPositionalParamArgs.length > positionalParamDefinitions.length
+    // ) {
+    //   throw new RedspotError(ERRORS.ARGUMENTS.UNRECOGNIZED_POSITIONAL_ARG, {
+    //     argument: rawPositionalParamArgs[positionalParamDefinitions.length]
+    //   });
+    // }
 
     return args;
   }
