@@ -74,6 +74,6 @@
     "test:watch": "polkadot-dev-run-test --watch"
   },
   "dependencies": {
-    "@redspot/chai": "workspace:^"
+    "@redspot/chai": "workspace:packages/redspot-chai"
   }
 }

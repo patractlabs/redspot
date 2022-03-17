@@ -2550,7 +2550,7 @@ __metadata:
   resolution: "@redspot/known-types@workspace:packages/redspot-known-types"
   dependencies:
     "@polkadot/api": 7.12.1
-    "@polkadot/apps-config": ^0.103.1
+    "@polkadot/apps-config": ^0.109.1
   peerDependencies:
     redspot: ^0.13.6
   languageName: unknown
