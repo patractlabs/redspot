@@ -62,7 +62,8 @@ subtask(
     const output = await compile(
       input,
       redspotArguments.verbose,
-      redspotArguments.release
+      redspotArguments.release,
+      redspotArguments.skipLinting,
     );
 
     return output;
