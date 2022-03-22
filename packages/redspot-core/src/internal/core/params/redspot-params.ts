@@ -66,6 +66,15 @@ export const REDSPOT_PARAM_DEFINITIONS: RedspotParamDefinitions = {
     isOptional: true,
     isVariadic: false
   },
+  skipLinting: {
+    name: 'skip-linting',
+    defaultValue: false,
+    description: 'Skips the run of linting process for `cargo-contract`',
+    type: types.boolean,
+    isFlag: true,
+    isOptional: true,
+    isVariadic: false
+  },
   logLevel: {
     name: 'logLevel',
     defaultValue: '2',

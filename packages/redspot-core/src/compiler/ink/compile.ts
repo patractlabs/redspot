@@ -15,7 +15,8 @@ export type InkOutput = {
 export async function compile(
   input: InkInput,
   verbose?: boolean,
-  release?: boolean
+  release?: boolean,
+  skipLinting?: boolean
 ) {
   const output: InkOutput[] = [];
 
@@ -30,6 +31,10 @@ export async function compile(
 
     if (release) {
       args = args.concat('--release');
+    }
+
+    if (skipLinting) {
+      args = args.concat('--skip-linting');
     }
 
     if (verbose) {

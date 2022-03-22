@@ -177,6 +177,7 @@ export interface RedspotArguments {
   maxMemory?: number;
   tsconfig?: string;
   release: boolean;
+  skipLinting: boolean;
 }
 
 export type RedspotParamDefinitions = {
