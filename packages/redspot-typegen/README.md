@@ -1,0 +1,1 @@
+# @redspot/typegen

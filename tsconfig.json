@@ -67,6 +67,12 @@
       ],
       "@redspot/decimals/*": [
         "packages/redspot-decimals/src/*"
+      ],
+      "@redspot/typegen": [
+        "packages/redspot-typegen/src"
+      ],
+      "@redspot/typegen/*": [
+        "packages/redspot-typegen/src/*"
       ]
     },
     "skipLibCheck": true,
