@@ -4,9 +4,9 @@ interface SpecDef {
   events: any[];
   messages: {
     label: string;
-    name: string[] | string
-    selector: string
-  }[]
+    name: string[] | string;
+    selector: string;
+  }[];
 }
 
 export type AbiMetadata = {
@@ -25,13 +25,13 @@ export type AbiMetadata = {
   spec: SpecDef;
   V1: {
     spec: SpecDef;
-  },
+  };
   V2: {
     spec: SpecDef;
-  },
+  };
   V3: {
     spec: SpecDef;
-  }
+  };
 };
 
 export interface Artifacts {

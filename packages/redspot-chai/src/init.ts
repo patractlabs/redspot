@@ -1,5 +1,5 @@
 import path from 'path';
-import chaiAsPromised from 'chai-as-promised'
+import chaiAsPromised from 'chai-as-promised';
 
 export function init(projectRoot: string) {
   try {

@@ -29,7 +29,7 @@ export class TransactionWatcher {
 
   constructor(config: GasReporterConfig) {
     this.#abiMap = (config.abis || []).reduce((result, data) => {
-      const abiData = this.getAbiData(data)
+      const abiData = this.getAbiData(data);
       // Compatible with older version abi
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
@@ -48,15 +48,17 @@ export class TransactionWatcher {
     this.#extrinsics = [];
   }
 
-  getAbiData(data:AbiMetadata) {
+  getAbiData(data: AbiMetadata) {
     let abiData = data;
     // new styles
     // Find the different metadata version key, V1, V2, V3, etc.
-    const storageKey = Object.keys(abiData).filter(key => key.search(/V\d/) > -1)
+    const storageKey = Object.keys(abiData).filter(
+      (key) => key.search(/V\d/) > -1
+    );
     if (storageKey.length) {
-      abiData = abiData[storageKey[0]]
+      abiData = abiData[storageKey[0]];
     }
-    return abiData
+    return abiData;
   }
 
   async ensureConnect() {

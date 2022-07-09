@@ -142,7 +142,7 @@ export default class ContractFactory {
           storageDepositLimit,
           codeHash,
           u8aConcat(data, salt),
-          //@ts-ignore
+          // @ts-ignore
           salt
         )
       : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -165,10 +165,7 @@ export default class ContractFactory {
     const codeStorage = await this.api.query.contracts.codeStorage(wasmHash);
 
     if (!codeStorage.isEmpty) {
-      const hash = this.api.registry.createType(
-        'CodeHash',
-        wasmHash
-      ) as CodeHash;
+      const hash = this.api.registry.createType('CodeHash', wasmHash);
       log.info(`Use the uploaded codehash: ${hash.toString()}`);
       return hash;
     }

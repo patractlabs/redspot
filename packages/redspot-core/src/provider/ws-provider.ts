@@ -351,7 +351,7 @@ export class WsProvider implements ProviderInterface {
   ): Promise<T> {
     const body = this._coder.encodeJson(method, params);
     let resultPromise: Promise<T> | null = isCacheable
-      ? (this._callCache.get(body) as Promise<T>)
+      ? this._callCache.get(body)
       : null;
 
     if (!resultPromise) {
@@ -381,7 +381,7 @@ export class WsProvider implements ProviderInterface {
         const id = this._coder.getId();
 
         const callback = (error?: Error | null, result?: T): void => {
-          error ? reject(error) : resolve(result as T);
+          error ? reject(error) : resolve(result);
         };
 
         log.debug(
@@ -512,7 +512,7 @@ export class WsProvider implements ProviderInterface {
   };
 
   _onSocketMessage = (message: MessageEvent<string>): void => {
-    const response = JSON.parse(message.data as string) as JsonRpcResponse;
+    const response = JSON.parse(message.data) as JsonRpcResponse;
     const isMsg = isUndefined(response.method);
 
     if (isMsg) {
@@ -571,8 +571,7 @@ export class WsProvider implements ProviderInterface {
   };
 
   _onSocketMessageSubscribe = (response: JsonRpcResponse): void => {
-    const method =
-      ALIASES[response.method as string] || response.method || 'invalid';
+    const method = ALIASES[response.method] || response.method || 'invalid';
     const subId = `${method}::${response.params.subscription}`;
     const handler = this._subscriptions[subId];
 

@@ -63,7 +63,7 @@ subtask(
       input,
       redspotArguments.verbose,
       redspotArguments.release,
-      redspotArguments.skipLinting,
+      redspotArguments.skipLinting
     );
 
     return output;

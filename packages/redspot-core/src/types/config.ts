@@ -17,7 +17,9 @@ import type { ApiOptions } from '@polkadot/api/types';
 import type BN from 'bn.js';
 
 // Networks config
-export type RedspotNetworkAccountsUserConfig = string[] | HDAccountsUserConfig[];
+export type RedspotNetworkAccountsUserConfig =
+  | string[]
+  | HDAccountsUserConfig[];
 
 export interface RedspotNetworkUserConfig {
   endpoint?: string;
