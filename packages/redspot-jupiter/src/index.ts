@@ -22,9 +22,11 @@ extendEnvironment((env) => {
 
     if (!isJupiter) return _encodedSalt(salt, signerAddress);
 
-    const nonceCodec = await env.network.api.query.system.accountNonce(signerAddress);
+    const nonceCodec = await env.network.api.query.system.accountNonce(
+      signerAddress
+    );
 
-    const nonce = nonceCodec.toHuman()['nonce']
+    const nonce = nonceCodec.toHuman().nonce;
 
     return salt instanceof Bytes ? salt : compactAddLength(numberToU8a(nonce));
   };

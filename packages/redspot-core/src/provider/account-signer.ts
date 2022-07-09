@@ -8,7 +8,7 @@ import { u8aToHex } from '@polkadot/util';
 import { RedspotError } from '../internal/core/errors';
 import { ERRORS } from '../internal/core/errors-list';
 import log from '../logger';
-import type {HDAccountsUserConfig, LocalKeyringPair} from '../types';
+import type { HDAccountsUserConfig, LocalKeyringPair } from '../types';
 import { RedspotNetworkAccountsUserConfig } from '../types';
 
 let id = 0;
@@ -86,9 +86,8 @@ export class Signer implements PolkadotSigner {
           log.error(error.message);
           throw new RedspotError(ERRORS.GENERAL.BAD_SURI, { uri: account });
         }
-      }
-      else if (typeof account == 'object') {
-        const _account = account as HDAccountsUserConfig
+      } else if (typeof account === 'object') {
+        const _account = account;
         try {
           const mnemonic = _account.mnemonic;
 
@@ -96,8 +95,8 @@ export class Signer implements PolkadotSigner {
           (pair as LocalKeyringPair).suri = mnemonic;
 
           if (_account.path) {
-            let initialIndex = _account.initialIndex || 0;
-            let count = _account.count || 20;
+            const initialIndex = _account.initialIndex || 0;
+            const count = _account.count || 20;
             pair.lock = (): void => {};
             if (initialIndex >= count) {
               return;
@@ -106,14 +105,15 @@ export class Signer implements PolkadotSigner {
               const derivedPath = `${_account.path}/${i}`;
               const childPair = pair.derive(derivedPath);
               (childPair as LocalKeyringPair).suri = mnemonic + derivedPath;
-              this.keyring.addPair(childPair)
+              this.keyring.addPair(childPair);
             }
           }
         } catch (error) {
-          log.error(error.message)
-          throw new RedspotError(ERRORS.GENERAL.BAD_SURI, { uri: _account.mnemonic });
+          log.error(error.message);
+          throw new RedspotError(ERRORS.GENERAL.BAD_SURI, {
+            uri: _account.mnemonic
+          });
         }
-
       }
     }
   };

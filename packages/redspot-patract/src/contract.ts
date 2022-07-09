@@ -91,7 +91,7 @@ async function populateTransaction(
         callParams.value,
         callParams.gasLimit,
         storageDepositLimit,
-        //@ts-ignore
+        // @ts-ignore
         callParams.inputData
       )
     : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -216,7 +216,9 @@ function buildCall(
 
     const _contractCallFn = contract.api.rpc.contracts.call;
 
-    const json = await (at ? _contractCallFn(rpcParams, at) : _contractCallFn(rpcParams));
+    const json = await (at
+      ? _contractCallFn(rpcParams, at)
+      : _contractCallFn(rpcParams));
 
     const {
       debugMessage,
@@ -458,12 +460,15 @@ export default class Contract {
 
   /**
    * Query at specific block
-   * 
+   *
    * @param at string | Uint8Array
    * @param abi AbiMessage
    * @returns ContractFunction\<ContractCallOutcome\>
    */
-  public queryAt(at: string | Uint8Array, abi: AbiMessage): ContractFunction<ContractCallOutcome> {
+  public queryAt(
+    at: string | Uint8Array,
+    abi: AbiMessage
+  ): ContractFunction<ContractCallOutcome> {
     return buildCall(this, abi, false, at);
   }
 

@@ -8,8 +8,8 @@
     "redspot": "^0.13.6"
   },
   "dependencies": {
-    "@polkadot/api": "^7.10.1",
-    "@polkadot/api-contract": "^7.10.1",
+    "@polkadot/api": "^8.11.3",
+    "@polkadot/api-contract": "^8.11.3",
     "chai-as-promised": "^7.1.1"
   },
   "devDependencies": {
